@@ -2,8 +2,10 @@
   "name": "shopit-be",
   "version": "1.0.0",
   "description": "Initial commit",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "nodemon app.js",
+    "start-server": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/fitu/shopit-be/issues"
   },
-  "homepage": "https://github.com/fitu/shopit-be#readme"
+  "homepage": "https://github.com/fitu/shopit-be#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
 }
