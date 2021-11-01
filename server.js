@@ -1,7 +1,7 @@
 const app = require('./app');
 const { handleGeneralErrors } = require('./utils/errors');
 
-// TODO: use another file
+// TODO: use another file for production, not env vars
 // FIXME: this is not working
 if (process.env.NODE_ENV !== 'PRODUCTION') {
     const dotenv = require('dotenv');
