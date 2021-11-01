@@ -2,7 +2,7 @@ const path = require('path');
 
 const express = require('express');
 
-const { get404 } = require('./controllers/errorController');
+const { handleAppErrors } = require('./controllers/errorController');
 
 // Init
 const app = express();
@@ -15,6 +15,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use(get404);
+app.use(handleAppErrors);
 
 module.exports = app;

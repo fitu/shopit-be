@@ -1,5 +1,12 @@
-const get404 = (req, res, next) => {
-    res.status(404).send({ message: 'Page not found' });
+const { ErrorHandler } = require('../utils/errors');
+
+const handleAppErrors = (err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+
+    res.status(error.statusCode).json({
+        success: false,
+        message: error.message || 'Internal server error',
+    });
 };
 
-module.exports = { get404 };
+module.exports = { handleAppErrors };

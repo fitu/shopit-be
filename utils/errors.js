@@ -7,7 +7,7 @@ class ErrorHandler extends Error {
     }
 }
 
-const handleErrors = (server) => {
+const handleGeneralErrors = (server) => {
     process.on('uncaughtException', (err) => {
         console.log(`Error; ${err.message}`);
         console.log(`Shutting down the server due to Uncaught exception`);
@@ -23,5 +23,5 @@ const handleErrors = (server) => {
 
 module.exports = {
     ErrorHandler,
-    handleErrors,
+    handleGeneralErrors,
 };
