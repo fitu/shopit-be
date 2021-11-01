@@ -4,8 +4,8 @@
   "description": "Initial commit",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "start-server": "node app.js",
+    "start": "nodemon server.js",
+    "start-server": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

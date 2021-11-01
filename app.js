@@ -2,15 +2,19 @@ const path = require('path');
 
 const express = require('express');
 
-const errorController = require('./controllers/errorController');
+const { get404 } = require('./controllers/errorController');
 
+// Init
 const app = express();
 
+// Parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Static
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(errorController.get404);
+// Routes
+app.use(get404);
 
-app.listen(3000);
+module.exports = app;
