@@ -1,8 +1,15 @@
 const app = require('./app');
 const { handleGeneralErrors } = require('./utils/errors');
 
-const server = app.listen(3000, () => {
-    console.log('Server started on port 3000 in DEVELOP mode');
+// TODO: use another file
+// FIXME: this is not working
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+    const dotenv = require('dotenv');
+    dotenv.config();
+}
+
+const server = app.listen(process.env.PORT, () => {
+    console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
 });
 
 handleGeneralErrors(server);
