@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+    shopit:
+        container_name: shopit
+        restart: always
+        build: .
+        ports:
+            - '4000:4000'
+        links:
+            - ordersDB
+    ordersDB:
+        container_name: ordersDB
+        image: mongo:4.4.6
+        volumes:
+            - mongo-data:/data/db
+        ports:
+            - '27017:27017'
+volumes:
+    mongo-data:
+    postgres-data:
