@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 // Static
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routess
+// Routes
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1', authRoutes);
 app.use(handleAppErrors);

@@ -8,13 +8,33 @@ services:
             - '4000:4000'
         links:
             - ordersDB
+            - usersDB
     ordersDB:
         container_name: ordersDB
         image: mongo:4.4.6
+        restart: always
         volumes:
             - mongo-data:/data/db
         ports:
             - '27017:27017'
+    usersDB:
+        container_name: usersDB
+        image: postgres:9.6
+        restart: always
+        volumes:
+            - postgres-data:/var/lib/postgresql/data/
+        ports:
+            - '5432:5432'
+        environment:
+            POSTGRES_DB: shopit
+            POSTGRES_USER: shopit
+            POSTGRES_PASSWORD: computadorar
+    adminer:
+        container_name: adminer
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
 volumes:
     mongo-data:
     postgres-data:
