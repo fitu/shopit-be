@@ -1,3 +1,5 @@
+import { Server } from 'http';
+
 const app = require('./app');
 const { handleGeneralErrors } = require('./utils/errors');
 
@@ -12,10 +14,10 @@ if (process.env.NODE_ENV !== 'PRODUCTION') {
 const db = require('./utils/database');
 db.sync()
     .then(() => {
-        const server = app.listen(process.env.PORT, () => {
+        const server: Server = app.listen(process.env.PORT, () => {
             console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
         });
 
         handleGeneralErrors(server);
     })
-    .catch((error) => console.log(error));
+    .catch((error: Error) => console.log(error));

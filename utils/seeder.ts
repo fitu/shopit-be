@@ -13,12 +13,10 @@ const seedProducts = async () => {
     // TODO: add seeder
     // try {
     //     await connectOrdersDatabase(process.env.ORDERS_DB_LOCAL_URL);
-
     //     await User.deleteMany();
     //     console.log('Users deleted');
     //     await Product.deleteMany();
     //     console.log('Products deleted');
-
     //     const users = await User.insertMany(mockUsers);
     //     console.log('Users added');
     //     await Product.insertMany(

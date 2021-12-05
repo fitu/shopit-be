@@ -5,8 +5,10 @@ const db = new Sequelize('shopit', 'shopit', 'computadorar', {
     dialect: 'postgres',
     // 172.17.0.1 as docker's localhost
     // usersDB as docker's net
-    host: 'usersDB', 
+    host: 'usersDB',
     port: 5432,
 });
 
 module.exports = db;
+
+export {};
