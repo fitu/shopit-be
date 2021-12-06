@@ -1,56 +1,35 @@
 const Sequelize = require('sequelize');
 const db = require('../utils/database');
 
-const User = db.define('user', {
+const ShippingInfo = db.define('shippingInfo', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },
-    firstName: {
+    address: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate: {
-            len: [2, 30],
-        },
     },
-    lastName: {
+    city: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate: {
-            len: [2, 30],
-        },
     },
-    email: {
+    phone: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate: {
-            isEmail: true,
-        },
     },
-    role: {
+    postalCode: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate: {
-            isIn: ['user', 'admin'],
-        },
     },
-    password: {
+    country: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate: {
-            min: 8,
-        },
-    },
-    resetPasswordToken: {
-        type: Sequelize.STRING,
-    },
-    resetPasswordExpire: {
-        type: Sequelize.DATE,
     },
 });
 
-module.exports = User;
+module.exports = ShippingInfo;
 
 export {};

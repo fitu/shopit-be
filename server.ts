@@ -37,7 +37,17 @@ db.sync()
         return User.findByPk(1);
     })
     .then((user: typeof User) => {
-        return user ? user : User.create({ firstName: 'foo', lastName: 'bar', email: 'foo@bar.com' });
+        return user
+            ? user
+            : User.create({
+                  firstName: 'foo',
+                  lastName: 'bar',
+                  email: 'foo@bar.com',
+                  role: 'admin',
+                  password: 'computadorar',
+                  resetPasswordToken: 'token',
+                  resetPasswordExpire: new Date(),
+              });
     })
     .then((user: typeof User) => {
         return user.createCart();

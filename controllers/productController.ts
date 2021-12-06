@@ -28,6 +28,7 @@ const addProduct = async (req: Request, res: Response, next: NextFunction): Prom
     const { title, description, price, imageUrl } = req.body;
 
     const user = await User.findByPk(1); // TODO: remove hardcoded
+    // FIXME: fixme
     const newProduct = await user.createProduct({
         title,
         description,
@@ -60,6 +61,7 @@ const updateProductById = async (req: Request, res: Response, next: NextFunction
 
     const updatedProduct = updatedProducts[0];
 
+    // FIXME: fixme
     updatedProduct.title = title;
     updatedProduct.description = description;
     updatedProduct.price = price;
