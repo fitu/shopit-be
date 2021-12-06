@@ -16,6 +16,8 @@ const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cartItem');
+const Order = require('./models/order');
+const OrderItem = require('./models/orderItem');
 
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 Product.belongsToMany(Cart, { through: CartItem });
@@ -23,8 +25,12 @@ Product.belongsToMany(Cart, { through: CartItem });
 Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
 
+Order.belongsTo(User);
+Order.belongsToMany(Product, { through: OrderItem });
+
 User.hasMany(Product);
 User.hasOne(Cart);
+User.hasMany(Order);
 
 db.sync()
     .then(() => {

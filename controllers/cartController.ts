@@ -8,7 +8,7 @@ const getCart = async (req: Request, res: Response, next: NextFunction): Promise
     const cart = await user.getCart();
     const products = await cart.getProducts();
 
-    res.status(200).json({ success: true, products });
+    res.status(200).json({ success: true, data: products });
 };
 
 const addProductToCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -25,14 +25,14 @@ const addProductToCart = async (req: Request, res: Response, next: NextFunction)
         const newQuantity = oldQuantity + 1;
         const updatedCart = await cart.addProduct(product, { throught: { quantity: newQuantity } });
 
-        res.status(200).json({ success: true, updatedCart });
+        res.status(200).json({ success: true, data: updatedCart });
         return;
     }
 
     const newProduct = await Product.findByPk(productId);
     const updatedCart = await cart.addProduct(newProduct, { throught: { quantity: 1 } });
 
-    res.status(200).json({ success: true, cart: updatedCart });
+    res.status(200).json({ success: true, data: updatedCart });
 };
 
 const deleteProductFromCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
