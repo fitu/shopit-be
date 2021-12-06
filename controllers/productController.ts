@@ -1,23 +1,34 @@
 import { Request, Response, NextFunction } from 'express';
 
 const Product = require('../models/product');
+const User = require('../models/user');
 
 const getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const allProducts = await Product.findAll();
+    const user = await User.findByPk(1); // TODO: remove hardcoded
+    const allProducts = await user.getProducts();
 
     res.status(200).json({ success: true, data: allProducts });
 };
 
 const getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { id } = req.params;
-    const product = await Product.findByPk(id);
+
+    const user = await User.findByPk(1); // TODO: remove hardcoded
+    const product = await user.getProducts({ where: { id } });
+
+    if (!product) {
+        res.status(404).json({ success: false });
+        return;
+    }
 
     res.status(200).json({ success: true, data: product });
 };
 
 const addProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { title, description, price, imageUrl } = req.body;
-    const newProduct = await Product.create({
+
+    const user = await User.findByPk(1); // TODO: remove hardcoded
+    const newProduct = await user.createProduct({
         title,
         description,
         price,
@@ -39,7 +50,16 @@ const updateProductById = async (req: Request, res: Response, next: NextFunction
     const { id } = req.params;
     const { title, description, price, imageUrl } = req.body;
 
-    const updatedProduct = await Product.findByPk(id);
+    const user = await User.findByPk(1); // TODO: remove hardcoded
+    const updatedProducts = await user.getProducts({ where: { id } });
+
+    if (!updatedProducts) {
+        res.status(404).json({ success: false });
+        return;
+    }
+
+    const updatedProduct = updatedProducts[0];
+
     updatedProduct.title = title;
     updatedProduct.description = description;
     updatedProduct.price = price;
