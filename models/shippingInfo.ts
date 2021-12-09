@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const db = require('../utils/database');
 
 const ShippingInfo = db.define('shippingInfo', {

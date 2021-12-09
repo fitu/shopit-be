@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const db = require('../utils/database');
 
 const Order = db.define('order', {
@@ -32,7 +33,7 @@ const Order = db.define('order', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: ['processing', 'shipped', 'delivered'],
+            isIn: [['processing', 'shipped', 'delivered']],
         },
     },
     deliveredAt: {

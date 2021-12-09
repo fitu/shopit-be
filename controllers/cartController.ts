@@ -23,14 +23,14 @@ const addProductToCart = async (req: Request, res: Response, next: NextFunction)
 
         const oldQuantity = product.cartItem.quantity;
         const newQuantity = oldQuantity + 1;
-        const updatedCart = await cart.addProduct(product, { throught: { quantity: newQuantity } });
+        const updatedCart = await cart.addProduct(product, { through: { quantity: newQuantity } });
 
         res.status(200).json({ success: true, data: updatedCart });
         return;
     }
 
     const newProduct = await Product.findByPk(productId);
-    const updatedCart = await cart.addProduct(newProduct, { throught: { quantity: 1 } });
+    const updatedCart = await cart.addProduct(newProduct, { through: { quantity: 1 } });
 
     res.status(200).json({ success: true, data: updatedCart });
 };

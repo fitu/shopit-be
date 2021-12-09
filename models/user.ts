@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const db = require('../utils/database');
 
 const User = db.define('user', {
@@ -33,7 +34,7 @@ const User = db.define('user', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: ['user', 'admin'],
+            isIn: [['user', 'admin']],
         },
     },
     password: {

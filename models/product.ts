@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const db = require('../utils/database');
 
 const Product = db.define('product', {
@@ -7,14 +8,13 @@ const Product = db.define('product', {
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
-        validate: {
-            max: 100,
-        },
     },
-    title: Sequelize.STRING,
-    description: {
+    title: {
         type: Sequelize.STRING,
         allowNull: false,
+    },
+    description: {
+        type: Sequelize.STRING,
     },
     price: {
         type: Sequelize.DOUBLE,
@@ -34,7 +34,7 @@ const Product = db.define('product', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: [
+            isIn: [[
                 'Electronics',
                 'Cameras',
                 'Laptops',
@@ -47,13 +47,16 @@ const Product = db.define('product', {
                 'Sports',
                 'Outdoor',
                 'Home',
-            ],
+            ]],
         },
     },
     stock: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
+        validate: {
+            max: 100,
+        },
     },
 });
 

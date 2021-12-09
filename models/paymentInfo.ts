@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const db = require('../utils/database');
 
 const PaymentInfo = db.define('paymentInfo', {
@@ -12,7 +13,7 @@ const PaymentInfo = db.define('paymentInfo', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: ['not-paid', 'paid'],
+            isIn: [['not-paid', 'paid']],
         },
     },
 });
