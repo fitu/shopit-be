@@ -1,0 +1,44 @@
+# Get all products
+GET http://localhost:4000/api/v1/products
+
+###
+
+# Get product by id
+GET http://localhost:4000/api/v1/products/1
+
+###
+
+# Create product
+POST http://localhost:4000/api/v1/products
+Content-Type: application/json
+
+{
+    "title": "title",
+    "description": "description",
+    "price": 1.11,
+    "ratings": 3,
+    "imageUrl": "https://unsplash.com/photos/jcNuyQjgYPs",
+    "category": "Electronics",
+    "stock": 2
+}
+
+###
+
+# Delete product by id
+DELETE http://localhost:4000/api/v1/products/1
+
+###
+
+# Update product by id
+PUT http://localhost:4000/api/v1/products/1
+Content-Type: application/json
+
+{
+    "title": "title*",
+    "description": "description*",
+    "price": 2.22,
+    "ratings": 4,
+    "imageUrl": "https://unsplash.com/photos/jcNuyQjgYPs",
+    "category": "Electronics",
+    "stock": 3
+}
