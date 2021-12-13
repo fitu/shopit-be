@@ -12,10 +12,9 @@ import {
     HasOneSetAssociationMixin,
 } from "sequelize";
 
-import sequelize from "../utils/database";
-
-import CartItem from "./cartItem";
-import User from "./user";
+import sequelize from "../../shared/database";
+import CartItem from "../../cartItem/domain/cartItem";
+import User from "../../user/domain/user";
 
 interface CartAttributes {
     id: number;

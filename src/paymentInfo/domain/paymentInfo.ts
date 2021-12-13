@@ -12,10 +12,9 @@ import {
     HasManyCountAssociationsMixin,
 } from "sequelize";
 
-import sequelize from "../utils/database";
-
-import Order from "./order";
-import User from "./user";
+import sequelize from "../../shared/database";
+import Order from "../../order/domain/order";
+import User from "../../user/domain/user";
 
 type Status = "not-paid" | "paid";
 

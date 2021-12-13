@@ -6,23 +6,20 @@ import {
     HasManyGetAssociationsMixin,
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
-    HasOneGetAssociationMixin,
-    HasOneCreateAssociationMixin,
     HasOne,
     HasOneSetAssociationMixin,
     HasManySetAssociationsMixin,
     HasManyCountAssociationsMixin,
 } from "sequelize";
 
-import sequelize from "../utils/database";
-
-import Product from "./product";
-import Order from "./order";
-import Cart from "./cart";
-import Avatar from "./avatar";
-import Review from "./review";
-import PaymentInfo from "./paymentInfo";
-import ShippingInfo from "./shippingInfo";
+import sequelize from "../../shared/database";
+import Product from "../../product/domain/product";
+import Order from "../../order/domain/order";
+import Cart from "../../cart/domain/cart";
+import Avatar from "../../avatar/domain/avatar";
+import Review from "../../review/domain/review";
+import PaymentInfo from "../../paymentInfo/domain/paymentInfo";
+import ShippingInfo from "../../shippingInfo/domain/shippingInfo";
 
 type Role = "user" | "admin";
 

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
-import User from "../models/user";
-import Product from "../models/product";
+import User from "../../user/domain/user";
+import Product from "../../product/domain/product";
 
 const getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const user = await User.findByPk(1); // TODO: remove hardcoded

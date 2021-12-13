@@ -7,9 +7,9 @@ import {
     Association,
 } from "sequelize";
 
-import sequelize from "../utils/database";
-import Product from "./product";
-import User from "./user";
+import sequelize from "../../shared/database";
+import Product from "../../product/domain/product";
+import User from "../../user/domain/user";
 
 interface ReviewAttributes {
     id: number;

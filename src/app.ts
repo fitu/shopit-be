@@ -2,11 +2,11 @@ import { Application, Request, Response, NextFunction } from "express";
 import path from "path";
 import express from "express";
 
-import { handleAppErrors } from "./controllers/errorController";
-import productRoutes from "./routes/productRoute";
-import authRoutes from "./routes/authRoute";
-import cartRoutes from "./routes/cartRoute";
-import orderRoutes from "./routes/orderRoute";
+import { handleAppErrors } from "./shared/errorController";
+import productRoutes from "./product/infrastructure/productRoute";
+import authRoutes from "./user/infrastructure/authRoute";
+import cartRoutes from "./cart/infrastructure/cartRoute";
+import orderRoutes from "./order/infrastructure/orderRoute";
 
 // Init
 const app: Application = express();

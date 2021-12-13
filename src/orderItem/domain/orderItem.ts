@@ -3,44 +3,44 @@ import {
     DataTypes,
     Optional,
     Association,
-    HasOneSetAssociationMixin,
     HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
 } from "sequelize";
 
-import sequelize from "../utils/database";
-import Cart from "./cart";
-import Product from "./product";
+import sequelize from "../../shared/database";
+import Order from "../../order/domain/order";
+import Product from "../../product/domain/product";
 
-interface CartItemAttributes {
+interface OrderItemAttributes {
     id: number;
     quantity: number;
 }
 
-interface CartItemCreationAttributes extends Optional<CartItemAttributes, "id"> {}
+interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {}
 
-class CartItem extends Model<CartItemAttributes, CartItemCreationAttributes> implements CartItemAttributes {
+class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
     public id!: number;
     public quantity!: number;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getCart!: HasOneGetAssociationMixin<Cart>;
-    public setCart!: HasOneSetAssociationMixin<Cart, number>;
+    public getOrder!: HasOneGetAssociationMixin<Order>;
+    public setOrder!: HasOneSetAssociationMixin<Order, number>;
 
     public getProduct!: HasOneGetAssociationMixin<Product>;
     public setProduct!: HasOneSetAssociationMixin<Product, number>;
 
-    public readonly cart?: Cart;
+    public readonly order?: Order;
     public readonly product?: Product;
 
     public static associations: {
-        cart: Association<CartItem, Cart>;
-        product: Association<CartItem, Product>;
+        order: Association<OrderItem, Order>;
+        product: Association<OrderItem, Product>;
     };
 }
 
-CartItem.init(
+OrderItem.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -54,9 +54,9 @@ CartItem.init(
         },
     },
     {
-        tableName: "cartItem",
+        tableName: "orderItem",
         sequelize,
     }
 );
 
-export default CartItem;
+export default OrderItem;

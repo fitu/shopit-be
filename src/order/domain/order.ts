@@ -12,13 +12,12 @@ import {
     HasOneGetAssociationMixin,
 } from "sequelize";
 
-import sequelize from "../utils/database";
-
-import OrderItem from "./orderItem";
-import PaymentInfo from "./paymentInfo";
-import Product from "./product";
-import ShippingInfo from "./shippingInfo";
-import User from "./user";
+import sequelize from "../../shared/database";
+import OrderItem from "../../orderItem/domain/orderItem";
+import PaymentInfo from "../../paymentInfo/domain/paymentInfo";
+import Product from "../../product/domain/product";
+import ShippingInfo from "../../shippingInfo/domain/shippingInfo";
+import User from "../../user/domain/user";
 
 type OrderStatus = "processing" | "shipped" | "delivered";
 

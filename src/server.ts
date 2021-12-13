@@ -2,19 +2,19 @@ import { Server } from "http";
 import moment from "moment";
 import dotenv from "dotenv";
 
+import { handleGeneralErrors } from "./shared/errors";
+import db from "./shared/database";
+import Product from "./product/domain/product";
+import User from "./user/domain/user";
+import Cart from "./cart/domain/cart";
+import CartItem from "./cartItem/domain/cartItem";
+import Order from "./order/domain/order";
+import OrderItem from "./orderItem/domain/orderItem";
+import Avatar from "./avatar/domain/avatar";
+import Review from "./review/domain/review";
+import PaymentInfo from "./paymentInfo/domain/paymentInfo";
+import ShippingInfo from "./shippingInfo/domain/shippingInfo";
 import app from "./app";
-import { handleGeneralErrors } from "./utils/errors";
-import db from "./utils/database";
-import Product from "./models/product";
-import User from "./models/user";
-import Cart from "./models/cart";
-import CartItem from "./models/cartItem";
-import Order from "./models/order";
-import OrderItem from "./models/orderItem";
-import Avatar from "./models/avatar";
-import Review from "./models/review";
-import PaymentInfo from "./models/paymentInfo";
-import ShippingInfo from "./models/shippingInfo";
 
 // TODO: use another file for production, not env vars
 // FIXME: this is not working
