@@ -1,7 +1,24 @@
-import { Model, DataTypes, Optional, Association, HasManyGetAssociationsMixin, HasManyAddAssociationMixin, HasManyHasAssociationMixin, HasManySetAssociationsMixin } from "sequelize";
+import {
+    Model,
+    DataTypes,
+    Optional,
+    Association,
+    HasManyGetAssociationsMixin,
+    HasManyAddAssociationMixin,
+    HasManyHasAssociationMixin,
+    HasManySetAssociationsMixin,
+    HasManyCountAssociationsMixin,
+    HasOneSetAssociationMixin,
+    HasOneGetAssociationMixin,
+} from "sequelize";
 
 import sequelize from "../utils/database";
+
+import OrderItem from "./orderItem";
+import PaymentInfo from "./paymentInfo";
 import Product from "./product";
+import ShippingInfo from "./shippingInfo";
+import User from "./user";
 
 type OrderStatus = "processing" | "shipped" | "delivered";
 
@@ -36,8 +53,31 @@ class Order extends Model<OrderAttributes, OrderCreationAttributes> implements O
     public hasProducts!: HasManyHasAssociationMixin<Product, number>;
     public setProducts!: HasManySetAssociationsMixin<Product, number>;
 
+    public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
+    public addOrderItems!: HasManyAddAssociationMixin<OrderItem, number>;
+    public hasOrderItems!: HasManyHasAssociationMixin<OrderItem, number>;
+    public setOrderItems!: HasManySetAssociationsMixin<OrderItem, number>;
+    public countOrderItems!: HasManyCountAssociationsMixin;
+
+    public getUser!: HasOneGetAssociationMixin<User>;
+    public setUser!: HasOneSetAssociationMixin<User, number>;
+
+    public getPaymentInfo!: HasOneGetAssociationMixin<PaymentInfo>;
+    public setPaymentInfo!: HasOneSetAssociationMixin<PaymentInfo, number>;
+
+    public getShippingInfo!: HasOneGetAssociationMixin<ShippingInfo>;
+    public setShippingInfo!: HasOneSetAssociationMixin<ShippingInfo, number>;
+
+    public readonly orderItems?: Array<OrderItem>;
+    public readonly user?: User;
+    public readonly paymentInfo?: PaymentInfo;
+    public readonly shippingInfo?: ShippingInfo;
+
     public static associations: {
-        products: Association<Order, Product>;
+        orderItems: Association<Order, OrderItem>;
+        user: Association<Order, User>;
+        paymentInfo: Association<Order, PaymentInfo>;
+        shippingInfo: Association<Order, ShippingInfo>;
     };
 }
 

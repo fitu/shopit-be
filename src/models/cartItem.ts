@@ -1,6 +1,15 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import {
+    Model,
+    DataTypes,
+    Optional,
+    Association,
+    HasOneSetAssociationMixin,
+    HasOneGetAssociationMixin,
+} from "sequelize";
 
 import sequelize from "../utils/database";
+import Cart from "./cart";
+import Product from "./product";
 
 interface CartItemAttributes {
     id: number;
@@ -15,6 +24,20 @@ class CartItem extends Model<CartItemAttributes, CartItemCreationAttributes> imp
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    public getCart!: HasOneGetAssociationMixin<Cart>;
+    public setCart!: HasOneSetAssociationMixin<Cart, number>;
+
+    public getProduct!: HasOneGetAssociationMixin<Product>;
+    public setProduct!: HasOneSetAssociationMixin<Product, number>;
+
+    public readonly cart?: Cart;
+    public readonly product?: Product;
+
+    public static associations: {
+        cart: Association<CartItem, Cart>;
+        product: Association<CartItem, Product>;
+    };
 }
 
 CartItem.init(

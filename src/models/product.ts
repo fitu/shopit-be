@@ -7,10 +7,16 @@ import {
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
     HasOneGetAssociationMixin,
+    HasManySetAssociationsMixin,
+    HasManyCountAssociationsMixin,
+    HasOneSetAssociationMixin,
 } from "sequelize";
 
 import sequelize from "../utils/database";
 import CartItem from "./cartItem";
+import OrderItem from "./orderItem";
+import Review from "./review";
+import User from "./user";
 
 type Category =
     | "Electronics"
@@ -52,12 +58,37 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes> implem
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getCartItem!: HasOneGetAssociationMixin<CartItem>;
+    public getCartItems!: HasManyGetAssociationsMixin<CartItem>;
     public addCartItems!: HasManyAddAssociationMixin<CartItem, number>;
     public hasCartItems!: HasManyHasAssociationMixin<CartItem, number>;
+    public setCartItems!: HasManySetAssociationsMixin<CartItem, number>;
+    public countCartItems!: HasManyCountAssociationsMixin;
+
+    public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
+    public addOrderItems!: HasManyAddAssociationMixin<OrderItem, number>;
+    public hasOrderItems!: HasManyHasAssociationMixin<OrderItem, number>;
+    public setOrderItems!: HasManySetAssociationsMixin<OrderItem, number>;
+    public countOrderItems!: HasManyCountAssociationsMixin;
+
+    public getReviews!: HasManyGetAssociationsMixin<Review>;
+    public addReviews!: HasManyAddAssociationMixin<Review, number>;
+    public hasReviews!: HasManyHasAssociationMixin<Review, number>;
+    public setReviews!: HasManySetAssociationsMixin<Review, number>;
+    public countReviews!: HasManyCountAssociationsMixin;
+
+    public getUser!: HasOneGetAssociationMixin<User>;
+    public setUser!: HasOneSetAssociationMixin<User, number>;
+
+    public readonly cartItems?: Array<CartItem>;
+    public readonly orderItems?: Array<OrderItem>;
+    public readonly reviews?: Array<Review>;
+    public readonly user?: User;
 
     public static associations: {
         cartItems: Association<Product, CartItem>;
+        orderItems: Association<Product, OrderItem>;
+        reviews: Association<Product, Review>;
+        user: Association<Product, User>;
     };
 }
 

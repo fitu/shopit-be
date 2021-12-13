@@ -1,6 +1,15 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import {
+    Model,
+    DataTypes,
+    Optional,
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
+    Association,
+} from "sequelize";
 
 import sequelize from "../utils/database";
+import Product from "./product";
+import User from "./user";
 
 interface ReviewAttributes {
     id: number;
@@ -19,6 +28,20 @@ class Review extends Model<ReviewAttributes, ReviewCreationAttributes> implement
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    public getProduct!: HasOneGetAssociationMixin<Product>;
+    public setProduct!: HasOneSetAssociationMixin<Product, number>;
+
+    public getUser!: HasOneGetAssociationMixin<User>;
+    public setUser!: HasOneSetAssociationMixin<User, number>;
+
+    public readonly product?: Product;
+    public readonly user?: User;
+
+    public static associations: {
+        product: Association<Review, Product>;
+        user: Association<Review, User>;
+    };
 }
 
 Review.init(

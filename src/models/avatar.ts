@@ -1,6 +1,14 @@
-import { Model, DataTypes, Optional, HasOneGetAssociationMixinOptions, Association, HasOne } from "sequelize";
+import {
+    Model,
+    DataTypes,
+    Optional,
+    Association,
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
+} from "sequelize";
 
 import sequelize from "../utils/database";
+
 import User from "./user";
 
 interface AvatarAttributes {
@@ -19,7 +27,10 @@ class Avatar extends Model<AvatarAttributes, AvatarCreationAttributes> implement
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public hasUser!: HasOne<User>;
+    public getUser!: HasOneGetAssociationMixin<User>;
+    public setUser!: HasOneSetAssociationMixin<User, number>;
+
+    public readonly user?: User;
 
     public static associations: {
         user: Association<Avatar, User>;

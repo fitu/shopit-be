@@ -10,6 +10,8 @@ import {
     HasOneCreateAssociationMixin,
     HasOne,
     HasOneSetAssociationMixin,
+    HasManySetAssociationsMixin,
+    HasManyCountAssociationsMixin,
 } from "sequelize";
 
 import sequelize from "../utils/database";
@@ -17,6 +19,10 @@ import sequelize from "../utils/database";
 import Product from "./product";
 import Order from "./order";
 import Cart from "./cart";
+import Avatar from "./avatar";
+import Review from "./review";
+import PaymentInfo from "./paymentInfo";
+import ShippingInfo from "./shippingInfo";
 
 type Role = "user" | "admin";
 
@@ -47,20 +53,57 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     public readonly updatedAt!: Date;
 
     public getProducts!: HasManyGetAssociationsMixin<Product>;
-    public addProduct!: HasManyAddAssociationMixin<Product, number>;
+    public addProducts!: HasManyAddAssociationMixin<Product, number>;
     public hasProducts!: HasManyHasAssociationMixin<Product, number>;
+    public setProducts!: HasManySetAssociationsMixin<Product, number>;
+    public countProducts!: HasManyCountAssociationsMixin;
 
     public getOrders!: HasManyGetAssociationsMixin<Order>;
-    public setOrder!: HasOneSetAssociationMixin<Order, number>;
+    public addOrders!: HasManyAddAssociationMixin<Order, number>;
     public hasOrders!: HasManyHasAssociationMixin<Order, number>;
+    public setOrders!: HasManySetAssociationsMixin<Order, number>;
+    public countOrders!: HasManyCountAssociationsMixin;
 
-    public getCart!: HasOneGetAssociationMixin<Cart>;
+    public getCart!: HasOne<Cart>;
     public addCart!: HasManyAddAssociationMixin<Cart, number>;
+
+    public getAvatar!: HasOne<Avatar>;
+    public setAvatar!: HasOneSetAssociationMixin<Avatar, number>;
+
+    public getReviews!: HasManyGetAssociationsMixin<Review>;
+    public addReviews!: HasManyAddAssociationMixin<Review, number>;
+    public hasReviews!: HasManyHasAssociationMixin<Review, number>;
+    public setReviews!: HasManySetAssociationsMixin<Review, number>;
+    public countReviews!: HasManyCountAssociationsMixin;
+
+    public getPaymentsInfo!: HasManyGetAssociationsMixin<PaymentInfo>;
+    public addPaymentsInfo!: HasManyAddAssociationMixin<PaymentInfo, number>;
+    public hasPaymentsInfo!: HasManyHasAssociationMixin<PaymentInfo, number>;
+    public setPaymentsInfo!: HasManySetAssociationsMixin<PaymentInfo, number>;
+    public countPaymentsInfo!: HasManyCountAssociationsMixin;
+
+    public getShippingsInfo!: HasManyGetAssociationsMixin<ShippingInfo>;
+    public addShippingsInfo!: HasManyAddAssociationMixin<ShippingInfo, number>;
+    public hasShippingsInfo!: HasManyHasAssociationMixin<ShippingInfo, number>;
+    public setShippingsInfo!: HasManySetAssociationsMixin<ShippingInfo, number>;
+    public countShippingsInfo!: HasManyCountAssociationsMixin;
+
+    public readonly products?: Array<Product>;
+    public readonly orders?: Array<Order>;
+    public readonly cart?: Cart;
+    public readonly avatar?: Avatar;
+    public readonly reviews?: Array<Review>;
+    public readonly paymentsInfo?: Array<PaymentInfo>;
+    public readonly shippingsInfo?: Array<ShippingInfo>;
 
     public static associations: {
         products: Association<User, Product>;
         orders: Association<User, Order>;
         cart: Association<User, Cart>;
+        avatar: Association<User, Avatar>;
+        review: Association<User, Review>;
+        paymentsInfo: Association<User, PaymentInfo>;
+        shippingsInfo: Association<User, ShippingInfo>;
     };
 }
 

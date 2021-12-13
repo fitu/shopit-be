@@ -1,6 +1,16 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import {
+    Model,
+    DataTypes,
+    Optional,
+    Association,
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
+} from "sequelize";
 
 import sequelize from "../utils/database";
+
+import Order from "./order";
+import Product from "./product";
 
 interface OrderItemAttributes {
     id: number;
@@ -15,6 +25,20 @@ class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> 
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    public getOrder!: HasOneGetAssociationMixin<Order>;
+    public setOrder!: HasOneSetAssociationMixin<Order, number>;
+
+    public getProduct!: HasOneGetAssociationMixin<Product>;
+    public setProduct!: HasOneSetAssociationMixin<Product, number>;
+
+    public readonly order?: Order;
+    public readonly product?: Product;
+
+    public static associations: {
+        order: Association<OrderItem, Order>;
+        product: Association<OrderItem, Product>;
+    };
 }
 
 OrderItem.init(

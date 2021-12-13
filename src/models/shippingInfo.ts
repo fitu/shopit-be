@@ -1,6 +1,21 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import {
+    Model,
+    DataTypes,
+    Optional,
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
+    Association,
+    HasManyGetAssociationsMixin,
+    HasManyHasAssociationMixin,
+    HasManySetAssociationsMixin,
+    HasManyCountAssociationsMixin,
+    HasManyAddAssociationMixin,
+} from "sequelize";
 
 import sequelize from "../utils/database";
+
+import Order from "./order";
+import User from "./user";
 
 interface ShippingInfoAttributes {
     id: number;
@@ -26,6 +41,23 @@ class ShippingInfo
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    public getOrders!: HasManyGetAssociationsMixin<Order>;
+    public addOrders!: HasManyAddAssociationMixin<Order, number>;
+    public hasOrders!: HasManyHasAssociationMixin<Order, number>;
+    public setOrders!: HasManySetAssociationsMixin<Order, number>;
+    public countOrders!: HasManyCountAssociationsMixin;
+
+    public getUser!: HasOneGetAssociationMixin<User>;
+    public setUser!: HasOneSetAssociationMixin<User, number>;
+
+    public readonly user?: User;
+    public readonly orders?: Array<Order>;
+
+    public static associations: {
+        user: Association<ShippingInfo, User>;
+        orders: Association<User, Order>;
+    };
 }
 
 ShippingInfo.init(

@@ -39,7 +39,7 @@ const addProduct = async (req: Request, res: Response, next: NextFunction): Prom
         stock,
     });
 
-    await user.addProduct(newProduct);
+    await user.addProducts(newProduct);
     res.status(200).json({ success: true, data: newProduct });
 };
 

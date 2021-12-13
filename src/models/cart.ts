@@ -7,10 +7,15 @@ import {
     HasManyHasAssociationMixin,
     HasManyGetAssociationsMixin,
     HasManySetAssociationsMixin,
+    HasManyCountAssociationsMixin,
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
 } from "sequelize";
 
 import sequelize from "../utils/database";
-import Product from "./product";
+
+import CartItem from "./cartItem";
+import User from "./user";
 
 interface CartAttributes {
     id: number;
@@ -30,13 +35,21 @@ class Cart extends Model<CartAttributes, CartCreationAttributes> implements Cart
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getProducts!: HasManyGetAssociationsMixin<Product>;
-    public addProduct!: HasManyAddAssociationMixin<Product, number>;
-    public hasProducts!: HasManyHasAssociationMixin<Product, number>;
-    public setProducts!: HasManySetAssociationsMixin<Product, number>;
+    public getCartItems!: HasManyGetAssociationsMixin<CartItem>;
+    public addCartItems!: HasManyAddAssociationMixin<CartItem, number>;
+    public hasCartItems!: HasManyHasAssociationMixin<CartItem, number>;
+    public setCartItems!: HasManySetAssociationsMixin<CartItem, number>;
+    public countCartItems!: HasManyCountAssociationsMixin;
+
+    public getUser!: HasOneGetAssociationMixin<User>;
+    public setUser!: HasOneSetAssociationMixin<User, number>;
+
+    public readonly cartItems?: Array<CartItem>;
+    public readonly user?: User;
 
     public static associations: {
-        products: Association<Cart, Product>;
+        cartItems: Association<Cart, CartItem>;
+        user: Association<Cart, User>;
     };
 }
 
