@@ -1,15 +1,39 @@
-import Sequelize from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 
-import db from "../utils/database";
+import sequelize from "../utils/database";
 
-const CartItem = db.define("cartItem", {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true,
+interface CartItemAttributes {
+    id: number;
+    quantity: number;
+}
+
+interface CartItemCreationAttributes extends Optional<CartItemAttributes, "id"> {}
+
+class CartItem extends Model<CartItemAttributes, CartItemCreationAttributes> implements CartItemAttributes {
+    public id!: number;
+    public quantity!: number;
+
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+}
+
+CartItem.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            allowNull: false,
+            primaryKey: true,
+        },
+        quantity: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
     },
-    quantity: Sequelize.INTEGER,
-});
+    {
+        tableName: "cartItem",
+        sequelize,
+    }
+);
 
 export default CartItem;

@@ -1,15 +1,39 @@
-import Sequelize from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 
-import db from "../utils/database";
+import sequelize from "../utils/database";
 
-const OrderItem = db.define("orderItem", {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true,
+interface OrderItemAttributes {
+    id: number;
+    quantity: number;
+}
+
+interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {}
+
+class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
+    public id!: number;
+    public quantity!: number;
+
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+}
+
+OrderItem.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            allowNull: false,
+            primaryKey: true,
+        },
+        quantity: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
     },
-    quantity: Sequelize.INTEGER,
-});
+    {
+        tableName: "orderItem",
+        sequelize,
+    }
+);
 
 export default OrderItem;

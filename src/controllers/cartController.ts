@@ -21,16 +21,19 @@ const addProductToCart = async (req: Request, res: Response, next: NextFunction)
     if (productsInCart) {
         const product = productsInCart[0];
 
-        const oldQuantity = product.cartItem.quantity;
+        const cartItem = await product.getCartItem();
+        const oldQuantity = cartItem.quantity;
         const newQuantity = oldQuantity + 1;
-        const updatedCart = await cart.addProduct(product, { through: { quantity: newQuantity } });
+        // FIXME: const updatedCart = await cart.addProduct(product, { through: { quantity: newQuantity } });
+        const updatedCart = await cart.addProduct(product);
 
         res.status(200).json({ success: true, data: updatedCart });
         return;
     }
 
     const newProduct = await Product.findByPk(productId);
-    const updatedCart = await cart.addProduct(newProduct, { through: { quantity: 1 } });
+    // FIXME: const updatedCart = await cart.addProduct(newProduct, { through: { quantity: 1 } });
+    const updatedCart = await cart.addProduct(newProduct);
 
     res.status(200).json({ success: true, data: updatedCart });
 };
@@ -48,7 +51,8 @@ const deleteProductFromCart = async (req: Request, res: Response, next: NextFunc
     }
 
     const product = products[0];
-    await product.cartItem.destroy();
+    const cartItem = await product.getCartItem();
+    await cartItem.destroy();
 
     res.status(200).json({ success: true });
 };

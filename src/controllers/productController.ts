@@ -29,7 +29,7 @@ const addProduct = async (req: Request, res: Response, next: NextFunction): Prom
     const ratings = 0;
 
     const user = await User.findByPk(1); // TODO: remove hardcoded
-    const newProduct = await user.createProduct({
+    const newProduct = await Product.create({
         title,
         description,
         price,
@@ -39,6 +39,7 @@ const addProduct = async (req: Request, res: Response, next: NextFunction): Prom
         stock,
     });
 
+    await user.addProduct(newProduct);
     res.status(200).json({ success: true, data: newProduct });
 };
 

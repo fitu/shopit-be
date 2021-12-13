@@ -65,7 +65,7 @@ db.sync({ force: true })
                   role: "admin",
                   password: "computadorar",
                   resetPasswordToken: "token123",
-                  resetPasswordExpire: moment().add(1, "months").calendar(),
+                  resetPasswordExpire: new Date(moment().add(1, "months").calendar()),
               })
     )
     .then((user: any) => user.createCart())
