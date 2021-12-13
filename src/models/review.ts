@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 
-const db = require('../utils/database');
+import db from "../utils/database";
 
-const Review = db.define('review', {
+const Review = db.define("review", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -23,6 +23,4 @@ const Review = db.define('review', {
     },
 });
 
-module.exports = Review;
-
-export {};
+export default Review;

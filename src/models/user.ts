@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 
-const db = require('../utils/database');
+import db from "../utils/database";
 
-const User = db.define('user', {
+const User = db.define("user", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -34,7 +34,7 @@ const User = db.define('user', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: [['user', 'admin']],
+            isIn: [["user", "admin"]],
         },
     },
     password: {
@@ -52,6 +52,4 @@ const User = db.define('user', {
     },
 });
 
-module.exports = User;
-
-export {};
+export default User;

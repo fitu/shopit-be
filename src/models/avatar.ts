@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 
-const db = require('../utils/database');
+import db from "../utils/database";
 
-const Avatar = db.define('avatar', {
+const Avatar = db.define("avatar", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -22,6 +22,4 @@ const Avatar = db.define('avatar', {
     },
 });
 
-module.exports = Avatar;
-
-export {};
+export default Avatar;

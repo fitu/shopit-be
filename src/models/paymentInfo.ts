@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 
-const db = require('../utils/database');
+import db from "../utils/database";
 
-const PaymentInfo = db.define('paymentInfo', {
+const PaymentInfo = db.define("paymentInfo", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -13,11 +13,9 @@ const PaymentInfo = db.define('paymentInfo', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: [['not-paid', 'paid']],
+            isIn: [["not-paid", "paid"]],
         },
     },
 });
 
-module.exports = PaymentInfo;
-
-export {};
+export default PaymentInfo;

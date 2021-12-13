@@ -1,14 +1,12 @@
-import { Application, Request, Response, NextFunction } from 'express';
+import { Application, Request, Response, NextFunction } from "express";
+import path from "path";
+import express from "express";
 
-const path = require('path');
-
-const express = require('express');
-
-const { handleAppErrors } = require('./controllers/errorController');
-const productRoutes = require('./routes/productRoute');
-const authRoutes = require('./routes/authRoute');
-const cartRoutes = require('./routes/cartRoute');
-const orderRoutes = require('./routes/orderRoute');
+import { handleAppErrors } from "./controllers/errorController";
+import productRoutes from "./routes/productRoute";
+import authRoutes from "./routes/authRoute";
+import cartRoutes from "./routes/cartRoute";
+import orderRoutes from "./routes/orderRoute";
 
 // Init
 const app: Application = express();
@@ -18,13 +16,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Static
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
-app.use('/api/v1/products', productRoutes);
-app.use('/api/v1', authRoutes);
-app.use('/api/v1/cart', cartRoutes);
-app.use('/api/v1/orders', orderRoutes);
+app.use("/api/v1/products", productRoutes);
+app.use("/api/v1", authRoutes);
+app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/orders", orderRoutes);
 app.use(handleAppErrors);
 
-module.exports = app;
+export default app;

@@ -1,8 +1,8 @@
-const dotenv = require("dotenv");
-const moment = require("moment");
+import dotenv from "dotenv";
+import moment from "moment";
 
-// const db = require("./database");
-// const User = require("../models/user");
+// import db from "./database";
+// import User from "../models/user";
 
 dotenv.config();
 

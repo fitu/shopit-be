@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
-const Product = require('../models/product');
-const User = require('../models/user');
+import Product from "../models/product";
+import User from "../models/user";
 
 const getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const user = await User.findByPk(1); // TODO: remove hardcoded
@@ -36,7 +36,7 @@ const addProduct = async (req: Request, res: Response, next: NextFunction): Prom
         imageUrl,
         ratings,
         category,
-        stock
+        stock,
     });
 
     res.status(200).json({ success: true, data: newProduct });
@@ -75,4 +75,4 @@ const updateProductById = async (req: Request, res: Response, next: NextFunction
     res.status(200).json({ success: true, data: updatedProduct });
 };
 
-module.exports = { getProducts, getProductById, addProduct, removeProductById, updateProductById };
+export { getProducts, getProductById, addProduct, removeProductById, updateProductById };

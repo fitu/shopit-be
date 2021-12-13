@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
-const User = require('../models/user');
-const Product = require('../models/product');
+import User from "../models/user";
+import Product from "../models/product";
 
 const getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const user = await User.findByPk(1); // TODO: remove hardcoded
@@ -53,4 +53,4 @@ const deleteProductFromCart = async (req: Request, res: Response, next: NextFunc
     res.status(200).json({ success: true });
 };
 
-module.exports = { getCart, addProductToCart, deleteProductFromCart };
+export { getCart, addProductToCart, deleteProductFromCart };

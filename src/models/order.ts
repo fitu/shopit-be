@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 
-const db = require('../utils/database');
+import db from "../utils/database";
 
-const Order = db.define('order', {
+const Order = db.define("order", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -33,7 +33,7 @@ const Order = db.define('order', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: [['processing', 'shipped', 'delivered']],
+            isIn: [["processing", "shipped", "delivered"]],
         },
     },
     deliveredAt: {
@@ -44,6 +44,4 @@ const Order = db.define('order', {
     },
 });
 
-module.exports = Order;
-
-export {};
+export default Order;

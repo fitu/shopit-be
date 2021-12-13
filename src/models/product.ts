@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 
-const db = require('../utils/database');
+import db from "../utils/database";
 
-const Product = db.define('product', {
+const Product = db.define("product", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -34,20 +34,22 @@ const Product = db.define('product', {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-            isIn: [[
-                'Electronics',
-                'Cameras',
-                'Laptops',
-                'Accessories',
-                'Headphones',
-                'Food',
-                'Books',
-                'Clothes/Shoes',
-                'Beauty/Health',
-                'Sports',
-                'Outdoor',
-                'Home',
-            ]],
+            isIn: [
+                [
+                    "Electronics",
+                    "Cameras",
+                    "Laptops",
+                    "Accessories",
+                    "Headphones",
+                    "Food",
+                    "Books",
+                    "Clothes/Shoes",
+                    "Beauty/Health",
+                    "Sports",
+                    "Outdoor",
+                    "Home",
+                ],
+            ],
         },
     },
     stock: {
@@ -60,6 +62,4 @@ const Product = db.define('product', {
     },
 });
 
-module.exports = Product;
-
-export {};
+export default Product;

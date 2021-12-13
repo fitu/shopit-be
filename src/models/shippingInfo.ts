@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import Sequelize from "sequelize";
 
-const db = require('../utils/database');
+import db from "../utils/database";
 
-const ShippingInfo = db.define('shippingInfo', {
+const ShippingInfo = db.define("shippingInfo", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -31,6 +31,4 @@ const ShippingInfo = db.define('shippingInfo', {
     },
 });
 
-module.exports = ShippingInfo;
-
-export {};
+export default ShippingInfo;
