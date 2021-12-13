@@ -57,25 +57,6 @@ ShippingInfo.hasMany(Order);
 
 db.sync()
     .then(() => {
-        return User.findByPk(1);
-    })
-    .then((user: typeof User) => {
-        return user
-            ? user
-            : User.create({
-                  firstName: 'foo',
-                  lastName: 'bar',
-                  email: 'foo@bar.com',
-                  role: 'admin',
-                  password: 'computadorar',
-                  resetPasswordToken: 'token',
-                  resetPasswordExpire: new Date(),
-              });
-    })
-    .then((user: typeof User) => {
-        return user.createCart();
-    })
-    .then(() => {
         const server: Server = app.listen(process.env.PORT, () => {
             console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
         });

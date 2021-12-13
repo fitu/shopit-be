@@ -10,5 +10,3 @@ const db = new Sequelize('shopit', 'shopit', 'computadorar', {
 });
 
 module.exports = db;
-
-export {};

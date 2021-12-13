@@ -28,5 +28,3 @@ app.use('/api/v1/orders', orderRoutes);
 app.use(handleAppErrors);
 
 module.exports = app;
-
-export {};
