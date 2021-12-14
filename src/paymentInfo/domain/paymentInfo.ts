@@ -10,9 +10,9 @@ import {
     HasManyHasAssociationMixin,
     HasManySetAssociationsMixin,
     HasManyCountAssociationsMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import Order from "../../order/domain/order";
 import User from "../../user/domain/user";
 
@@ -50,26 +50,29 @@ class PaymentInfo extends Model<PaymentInfoAttributes, PaymentInfoCreationAttrib
     };
 }
 
-PaymentInfo.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
-        },
-        status: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isIn: [["not-paid", "paid"]],
+const init = (sequelize: Sequelize) => {
+    PaymentInfo.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            status: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    isIn: [["not-paid", "paid"]],
+                },
             },
         },
-    },
-    {
-        tableName: "paymentInfo",
-        sequelize,
-    }
-);
+        {
+            tableName: "paymentInfo",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default PaymentInfo;

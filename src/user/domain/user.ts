@@ -10,9 +10,9 @@ import {
     HasOneSetAssociationMixin,
     HasManySetAssociationsMixin,
     HasManyCountAssociationsMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import Product from "../../product/domain/product";
 import Order from "../../order/domain/order";
 import Cart from "../../cart/domain/cart";
@@ -104,60 +104,63 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     };
 }
 
-User.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
-        },
-        firstName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                len: [2, 30],
+const init = (sequelize: Sequelize) => {
+    User.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            firstName: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    len: [2, 30],
+                },
+            },
+            lastName: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    len: [2, 30],
+                },
+            },
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    isEmail: true,
+                },
+            },
+            role: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    isIn: [["user", "admin"]],
+                },
+            },
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    min: 8,
+                },
+            },
+            resetPasswordToken: {
+                type: DataTypes.STRING,
+            },
+            resetPasswordExpire: {
+                type: DataTypes.DATE,
             },
         },
-        lastName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                len: [2, 30],
-            },
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isEmail: true,
-            },
-        },
-        role: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isIn: [["user", "admin"]],
-            },
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                min: 8,
-            },
-        },
-        resetPasswordToken: {
-            type: DataTypes.STRING,
-        },
-        resetPasswordExpire: {
-            type: DataTypes.DATE,
-        },
-    },
-    {
-        tableName: "user",
-        sequelize,
-    }
-);
+        {
+            tableName: "user",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default User;

@@ -5,9 +5,9 @@ import {
     HasOneGetAssociationMixin,
     HasOneSetAssociationMixin,
     Association,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import Product from "../../product/domain/product";
 import User from "../../user/domain/user";
 
@@ -44,31 +44,34 @@ class Review extends Model<ReviewAttributes, ReviewCreationAttributes> implement
     };
 }
 
-Review.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
+const init = (sequelize: Sequelize) => {
+    Review.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            rating: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            comment: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
         },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        rating: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        comment: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-    },
-    {
-        tableName: "review",
-        sequelize,
-    }
-);
+        {
+            tableName: "review",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default Review;

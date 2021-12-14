@@ -5,9 +5,9 @@ import {
     Association,
     HasOneGetAssociationMixin,
     HasOneSetAssociationMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import Order from "../../order/domain/order";
 import Product from "../../product/domain/product";
 
@@ -40,23 +40,26 @@ class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> 
     };
 }
 
-OrderItem.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
+const init = (sequelize: Sequelize) => {
+    OrderItem.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            quantity: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
         },
-        quantity: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-    },
-    {
-        tableName: "orderItem",
-        sequelize,
-    }
-);
+        {
+            tableName: "orderItem",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default OrderItem;

@@ -5,9 +5,9 @@ import {
     Association,
     HasOneGetAssociationMixin,
     HasOneSetAssociationMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import User from "../../user/domain/user";
 
 interface AvatarAttributes {
@@ -36,30 +36,33 @@ class Avatar extends Model<AvatarAttributes, AvatarCreationAttributes> implement
     };
 }
 
-Avatar.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
-        },
-        publicId: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        url: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isUrl: true,
+const init = (sequelize: Sequelize) => {
+    Avatar.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            publicId: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            url: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    isUrl: true,
+                },
             },
         },
-    },
-    {
-        tableName: "avatar",
-        sequelize,
-    }
-);
+        {
+            tableName: "avatar",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default Avatar;

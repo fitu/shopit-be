@@ -10,9 +10,9 @@ import {
     HasManyCountAssociationsMixin,
     HasOneGetAssociationMixin,
     HasOneSetAssociationMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import CartItem from "../../cartItem/domain/cartItem";
 import User from "../../user/domain/user";
 
@@ -52,34 +52,37 @@ class Cart extends Model<CartAttributes, CartCreationAttributes> implements Cart
     };
 }
 
-Cart.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
+const init = (sequelize: Sequelize) => {
+    Cart.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            itemsPrice: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
+            taxPrice: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
+            totalPrice: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
         },
-        itemsPrice: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-        taxPrice: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-        totalPrice: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-    },
-    {
-        tableName: "cart",
-        sequelize,
-    }
-);
+        {
+            tableName: "cart",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default Cart;

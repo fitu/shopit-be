@@ -10,9 +10,9 @@ import {
     HasManyCountAssociationsMixin,
     HasOneSetAssociationMixin,
     HasOneGetAssociationMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import OrderItem from "../../orderItem/domain/orderItem";
 import PaymentInfo from "../../paymentInfo/domain/paymentInfo";
 import Product from "../../product/domain/product";
@@ -80,52 +80,55 @@ class Order extends Model<OrderAttributes, OrderCreationAttributes> implements O
     };
 }
 
-Order.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
-        },
-        itemsPrice: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-        taxPrice: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-        shippingPrice: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-        totalPrice: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-        orderStatus: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isIn: [["processing", "shipped", "delivered"]],
+const init = (sequelize: Sequelize) => {
+    Order.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            itemsPrice: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
+            taxPrice: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
+            shippingPrice: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
+            totalPrice: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
+            orderStatus: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    isIn: [["processing", "shipped", "delivered"]],
+                },
+            },
+            deliveredAt: {
+                type: DataTypes.DATE,
+            },
+            paidAt: {
+                type: DataTypes.DATE,
             },
         },
-        deliveredAt: {
-            type: DataTypes.DATE,
-        },
-        paidAt: {
-            type: DataTypes.DATE,
-        },
-    },
-    {
-        tableName: "order",
-        sequelize,
-    }
-);
+        {
+            tableName: "order",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default Order;

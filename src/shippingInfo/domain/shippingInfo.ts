@@ -10,9 +10,9 @@ import {
     HasManySetAssociationsMixin,
     HasManyCountAssociationsMixin,
     HasManyAddAssociationMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import Order from "../../order/domain/order";
 import User from "../../user/domain/user";
 
@@ -59,39 +59,42 @@ class ShippingInfo
     };
 }
 
-ShippingInfo.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
+const init = (sequelize: Sequelize) => {
+    ShippingInfo.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            address: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            city: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            phone: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            postalCode: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            country: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
         },
-        address: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        city: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        phone: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        postalCode: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        country: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-    },
-    {
-        tableName: "shippingInfo",
-        sequelize,
-    }
-);
+        {
+            tableName: "shippingInfo",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default ShippingInfo;

@@ -5,9 +5,9 @@ import {
     Association,
     HasOneSetAssociationMixin,
     HasOneGetAssociationMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import Cart from "../../cart/domain/cart";
 import Product from "../../product/domain/product";
 
@@ -40,23 +40,26 @@ class CartItem extends Model<CartItemAttributes, CartItemCreationAttributes> imp
     };
 }
 
-CartItem.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
+const init = (sequelize: Sequelize) => {
+    CartItem.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            quantity: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
         },
-        quantity: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-    },
-    {
-        tableName: "cartItem",
-        sequelize,
-    }
-);
+        {
+            tableName: "cartItem",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default CartItem;

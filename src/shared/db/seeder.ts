@@ -1,18 +1,18 @@
-import dotenv from "dotenv";
 import csv from "csv-parser";
 import fs from "fs";
 
+import validateEnv from "../../shared/env/envUtils";
 import Product from "../../product/domain/product";
 import Cart from "../../cart/domain/cart";
 import User from "../../user/domain/user";
 
-import db from "./database";
-
-dotenv.config();
+import { initializeDB } from "./database";
 
 const seedProducts = async () => {
     try {
-        await db.sync({ force: true });
+        // Validate env before start
+        const env = validateEnv();
+        await initializeDB(env, { force: true });
 
         await clearDatabase();
         await createUserWithCart();

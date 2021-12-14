@@ -10,9 +10,9 @@ import {
     HasManySetAssociationsMixin,
     HasManyCountAssociationsMixin,
     HasOneSetAssociationMixin,
+    Sequelize,
 } from "sequelize";
 
-import sequelize from "../../shared/db/database";
 import CartItem from "../../cartItem/domain/cartItem";
 import OrderItem from "../../orderItem/domain/orderItem";
 import Review from "../../review/domain/review";
@@ -92,70 +92,73 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes> implem
     };
 }
 
-Product.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
-        },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        description: {
-            type: DataTypes.STRING,
-        },
-        price: {
-            type: DataTypes.DOUBLE,
-            allowNull: false,
-            defaultValue: 0.0,
-        },
-        ratings: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
-        imageUrl: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        category: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isIn: [
-                    [
-                        "Electronics",
-                        "Cameras",
-                        "Laptops",
-                        "Accessories",
-                        "Headphones",
-                        "Food",
-                        "Books",
-                        "Clothes/Shoes",
-                        "Beauty/Health",
-                        "Sports",
-                        "Outdoor",
-                        "Home",
+const init = (sequelize: Sequelize) => {
+    Product.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                autoIncrement: true,
+                allowNull: false,
+                primaryKey: true,
+            },
+            title: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            description: {
+                type: DataTypes.STRING,
+            },
+            price: {
+                type: DataTypes.DOUBLE,
+                allowNull: false,
+                defaultValue: 0.0,
+            },
+            ratings: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
+            imageUrl: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            category: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    isIn: [
+                        [
+                            "Electronics",
+                            "Cameras",
+                            "Laptops",
+                            "Accessories",
+                            "Headphones",
+                            "Food",
+                            "Books",
+                            "Clothes/Shoes",
+                            "Beauty/Health",
+                            "Sports",
+                            "Outdoor",
+                            "Home",
+                        ],
                     ],
-                ],
+                },
+            },
+            stock: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                validate: {
+                    max: 100,
+                },
             },
         },
-        stock: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-            validate: {
-                max: 100,
-            },
-        },
-    },
-    {
-        tableName: "product",
-        sequelize,
-    }
-);
+        {
+            tableName: "product",
+            sequelize,
+        }
+    );
+};
 
+export { init };
 export default Product;
