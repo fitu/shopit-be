@@ -1,9 +1,10 @@
-import { Server } from "http";
-
+import CartController from "./cart/infrastructure/cartController";
+import OrderController from "./order/infrastructure/orderController";
+import ProductController from "./product/infrastructure/productController";
+import UserController from "./user/infrastructure/authController";
 import { initializeDB } from "./shared/db/database";
 import validateEnv from "./shared/env/envUtils";
-import { handleGeneralErrors } from "./shared/error/errors";
-import app from "./app";
+import App from "./app";
 
 (async () => {
     try {
@@ -13,12 +14,15 @@ import app from "./app";
         // Connect to DB
         await initializeDB(env);
 
-        // Create the server and start listening for connections
-        const server: Server = app.listen(process.env.PORT, () => {
-            console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
-        });
+        // Create the app and start listening for connections
+        const app = new App([
+            new CartController(),
+            new OrderController(),
+            new ProductController(),
+            new UserController(),
+        ]);
 
-        handleGeneralErrors(server);
+        app.listen();
     } catch (error) {
         console.error("Error while connecting to the database", error);
         return error;

@@ -1,28 +1,53 @@
-import { Application, Request, Response, NextFunction } from "express";
+import express, { Application } from "express";
 import path from "path";
-import express from "express";
 
 import { handleAppErrors } from "./shared/error/errorController";
-import productRoutes from "./product/infrastructure/productRoute";
-import authRoutes from "./user/infrastructure/authRoute";
-import cartRoutes from "./cart/infrastructure/cartRoute";
-import orderRoutes from "./order/infrastructure/orderRoute";
+import { handleGeneralErrors } from "./shared/error/errors";
+import Controller from "./shared/Controller";
 
-// Init
-const app: Application = express();
+const BASE_VERSION = "/api/v1";
 
-// Parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+class App {
+    private app: Application;
 
-// Static
-app.use(express.static(path.join(__dirname, "public")));
+    constructor(controllers: Controller[]) {
+        this.app = express();
+        this.initializeMiddlewares();
+        this.initializeControllers(controllers);
+        this.initializeErrorHandling();
+        this.initializeStaticResources();
+    }
 
-// Routes
-app.use("/api/v1/products", productRoutes);
-app.use("/api/v1", authRoutes);
-app.use("/api/v1/cart", cartRoutes);
-app.use("/api/v1/orders", orderRoutes);
-app.use(handleAppErrors);
+    public getServer(): Application {
+        return this.app;
+    }
 
-export default app;
+    public listen(): void {
+        const server = this.app.listen(process.env.PORT, () => {
+            console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
+        });
+
+        handleGeneralErrors(server);
+    }
+
+    private initializeMiddlewares = (): void => {
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: false }));
+    };
+
+    private initializeControllers(controllers: Controller[]) {
+        controllers.forEach((controller) => {
+            this.app.use(BASE_VERSION, controller.router);
+        });
+    }
+
+    private initializeErrorHandling(): void {
+        this.app.use(handleAppErrors);
+    }
+
+    private initializeStaticResources = (): void => {
+        this.app.use(express.static(path.join(__dirname, "public")));
+    };
+}
+
+export default App;

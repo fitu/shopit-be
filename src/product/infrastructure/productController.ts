@@ -1,76 +1,94 @@
-import { Request, Response, NextFunction } from "express";
+import { Router, Request, Response, NextFunction } from "express";
+import Controller from "shared/Controller";
 
 import Product from "../../product/domain/product";
 import User from "../../user/domain/user";
 
-const getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const allProducts = await Product.findAll();
+class ProductController implements Controller {
+    public path = "/products";
+    public router = Router();
 
-    res.status(200).json({ success: true, data: allProducts });
-};
-
-const getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { id } = req.params;
-
-    const product = await Product.findByPk(id);
-
-    if (!product) {
-        res.status(404).json({ success: false });
-        return;
+    constructor() {
+        this.initializeRoutes();
     }
 
-    res.status(200).json({ success: true, data: product });
-};
+    private initializeRoutes = (): void => {
+        this.router.get(this.path, this.getProducts);
+        this.router.get(`${this.path}/:id`, this.getProductById);
+        this.router.post(this.path, this.addProduct);
+        this.router.delete(`${this.path}/:id`, this.removeProductById);
+        this.router.put(`${this.path}/:id`, this.updateProductById);
+    };
 
-const addProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { title, description, price, imageUrl, category, stock } = req.body;
-    const ratings = 0;
+    private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const allProducts = await Product.findAll();
 
-    const user = await User.findByPk(1); // TODO: remove hardcoded
-    const newProduct = await Product.create({
-        title,
-        description,
-        price,
-        imageUrl,
-        ratings,
-        category,
-        stock,
-    });
+        res.status(200).json({ success: true, data: allProducts });
+    };
 
-    await user.addProducts(newProduct);
-    res.status(200).json({ success: true, data: newProduct });
-};
+    private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
 
-const removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { id } = req.params;
-    const productToDelete = await Product.findByPk(id);
-    await productToDelete.destroy();
+        const product = await Product.findByPk(id);
 
-    res.status(200).json({ success: true });
-};
+        if (!product) {
+            res.status(404).json({ success: false });
+            return;
+        }
 
-const updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { id } = req.params;
-    const { title, description, price, imageUrl, category, stock } = req.body;
+        res.status(200).json({ success: true, data: product });
+    };
 
-    const updatedProducts = await Product.findOne({ where: { id } });
+    private addProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { title, description, price, imageUrl, category, stock } = req.body;
+        const ratings = 0;
 
-    if (!updatedProducts) {
-        res.status(404).json({ success: false });
-        return;
-    }
+        const user = await User.findByPk(1); // TODO: remove hardcoded
+        const newProduct = await Product.create({
+            title,
+            description,
+            price,
+            imageUrl,
+            ratings,
+            category,
+            stock,
+        });
 
-    const updatedProduct = updatedProducts[0];
+        await user.addProducts(newProduct);
+        res.status(200).json({ success: true, data: newProduct });
+    };
 
-    updatedProduct.title = title;
-    updatedProduct.description = description;
-    updatedProduct.price = price;
-    updatedProduct.imageUrl = imageUrl;
-    updatedProduct.category = category;
-    updatedProduct.stock = stock;
-    await updatedProduct.save();
+    private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const productToDelete = await Product.findByPk(id);
+        await productToDelete.destroy();
 
-    res.status(200).json({ success: true, data: updatedProduct });
-};
+        res.status(200).json({ success: true });
+    };
 
-export { getProducts, getProductById, addProduct, removeProductById, updateProductById };
+    private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const { title, description, price, imageUrl, category, stock } = req.body;
+
+        const updatedProducts = await Product.findOne({ where: { id } });
+
+        if (!updatedProducts) {
+            res.status(404).json({ success: false });
+            return;
+        }
+
+        const updatedProduct = updatedProducts[0];
+
+        updatedProduct.title = title;
+        updatedProduct.description = description;
+        updatedProduct.price = price;
+        updatedProduct.imageUrl = imageUrl;
+        updatedProduct.category = category;
+        updatedProduct.stock = stock;
+        await updatedProduct.save();
+
+        res.status(200).json({ success: true, data: updatedProduct });
+    };
+}
+
+export default ProductController;
