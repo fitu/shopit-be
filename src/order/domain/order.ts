@@ -12,7 +12,7 @@ import {
     HasOneGetAssociationMixin,
 } from "sequelize";
 
-import sequelize from "../../shared/database";
+import sequelize from "../../shared/db/database";
 import OrderItem from "../../orderItem/domain/orderItem";
 import PaymentInfo from "../../paymentInfo/domain/paymentInfo";
 import Product from "../../product/domain/product";

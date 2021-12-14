@@ -12,7 +12,7 @@ import {
     HasOneSetAssociationMixin,
 } from "sequelize";
 
-import sequelize from "../../shared/database";
+import sequelize from "../../shared/db/database";
 import CartItem from "../../cartItem/domain/cartItem";
 import User from "../../user/domain/user";
 

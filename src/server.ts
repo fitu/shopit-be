@@ -2,8 +2,8 @@ import { Server } from "http";
 import moment from "moment";
 import dotenv from "dotenv";
 
-import { handleGeneralErrors } from "./shared/errors";
-import db from "./shared/database";
+import { handleGeneralErrors } from "./shared/error/errors";
+import db from "./shared/db/database";
 import Product from "./product/domain/product";
 import User from "./user/domain/user";
 import Cart from "./cart/domain/cart";
@@ -53,27 +53,17 @@ PaymentInfo.hasMany(Order);
 ShippingInfo.belongsTo(User);
 ShippingInfo.hasMany(Order);
 
-db.sync({ force: true })
-    .then(() => User.findByPk(1))
-    .then((user) =>
-        user
-            ? user
-            : User.create({
-                  firstName: "Victorio",
-                  lastName: "Matteucci",
-                  email: "victorio.matteucci@shopit.com",
-                  role: "admin",
-                  password: "computadorar",
-                  resetPasswordToken: "token123",
-                  resetPasswordExpire: new Date(moment().add(1, "months").calendar()),
-              })
-    )
-    .then((user: any) => user.createCart())
-    .then(() => {
-        const server: Server = app.listen(process.env.PORT, () => {
-            console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
-        });
+(async () => {
+    try {
+        db.sync();
+    } catch (error) {
+        console.error("Error while connecting to the database", error);
+        return error;
+    }
 
-        handleGeneralErrors(server);
-    })
-    .catch((error: Error) => console.log(error));
+    const server: Server = app.listen(process.env.PORT, () => {
+        console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
+    });
+
+    handleGeneralErrors(server);
+})();

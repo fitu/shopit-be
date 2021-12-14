@@ -7,7 +7,7 @@ import {
     HasOneSetAssociationMixin,
 } from "sequelize";
 
-import sequelize from "../../shared/database";
+import sequelize from "../../shared/db/database";
 import User from "../../user/domain/user";
 
 interface AvatarAttributes {

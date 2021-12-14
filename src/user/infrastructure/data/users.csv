@@ -1,0 +1,2 @@
+firstName,lastName,email,role,password,resetPasswordToken,resetPasswordExpire
+Victorio,Matteucci,victorio.matteucci@shopit.com,admin,computadorar,token123,2022-01-13T03:00:00.000Z

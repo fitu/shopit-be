@@ -2,7 +2,7 @@ import { Application, Request, Response, NextFunction } from "express";
 import path from "path";
 import express from "express";
 
-import { handleAppErrors } from "./shared/errorController";
+import { handleAppErrors } from "./shared/error/errorController";
 import productRoutes from "./product/infrastructure/productRoute";
 import authRoutes from "./user/infrastructure/authRoute";
 import cartRoutes from "./cart/infrastructure/cartRoute";

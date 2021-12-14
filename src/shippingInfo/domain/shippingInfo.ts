@@ -12,7 +12,7 @@ import {
     HasManyAddAssociationMixin,
 } from "sequelize";
 
-import sequelize from "../../shared/database";
+import sequelize from "../../shared/db/database";
 import Order from "../../order/domain/order";
 import User from "../../user/domain/user";
 

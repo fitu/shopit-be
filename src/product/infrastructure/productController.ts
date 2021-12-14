@@ -4,8 +4,7 @@ import Product from "../../product/domain/product";
 import User from "../../user/domain/user";
 
 const getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const user = await User.findByPk(1); // TODO: remove hardcoded
-    const allProducts = await user.getProducts();
+    const allProducts = await Product.findAll();
 
     res.status(200).json({ success: true, data: allProducts });
 };
@@ -13,8 +12,7 @@ const getProducts = async (req: Request, res: Response, next: NextFunction): Pro
 const getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { id } = req.params;
 
-    const user = await User.findByPk(1); // TODO: remove hardcoded
-    const product = await user.getProducts({ where: { id } });
+    const product = await Product.findByPk(id);
 
     if (!product) {
         res.status(404).json({ success: false });
@@ -55,8 +53,7 @@ const updateProductById = async (req: Request, res: Response, next: NextFunction
     const { id } = req.params;
     const { title, description, price, imageUrl, category, stock } = req.body;
 
-    const user = await User.findByPk(1); // TODO: remove hardcoded
-    const updatedProducts = await user.getProducts({ where: { id } });
+    const updatedProducts = await Product.findOne({ where: { id } });
 
     if (!updatedProducts) {
         res.status(404).json({ success: false });

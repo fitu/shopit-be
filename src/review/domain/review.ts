@@ -7,7 +7,7 @@ import {
     Association,
 } from "sequelize";
 
-import sequelize from "../../shared/database";
+import sequelize from "../../shared/db/database";
 import Product from "../../product/domain/product";
 import User from "../../user/domain/user";
 

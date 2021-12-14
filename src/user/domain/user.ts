@@ -12,7 +12,7 @@ import {
     HasManyCountAssociationsMixin,
 } from "sequelize";
 
-import sequelize from "../../shared/database";
+import sequelize from "../../shared/db/database";
 import Product from "../../product/domain/product";
 import Order from "../../order/domain/order";
 import Cart from "../../cart/domain/cart";
@@ -62,7 +62,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     public countOrders!: HasManyCountAssociationsMixin;
 
     public getCart!: HasOne<Cart>;
-    public addCart!: HasManyAddAssociationMixin<Cart, number>;
+    public setCart!: HasOneSetAssociationMixin<Cart, number>;
 
     public getAvatar!: HasOne<Avatar>;
     public setAvatar!: HasOneSetAssociationMixin<Avatar, number>;
