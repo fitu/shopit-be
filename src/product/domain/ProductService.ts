@@ -18,9 +18,14 @@ class ProductService {
         return savedProduct;
     }
 
-    public async getAllProductsForUser(userId: number): Promise<Array<Product>> {
-        const allProducts = await this.productRepository.getAllProductsForUser(userId);
+    public async getAllProducts(): Promise<Array<Product>> {
+        const allProducts = await this.productRepository.getAllProducts();
         return allProducts;
+    }
+
+    public async getProductById(productId: number): Promise<Product | null> {
+        const product = await this.productRepository.getProductById(productId);
+        return product;
     }
 }
 

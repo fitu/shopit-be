@@ -3,7 +3,8 @@ import { Router, Request, Response, NextFunction } from "express";
 import Controller from "../../shared/Controller";
 import ProductData from "../application/ProductData";
 import AddProductInteractor from "../application/AddProductInteractor";
-import GetAllProductsForUserInteractor from "../application/GetAllProductsForUserInteractor";
+import GetAllProductsInteractor from "../application/GetAllProductsInteractor";
+import GetProductByIdInteractor from "../application/GetProductByIdInteractor";
 import ProductService from "../domain/ProductService";
 
 import ProductDao from "./ProductDao";
@@ -29,10 +30,7 @@ class ProductController implements Controller {
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const userId = 1; // TODO: remove hardcoded
-        const data = { userId };
-
-        const interactor = new GetAllProductsForUserInteractor(data, this.productService);
+        const interactor = new GetAllProductsInteractor(this.productService);
         const result = await interactor.execute();
 
         const allProducts = result.map((product) => ProductViewModel.fromData(product));
@@ -42,13 +40,18 @@ class ProductController implements Controller {
 
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
+        // TODO: validate
+        const data = { productId: +id };
 
-        const product = await ProductDao.findByPk(id);
+        const interactor = new GetProductByIdInteractor(data, this.productService);
+        const result = await interactor.execute();
 
-        if (!product) {
+        if (!result) {
             res.status(404).json({ success: false });
             return;
         }
+
+        const product = ProductViewModel.fromData(result);
 
         res.status(200).json({ success: true, data: product });
     };
@@ -58,10 +61,7 @@ class ProductController implements Controller {
         const userId = 1; // TODO: remove hardcoded
 
         const productData = new ProductData(title, description, price, imageUrl, category, stock);
-        const data = {
-            data: productData,
-            userId,
-        };
+        const data = { productData, userId };
 
         const interactor = new AddProductInteractor(data, this.productService);
         const result = await interactor.execute();

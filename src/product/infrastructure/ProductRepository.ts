@@ -21,10 +21,14 @@ class ProductRepository implements Repository {
         return newProduct;
     }
 
-    public async getAllProductsForUser(userId: number): Promise<Array<Product>> {
-        // TODO: add where for userId
+    public async getAllProducts(): Promise<Array<Product>> {
         const allProducts = await ProductDao.findAll();
         return allProducts;
+    }
+
+    public async getProductById(productId: number): Promise<Product | null> {
+        const product = await ProductDao.findByPk(productId);
+        return product;
     }
 }
 

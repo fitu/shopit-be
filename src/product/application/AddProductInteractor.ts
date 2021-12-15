@@ -5,7 +5,7 @@ import ProductService from "../domain/ProductService";
 import ProductData from "./ProductData";
 
 interface AddProductData {
-    data: ProductData;
+    productData: ProductData;
     userId: number;
 }
 
@@ -24,13 +24,13 @@ class AddProductInteractor implements Interactor {
 
         const newProduct = new Product(
             1, // TODO: remove hardcoded
-            this.data.data.title,
-            this.data.data.description,
-            this.data.data.price,
-            this.data.data.ratings,
-            this.data.data.imageUrl,
-            this.data.data.category,
-            this.data.data.stock
+            this.data.productData.title,
+            this.data.productData.description,
+            this.data.productData.price,
+            this.data.productData.ratings,
+            this.data.productData.imageUrl,
+            this.data.productData.category,
+            this.data.productData.stock
         );
         const createdProduct = await this.productService.create(newProduct, this.data.userId);
 
