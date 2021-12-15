@@ -1,14 +1,14 @@
-import ProductModel from "../domain/Product";
-import Product from "./product";
+import Product from "../domain/Product";
+
+import ProductDao from "./ProductDao";
 
 interface Repository {
-    createProduct: (product: ProductModel) => Promise<ProductModel>;
-    setUser: (product: ProductModel, userId: number) => Promise<void>;
+    save: (product: Product) => Promise<Product>;
 }
 
 class ProductRepository implements Repository {
-    public createProduct = async (product: ProductModel): Promise<ProductModel> => {
-        const newProduct = await Product.create({
+    public save = async (product: Product): Promise<Product> => {
+        const newProduct = await ProductDao.create({
             title: product.title,
             description: product.description,
             price: product.price,
@@ -19,11 +19,6 @@ class ProductRepository implements Repository {
         });
 
         return newProduct;
-    };
-
-    public setUser = async (product: ProductModel, userId: number): Promise<void> => {
-        const foundProduct = await Product.findByPk(product.id);
-        await foundProduct.setUser(1);
     };
 }
 

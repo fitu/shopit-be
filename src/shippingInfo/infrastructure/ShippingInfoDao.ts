@@ -13,13 +13,13 @@ import {
     Sequelize,
 } from "sequelize";
 
-import Order from "../../order/infrastructure/order";
-import User from "../../user/infrastructure/user";
+import OrderDao from "../../order/infrastructure/OrderDao";
+import UserDao from "../../user/infrastructure/UserDao";
 import { ShippingInfoAttributes } from "../domain/ShippingInfo";
 
 interface ShippingInfoCreationAttributes extends Optional<ShippingInfoAttributes, "id"> {}
 
-class ShippingInfo
+class ShippingInfoDao
     extends Model<ShippingInfoAttributes, ShippingInfoCreationAttributes>
     implements ShippingInfoAttributes
 {
@@ -33,26 +33,26 @@ class ShippingInfo
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getOrders!: HasManyGetAssociationsMixin<Order>;
-    public addOrders!: HasManyAddAssociationMixin<Order, number>;
-    public hasOrders!: HasManyHasAssociationMixin<Order, number>;
-    public setOrders!: HasManySetAssociationsMixin<Order, number>;
+    public getOrders!: HasManyGetAssociationsMixin<OrderDao>;
+    public addOrders!: HasManyAddAssociationMixin<OrderDao, number>;
+    public hasOrders!: HasManyHasAssociationMixin<OrderDao, number>;
+    public setOrders!: HasManySetAssociationsMixin<OrderDao, number>;
     public countOrders!: HasManyCountAssociationsMixin;
 
-    public getUser!: HasOneGetAssociationMixin<User>;
-    public setUser!: HasOneSetAssociationMixin<User, number>;
+    public getUser!: HasOneGetAssociationMixin<UserDao>;
+    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public readonly user?: User;
-    public readonly orders?: Array<Order>;
+    public readonly user?: UserDao;
+    public readonly orders?: Array<OrderDao>;
 
     public static associations: {
-        user: Association<ShippingInfo, User>;
-        orders: Association<User, Order>;
+        user: Association<ShippingInfoDao, UserDao>;
+        orders: Association<UserDao, OrderDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    ShippingInfo.init(
+    ShippingInfoDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -89,4 +89,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default ShippingInfo;
+export default ShippingInfoDao;

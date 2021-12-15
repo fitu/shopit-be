@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
 
 import Controller from "../../shared/Controller";
-import Order from "./order";
-import User from "../../user/infrastructure/user";
+import OrderDao from "./OrderDao";
+import UserDao from "../../user/infrastructure/UserDao";
 
 class OrderController implements Controller {
     public path = "/orders";
@@ -18,16 +18,16 @@ class OrderController implements Controller {
     };
 
     private getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await User.findByPk(1); // TODO: remove hardcoded
+        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
         const orders = await user.getOrders({ include: ["products"] });
 
         res.status(200).json({ success: true, data: orders });
     };
 
     private createOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await User.findByPk(1); // TODO: remove hardcoded
+        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
         const cart = await user.cart;
-        const order = await Order.create();
+        const order = await OrderDao.create();
         await user.setOrders([order]);
 
         const cartItems = await cart.getCartItems();

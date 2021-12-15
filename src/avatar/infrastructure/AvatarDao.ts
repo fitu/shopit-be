@@ -8,12 +8,12 @@ import {
     Sequelize,
 } from "sequelize";
 
-import User from "../../user/infrastructure/user";
+import UserDao from "../../user/infrastructure/UserDao";
 import { AvatarAttributes } from "../domain/Avatar";
 
 interface AvatarCreationAttributes extends Optional<AvatarAttributes, "id"> {}
 
-class Avatar extends Model<AvatarAttributes, AvatarCreationAttributes> implements AvatarAttributes {
+class AvatarDao extends Model<AvatarAttributes, AvatarCreationAttributes> implements AvatarAttributes {
     public id!: number;
     public publicId!: string;
     public url!: string;
@@ -21,18 +21,18 @@ class Avatar extends Model<AvatarAttributes, AvatarCreationAttributes> implement
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getUser!: HasOneGetAssociationMixin<User>;
-    public setUser!: HasOneSetAssociationMixin<User, number>;
+    public getUser!: HasOneGetAssociationMixin<UserDao>;
+    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public readonly user?: User;
+    public readonly user?: UserDao;
 
     public static associations: {
-        user: Association<Avatar, User>;
+        user: Association<AvatarDao, UserDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    Avatar.init(
+    AvatarDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -60,4 +60,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default Avatar;
+export default AvatarDao;

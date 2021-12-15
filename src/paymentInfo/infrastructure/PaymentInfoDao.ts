@@ -13,39 +13,42 @@ import {
     Sequelize,
 } from "sequelize";
 
-import Order from "../../order/infrastructure/order";
-import User from "../../user/infrastructure/user";
+import OrderDao from "../../order/infrastructure/OrderDao";
+import UserDao from "../../user/infrastructure/UserDao";
 import { PaymentInfoAttributes, PaymentStatus } from "../domain/PaymentInfo";
 
 interface PaymentInfoCreationAttributes extends Optional<PaymentInfoAttributes, "id"> {}
 
-class PaymentInfo extends Model<PaymentInfoAttributes, PaymentInfoCreationAttributes> implements PaymentInfoAttributes {
+class PaymentInfoDao
+    extends Model<PaymentInfoAttributes, PaymentInfoCreationAttributes>
+    implements PaymentInfoAttributes
+{
     public id!: number;
     public status!: PaymentStatus;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getUser!: HasOneGetAssociationMixin<User>;
-    public setUser!: HasOneSetAssociationMixin<User, number>;
+    public getUser!: HasOneGetAssociationMixin<UserDao>;
+    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public getOrders!: HasManyGetAssociationsMixin<Order>;
-    public addOrders!: HasManyAddAssociationMixin<Order, number>;
-    public hasOrders!: HasManyHasAssociationMixin<Order, number>;
-    public setOrders!: HasManySetAssociationsMixin<Order, number>;
+    public getOrders!: HasManyGetAssociationsMixin<OrderDao>;
+    public addOrders!: HasManyAddAssociationMixin<OrderDao, number>;
+    public hasOrders!: HasManyHasAssociationMixin<OrderDao, number>;
+    public setOrders!: HasManySetAssociationsMixin<OrderDao, number>;
     public countOrders!: HasManyCountAssociationsMixin;
 
-    public readonly user?: User;
-    public readonly orders?: Array<Order>;
+    public readonly user?: UserDao;
+    public readonly orders?: Array<OrderDao>;
 
     public static associations: {
-        user: Association<PaymentInfo, User>;
-        orders: Association<User, Order>;
+        user: Association<PaymentInfoDao, UserDao>;
+        orders: Association<UserDao, OrderDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    PaymentInfo.init(
+    PaymentInfoDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -69,4 +72,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default PaymentInfo;
+export default PaymentInfoDao;

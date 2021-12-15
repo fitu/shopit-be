@@ -14,14 +14,14 @@ import {
 } from "sequelize";
 
 import { ProductAttributes, ProductCategory } from "../domain/Product";
-import CartItem from "../../cartItem/infrastructure/cartItem";
-import OrderItem from "../../orderItem/infrastructure/orderItem";
-import Review from "../../review/infrastructure/review";
-import User from "../../user/infrastructure/user";
+import CartItemDao from "../../cartItem/infrastructure/CartItemDao";
+import OrderItemDao from "../../orderItem/infrastructure/OrderItemDao";
+import ReviewDao from "../../review/infrastructure/ReviewDao";
+import UserDao from "../../user/infrastructure/UserDao";
 
 interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
 
-class Product extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
+class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
     public id!: number;
     public title!: string;
     public description!: string | null;
@@ -34,42 +34,42 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes> implem
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getCartItems!: HasManyGetAssociationsMixin<CartItem>;
-    public addCartItems!: HasManyAddAssociationMixin<CartItem, number>;
-    public hasCartItems!: HasManyHasAssociationMixin<CartItem, number>;
-    public setCartItems!: HasManySetAssociationsMixin<CartItem, number>;
+    public getCartItems!: HasManyGetAssociationsMixin<CartItemDao>;
+    public addCartItems!: HasManyAddAssociationMixin<CartItemDao, number>;
+    public hasCartItems!: HasManyHasAssociationMixin<CartItemDao, number>;
+    public setCartItems!: HasManySetAssociationsMixin<CartItemDao, number>;
     public countCartItems!: HasManyCountAssociationsMixin;
 
-    public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
-    public addOrderItems!: HasManyAddAssociationMixin<OrderItem, number>;
-    public hasOrderItems!: HasManyHasAssociationMixin<OrderItem, number>;
-    public setOrderItems!: HasManySetAssociationsMixin<OrderItem, number>;
+    public getOrderItems!: HasManyGetAssociationsMixin<OrderItemDao>;
+    public addOrderItems!: HasManyAddAssociationMixin<OrderItemDao, number>;
+    public hasOrderItems!: HasManyHasAssociationMixin<OrderItemDao, number>;
+    public setOrderItems!: HasManySetAssociationsMixin<OrderItemDao, number>;
     public countOrderItems!: HasManyCountAssociationsMixin;
 
-    public getReviews!: HasManyGetAssociationsMixin<Review>;
-    public addReviews!: HasManyAddAssociationMixin<Review, number>;
-    public hasReviews!: HasManyHasAssociationMixin<Review, number>;
-    public setReviews!: HasManySetAssociationsMixin<Review, number>;
+    public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
+    public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
+    public hasReviews!: HasManyHasAssociationMixin<ReviewDao, number>;
+    public setReviews!: HasManySetAssociationsMixin<ReviewDao, number>;
     public countReviews!: HasManyCountAssociationsMixin;
 
-    public getUser!: HasOneGetAssociationMixin<User>;
-    public setUser!: HasOneSetAssociationMixin<User, number>;
+    public getUser!: HasOneGetAssociationMixin<UserDao>;
+    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public readonly cartItems?: Array<CartItem>;
-    public readonly orderItems?: Array<OrderItem>;
-    public readonly reviews?: Array<Review>;
-    public readonly user?: User;
+    public readonly cartItems?: Array<CartItemDao>;
+    public readonly orderItems?: Array<OrderItemDao>;
+    public readonly reviews?: Array<ReviewDao>;
+    public readonly user?: UserDao;
 
     public static associations: {
-        cartItems: Association<Product, CartItem>;
-        orderItems: Association<Product, OrderItem>;
-        reviews: Association<Product, Review>;
-        user: Association<Product, User>;
+        cartItems: Association<ProductDao, CartItemDao>;
+        orderItems: Association<ProductDao, OrderItemDao>;
+        reviews: Association<ProductDao, ReviewDao>;
+        user: Association<ProductDao, UserDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    Product.init(
+    ProductDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -137,4 +137,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default Product;
+export default ProductDao;

@@ -14,15 +14,15 @@ import {
 } from "sequelize";
 
 import { OrderAttributes, OrderStatus } from "../domain/Order";
-import OrderItem from "../../orderItem/infrastructure/orderItem";
-import PaymentInfo from "../../paymentInfo/infrastructure/paymentInfo";
-import Product from "../../product/infrastructure/product";
-import ShippingInfo from "../../shippingInfo/infrastructure/shippingInfo";
-import User from "../../user/infrastructure/user";
+import OrderItemDao from "../../orderItem/infrastructure/OrderItemDao";
+import PaymentInfoDao from "../../paymentInfo/infrastructure/PaymentInfoDao";
+import ProductDao from "../../product/infrastructure/ProductDao";
+import ShippingInfoDao from "../../shippingInfo/infrastructure/ShippingInfoDao";
+import UserDao from "../../user/infrastructure/UserDao";
 
 interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {}
 
-class Order extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
+class OrderDao extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
     public id!: number;
     public itemsPrice!: number;
     public taxPrice!: number;
@@ -35,41 +35,41 @@ class Order extends Model<OrderAttributes, OrderCreationAttributes> implements O
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getProducts!: HasManyGetAssociationsMixin<Product>;
-    public addProducts!: HasManyAddAssociationMixin<Product, number>;
-    public hasProducts!: HasManyHasAssociationMixin<Product, number>;
-    public setProducts!: HasManySetAssociationsMixin<Product, number>;
+    public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
+    public addProducts!: HasManyAddAssociationMixin<ProductDao, number>;
+    public hasProducts!: HasManyHasAssociationMixin<ProductDao, number>;
+    public setProducts!: HasManySetAssociationsMixin<ProductDao, number>;
 
-    public getOrderItems!: HasManyGetAssociationsMixin<OrderItem>;
-    public addOrderItems!: HasManyAddAssociationMixin<OrderItem, number>;
-    public hasOrderItems!: HasManyHasAssociationMixin<OrderItem, number>;
-    public setOrderItems!: HasManySetAssociationsMixin<OrderItem, number>;
+    public getOrderItems!: HasManyGetAssociationsMixin<OrderItemDao>;
+    public addOrderItems!: HasManyAddAssociationMixin<OrderItemDao, number>;
+    public hasOrderItems!: HasManyHasAssociationMixin<OrderItemDao, number>;
+    public setOrderItems!: HasManySetAssociationsMixin<OrderItemDao, number>;
     public countOrderItems!: HasManyCountAssociationsMixin;
 
-    public getUser!: HasOneGetAssociationMixin<User>;
-    public setUser!: HasOneSetAssociationMixin<User, number>;
+    public getUser!: HasOneGetAssociationMixin<UserDao>;
+    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public getPaymentInfo!: HasOneGetAssociationMixin<PaymentInfo>;
-    public setPaymentInfo!: HasOneSetAssociationMixin<PaymentInfo, number>;
+    public getPaymentInfo!: HasOneGetAssociationMixin<PaymentInfoDao>;
+    public setPaymentInfo!: HasOneSetAssociationMixin<PaymentInfoDao, number>;
 
-    public getShippingInfo!: HasOneGetAssociationMixin<ShippingInfo>;
-    public setShippingInfo!: HasOneSetAssociationMixin<ShippingInfo, number>;
+    public getShippingInfo!: HasOneGetAssociationMixin<ShippingInfoDao>;
+    public setShippingInfo!: HasOneSetAssociationMixin<ShippingInfoDao, number>;
 
-    public readonly orderItems?: Array<OrderItem>;
-    public readonly user?: User;
-    public readonly paymentInfo?: PaymentInfo;
-    public readonly shippingInfo?: ShippingInfo;
+    public readonly orderItems?: Array<OrderItemDao>;
+    public readonly user?: UserDao;
+    public readonly paymentInfo?: PaymentInfoDao;
+    public readonly shippingInfo?: ShippingInfoDao;
 
     public static associations: {
-        orderItems: Association<Order, OrderItem>;
-        user: Association<Order, User>;
-        paymentInfo: Association<Order, PaymentInfo>;
-        shippingInfo: Association<Order, ShippingInfo>;
+        orderItems: Association<OrderDao, OrderItemDao>;
+        user: Association<OrderDao, UserDao>;
+        paymentInfo: Association<OrderDao, PaymentInfoDao>;
+        shippingInfo: Association<OrderDao, ShippingInfoDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    Order.init(
+    OrderDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -119,4 +119,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default Order;
+export default OrderDao;

@@ -1,20 +1,17 @@
 import { Sequelize } from "sequelize";
 
-import Product, { init as initProduct } from "../../product/infrastructure/product";
-import User, { init as initUser } from "../../user/infrastructure/user";
-import Cart, { init as initCart } from "../../cart/infrastructure/cart";
-import UserRepository from "../../user/infrastructure/UserRepository";
-import CartRepository from "../../cart/infrastructure/CartRepository";
-import ProductRepository from "../../product/infrastructure/ProductRepository";
-import CartItem, { init as initCartItem } from "../../cartItem/infrastructure/cartItem";
-import Order, { init as initOrder } from "../../order/infrastructure/order";
-import OrderItem, { init as initOrderItem } from "../../orderItem/infrastructure/orderItem";
-import Avatar, { init as initAvatar } from "../../avatar/infrastructure/avatar";
-import Review, { init as initReview } from "../../review/infrastructure/review";
-import PaymentInfo, { init as initPaymentInfo } from "../../paymentInfo/infrastructure/paymentInfo";
-import ShippingInfo, { init as initShippingInfo } from "../../shippingInfo/infrastructure/shippingInfo";
+import ProductDao, { init as initProduct } from "../../product/infrastructure/ProductDao";
+import UserDao, { init as initUser } from "../../user/infrastructure/UserDao";
+import CartDao, { init as initCart } from "../../cart/infrastructure/CartDao";
+import CartItemDao, { init as initCartItem } from "../../cartItem/infrastructure/CartItemDao";
+import OrderDao, { init as initOrder } from "../../order/infrastructure/OrderDao";
+import OrderItemDao, { init as initOrderItem } from "../../orderItem/infrastructure/OrderItemDao";
+import AvatarDao, { init as initAvatar } from "../../avatar/infrastructure/AvatarDao";
+import ReviewDao, { init as initReview } from "../../review/infrastructure/ReviewDao";
+import PaymentInfoDao, { init as initPaymentInfo } from "../../paymentInfo/infrastructure/PaymentInfoDao";
+import ShippingInfoDao, { init as initShippingInfo } from "../../shippingInfo/infrastructure/ShippingInfoDao";
 
-import Database, { DatabaseOptions } from "./Database";
+import Database, { DatabaseOptions } from "./database";
 
 class SqlDb implements Database {
     private env: any;
@@ -63,60 +60,49 @@ class SqlDb implements Database {
     };
 
     private initializeRelationships = (): void => {
-        Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
-        Product.belongsToMany(Cart, { through: CartItem });
-        Product.hasMany(Review);
+        ProductDao.belongsTo(UserDao, { constraints: true, onDelete: "CASCADE" });
+        ProductDao.belongsToMany(CartDao, { through: CartItemDao });
+        ProductDao.hasMany(ReviewDao);
 
-        Review.belongsTo(User);
-        Review.belongsTo(Product);
+        ReviewDao.belongsTo(UserDao);
+        ReviewDao.belongsTo(ProductDao);
 
-        Cart.belongsTo(User);
-        Cart.belongsToMany(Product, { through: CartItem });
+        CartDao.belongsTo(UserDao);
+        CartDao.belongsToMany(ProductDao, { through: CartItemDao });
 
-        Order.belongsTo(User);
-        Order.belongsToMany(Product, { through: OrderItem });
-        Order.belongsTo(PaymentInfo);
-        Order.belongsTo(ShippingInfo);
+        OrderDao.belongsTo(UserDao);
+        OrderDao.belongsToMany(ProductDao, { through: OrderItemDao });
+        OrderDao.belongsTo(PaymentInfoDao);
+        OrderDao.belongsTo(ShippingInfoDao);
 
-        User.hasMany(Product);
-        User.hasOne(Cart);
-        User.hasMany(Order);
-        User.hasOne(Avatar);
-        User.hasMany(Review);
-        User.hasMany(PaymentInfo);
-        User.hasMany(ShippingInfo);
+        UserDao.hasMany(ProductDao);
+        UserDao.hasOne(CartDao);
+        UserDao.hasMany(OrderDao);
+        UserDao.hasOne(AvatarDao);
+        UserDao.hasMany(ReviewDao);
+        UserDao.hasMany(PaymentInfoDao);
+        UserDao.hasMany(ShippingInfoDao);
 
-        Avatar.belongsTo(User);
+        AvatarDao.belongsTo(UserDao);
 
-        PaymentInfo.belongsTo(User);
-        PaymentInfo.hasMany(Order);
+        PaymentInfoDao.belongsTo(UserDao);
+        PaymentInfoDao.hasMany(OrderDao);
 
-        ShippingInfo.belongsTo(User);
-        ShippingInfo.hasMany(Order);
+        ShippingInfoDao.belongsTo(UserDao);
+        ShippingInfoDao.hasMany(OrderDao);
     };
 
     public clearDB = async (): Promise<void> => {
         console.log("Delete users");
-        User.destroy({ where: {}, truncate: true });
+        UserDao.destroy({ where: {}, truncate: true });
 
         console.log("Delete carts");
-        Cart.destroy({ where: {}, truncate: true });
+        CartDao.destroy({ where: {}, truncate: true });
 
         console.log("Delete products");
-        Product.destroy({ where: {}, truncate: true });
+        ProductDao.destroy({ where: {}, truncate: true });
     };
 
-    public getUserRepository = (): UserRepository => {
-        return new UserRepository();
-    };
-
-    public getCartRepository = (): CartRepository => {
-        return new CartRepository();
-    };
-
-    public getProductRepository = (): ProductRepository => {
-        return new ProductRepository();
-    };
 }
 
 export default SqlDb;

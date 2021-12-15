@@ -1,16 +1,17 @@
-import CartModel from "../domain/Cart";
-import Cart from "./cart";
+import Cart from "../domain/Cart";
+
+import CartDao from "./CartDao";
 
 interface Repository {
-    createCart: () => Promise<CartModel>;
+    save: (cart: Cart) => Promise<Cart>;
 }
 
 class CartRepository implements Repository {
-    public createCart = async (): Promise<CartModel> => {
-        const newCart = await Cart.create({
-            itemsPrice: 0,
-            taxPrice: 0,
-            totalPrice: 0,
+    public save = async (cart: Cart): Promise<Cart> => {
+        const newCart = await CartDao.create({
+            itemsPrice: cart.itemsPrice,
+            taxPrice: cart.taxPrice,
+            totalPrice: cart.totalPrice,
         });
 
         return newCart;

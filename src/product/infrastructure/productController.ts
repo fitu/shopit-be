@@ -1,15 +1,22 @@
 import { Router, Request, Response, NextFunction } from "express";
 
 import Controller from "../../shared/Controller";
-import Product from "./product";
-import User from "../../user/infrastructure/user";
+import ProductData from "../application/ProductData";
+import AddProductInteractor from "../application/AddProductInteractor";
+import ProductService from "../domain/ProductService";
+
+import ProductDao from "./ProductDao";
+import ProductViewModel from "./ProductViewModel";
 
 class ProductController implements Controller {
     public path = "/products";
     public router = Router();
 
-    constructor() {
+    private productService: ProductService;
+
+    constructor(productService: ProductService) {
         this.initializeRoutes();
+        this.productService = productService;
     }
 
     private initializeRoutes = (): void => {
@@ -21,7 +28,7 @@ class ProductController implements Controller {
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const allProducts = await Product.findAll();
+        const allProducts = await ProductDao.findAll();
 
         res.status(200).json({ success: true, data: allProducts });
     };
@@ -29,7 +36,7 @@ class ProductController implements Controller {
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
 
-        const product = await Product.findByPk(id);
+        const product = await ProductDao.findByPk(id);
 
         if (!product) {
             res.status(404).json({ success: false });
@@ -41,26 +48,24 @@ class ProductController implements Controller {
 
     private addProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { title, description, price, imageUrl, category, stock } = req.body;
-        const ratings = 0;
+        const userId = 1; // TODO: remove hardcoded
 
-        const user = await User.findByPk(1); // TODO: remove hardcoded
-        const newProduct = await Product.create({
-            title,
-            description,
-            price,
-            imageUrl,
-            ratings,
-            category,
-            stock,
-        });
+        const productData = new ProductData(title, description, price, imageUrl, category, stock);
+        const data = {
+            data: productData,
+            userId,
+        };
 
-        await user.addProducts(newProduct);
+        const interactor = new AddProductInteractor(data, this.productService);
+        const result = await interactor.execute();
+        const newProduct = ProductViewModel.fromData(result);
+
         res.status(200).json({ success: true, data: newProduct });
     };
 
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        const productToDelete = await Product.findByPk(id);
+        const productToDelete = await ProductDao.findByPk(id);
         await productToDelete.destroy();
 
         res.status(200).json({ success: true });
@@ -70,7 +75,7 @@ class ProductController implements Controller {
         const { id } = req.params;
         const { title, description, price, imageUrl, category, stock } = req.body;
 
-        const updatedProducts = await Product.findOne({ where: { id } });
+        const updatedProducts = await ProductDao.findOne({ where: { id } });
 
         if (!updatedProducts) {
             res.status(404).json({ success: false });

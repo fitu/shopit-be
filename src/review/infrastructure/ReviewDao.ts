@@ -8,13 +8,13 @@ import {
     Sequelize,
 } from "sequelize";
 
-import Product from "../../product/infrastructure/product";
-import User from "../../user/infrastructure/user";
+import ProductDao from "../../product/infrastructure/ProductDao";
+import UserDao from "../../user/infrastructure/UserDao";
 import { ReviewAttributes } from "../domain/Review";
 
 interface ReviewCreationAttributes extends Optional<ReviewAttributes, "id"> {}
 
-class Review extends Model<ReviewAttributes, ReviewCreationAttributes> implements ReviewAttributes {
+class ReviewDao extends Model<ReviewAttributes, ReviewCreationAttributes> implements ReviewAttributes {
     public id!: number;
     public name!: string;
     public rating!: number;
@@ -23,23 +23,23 @@ class Review extends Model<ReviewAttributes, ReviewCreationAttributes> implement
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getProduct!: HasOneGetAssociationMixin<Product>;
-    public setProduct!: HasOneSetAssociationMixin<Product, number>;
+    public getProduct!: HasOneGetAssociationMixin<ProductDao>;
+    public setProduct!: HasOneSetAssociationMixin<ProductDao, number>;
 
-    public getUser!: HasOneGetAssociationMixin<User>;
-    public setUser!: HasOneSetAssociationMixin<User, number>;
+    public getUser!: HasOneGetAssociationMixin<UserDao>;
+    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public readonly product?: Product;
-    public readonly user?: User;
+    public readonly product?: ProductDao;
+    public readonly user?: UserDao;
 
     public static associations: {
-        product: Association<Review, Product>;
-        user: Association<Review, User>;
+        product: Association<ReviewDao, ProductDao>;
+        user: Association<ReviewDao, UserDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    Review.init(
+    ReviewDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -68,4 +68,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default Review;
+export default ReviewDao;

@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 
-import User from "../../user/infrastructure/user";
-import Product from "../../product/infrastructure/product";
+import UserDao from "../../user/infrastructure/UserDao";
+import ProductDao from "../../product/infrastructure/ProductDao";
 import Controller from "../../shared/Controller";
 
 class CartController implements Controller {
@@ -19,7 +19,7 @@ class CartController implements Controller {
     };
 
     private getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await User.findByPk(1); // TODO: remove hardcoded
+        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
         const cart = await user.cart;
         const cartItems = await cart.getCartItems();
         const products = cartItems.map(async (cartItem) => await cartItem.product);
@@ -30,7 +30,7 @@ class CartController implements Controller {
     private addProductToCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { productId } = req.body;
 
-        const user = await User.findByPk(1); // TODO: remove hardcoded
+        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
         const cart = await user.cart;
         const productsInCart = await cart.getCartItems({ where: { id: productId } });
 
@@ -47,7 +47,7 @@ class CartController implements Controller {
             return;
         }
 
-        const newProduct = await Product.findByPk(productId);
+        const newProduct = await ProductDao.findByPk(productId);
         // FIXME: const updatedCart = await cart.addProduct(newProduct, { through: { quantity: 1 } });
         // const updatedCart = await cart.addCartItems(newProduct);
 
@@ -57,7 +57,7 @@ class CartController implements Controller {
     private deleteProductFromCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { productId } = req.body;
 
-        const user = await User.findByPk(1); // TODO: remove hardcoded
+        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
         const cart = await user.cart;
         const products = await cart.getCartItems({ where: { id: productId } });
 

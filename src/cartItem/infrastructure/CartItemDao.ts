@@ -8,36 +8,36 @@ import {
     Sequelize,
 } from "sequelize";
 
-import Cart from "../../cart/infrastructure/cart";
-import Product from "../../product/infrastructure/product";
+import CartDao from "../../cart/infrastructure/CartDao";
+import ProductDao from "../../product/infrastructure/ProductDao";
 import { CartItemAttributes } from "../domain/CartItem";
 
 interface CartItemCreationAttributes extends Optional<CartItemAttributes, "id"> {}
 
-class CartItem extends Model<CartItemAttributes, CartItemCreationAttributes> implements CartItemAttributes {
+class CartItemDao extends Model<CartItemAttributes, CartItemCreationAttributes> implements CartItemAttributes {
     public id!: number;
     public quantity!: number;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getCart!: HasOneGetAssociationMixin<Cart>;
-    public setCart!: HasOneSetAssociationMixin<Cart, number>;
+    public getCart!: HasOneGetAssociationMixin<CartDao>;
+    public setCart!: HasOneSetAssociationMixin<CartDao, number>;
 
-    public getProduct!: HasOneGetAssociationMixin<Product>;
-    public setProduct!: HasOneSetAssociationMixin<Product, number>;
+    public getProduct!: HasOneGetAssociationMixin<ProductDao>;
+    public setProduct!: HasOneSetAssociationMixin<ProductDao, number>;
 
-    public readonly cart?: Cart;
-    public readonly product?: Product;
+    public readonly cart?: CartDao;
+    public readonly product?: ProductDao;
 
     public static associations: {
-        cart: Association<CartItem, Cart>;
-        product: Association<CartItem, Product>;
+        cart: Association<CartItemDao, CartDao>;
+        product: Association<CartItemDao, ProductDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    CartItem.init(
+    CartItemDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -58,4 +58,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default CartItem;
+export default CartItemDao;

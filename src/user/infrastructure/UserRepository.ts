@@ -1,17 +1,19 @@
-import CartModel from "../../cart/domain/Cart";
-import Cart from "../../cart/infrastructure/cart";
-import UserModel from "../domain/User";
+import ProductDao from "../../product/infrastructure/ProductDao";
+import CartDao from "../../cart/infrastructure/CartDao";
+import Cart from "../../cart/domain/Cart";
+import User from "../domain/User";
 
-import User from "./user";
+import UserDao from "./UserDao";
 
 interface Repository {
-    createUser: (user: UserModel) => Promise<UserModel>;
-    setCartToUser: (user: UserModel, cart: CartModel) => Promise<void>;
+    save: (user: User) => Promise<User>;
+    addCart: (user: User, cart: Cart) => Promise<void>;
+    addProduct: (userId: number, productId: number) => Promise<void>;
 }
 
 class UserRepository implements Repository {
-    public createUser = async (user: UserModel): Promise<UserModel> => {
-        const newUser = await User.create({
+    public save = async (user: User): Promise<User> => {
+        const newUser = await UserDao.create({
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -23,10 +25,15 @@ class UserRepository implements Repository {
         return newUser;
     };
 
-    public setCartToUser = async (user: UserModel, cart: CartModel): Promise<void> => {
-        const foundUser = await User.findByPk(user.id);
-        const newCart = await Cart.create();
+    public addCart = async (user: User, cart: Cart): Promise<void> => {
+        const foundUser = await UserDao.findByPk(user.id);
+        const newCart = await CartDao.findByPk(cart.id);
         await foundUser.setCart(newCart);
+    };
+
+    public addProduct = async (userId: number, productId: number): Promise<void> => {
+        const product = await ProductDao.findByPk(productId);
+        await product.setUser(userId);
     };
 }
 

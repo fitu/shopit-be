@@ -8,36 +8,36 @@ import {
     Sequelize,
 } from "sequelize";
 
-import Order from "../../order/infrastructure/order";
-import Product from "../../product/infrastructure/product";
+import OrderDao from "../../order/infrastructure/OrderDao";
+import ProductDao from "../../product/infrastructure/ProductDao";
 import { OrderItemAttributes } from "../domain/OrderItem";
 
 interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {}
 
-class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
+class OrderItemDao extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
     public id!: number;
     public quantity!: number;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getOrder!: HasOneGetAssociationMixin<Order>;
-    public setOrder!: HasOneSetAssociationMixin<Order, number>;
+    public getOrder!: HasOneGetAssociationMixin<OrderDao>;
+    public setOrder!: HasOneSetAssociationMixin<OrderDao, number>;
 
-    public getProduct!: HasOneGetAssociationMixin<Product>;
-    public setProduct!: HasOneSetAssociationMixin<Product, number>;
+    public getProduct!: HasOneGetAssociationMixin<ProductDao>;
+    public setProduct!: HasOneSetAssociationMixin<ProductDao, number>;
 
-    public readonly order?: Order;
-    public readonly product?: Product;
+    public readonly order?: OrderDao;
+    public readonly product?: ProductDao;
 
     public static associations: {
-        order: Association<OrderItem, Order>;
-        product: Association<OrderItem, Product>;
+        order: Association<OrderItemDao, OrderDao>;
+        product: Association<OrderItemDao, ProductDao>;
     };
 }
 
 const init = (sequelize: Sequelize) => {
-    OrderItem.init(
+    OrderItemDao.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -58,4 +58,4 @@ const init = (sequelize: Sequelize) => {
 };
 
 export { init };
-export default OrderItem;
+export default OrderItemDao;

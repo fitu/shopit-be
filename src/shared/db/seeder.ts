@@ -1,6 +1,7 @@
 import csv from "csv-parser";
 import fs from "fs";
 
+import Cart from "../../cart/domain/Cart";
 import CartRepository from "../../cart/infrastructure/CartRepository";
 import ProductRepository from "../../product/infrastructure/ProductRepository";
 import UserRepository from "../../user/infrastructure/UserRepository";
@@ -21,12 +22,12 @@ const seedProducts = async () => {
 
         await db.clearDB();
 
-        const userRepository = db.getUserRepository();
-        const cartRepository = db.getCartRepository();
-        const productRepository = db.getProductRepository();
+        const userRepository = new UserRepository();
+        const productRepository = new ProductRepository();
+        const cartRepository = new CartRepository();
 
         await createUserWithCart(userRepository, cartRepository);
-        await createUserProducts(productRepository);
+        await createUserProducts(productRepository, userRepository);
     } catch (error) {
         console.error(error);
     } finally {
@@ -42,14 +43,15 @@ const createUserWithCart = async (userRepository: UserRepository, cartRepository
         .on("data", (data) => users.push(data))
         .on("end", async () => {
             users.forEach(async (user) => {
-                const newUser = await userRepository.createUser(user);
-                const newCart = await cartRepository.createCart();
-                await userRepository.setCartToUser(newUser, newCart);
+                const savedUser = await userRepository.save(user);
+                const newCart = new Cart(1, 0, 0, 0);
+                const savedCart = await cartRepository.save(newCart);
+                await userRepository.addCart(savedUser, savedCart);
             });
         });
 };
 
-const createUserProducts = (productRepository: ProductRepository): Promise<void> => {
+const createUserProducts = (productRepository: ProductRepository, userRepository: UserRepository): Promise<void> => {
     console.log("Create products and set them to users");
     const products: Array<Product> = [];
     fs.createReadStream("../../product/infrastructure/products.csv")
@@ -57,8 +59,8 @@ const createUserProducts = (productRepository: ProductRepository): Promise<void>
         .on("data", (data) => products.push(data))
         .on("end", async () => {
             products.forEach(async (product) => {
-                const newProduct = await productRepository.createProduct(product);
-                await productRepository.setUser(newProduct, 1);
+                const newProduct = await productRepository.save(product);
+                await userRepository.addProduct(1, newProduct.id);
             });
         });
     return;
