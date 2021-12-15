@@ -7,7 +7,7 @@ interface Repository {
 }
 
 class ProductRepository implements Repository {
-    public save = async (product: Product): Promise<Product> => {
+    public async save(product: Product): Promise<Product> {
         const newProduct = await ProductDao.create({
             title: product.title,
             description: product.description,
@@ -19,7 +19,13 @@ class ProductRepository implements Repository {
         });
 
         return newProduct;
-    };
+    }
+
+    public async getAllProductsForUser(userId: number): Promise<Array<Product>> {
+        // TODO: add where for userId
+        const allProducts = await ProductDao.findAll();
+        return allProducts;
+    }
 }
 
 export type { Repository };

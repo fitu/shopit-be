@@ -12,7 +12,7 @@ interface Repository {
 }
 
 class UserRepository implements Repository {
-    public save = async (user: User): Promise<User> => {
+    public async save(user: User): Promise<User> {
         const newUser = await UserDao.create({
             firstName: user.firstName,
             lastName: user.lastName,
@@ -23,18 +23,18 @@ class UserRepository implements Repository {
             resetPasswordExpire: new Date(user.resetPasswordExpire),
         });
         return newUser;
-    };
+    }
 
-    public addCart = async (user: User, cart: Cart): Promise<void> => {
+    public async addCart(user: User, cart: Cart): Promise<void> {
         const foundUser = await UserDao.findByPk(user.id);
         const newCart = await CartDao.findByPk(cart.id);
         await foundUser.setCart(newCart);
-    };
+    }
 
-    public addProduct = async (userId: number, productId: number): Promise<void> => {
+    public async addProduct(userId: number, productId: number): Promise<void> {
         const product = await ProductDao.findByPk(productId);
         await product.setUser(userId);
-    };
+    }
 }
 
 export type { Repository };

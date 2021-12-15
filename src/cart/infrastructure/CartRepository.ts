@@ -7,7 +7,7 @@ interface Repository {
 }
 
 class CartRepository implements Repository {
-    public save = async (cart: Cart): Promise<Cart> => {
+    public async save(cart: Cart): Promise<Cart> {
         const newCart = await CartDao.create({
             itemsPrice: cart.itemsPrice,
             taxPrice: cart.taxPrice,
@@ -15,7 +15,7 @@ class CartRepository implements Repository {
         });
 
         return newCart;
-    };
+    }
 }
 
 export type { Repository };

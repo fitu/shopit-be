@@ -12,10 +12,15 @@ class ProductService {
         this.userRepository = userRepository;
     }
 
-    public create(product: Product, userId: number): Product {
-        this.productRepository.save(product);
-        this.userRepository.addProduct(userId, product.id);
-        return product;
+    public async create(product: Product, userId: number): Promise<Product> {
+        const savedProduct = await this.productRepository.save(product);
+        await this.userRepository.addProduct(userId, product.id);
+        return savedProduct;
+    }
+
+    public async getAllProductsForUser(userId: number): Promise<Array<Product>> {
+        const allProducts = await this.productRepository.getAllProductsForUser(userId);
+        return allProducts;
     }
 }
 

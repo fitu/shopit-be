@@ -3,6 +3,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import Controller from "../../shared/Controller";
 import ProductData from "../application/ProductData";
 import AddProductInteractor from "../application/AddProductInteractor";
+import GetAllProductsForUserInteractor from "../application/GetAllProductsForUserInteractor";
 import ProductService from "../domain/ProductService";
 
 import ProductDao from "./ProductDao";
@@ -28,7 +29,13 @@ class ProductController implements Controller {
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const allProducts = await ProductDao.findAll();
+        const userId = 1; // TODO: remove hardcoded
+        const data = { userId };
+
+        const interactor = new GetAllProductsForUserInteractor(data, this.productService);
+        const result = await interactor.execute();
+
+        const allProducts = result.map((product) => ProductViewModel.fromData(product));
 
         res.status(200).json({ success: true, data: allProducts });
     };
@@ -58,6 +65,7 @@ class ProductController implements Controller {
 
         const interactor = new AddProductInteractor(data, this.productService);
         const result = await interactor.execute();
+
         const newProduct = ProductViewModel.fromData(result);
 
         res.status(200).json({ success: true, data: newProduct });

@@ -20,7 +20,7 @@ class AddProductInteractor implements Interactor {
     }
 
     public async execute(): Promise<ProductData> {
-        // Validate
+        // TODO: Validate
 
         const newProduct = new Product(
             1, // TODO: remove hardcoded
@@ -32,7 +32,7 @@ class AddProductInteractor implements Interactor {
             this.data.data.category,
             this.data.data.stock
         );
-        const createdProduct = this.productService.create(newProduct, this.data.userId);
+        const createdProduct = await this.productService.create(newProduct, this.data.userId);
 
         return ProductData.fromModel(createdProduct);
     }
