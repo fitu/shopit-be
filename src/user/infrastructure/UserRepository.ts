@@ -33,7 +33,8 @@ class UserRepository implements Repository {
 
     public async addProduct(userId: number, productId: number): Promise<void> {
         const product = await ProductDao.findByPk(productId);
-        await product.setUser(userId);
+        // FIXME: fix setUser to product
+        // await product.setUser(userId);
     }
 }
 

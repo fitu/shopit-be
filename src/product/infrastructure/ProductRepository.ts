@@ -30,6 +30,11 @@ class ProductRepository implements Repository {
         const product = await ProductDao.findByPk(productId);
         return product;
     }
+
+    public async deleteProductById(productId: number): Promise<void> {
+        const productToDelete = await ProductDao.findByPk(productId);
+        await productToDelete.destroy();
+    }
 }
 
 export type { Repository };

@@ -5,6 +5,7 @@ import ProductData from "../application/ProductData";
 import AddProductInteractor from "../application/AddProductInteractor";
 import GetAllProductsInteractor from "../application/GetAllProductsInteractor";
 import GetProductByIdInteractor from "../application/GetProductByIdInteractor";
+import DeleteProductByIdInteractor from "../application/DeleteProductByIdInteractor";
 import ProductService from "../domain/ProductService";
 
 import ProductDao from "./ProductDao";
@@ -73,8 +74,11 @@ class ProductController implements Controller {
 
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        const productToDelete = await ProductDao.findByPk(id);
-        await productToDelete.destroy();
+        // TODO: validate
+        const data = { productId: +id };
+
+        const interactor = new DeleteProductByIdInteractor(data, this.productService);
+        await interactor.execute();
 
         res.status(200).json({ success: true });
     };
