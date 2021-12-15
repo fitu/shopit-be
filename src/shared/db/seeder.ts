@@ -1,22 +1,32 @@
 import csv from "csv-parser";
 import fs from "fs";
 
+import CartRepository from "../../cart/infrastructure/CartRepository";
+import ProductRepository from "../../product/infrastructure/ProductRepository";
+import UserRepository from "../../user/infrastructure/UserRepository";
 import validateEnv from "../../shared/env/envUtils";
-import Product from "../../product/domain/product";
-import Cart from "../../cart/domain/cart";
-import User from "../../user/domain/user";
+import User from "../../user/domain/User";
+import Product from "../../product/domain/Product";
 
-import { initializeDB } from "./database";
+import Db from "./SqlDb";
 
 const seedProducts = async () => {
     try {
         // Validate env before start
         const env = validateEnv();
-        await initializeDB(env, { force: true });
 
-        await clearDatabase();
-        await createUserWithCart();
-        await createUserProducts();
+        // Initialize the DB
+        const db = new Db(env);
+        await db.init({ force: true });
+
+        await db.clearDB();
+
+        const userRepository = db.getUserRepository();
+        const cartRepository = db.getCartRepository();
+        const productRepository = db.getProductRepository();
+
+        await createUserWithCart(userRepository, cartRepository);
+        await createUserProducts(productRepository);
     } catch (error) {
         console.error(error);
     } finally {
@@ -24,18 +34,7 @@ const seedProducts = async () => {
     }
 };
 
-const clearDatabase = async (): Promise<void> => {
-    console.log("Delete users");
-    User.destroy({ where: {}, truncate: true });
-
-    console.log("Delete carts");
-    Cart.destroy({ where: {}, truncate: true });
-
-    console.log("Delete products");
-    Product.destroy({ where: {}, truncate: true });
-};
-
-const createUserWithCart = async (): Promise<void> => {
+const createUserWithCart = async (userRepository: UserRepository, cartRepository: CartRepository): Promise<void> => {
     console.log("Create users and set carts");
     const users: Array<User> = [];
     fs.createReadStream("../../user/infrastructure/users.csv")
@@ -43,26 +42,14 @@ const createUserWithCart = async (): Promise<void> => {
         .on("data", (data) => users.push(data))
         .on("end", async () => {
             users.forEach(async (user) => {
-                const newUser = await User.create({
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    role: user.role,
-                    password: user.password,
-                    resetPasswordToken: user.resetPasswordToken,
-                    resetPasswordExpire: new Date(user.resetPasswordExpire),
-                });
-                const cart = await Cart.create({
-                    itemsPrice: 0,
-                    taxPrice: 0,
-                    totalPrice: 0,
-                });
-                await newUser.setCart(cart);
+                const newUser = await userRepository.createUser(user);
+                const newCart = await cartRepository.createCart();
+                await userRepository.setCartToUser(newUser, newCart);
             });
         });
 };
 
-const createUserProducts = (): Promise<void> => {
+const createUserProducts = (productRepository: ProductRepository): Promise<void> => {
     console.log("Create products and set them to users");
     const products: Array<Product> = [];
     fs.createReadStream("../../product/infrastructure/products.csv")
@@ -70,16 +57,8 @@ const createUserProducts = (): Promise<void> => {
         .on("data", (data) => products.push(data))
         .on("end", async () => {
             products.forEach(async (product) => {
-                const newProduct = await Product.create({
-                    title: product.title,
-                    description: product.description,
-                    price: product.price,
-                    imageUrl: product.imageUrl,
-                    ratings: product.ratings,
-                    category: product.category,
-                    stock: product.stock,
-                });
-                await newProduct.setUser(1);
+                const newProduct = await productRepository.createProduct(product);
+                await productRepository.setUser(newProduct, 1);
             });
         });
     return;

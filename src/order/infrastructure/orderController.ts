@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
-import Controller from "shared/Controller";
 
-import Order from "../../order/domain/order";
-import User from "../../user/domain/user";
+import Controller from "../../shared/Controller";
+import Order from "./order";
+import User from "../../user/infrastructure/user";
 
 class OrderController implements Controller {
     public path = "/orders";

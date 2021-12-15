@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
-import Controller from "shared/Controller";
 
-import Product from "../../product/domain/product";
-import User from "../../user/domain/user";
+import Controller from "../../shared/Controller";
+import Product from "./product";
+import User from "../../user/infrastructure/user";
 
 class ProductController implements Controller {
     public path = "/products";
