@@ -19,13 +19,19 @@ class ProductService {
     }
 
     public async getAllProducts(): Promise<Array<Product>> {
-        const allProducts = await this.productRepository.getAllProducts();
-        return allProducts;
+        return await this.productRepository.getAllProducts();
     }
 
-    public async getProductById(productId: number): Promise<Product | null> {
-        const product = await this.productRepository.getProductById(productId);
-        return product;
+    public async getProductById(productId: number): Promise<Product> | null {
+        return await this.productRepository.getProductById(productId);
+    }
+
+    public async deleteProductById(productId: number): Promise<void> {
+        await this.productRepository.deleteProductById(productId);
+    }
+
+    public async updateProductById(productId: number, product: Product): Promise<Product> | null {
+        return await this.productRepository.updateProductById(productId, product);
     }
 }
 

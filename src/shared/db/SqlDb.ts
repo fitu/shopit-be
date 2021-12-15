@@ -22,7 +22,7 @@ class SqlDb implements Database {
     }
 
     public init = async (options?: DatabaseOptions): Promise<void> => {
-        const db = this.createDB(this.env);
+        const db = this.createDbConnection();
         this.instance = db;
 
         this.initializeTables();
@@ -32,12 +32,12 @@ class SqlDb implements Database {
         await this.instance.sync({ force: forceSync });
     };
 
-    private createDB = (env: any): Sequelize => {
-        const dbName = env.DB_NAME;
-        const dbUserName = env.DB_USER_NAME;
-        const dbPassword = env.DB_PASSWORD;
-        const dbHost = env.DB_HOST;
-        const dbPort = env.DB_PORT;
+    private createDbConnection = (): Sequelize => {
+        const dbName = this.env.DB_NAME;
+        const dbUserName = this.env.DB_USER_NAME;
+        const dbPassword = this.env.DB_PASSWORD;
+        const dbHost = this.env.DB_HOST;
+        const dbPort = this.env.DB_PORT;
 
         return new Sequelize(dbName, dbUserName, dbPassword, {
             dialect: "postgres",

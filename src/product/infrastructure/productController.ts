@@ -6,6 +6,7 @@ import AddProductInteractor from "../application/AddProductInteractor";
 import GetAllProductsInteractor from "../application/GetAllProductsInteractor";
 import GetProductByIdInteractor from "../application/GetProductByIdInteractor";
 import DeleteProductByIdInteractor from "../application/DeleteProductByIdInteractor";
+import UpdateProductByIdInteractor from "../application/UpdateProductById";
 import ProductService from "../domain/ProductService";
 
 import ProductDao from "./ProductDao";
@@ -87,22 +88,19 @@ class ProductController implements Controller {
         const { id } = req.params;
         const { title, description, price, imageUrl, category, stock } = req.body;
 
-        const updatedProducts = await ProductDao.findOne({ where: { id } });
+        const productData = new ProductData(title, description, price, imageUrl, category, stock);
+        // TODO: validate
+        const data = { productId: +id, productData };
 
-        if (!updatedProducts) {
+        const interactor = new UpdateProductByIdInteractor(data, this.productService);
+        const result = await interactor.execute();
+
+        if (!result) {
             res.status(404).json({ success: false });
             return;
         }
 
-        const updatedProduct = updatedProducts[0];
-
-        updatedProduct.title = title;
-        updatedProduct.description = description;
-        updatedProduct.price = price;
-        updatedProduct.imageUrl = imageUrl;
-        updatedProduct.category = category;
-        updatedProduct.stock = stock;
-        await updatedProduct.save();
+        const updatedProduct = ProductViewModel.fromData(result);
 
         res.status(200).json({ success: true, data: updatedProduct });
     };
