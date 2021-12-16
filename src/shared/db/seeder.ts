@@ -12,6 +12,7 @@ import Product from "../../product/domain/Product";
 import Db from "./SqlDb";
 
 const USERS_CSV_PATH = "./src/user/infrastructure/data/users.csv";
+const CARTS_CSV_PATH = "./src/cart/infrastructure/data/carts.csv";
 const PRODUCTS_CSV_PATH = "./src/product/infrastructure/data/products.csv";
 
 const seedProducts = async () => {
@@ -26,10 +27,10 @@ const seedProducts = async () => {
         await db.clearDB();
 
         const userRepository = new UserRepository();
-        const productRepository = new ProductRepository();
         const cartRepository = new CartRepository();
+        const productRepository = new ProductRepository();
 
-        await createUserWithCart(userRepository, cartRepository);
+        await Promise.all([createUsers(userRepository), createCarts(cartRepository)]);
         // await createUserProducts(productRepository, userRepository);
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
@@ -39,8 +40,8 @@ const seedProducts = async () => {
     }
 };
 
-const createUserWithCart = async (userRepository: UserRepository, cartRepository: CartRepository): Promise<void> => {
-    console.log("Create users and set carts");
+const createUsers = async (userRepository: UserRepository): Promise<void> => {
+    console.log("Create users");
     const users: Array<User> = [];
 
     return new Promise((resolve, reject) => {
@@ -50,16 +51,27 @@ const createUserWithCart = async (userRepository: UserRepository, cartRepository
             .on("end", async () => {
                 await Promise.all(
                     users.map(async (user) => {
-                        console.log(`Creating user: ${user}`);
-                        const savedUser = await userRepository.save(user);
-                        // const newCart = new Cart(1, 0, 0, 0);
-                        // const savedCart = await cartRepository.save(newCart);
-                        // await userRepository.addCart(savedUser, savedCart);
-                        resolve();
+                        await userRepository.save(user);
                     })
                 );
+            });
+    });
+};
 
-                resolve();
+const createCarts = async (cartRepository: CartRepository): Promise<void> => {
+    console.log("Create carts");
+    const carts: Array<Cart> = [];
+
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(CARTS_CSV_PATH)
+            .pipe(csv())
+            .on("data", (data) => carts.push(data))
+            .on("end", async () => {
+                await Promise.all(
+                    carts.map(async (cart) => {
+                        await cartRepository.save(cart);
+                    })
+                );
             });
     });
 };
@@ -67,7 +79,7 @@ const createUserWithCart = async (userRepository: UserRepository, cartRepository
 const createUserProducts = (productRepository: ProductRepository, userRepository: UserRepository): Promise<void> => {
     console.log("Create products and set them to users");
     const products: Array<Product> = [];
-    
+
     return new Promise((resolve, reject) => {
         fs.createReadStream(PRODUCTS_CSV_PATH)
             .pipe(csv())
