@@ -4,10 +4,11 @@
   "description": "Initial commit",
   "main": "app.js",
   "scripts": {
-    "start": "npm run build && NODE_ENV=DEVELOPMENT node dist/server.js",
-    "dev": "NODE_ENV=DEVELOPMENT nodemon --watch '**/*.ts' --exec 'ts-node' ./src/server.ts",
-    "build": "rm -rf ./dist && tsc",
-    "seeder": "npm run build && NODE_ENV=DEVELOPMENT node dist/shared/db/seeder.js",
+    "start": "npm run build && NODE_ENV=DEVELOPMENT && node dist/server.js",
+    "dev": "npm run build && NODE_ENV=DEVELOPMENT nodemon --watch '**/*.ts' --exec 'ts-node' ./src/server.ts",
+    "clean": "rm -rf ./dist",
+    "build": "tsc",
+    "seeder": "npm run clean && npm run build && NODE_ENV=DEVELOPMENT && node dist/shared/db/seeder.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

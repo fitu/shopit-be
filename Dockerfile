@@ -1,4 +1,4 @@
-FROM node:16.3.0
+FROM node:latest
 RUN mkdir -p /usr/src/shopit
 WORKDIR /usr/src/shopit
 COPY package.json /usr/src/shopit/

@@ -10,10 +10,10 @@ app-shell:
 	docker-compose run shopit bash
 
 ordersdb-shell:
-	docker-compose run ordersDB bash
+	docker-compose run noSQLDB bash
 
 usersdb-shell:
-	docker-compose run usersDB bash
+	docker-compose run sqlDB bash
 
 # Utils
 logs:
