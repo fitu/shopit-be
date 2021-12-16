@@ -11,6 +11,9 @@ import Product from "../../product/domain/Product";
 
 import Db from "./SqlDb";
 
+const USERS_CSV_PATH = "../../user/infrastructure/data/users.csv";
+const PRODUCTS_CSV_PATH = "../../product/infrastructure/data/products.csv";
+
 const seedProducts = async () => {
     try {
         // Validate env before start
@@ -41,7 +44,7 @@ const createUserWithCart = async (userRepository: UserRepository, cartRepository
     const users: Array<User> = [];
 
     return new Promise((resolve, reject) => {
-        fs.createReadStream("../../user/infrastructure/users.csv")
+        fs.createReadStream(USERS_CSV_PATH)
             .pipe(csv())
             .on("data", (data) => users.push(data))
             .on("end", async () => {
@@ -64,7 +67,7 @@ const createUserProducts = (productRepository: ProductRepository, userRepository
     console.log("Create products and set them to users");
     const products: Array<Product> = [];
     return new Promise((resolve, reject) => {
-        fs.createReadStream("../../product/infrastructure/products.csv")
+        fs.createReadStream(PRODUCTS_CSV_PATH)
             .pipe(csv())
             .on("data", (data) => products.push(data))
             .on("end", async () => {

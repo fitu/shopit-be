@@ -60,36 +60,42 @@ class SqlDb implements Database {
     };
 
     private initializeRelationships = (): void => {
-        ProductDao.belongsTo(UserDao, { constraints: true, onDelete: "CASCADE" });
-        ProductDao.belongsToMany(CartDao, { through: CartItemDao });
-        ProductDao.hasMany(ReviewDao);
+        AvatarDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
 
-        ReviewDao.belongsTo(UserDao);
-        ReviewDao.belongsTo(ProductDao);
+        CartDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        CartDao.belongsToMany(ProductDao, { through: CartItemDao, targetKey: "id", foreignKey: "cartId" });
 
-        CartDao.belongsTo(UserDao);
-        CartDao.belongsToMany(ProductDao, { through: CartItemDao });
+        OrderDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        OrderDao.belongsToMany(ProductDao, { through: OrderItemDao, targetKey: "id", foreignKey: "orderId" });
+        OrderDao.belongsTo(PaymentInfoDao, { targetKey: "id", foreignKey: "paymentInfoId" });
+        OrderDao.belongsTo(ShippingInfoDao, { targetKey: "id", foreignKey: "shippingInfoId" });
 
-        OrderDao.belongsTo(UserDao);
-        OrderDao.belongsToMany(ProductDao, { through: OrderItemDao });
-        OrderDao.belongsTo(PaymentInfoDao);
-        OrderDao.belongsTo(ShippingInfoDao);
+        PaymentInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        PaymentInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "paymentInfoId" });
 
-        UserDao.hasMany(ProductDao);
-        UserDao.hasOne(CartDao);
-        UserDao.hasMany(OrderDao);
-        UserDao.hasOne(AvatarDao);
-        UserDao.hasMany(ReviewDao);
-        UserDao.hasMany(PaymentInfoDao);
-        UserDao.hasMany(ShippingInfoDao);
+        ProductDao.belongsTo(UserDao, {
+            constraints: true,
+            onDelete: "CASCADE",
+            targetKey: "id",
+            foreignKey: "userId",
+        });
+        ProductDao.belongsToMany(CartDao, { through: CartItemDao, targetKey: "id", foreignKey: "productId" });
+        ProductDao.belongsToMany(OrderDao, { through: OrderItemDao, targetKey: "id", foreignKey: "productId" });
+        ProductDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "productId" });
 
-        AvatarDao.belongsTo(UserDao);
+        ReviewDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        ReviewDao.belongsTo(ProductDao, { targetKey: "id", foreignKey: "productId" });
 
-        PaymentInfoDao.belongsTo(UserDao);
-        PaymentInfoDao.hasMany(OrderDao);
+        ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        ShippingInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "shippingInfoId" });
 
-        ShippingInfoDao.belongsTo(UserDao);
-        ShippingInfoDao.hasMany(OrderDao);
+        UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasOne(CartDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId" });
     };
 
     public clearDB = async (): Promise<void> => {
@@ -102,7 +108,6 @@ class SqlDb implements Database {
         console.log("Delete products");
         ProductDao.destroy({ where: {}, truncate: true });
     };
-
 }
 
 export default SqlDb;
