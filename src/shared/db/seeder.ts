@@ -34,7 +34,7 @@ const seedProducts = async () => {
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
-        console.log("DB fulfiled!");
+        console.log("DB fulfilled!");
         process.exit();
     }
 };
@@ -51,10 +51,11 @@ const createUserWithCart = async (userRepository: UserRepository, cartRepository
                 await Promise.all(
                     users.map(async (user) => {
                         console.log(`Creating user: ${user}`);
-                        const savedUser = await userRepository.save(user);
-                        const newCart = new Cart(1, 0, 0, 0);
-                        const savedCart = await cartRepository.save(newCart);
-                        await userRepository.addCart(savedUser, savedCart);
+                        // const savedUser = await userRepository.save(user);
+                        // const newCart = new Cart(1, 0, 0, 0);
+                        // const savedCart = await cartRepository.save(newCart);
+                        // await userRepository.addCart(savedUser, savedCart);
+                        resolve();
                     })
                 );
 
@@ -66,6 +67,7 @@ const createUserWithCart = async (userRepository: UserRepository, cartRepository
 const createUserProducts = (productRepository: ProductRepository, userRepository: UserRepository): Promise<void> => {
     console.log("Create products and set them to users");
     const products: Array<Product> = [];
+    
     return new Promise((resolve, reject) => {
         fs.createReadStream(PRODUCTS_CSV_PATH)
             .pipe(csv())
@@ -74,8 +76,9 @@ const createUserProducts = (productRepository: ProductRepository, userRepository
                 await Promise.all(
                     products.map(async (product) => {
                         console.log(`Creating product: ${product}`);
-                        const newProduct = await productRepository.save(product);
-                        await userRepository.addProduct(1, newProduct.id);
+                        // const newProduct = await productRepository.save(product);
+                        // await userRepository.addProduct(1, newProduct.id);
+                        resolve();
                     })
                 );
 

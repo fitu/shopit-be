@@ -8,6 +8,7 @@ import OrderDao, { init as initOrder } from "../../order/infrastructure/OrderDao
 import OrderItemDao, { init as initOrderItem } from "../../orderItem/infrastructure/OrderItemDao";
 import AvatarDao, { init as initAvatar } from "../../avatar/infrastructure/AvatarDao";
 import ReviewDao, { init as initReview } from "../../review/infrastructure/ReviewDao";
+import PaymentOrderDao, { init as initPaymentOrder } from "../../paymentOrder/infrastructure/PaymentOrderDao";
 import PaymentInfoDao, { init as initPaymentInfo } from "../../paymentInfo/infrastructure/PaymentInfoDao";
 import ShippingInfoDao, { init as initShippingInfo } from "../../shippingInfo/infrastructure/ShippingInfoDao";
 
@@ -56,6 +57,7 @@ class SqlDb implements Database {
         initAvatar(this.instance);
         initReview(this.instance);
         initPaymentInfo(this.instance);
+        initPaymentOrder(this.instance);
         initShippingInfo(this.instance);
     };
 
@@ -66,33 +68,34 @@ class SqlDb implements Database {
         CartDao.belongsToMany(ProductDao, { through: CartItemDao, targetKey: "id", foreignKey: "cartId" });
 
         OrderDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
-        OrderDao.belongsToMany(ProductDao, { through: OrderItemDao, targetKey: "id", foreignKey: "orderId" });
         OrderDao.belongsTo(PaymentInfoDao, { targetKey: "id", foreignKey: "paymentInfoId" });
         OrderDao.belongsTo(ShippingInfoDao, { targetKey: "id", foreignKey: "shippingInfoId" });
+        OrderDao.belongsToMany(ProductDao, { through: OrderItemDao, targetKey: "id", foreignKey: "orderId" });
+        OrderDao.belongsToMany(PaymentInfoDao, { through: PaymentOrderDao, targetKey: "id", foreignKey: "orderId" });
 
         PaymentInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        PaymentInfoDao.belongsToMany(OrderDao, {
+            through: PaymentOrderDao,
+            targetKey: "id",
+            foreignKey: "paymentInfoId",
+        });
         PaymentInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "paymentInfoId" });
 
-        ProductDao.belongsTo(UserDao, {
-            constraints: true,
-            onDelete: "CASCADE",
-            targetKey: "id",
-            foreignKey: "userId",
-        });
+        ProductDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "productId" });
+        ProductDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
         ProductDao.belongsToMany(CartDao, { through: CartItemDao, targetKey: "id", foreignKey: "productId" });
         ProductDao.belongsToMany(OrderDao, { through: OrderItemDao, targetKey: "id", foreignKey: "productId" });
-        ProductDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "productId" });
 
         ReviewDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
         ReviewDao.belongsTo(ProductDao, { targetKey: "id", foreignKey: "productId" });
 
-        ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
         ShippingInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "shippingInfoId" });
+        ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
 
-        UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasOne(CartDao, { sourceKey: "id", foreignKey: "userId" });
-        UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId" });
