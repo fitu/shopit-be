@@ -11,8 +11,8 @@ import Product from "../../product/domain/Product";
 
 import Db from "./SqlDb";
 
-const USERS_CSV_PATH = "../../user/infrastructure/data/users.csv";
-const PRODUCTS_CSV_PATH = "../../product/infrastructure/data/products.csv";
+const USERS_CSV_PATH = "./src/user/infrastructure/data/users.csv";
+const PRODUCTS_CSV_PATH = "./src/product/infrastructure/data/products.csv";
 
 const seedProducts = async () => {
     try {
@@ -30,7 +30,7 @@ const seedProducts = async () => {
         const cartRepository = new CartRepository();
 
         await createUserWithCart(userRepository, cartRepository);
-        await createUserProducts(productRepository, userRepository);
+        // await createUserProducts(productRepository, userRepository);
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
@@ -51,7 +51,7 @@ const createUserWithCart = async (userRepository: UserRepository, cartRepository
                 await Promise.all(
                     users.map(async (user) => {
                         console.log(`Creating user: ${user}`);
-                        // const savedUser = await userRepository.save(user);
+                        const savedUser = await userRepository.save(user);
                         // const newCart = new Cart(1, 0, 0, 0);
                         // const savedCart = await cartRepository.save(newCart);
                         // await userRepository.addCart(savedUser, savedCart);

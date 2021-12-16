@@ -101,15 +101,16 @@ class SqlDb implements Database {
         UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId" });
     };
 
+    // FIXME: check this
     public clearDB = async (): Promise<void> => {
         console.log("Delete users");
-        UserDao.destroy({ where: {}, truncate: true });
+        await UserDao.destroy({ where: {} });
 
         console.log("Delete carts");
-        CartDao.destroy({ where: {}, truncate: true });
+        await CartDao.destroy({ where: {} });
 
         console.log("Delete products");
-        ProductDao.destroy({ where: {}, truncate: true });
+        await ProductDao.destroy({ where: {} });
     };
 }
 
