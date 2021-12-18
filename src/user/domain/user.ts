@@ -12,6 +12,7 @@ class User {
         public password: string,
         public resetPasswordToken: string | null,
         public resetPasswordExpire: Date | null,
+        // TODO: is this ?
         public cart?: Cart
     ) {}
 }

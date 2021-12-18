@@ -23,14 +23,14 @@ class UserRepository implements Repository {
             resetPasswordExpire: new Date(user.resetPasswordExpire),
         });
 
-        // TODO: add parser
-        return { ...newUser, cart: null };
+        return newUser.toModel();
     }
 
     public async addCart(userId: number, cart: Cart): Promise<void> {
         const foundUser = await UserDao.findByPk(userId);
         const newCart = await CartDao.findByPk(cart.id);
-        // await foundUser.setCart(newCart);
+        // FIXME: fix this setter
+        await foundUser.setCart(newCart);
     }
 
     public async addProduct(userId: number, productId: number): Promise<void> {

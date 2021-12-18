@@ -20,7 +20,7 @@ import AvatarDao from "../../avatar/infrastructure/AvatarDao";
 import ReviewDao from "../../review/infrastructure/ReviewDao";
 import PaymentInfoDao from "../../paymentInfo/infrastructure/PaymentInfoDao";
 import ShippingInfoDao from "../../shippingInfo/infrastructure/ShippingInfoDao";
-import { UserRole } from "../domain/User";
+import User, { UserRole } from "../domain/User";
 
 interface UserAttributes {
     id: number;
@@ -101,6 +101,20 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
         paymentsInfo: Association<UserDao, PaymentInfoDao>;
         shippingsInfo: Association<UserDao, ShippingInfoDao>;
     };
+
+    public toModel(): User {
+        return {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            role: this.role,
+            password: this.password,
+            resetPasswordToken: this.resetPasswordToken,
+            resetPasswordExpire: this.resetPasswordExpire,
+            cart: this.cart?.toModel(),
+        };
+    }
 }
 
 const init = (sequelize: Sequelize) => {

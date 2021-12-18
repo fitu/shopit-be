@@ -2,8 +2,6 @@ import csv from "csv-parser";
 import fs from "fs";
 
 import Avatar from "../../avatar/domain/Avatar";
-import Cart from "../../cart/domain/Cart";
-import CartDao from "../../cart/infrastructure/CartDao";
 import CartCSV from "../../cart/infrastructure/data/CartCSV";
 import CartItem from "../../cartItem/domain/CartItem";
 import Order from "../../order/domain/Order";
@@ -13,8 +11,6 @@ import PaymentOrder from "../../paymentOrder/domain/PaymentOrder";
 import Product from "../../product/domain/Product";
 import Review from "../../review/domain/Review";
 import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
-import User from "../../user/domain/User";
-import UserDao from "../../user/infrastructure/UserDao";
 import UserCSV from "../../user/infrastructure/data/UserCSV";
 import CartRepository from "../../cart/infrastructure/CartRepository";
 import CartService from "../../cart/domain/CartService";
@@ -55,20 +51,17 @@ const seedProducts = async () => {
         const cartService = new CartService(cartRepository);
         const userService = new UserService(userRepository);
 
-        // FIXME: do not run them parallel
-        await Promise.all([
-            createUsers(userService),
-            createCarts(cartService, userService),
-            // createAvatars(),
-            // createCartItems(),
-            // createOrders(),
-            // createOrderItems(),
-            // createPaymentInfos(),
-            // createPaymentOrders(),
-            // createProducts(productRepository, userRepository),
-            // createReviews(),
-            // createShippingInfos(),
-        ]);
+        await createUsers(userService);
+        await createCarts(cartService, userService);
+        // createAvatars(),
+        // createCartItems(),
+        // createOrders(),
+        // createOrderItems(),
+        // createPaymentInfos(),
+        // createPaymentOrders(),
+        // createProducts(productRepository, userRepository),
+        // createReviews(),
+        // createShippingInfos(),
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
@@ -101,9 +94,9 @@ const createCarts = async (cartService: CartService, userService: UserService): 
     await Promise.all(
         cartsCSV.map(async (cartCSV) => {
             const cart = CartCSV.toModel(cartCSV);
-            await cartService.create(cart);
+            const savedCart = await cartService.create(cart);
             const user = await userService.getUserById(cartCSV.userId);
-            await userService.addCart(user, cart);
+            await userService.addCart(user, savedCart);
         })
     );
 };
