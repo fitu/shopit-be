@@ -1,17 +1,6 @@
 type OrderStatus = "processing" | "shipped" | "delivered";
 
-interface OrderAttributes {
-    id: number;
-    itemsPrice: number;
-    taxPrice: number;
-    shippingPrice: number;
-    totalPrice: number;
-    orderStatus: OrderStatus;
-    deliveredAt: Date | null;
-    paidAt: Date | null;
-}
-
-class Order implements OrderAttributes {
+class Order {
     constructor(
         public id: number,
         public itemsPrice: number,
@@ -24,5 +13,5 @@ class Order implements OrderAttributes {
     ) {}
 }
 
-export type { OrderStatus, OrderAttributes };
+export type { OrderStatus };
 export default Order;

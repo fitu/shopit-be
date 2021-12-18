@@ -1,17 +1,6 @@
 type UserRole = "user" | "admin";
 
-interface UserAttributes {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: UserRole;
-    password: string;
-    resetPasswordToken: string | null;
-    resetPasswordExpire: Date | null;
-}
-
-class User implements UserAttributes {
+class User {
     constructor(
         public id: number,
         public firstName: string,
@@ -24,5 +13,5 @@ class User implements UserAttributes {
     ) {}
 }
 
-export type { UserRole, UserAttributes };
+export type { UserRole };
 export default User;

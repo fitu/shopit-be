@@ -9,7 +9,12 @@ import {
 } from "sequelize";
 
 import UserDao from "../../user/infrastructure/UserDao";
-import { AvatarAttributes } from "../domain/Avatar";
+
+interface AvatarAttributes {
+    id: number;
+    publicId: string;
+    url: string;
+}
 
 interface AvatarCreationAttributes extends Optional<AvatarAttributes, "id"> {}
 

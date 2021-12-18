@@ -10,7 +10,13 @@ import {
 
 import ProductDao from "../../product/infrastructure/ProductDao";
 import UserDao from "../../user/infrastructure/UserDao";
-import { ReviewAttributes } from "../domain/Review";
+
+interface ReviewAttributes {
+    id: number;
+    name: string;
+    rating: number;
+    comment: string;
+}
 
 interface ReviewCreationAttributes extends Optional<ReviewAttributes, "id"> {}
 

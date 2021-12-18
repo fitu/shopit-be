@@ -15,7 +15,13 @@ import {
 
 import CartItemDao from "../../cartItem/infrastructure/CartItemDao";
 import UserDao from "../../user/infrastructure/UserDao";
-import { CartAttributes } from "../domain/Cart";
+
+interface CartAttributes {
+    id: number;
+    itemsPrice: number;
+    taxPrice: number;
+    totalPrice: number;
+}
 
 interface CartCreationAttributes extends Optional<CartAttributes, "id"> {}
 

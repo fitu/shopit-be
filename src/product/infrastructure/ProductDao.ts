@@ -13,11 +13,22 @@ import {
     Sequelize,
 } from "sequelize";
 
-import { ProductAttributes, ProductCategory } from "../domain/Product";
 import CartItemDao from "../../cartItem/infrastructure/CartItemDao";
 import OrderItemDao from "../../orderItem/infrastructure/OrderItemDao";
 import ReviewDao from "../../review/infrastructure/ReviewDao";
 import UserDao from "../../user/infrastructure/UserDao";
+import { ProductCategory } from "../domain/Product";
+
+interface ProductAttributes {
+    id: number;
+    title: string;
+    description: string | null;
+    price: number;
+    ratings: number;
+    imageUrl: string;
+    category: ProductCategory;
+    stock: number;
+}
 
 interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
 

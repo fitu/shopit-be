@@ -13,12 +13,23 @@ import {
     Sequelize,
 } from "sequelize";
 
-import { OrderAttributes, OrderStatus } from "../domain/Order";
+import { OrderStatus } from "../domain/Order";
 import OrderItemDao from "../../orderItem/infrastructure/OrderItemDao";
 import PaymentInfoDao from "../../paymentInfo/infrastructure/PaymentInfoDao";
 import ProductDao from "../../product/infrastructure/ProductDao";
 import ShippingInfoDao from "../../shippingInfo/infrastructure/ShippingInfoDao";
 import UserDao from "../../user/infrastructure/UserDao";
+
+interface OrderAttributes {
+    id: number;
+    itemsPrice: number;
+    taxPrice: number;
+    shippingPrice: number;
+    totalPrice: number;
+    orderStatus: OrderStatus;
+    deliveredAt: Date | null;
+    paidAt: Date | null;
+}
 
 interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {}
 

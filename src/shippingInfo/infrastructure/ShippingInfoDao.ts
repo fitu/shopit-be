@@ -15,7 +15,15 @@ import {
 
 import OrderDao from "../../order/infrastructure/OrderDao";
 import UserDao from "../../user/infrastructure/UserDao";
-import { ShippingInfoAttributes } from "../domain/ShippingInfo";
+
+interface ShippingInfoAttributes {
+    id: number;
+    address: string;
+    city: string;
+    phone: string;
+    postalCode: string;
+    country: string;
+}
 
 interface ShippingInfoCreationAttributes extends Optional<ShippingInfoAttributes, "id"> {}
 

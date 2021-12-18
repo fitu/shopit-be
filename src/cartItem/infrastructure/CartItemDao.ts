@@ -10,7 +10,11 @@ import {
 
 import CartDao from "../../cart/infrastructure/CartDao";
 import ProductDao from "../../product/infrastructure/ProductDao";
-import { CartItemAttributes } from "../domain/CartItem";
+
+interface CartItemAttributes {
+    id: number;
+    quantity: number;
+}
 
 interface CartItemCreationAttributes extends Optional<CartItemAttributes, "id"> {}
 

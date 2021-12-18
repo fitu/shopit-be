@@ -10,7 +10,11 @@ import {
 
 import OrderDao from "../../order/infrastructure/OrderDao";
 import PaymentInfoDao from "../../paymentInfo/infrastructure/PaymentInfoDao";
-import { PaymentOrderAttributes } from "../domain/PaymentOrder";
+
+interface PaymentOrderAttributes {
+    id: number;
+    amount: number;
+}
 
 interface OrderItemCreationAttributes extends Optional<PaymentOrderAttributes, "id"> {}
 

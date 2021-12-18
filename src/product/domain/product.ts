@@ -12,18 +12,7 @@ type ProductCategory =
     | "Outdoor"
     | "Home";
 
-interface ProductAttributes {
-    id: number;
-    title: string;
-    description: string | null;
-    price: number;
-    ratings: number;
-    imageUrl: string;
-    category: ProductCategory;
-    stock: number;
-}
-
-class Product implements ProductAttributes {
+class Product {
     constructor(
         public id: number,
         public title: string,
@@ -36,5 +25,5 @@ class Product implements ProductAttributes {
     ) {}
 }
 
-export type { ProductCategory, ProductAttributes };
+export type { ProductCategory };
 export default Product;

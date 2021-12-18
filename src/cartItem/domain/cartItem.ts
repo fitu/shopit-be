@@ -1,11 +1,5 @@
-interface CartItemAttributes {
-    id: number;
-    quantity: number;
-}
-
-class CartItem implements CartItemAttributes {
+class CartItem {
     constructor(public id: number, public quantity: number) {}
 }
 
-export type { CartItemAttributes };
 export default CartItem;

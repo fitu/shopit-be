@@ -1,11 +1,5 @@
-interface OrderItemAttributes {
-    id: number;
-    quantity: number;
-}
-
-class OrderItem implements OrderItemAttributes {
+class OrderItem {
     constructor(public id: number, public quantity: number) {}
 }
 
-export type { OrderItemAttributes };
 export default OrderItem;

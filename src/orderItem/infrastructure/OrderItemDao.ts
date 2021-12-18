@@ -10,7 +10,11 @@ import {
 
 import OrderDao from "../../order/infrastructure/OrderDao";
 import ProductDao from "../../product/infrastructure/ProductDao";
-import { OrderItemAttributes } from "../domain/OrderItem";
+
+interface OrderItemAttributes {
+    id: number;
+    quantity: number;
+}
 
 interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {}
 

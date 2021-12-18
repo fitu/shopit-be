@@ -15,7 +15,12 @@ import {
 
 import OrderDao from "../../order/infrastructure/OrderDao";
 import UserDao from "../../user/infrastructure/UserDao";
-import { PaymentInfoAttributes, PaymentStatus } from "../domain/PaymentInfo";
+import { PaymentStatus } from "../domain/PaymentInfo";
+
+interface PaymentInfoAttributes {
+    id: number;
+    status: PaymentStatus;
+}
 
 interface PaymentInfoCreationAttributes extends Optional<PaymentInfoAttributes, "id"> {}
 

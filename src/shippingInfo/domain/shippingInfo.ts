@@ -1,13 +1,4 @@
-interface ShippingInfoAttributes {
-    id: number;
-    address: string;
-    city: string;
-    phone: string;
-    postalCode: string;
-    country: string;
-}
-
-class ShippingInfo implements ShippingInfoAttributes {
+class ShippingInfo {
     constructor(
         public id: number,
         public address: string,
@@ -18,5 +9,4 @@ class ShippingInfo implements ShippingInfoAttributes {
     ) {}
 }
 
-export type { ShippingInfoAttributes };
 export default ShippingInfo;

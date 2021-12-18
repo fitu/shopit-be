@@ -20,7 +20,18 @@ import AvatarDao from "../../avatar/infrastructure/AvatarDao";
 import ReviewDao from "../../review/infrastructure/ReviewDao";
 import PaymentInfoDao from "../../paymentInfo/infrastructure/PaymentInfoDao";
 import ShippingInfoDao from "../../shippingInfo/infrastructure/ShippingInfoDao";
-import { UserAttributes, UserRole } from "../domain/User";
+import { UserRole } from "../domain/User";
+
+interface UserAttributes {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: UserRole;
+    password: string;
+    resetPasswordToken: string | null;
+    resetPasswordExpire: Date | null;
+}
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
