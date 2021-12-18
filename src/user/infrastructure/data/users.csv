@@ -1,3 +1,3 @@
-firstName,lastName,email,role,password,resetPasswordToken,resetPasswordExpire
-Victorio,Matteucci,victorio.matteucci@shopit.com,admin,computadorar,token123,2022-01-13T03:00:00.000Z
-Fitu,Lp,fitu.lp@gmail.com,user,computadorar,token234,2022-01-13T04:00:00.000Z
+id,firstName,lastName,email,role,password,resetPasswordToken,resetPasswordExpire
+1,Victorio,Matteucci,victorio.matteucci@shopit.com,admin,computadorar,token123,2022-01-13T03:00:00.000Z
+2,Fitu,Lp,fitu.lp@gmail.com,user,computadorar,token234,2022-01-13T04:00:00.000Z

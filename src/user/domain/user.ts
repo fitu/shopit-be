@@ -1,3 +1,5 @@
+import Cart from "cart/domain/Cart";
+
 type UserRole = "user" | "admin";
 
 class User {
@@ -9,7 +11,8 @@ class User {
         public role: UserRole,
         public password: string,
         public resetPasswordToken: string | null,
-        public resetPasswordExpire: Date | null
+        public resetPasswordExpire: Date | null,
+        public cart?: Cart
     ) {}
 }
 

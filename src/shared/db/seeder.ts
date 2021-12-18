@@ -3,6 +3,8 @@ import fs from "fs";
 
 import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
+import CartDao from "../../cart/infrastructure/CartDao";
+import CartCSV from "../../cart/infrastructure/data/CartCSV";
 import CartItem from "../../cartItem/domain/CartItem";
 import Order from "../../order/domain/Order";
 import OrderItem from "../../orderItem/domain/OrderItem";
@@ -12,9 +14,13 @@ import Product from "../../product/domain/Product";
 import Review from "../../review/domain/Review";
 import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
 import User from "../../user/domain/User";
+import UserDao from "../../user/infrastructure/UserDao";
+import UserCSV from "../../user/infrastructure/data/UserCSV";
 import CartRepository from "../../cart/infrastructure/CartRepository";
+import CartService from "../../cart/domain/CartService";
 import ProductRepository from "../../product/infrastructure/ProductRepository";
 import UserRepository from "../../user/infrastructure/UserRepository";
+import UserService from "../../user/domain/UserService";
 import validateEnv from "../../shared/env/envUtils";
 
 import Db from "./SqlDb";
@@ -46,18 +52,22 @@ const seedProducts = async () => {
         const cartRepository = new CartRepository();
         const productRepository = new ProductRepository();
 
+        const cartService = new CartService(cartRepository);
+        const userService = new UserService(userRepository);
+
+        // FIXME: do not run them parallel
         await Promise.all([
-            createAvatars(),
-            createCarts(cartRepository, userRepository),
-            createCartItems(),
-            createOrders(),
-            createOrderItems(),
-            createPaymentInfos(),
-            createPaymentOrders(),
-            createProducts(productRepository, userRepository),
-            createReviews(),
-            createShippingInfos(),
-            createUsers(userRepository),
+            createUsers(userService),
+            createCarts(cartService, userService),
+            // createAvatars(),
+            // createCartItems(),
+            // createOrders(),
+            // createOrderItems(),
+            // createPaymentInfos(),
+            // createPaymentOrders(),
+            // createProducts(productRepository, userRepository),
+            // createReviews(),
+            // createShippingInfos(),
         ]);
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
@@ -71,7 +81,7 @@ const readFromCsv = async <T>(csvPath: string): Promise<Array<T>> => {
     console.log(`Loading file: ${csvPath}`);
     const items: Array<T> = [];
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         fs.createReadStream(csvPath)
             .pipe(csv())
             .on("data", (data) => items.push(data))
@@ -85,13 +95,15 @@ const createAvatars = async (): Promise<void> => {
     const avatars = await readFromCsv<Avatar>(AVATARS_CSV_PATH);
 };
 
-const createCarts = async (cartRepository: CartRepository, userRepository: UserRepository): Promise<void> => {
-    const carts = await readFromCsv<Cart>(CARTS_CSV_PATH);
+const createCarts = async (cartService: CartService, userService: UserService): Promise<void> => {
+    const cartsCSV = await readFromCsv<CartCSV>(CARTS_CSV_PATH);
 
     await Promise.all(
-        carts.map(async (cart) => {
-            await cartRepository.save(cart);
-            await userRepository.addCart(1, cart);
+        cartsCSV.map(async (cartCSV) => {
+            const cart = CartCSV.toModel(cartCSV);
+            await cartService.create(cart);
+            const user = await userService.getUserById(cartCSV.userId);
+            await userService.addCart(user, cart);
         })
     );
 };
@@ -116,23 +128,15 @@ const createPaymentOrders = async (): Promise<void> => {
     const paymentOrders = await readFromCsv<PaymentOrder>(PAYMENT_ORDERS_CSV_PATH);
 };
 
-const createProducts = (productRepository: ProductRepository, userRepository: UserRepository): Promise<void> => {
-    console.log("Create products");
-    const products: Array<Product> = [];
+const createProducts = async (productRepository: ProductRepository, userRepository: UserRepository): Promise<void> => {
+    const products = await readFromCsv<Product>(PRODUCTS_CSV_PATH);
 
-    return new Promise(() => {
-        fs.createReadStream(PRODUCTS_CSV_PATH)
-            .pipe(csv())
-            .on("data", (data) => products.push(data))
-            .on("end", async () => {
-                await Promise.all(
-                    products.map(async (product) => {
-                        // const newProduct = await productRepository.save(product);
-                        // await userRepository.addProduct(1, newProduct.id);
-                    })
-                );
-            });
-    });
+    await Promise.all(
+        products.map(async (product) => {
+            // const newProduct = await productRepository.save(product);
+            // await userRepository.addProduct(1, newProduct.id);
+        })
+    );
 };
 
 const createReviews = async (): Promise<void> => {
@@ -143,12 +147,13 @@ const createShippingInfos = async (): Promise<void> => {
     const shippingInfos = await readFromCsv<ShippingInfo>(SHIPPING_INFOS_CSV_PATH);
 };
 
-const createUsers = async (userRepository: UserRepository): Promise<void> => {
-    const users = await readFromCsv<User>(USERS_CSV_PATH);
+const createUsers = async (userService: UserService): Promise<void> => {
+    const usersCSV = await readFromCsv<UserCSV>(USERS_CSV_PATH);
 
     await Promise.all(
-        users.map(async (user) => {
-            await userRepository.save(user);
+        usersCSV.map(async (userCSV) => {
+            const user = UserCSV.toModel(userCSV);
+            await userService.create(user);
         })
     );
 };

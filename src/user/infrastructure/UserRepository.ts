@@ -23,7 +23,8 @@ class UserRepository implements Repository {
             resetPasswordExpire: new Date(user.resetPasswordExpire),
         });
 
-        return newUser;
+        // TODO: add parser
+        return { ...newUser, cart: null };
     }
 
     public async addCart(userId: number, cart: Cart): Promise<void> {
@@ -36,6 +37,10 @@ class UserRepository implements Repository {
         const product = await ProductDao.findByPk(productId);
         // FIXME: fix setUser to product
         // await product.setUser(userId);
+    }
+
+    public async getUserById(userId: number): Promise<User> {
+        return await UserDao.findByPk(userId);
     }
 }
 

@@ -15,6 +15,7 @@ import {
 
 import CartItemDao from "../../cartItem/infrastructure/CartItemDao";
 import UserDao from "../../user/infrastructure/UserDao";
+import Cart from "../domain/Cart";
 
 interface CartAttributes {
     id: number;
@@ -50,6 +51,15 @@ class CartDao extends Model<CartAttributes, CartCreationAttributes> implements C
         cartItems: Association<CartDao, CartItemDao>;
         user: Association<CartDao, UserDao>;
     };
+
+    public toModel(): Cart {
+        return {
+            id: this.id,
+            itemsPrice: this.itemsPrice,
+            taxPrice: this.taxPrice,
+            totalPrice: this.totalPrice,
+        };
+    }
 }
 
 const init = (sequelize: Sequelize) => {
