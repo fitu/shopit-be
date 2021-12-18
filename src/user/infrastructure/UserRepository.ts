@@ -7,7 +7,7 @@ import UserDao from "./UserDao";
 
 interface Repository {
     save: (user: User) => Promise<User>;
-    addCart: (user: User, cart: Cart) => Promise<void>;
+    addCart: (userId: number, cart: Cart) => Promise<void>;
     addProduct: (userId: number, productId: number) => Promise<void>;
 }
 
@@ -22,13 +22,14 @@ class UserRepository implements Repository {
             resetPasswordToken: user.resetPasswordToken,
             resetPasswordExpire: new Date(user.resetPasswordExpire),
         });
+
         return newUser;
     }
 
-    public async addCart(user: User, cart: Cart): Promise<void> {
-        const foundUser = await UserDao.findByPk(user.id);
+    public async addCart(userId: number, cart: Cart): Promise<void> {
+        const foundUser = await UserDao.findByPk(userId);
         const newCart = await CartDao.findByPk(cart.id);
-        await foundUser.setCart(newCart);
+        // await foundUser.setCart(newCart);
     }
 
     public async addProduct(userId: number, productId: number): Promise<void> {

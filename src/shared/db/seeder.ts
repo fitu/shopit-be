@@ -30,8 +30,11 @@ const seedProducts = async () => {
         const cartRepository = new CartRepository();
         const productRepository = new ProductRepository();
 
-        await Promise.all([createUsers(userRepository), createCarts(cartRepository)]);
-        // await createUserProducts(productRepository, userRepository);
+        await Promise.all([
+            createUsers(userRepository),
+            createCarts(cartRepository, userRepository),
+            createUserProducts(productRepository, userRepository),
+        ]);
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
@@ -44,7 +47,7 @@ const createUsers = async (userRepository: UserRepository): Promise<void> => {
     console.log("Create users");
     const users: Array<User> = [];
 
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
         fs.createReadStream(USERS_CSV_PATH)
             .pipe(csv())
             .on("data", (data) => users.push(data))
@@ -58,11 +61,11 @@ const createUsers = async (userRepository: UserRepository): Promise<void> => {
     });
 };
 
-const createCarts = async (cartRepository: CartRepository): Promise<void> => {
+const createCarts = async (cartRepository: CartRepository, userRepository: UserRepository): Promise<void> => {
     console.log("Create carts");
     const carts: Array<Cart> = [];
 
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
         fs.createReadStream(CARTS_CSV_PATH)
             .pipe(csv())
             .on("data", (data) => carts.push(data))
@@ -70,6 +73,7 @@ const createCarts = async (cartRepository: CartRepository): Promise<void> => {
                 await Promise.all(
                     carts.map(async (cart) => {
                         await cartRepository.save(cart);
+                        await userRepository.addCart(1, cart);
                     })
                 );
             });
@@ -77,24 +81,20 @@ const createCarts = async (cartRepository: CartRepository): Promise<void> => {
 };
 
 const createUserProducts = (productRepository: ProductRepository, userRepository: UserRepository): Promise<void> => {
-    console.log("Create products and set them to users");
+    console.log("Create products");
     const products: Array<Product> = [];
 
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
         fs.createReadStream(PRODUCTS_CSV_PATH)
             .pipe(csv())
             .on("data", (data) => products.push(data))
             .on("end", async () => {
                 await Promise.all(
                     products.map(async (product) => {
-                        console.log(`Creating product: ${product}`);
                         // const newProduct = await productRepository.save(product);
                         // await userRepository.addProduct(1, newProduct.id);
-                        resolve();
                     })
                 );
-
-                resolve();
             });
     });
 };
