@@ -2,7 +2,6 @@ import {
     Model,
     DataTypes,
     Optional,
-    Association,
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
     HasManyGetAssociationsMixin,
@@ -22,7 +21,6 @@ interface CartAttributes {
     itemsPrice: number;
     taxPrice: number;
     totalPrice: number;
-    userId: number;
 }
 
 interface CartCreationAttributes extends Optional<CartAttributes, "id"> {}
@@ -32,27 +30,20 @@ class CartDao extends Model<CartAttributes, CartCreationAttributes> implements C
     public itemsPrice!: number;
     public taxPrice!: number;
     public totalPrice!: number;
-    public userId!: number;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getCartItems!: HasManyGetAssociationsMixin<CartItemDao>;
-    public addCartItems!: HasManyAddAssociationMixin<CartItemDao, number>;
-    public hasCartItems!: HasManyHasAssociationMixin<CartItemDao, number>;
-    public setCartItems!: HasManySetAssociationsMixin<CartItemDao, number>;
-    public countCartItems!: HasManyCountAssociationsMixin;
+    // public readonly cartItems?: Array<CartItemDao>;
+
+    // public getCartItems!: HasManyGetAssociationsMixin<CartItemDao>;
+    // public addCartItems!: HasManyAddAssociationMixin<CartItemDao, number>;
+    // public hasCartItems!: HasManyHasAssociationMixin<CartItemDao, number>;
+    // public setCartItems!: HasManySetAssociationsMixin<CartItemDao, number>;
+    // public countCartItems!: HasManyCountAssociationsMixin;
 
     public getUser!: HasOneGetAssociationMixin<UserDao>;
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
-
-    public readonly cartItems?: Array<CartItemDao>;
-    public readonly user?: UserDao;
-
-    public static associations: {
-        cartItems: Association<CartDao, CartItemDao>;
-        user: Association<CartDao, UserDao>;
-    };
 
     public toModel(): Cart {
         return {
@@ -68,7 +59,7 @@ const init = (sequelize: Sequelize) => {
     CartDao.init(
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 allowNull: false,
                 primaryKey: true,
@@ -88,9 +79,6 @@ const init = (sequelize: Sequelize) => {
                 allowNull: false,
                 defaultValue: 0.0,
             },
-            userId: {
-                type: DataTypes.INTEGER,
-            }
         },
         {
             tableName: "cart",

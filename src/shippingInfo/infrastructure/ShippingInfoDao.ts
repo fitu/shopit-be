@@ -63,7 +63,7 @@ const init = (sequelize: Sequelize) => {
     ShippingInfoDao.init(
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 allowNull: false,
                 primaryKey: true,

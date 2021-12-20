@@ -48,7 +48,7 @@ const init = (sequelize: Sequelize) => {
     ReviewDao.init(
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 allowNull: false,
                 primaryKey: true,

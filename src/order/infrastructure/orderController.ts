@@ -18,31 +18,31 @@ class OrderController implements Controller {
     };
 
     private getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
-        const orders = await user.getOrders({ include: ["products"] });
+        // const user = await UserDao.findByPk(1); // TODO: remove hardcoded
+        // const orders = await user.getOrders({ include: ["products"] });
 
-        res.status(200).json({ success: true, data: orders });
+        // res.status(200).json({ success: true, data: orders });
     };
 
     private createOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
-        const cart = await user.cart;
-        const order = await OrderDao.create();
-        await user.setOrders([order]);
+        // const user = await UserDao.findByPk(1); // TODO: remove hardcoded
+        // const cart = await user.cart;
+        // const order = await OrderDao.create();
+        // await user.setOrders([order]);
 
-        const cartItems = await cart.getCartItems();
-        const productsToSave = cartItems.map(async (cartItem) => {
-            const product = await cartItem.product;
+        // const cartItems = await cart.getCartItems();
+        // const productsToSave = cartItems.map(async (cartItem) => {
+        //     const product = await cartItem.product;
 
-            return {
-                ...product,
-                orderItem: { quantity: cartItem.quantity },
-            };
-        });
+        //     return {
+        //         ...product,
+        //         orderItem: { quantity: cartItem.quantity },
+        //     };
+        // });
         // await order.addProducts(productsToSave);
-        await cart.setCartItems(cartItems);
+        // await cart.setCartItems(cartItems);
 
-        res.status(200).json({ success: true });
+        // res.status(200).json({ success: true });
     };
 }
 

@@ -64,7 +64,7 @@ class SqlDb implements Database {
     private initializeRelationships = (): void => {
         AvatarDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
 
-        CartDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        CartDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
         CartDao.belongsToMany(ProductDao, { through: CartItemDao, targetKey: "id", foreignKey: "cartId" });
 
         OrderDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
@@ -98,6 +98,7 @@ class SqlDb implements Database {
                 name: "userId",
                 allowNull: false,
             },
+            as: "cart",
         });
         UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });

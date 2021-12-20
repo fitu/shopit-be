@@ -1,6 +1,4 @@
-import ProductDao from "../../product/infrastructure/ProductDao";
 import CartDao from "../../cart/infrastructure/CartDao";
-import Cart from "../../cart/domain/Cart";
 import User from "../domain/User";
 
 import UserDao from "./UserDao";
@@ -35,9 +33,14 @@ class UserRepository implements Repository {
             password: user.password,
             resetPasswordToken: user.resetPasswordToken,
             resetPasswordExpire: new Date(user.resetPasswordExpire),
+            cart: {
+                itemsPrice: 0,
+                taxPrice: 0,
+                totalPrice: 0,
+            },
         }));
 
-        const savedUsers = await UserDao.bulkCreate(usersToSave);
+        const savedUsers = await UserDao.bulkCreate(usersToSave, { include: [{ model: CartDao, as: "cart" }] });
 
         return savedUsers.map((savedUser) => savedUser.toModel());
     }

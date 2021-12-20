@@ -12,7 +12,6 @@ class CartRepository implements Repository {
             itemsPrice: cart.itemsPrice,
             taxPrice: cart.taxPrice,
             totalPrice: cart.totalPrice,
-            userId: userId,
         });
 
         return newCart.toModel();

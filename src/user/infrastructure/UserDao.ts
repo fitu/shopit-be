@@ -3,7 +3,6 @@ import {
     Model,
     DataTypes,
     Optional,
-    Association,
     HasManyGetAssociationsMixin,
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
@@ -12,6 +11,7 @@ import {
     HasManySetAssociationsMixin,
     HasManyCountAssociationsMixin,
     Sequelize,
+    HasOneGetAssociationMixin,
 } from "sequelize";
 
 import ProductDao from "../../product/infrastructure/ProductDao";
@@ -49,59 +49,50 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
-    public addProducts!: HasManyAddAssociationMixin<ProductDao, number>;
-    public hasProducts!: HasManyHasAssociationMixin<ProductDao, number>;
-    public setProducts!: HasManySetAssociationsMixin<ProductDao, number>;
-    public countProducts!: HasManyCountAssociationsMixin;
+    public readonly cart?: CartDao;
+    // public readonly products?: Array<ProductDao>;
+    // public readonly orders?: Array<OrderDao>;
+    // public readonly avatar?: AvatarDao;
+    // public readonly reviews?: Array<ReviewDao>;
+    // public readonly paymentsInfo?: Array<PaymentInfoDao>;
+    // public readonly shippingsInfo?: Array<ShippingInfoDao>;
 
-    public getOrders!: HasManyGetAssociationsMixin<OrderDao>;
-    public addOrders!: HasManyAddAssociationMixin<OrderDao, number>;
-    public hasOrders!: HasManyHasAssociationMixin<OrderDao, number>;
-    public setOrders!: HasManySetAssociationsMixin<OrderDao, number>;
-    public countOrders!: HasManyCountAssociationsMixin;
+    // public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
+    // public addProducts!: HasManyAddAssociationMixin<ProductDao, number>;
+    // public hasProducts!: HasManyHasAssociationMixin<ProductDao, number>;
+    // public setProducts!: HasManySetAssociationsMixin<ProductDao, number>;
+    // public countProducts!: HasManyCountAssociationsMixin;
 
-    public getCart!: HasOne<CartDao>;
+    // public getOrders!: HasManyGetAssociationsMixin<OrderDao>;
+    // public addOrders!: HasManyAddAssociationMixin<OrderDao, number>;
+    // public hasOrders!: HasManyHasAssociationMixin<OrderDao, number>;
+    // public setOrders!: HasManySetAssociationsMixin<OrderDao, number>;
+
+    // public countOrders!: HasManyCountAssociationsMixin;
+
+    public getCart!: HasOneGetAssociationMixin<CartDao>;
     public setCart!: HasOneSetAssociationMixin<CartDao, number>;
 
-    public getAvatar!: HasOne<AvatarDao>;
-    public setAvatar!: HasOneSetAssociationMixin<AvatarDao, number>;
+    // public getAvatar!: HasOneGetAssociationMixin<AvatarDao>;
+    // public setAvatar!: HasOneSetAssociationMixin<AvatarDao, number>;
 
-    public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
-    public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
-    public hasReviews!: HasManyHasAssociationMixin<ReviewDao, number>;
-    public setReviews!: HasManySetAssociationsMixin<ReviewDao, number>;
-    public countReviews!: HasManyCountAssociationsMixin;
+    // public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
+    // public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
+    // public hasReviews!: HasManyHasAssociationMixin<ReviewDao, number>;
+    // public setReviews!: HasManySetAssociationsMixin<ReviewDao, number>;
+    // public countReviews!: HasManyCountAssociationsMixin;
 
-    public getPaymentsInfo!: HasManyGetAssociationsMixin<PaymentInfoDao>;
-    public addPaymentsInfo!: HasManyAddAssociationMixin<PaymentInfoDao, number>;
-    public hasPaymentsInfo!: HasManyHasAssociationMixin<PaymentInfoDao, number>;
-    public setPaymentsInfo!: HasManySetAssociationsMixin<PaymentInfoDao, number>;
-    public countPaymentsInfo!: HasManyCountAssociationsMixin;
+    // public getPaymentsInfo!: HasManyGetAssociationsMixin<PaymentInfoDao>;
+    // public addPaymentsInfo!: HasManyAddAssociationMixin<PaymentInfoDao, number>;
+    // public hasPaymentsInfo!: HasManyHasAssociationMixin<PaymentInfoDao, number>;
+    // public setPaymentsInfo!: HasManySetAssociationsMixin<PaymentInfoDao, number>;
+    // public countPaymentsInfo!: HasManyCountAssociationsMixin;
 
-    public getShippingsInfo!: HasManyGetAssociationsMixin<ShippingInfoDao>;
-    public addShippingsInfo!: HasManyAddAssociationMixin<ShippingInfoDao, number>;
-    public hasShippingsInfo!: HasManyHasAssociationMixin<ShippingInfoDao, number>;
-    public setShippingsInfo!: HasManySetAssociationsMixin<ShippingInfoDao, number>;
-    public countShippingsInfo!: HasManyCountAssociationsMixin;
-
-    public readonly products?: Array<ProductDao>;
-    public readonly orders?: Array<OrderDao>;
-    public readonly cart?: CartDao;
-    public readonly avatar?: AvatarDao;
-    public readonly reviews?: Array<ReviewDao>;
-    public readonly paymentsInfo?: Array<PaymentInfoDao>;
-    public readonly shippingsInfo?: Array<ShippingInfoDao>;
-
-    public static associations: {
-        products: Association<UserDao, ProductDao>;
-        orders: Association<UserDao, OrderDao>;
-        cart: Association<UserDao, CartDao>;
-        avatar: Association<UserDao, AvatarDao>;
-        review: Association<UserDao, ReviewDao>;
-        paymentsInfo: Association<UserDao, PaymentInfoDao>;
-        shippingsInfo: Association<UserDao, ShippingInfoDao>;
-    };
+    // public getShippingsInfo!: HasManyGetAssociationsMixin<ShippingInfoDao>;
+    // public addShippingsInfo!: HasManyAddAssociationMixin<ShippingInfoDao, number>;
+    // public hasShippingsInfo!: HasManyHasAssociationMixin<ShippingInfoDao, number>;
+    // public setShippingsInfo!: HasManySetAssociationsMixin<ShippingInfoDao, number>;
+    // public countShippingsInfo!: HasManyCountAssociationsMixin;
 
     public toModel(): User {
         return {
@@ -122,7 +113,7 @@ const init = (sequelize: Sequelize) => {
     UserDao.init(
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.INTEGER.UNSIGNED,
                 autoIncrement: true,
                 allowNull: false,
                 primaryKey: true,
