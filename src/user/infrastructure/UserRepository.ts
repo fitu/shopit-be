@@ -8,7 +8,6 @@ import UserDao from "./UserDao";
 interface Repository {
     save: (user: User) => Promise<User>;
     saveBulk: (users: Array<User>) => Promise<Array<User>>;
-    addCart: (userId: number, cart: Cart) => Promise<void>;
     addProduct: (userId: number, productId: number) => Promise<void>;
 }
 
@@ -41,13 +40,6 @@ class UserRepository implements Repository {
         const savedUsers = await UserDao.bulkCreate(usersToSave);
 
         return savedUsers.map((savedUser) => savedUser.toModel());
-    }
-
-    public async addCart(userId: number, cart: Cart): Promise<void> {
-        const foundUser = await UserDao.findByPk(userId);
-        const newCart = await CartDao.findByPk(cart.id);
-        // FIXME: fix this setter
-        await foundUser.setCart(newCart);
     }
 
     public async addProduct(userId: number, productId: number): Promise<void> {

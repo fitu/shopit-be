@@ -92,7 +92,13 @@ class SqlDb implements Database {
         ShippingInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "shippingInfoId" });
         ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
 
-        UserDao.hasOne(CartDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasOne(CartDao, {
+            sourceKey: "id",
+            foreignKey: {
+                name: "userId",
+                allowNull: false,
+            },
+        });
         UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });

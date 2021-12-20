@@ -22,6 +22,7 @@ interface CartAttributes {
     itemsPrice: number;
     taxPrice: number;
     totalPrice: number;
+    userId: number;
 }
 
 interface CartCreationAttributes extends Optional<CartAttributes, "id"> {}
@@ -31,6 +32,7 @@ class CartDao extends Model<CartAttributes, CartCreationAttributes> implements C
     public itemsPrice!: number;
     public taxPrice!: number;
     public totalPrice!: number;
+    public userId!: number;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -86,6 +88,9 @@ const init = (sequelize: Sequelize) => {
                 allowNull: false,
                 defaultValue: 0.0,
             },
+            userId: {
+                type: DataTypes.INTEGER,
+            }
         },
         {
             tableName: "cart",

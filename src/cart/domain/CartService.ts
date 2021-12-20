@@ -9,8 +9,8 @@ class CartService {
         this.cartRepository = cartRepository;
     }
 
-    public async create(cart: Cart): Promise<Cart> {
-        return await this.cartRepository.save(cart);
+    public async create(cart: Cart, userId: number): Promise<Cart> {
+        return await this.cartRepository.save(cart, userId);
     }
 }
 

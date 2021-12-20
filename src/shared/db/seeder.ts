@@ -96,9 +96,7 @@ const createCarts = async (cartService: CartService, userService: UserService): 
     await Promise.all(
         cartsCSV.map(async (cartCSV) => {
             const cart = CartCSV.toModel(cartCSV);
-            const savedCart = await cartService.create(cart);
-            const user = await userService.getUserById(cartCSV.userId);
-            await userService.addCart(user, savedCart);
+            await cartService.create(cart, cartCSV.userId);
         })
     );
 };

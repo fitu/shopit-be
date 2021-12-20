@@ -1,4 +1,3 @@
-import Cart from "../../cart/domain/Cart";
 import UserRepository from "../infrastructure/UserRepository";
 
 import User from "./User";
@@ -16,10 +15,6 @@ class UserService {
 
     public async createBulk(users: Array<User>): Promise<Array<User>> {
         return await this.userRepository.saveBulk(users);
-    }
-
-    public async addCart(user: User, cart: Cart): Promise<User> {
-        return await this.userRepository.save(user);
     }
 
     public async getUserById(userId: number): Promise<User> {
