@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import {
     Model,
     DataTypes,
@@ -159,6 +160,10 @@ const init = (sequelize: Sequelize) => {
                 allowNull: false,
                 validate: {
                     min: 8,
+                },
+                set(value: string) {
+                    const hash = crypto.createHash("md5").update(value).digest("hex");
+                    this.setDataValue("password", hash);
                 },
             },
             resetPasswordToken: {

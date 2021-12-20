@@ -43,13 +43,14 @@ class ProductRepository implements Repository {
             return null;
         }
 
-        updatedProduct.title = product.title;
-        updatedProduct.description = product.description;
-        updatedProduct.price = product.price;
-        updatedProduct.imageUrl = product.imageUrl;
-        updatedProduct.category = product.category;
-        updatedProduct.stock = product.stock;
-        await updatedProduct.save();
+        updatedProduct.update({
+            title: product.title,
+            description: product.description,
+            price: product.price,
+            imageUrl: product.imageUrl,
+            category: product.category,
+            stock: product.stock,
+        });
 
         return updatedProduct;
     }

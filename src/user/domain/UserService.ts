@@ -14,6 +14,10 @@ class UserService {
         return await this.userRepository.save(user);
     }
 
+    public async createBulk(users: Array<User>): Promise<Array<User>> {
+        return await this.userRepository.saveBulk(users);
+    }
+
     public async addCart(user: User, cart: Cart): Promise<User> {
         return await this.userRepository.save(user);
     }

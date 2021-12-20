@@ -84,8 +84,10 @@ const readFromCsv = async <T>(csvPath: string): Promise<Array<T>> => {
     });
 };
 
-const createAvatars = async (): Promise<void> => {
-    const avatars = await readFromCsv<Avatar>(AVATARS_CSV_PATH);
+const createUsers = async (userService: UserService): Promise<void> => {
+    const usersCSV = await readFromCsv<UserCSV>(USERS_CSV_PATH);
+    const users = usersCSV.map((userCSV) => UserCSV.toModel(userCSV));
+    await userService.createBulk(users);
 };
 
 const createCarts = async (cartService: CartService, userService: UserService): Promise<void> => {
@@ -99,6 +101,10 @@ const createCarts = async (cartService: CartService, userService: UserService): 
             await userService.addCart(user, savedCart);
         })
     );
+};
+
+const createAvatars = async (): Promise<void> => {
+    const avatars = await readFromCsv<Avatar>(AVATARS_CSV_PATH);
 };
 
 const createCartItems = async (): Promise<void> => {
@@ -123,13 +129,6 @@ const createPaymentOrders = async (): Promise<void> => {
 
 const createProducts = async (productRepository: ProductRepository, userRepository: UserRepository): Promise<void> => {
     const products = await readFromCsv<Product>(PRODUCTS_CSV_PATH);
-
-    await Promise.all(
-        products.map(async (product) => {
-            // const newProduct = await productRepository.save(product);
-            // await userRepository.addProduct(1, newProduct.id);
-        })
-    );
 };
 
 const createReviews = async (): Promise<void> => {
@@ -138,17 +137,6 @@ const createReviews = async (): Promise<void> => {
 
 const createShippingInfos = async (): Promise<void> => {
     const shippingInfos = await readFromCsv<ShippingInfo>(SHIPPING_INFOS_CSV_PATH);
-};
-
-const createUsers = async (userService: UserService): Promise<void> => {
-    const usersCSV = await readFromCsv<UserCSV>(USERS_CSV_PATH);
-
-    await Promise.all(
-        usersCSV.map(async (userCSV) => {
-            const user = UserCSV.toModel(userCSV);
-            await userService.create(user);
-        })
-    );
 };
 
 seedProducts();
