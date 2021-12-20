@@ -1,5 +1,6 @@
 # Dependecies
 node_modules
+dist
 
 # Secrets
 .env

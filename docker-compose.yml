@@ -12,6 +12,8 @@ services:
         depends_on:
             - noSQLDB
             - sqlDB
+        volumes:
+            - .:/usr/src/shopit
     noSQLDB:
         container_name: noSQLDB
         image: mongo:latest
