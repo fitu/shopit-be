@@ -100,7 +100,7 @@ class SqlDb implements Database {
             },
             as: "cart",
         });
-        UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId", as: "avatar", });
+        UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId", as: "avatar" });
         UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId" });
@@ -116,8 +116,20 @@ class SqlDb implements Database {
         console.log("Delete carts");
         await CartDao.destroy({ where: {} });
 
+        console.log("Delete avatars");
+        await AvatarDao.destroy({ where: {} });
+
+        console.log("Delete payment infos");
+        await PaymentInfoDao.destroy({ where: {} });
+
+        console.log("Delete shipping infos");
+        await ShippingInfoDao.destroy({ where: {} });
+
         console.log("Delete products");
         await ProductDao.destroy({ where: {} });
+
+        console.log("Delete reviews");
+        await ReviewDao.destroy({ where: {} });
     };
 }
 

@@ -8,6 +8,7 @@ interface Repository {
     save: (user: User) => Promise<User>;
     saveBulk: (users: Array<User>) => Promise<Array<User>>;
     addProduct: (userId: number, productId: number) => Promise<void>;
+    getUserById: (userId: number) => Promise<User>;
 }
 
 class UserRepository implements Repository {
