@@ -1,3 +1,4 @@
+import AvatarDao from "../../avatar/infrastructure/AvatarDao";
 import CartDao from "../../cart/infrastructure/CartDao";
 import User from "../domain/User";
 
@@ -25,22 +26,41 @@ class UserRepository implements Repository {
     }
 
     public async saveBulk(users: Array<User>): Promise<Array<User>> {
-        const usersToSave = users.map((user) => ({
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            role: user.role,
-            password: user.password,
-            resetPasswordToken: user.resetPasswordToken,
-            resetPasswordExpire: new Date(user.resetPasswordExpire),
-            cart: {
-                itemsPrice: 0,
-                taxPrice: 0,
-                totalPrice: 0,
-            },
-        }));
+        const usersToSave = users.map((user) => {
+            const cart = {
+                id: user.cart.id,
+                itemsPrice: user.cart.itemsPrice,
+                taxPrice: user.cart.taxPrice,
+                totalPrice: user.cart.totalPrice,
+            };
 
-        const savedUsers = await UserDao.bulkCreate(usersToSave, { include: [{ model: CartDao, as: "cart" }] });
+            const avatar = user.avatar
+                ? {
+                      id: user.avatar.id,
+                      publicId: user.avatar.publicId,
+                      url: user.avatar.url,
+                  }
+                : null;
+
+            return {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                role: user.role,
+                password: user.password,
+                resetPasswordToken: user.resetPasswordToken,
+                resetPasswordExpire: new Date(user.resetPasswordExpire),
+                cart,
+                ...(avatar && { avatar }),
+            };
+        });
+
+        const savedUsers = await UserDao.bulkCreate(usersToSave, {
+            include: [
+                { model: CartDao, as: "cart" },
+                { model: AvatarDao, as: "avatar" },
+            ],
+        });
 
         return savedUsers.map((savedUser) => savedUser.toModel());
     }

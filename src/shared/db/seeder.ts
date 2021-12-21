@@ -1,7 +1,6 @@
 import csv from "csv-parser";
 import fs from "fs";
 
-import Avatar from "../../avatar/domain/Avatar";
 import CartItem from "../../cartItem/domain/CartItem";
 import Order from "../../order/domain/Order";
 import OrderItem from "../../orderItem/domain/OrderItem";
@@ -20,8 +19,6 @@ import validateEnv from "../../shared/env/envUtils";
 
 import Db from "./SqlDb";
 
-const AVATARS_CSV_PATH = "./src/avatar/infrastructure/data/avatars.csv";
-const CARTS_CSV_PATH = "./src/cart/infrastructure/data/carts.csv";
 const CART_ITEMS_CSV_PATH = "./src/cartItem/infrastructure/data/cartItems.csv";
 const ORDERS_CSV_PATH = "./src/order/infrastructure/data/orders.csv";
 const ORDER_ITEMS_CSV_PATH = "./src/orderItem/infrastructure/data/orderItems.csv";
@@ -50,8 +47,7 @@ const seedProducts = async () => {
         const cartService = new CartService(cartRepository);
         const userService = new UserService(userRepository);
 
-        await createUsersWithCarts(userService);
-        // createAvatars(),
+        await createUsers(userService);
         // createCartItems(),
         // createOrders(),
         // createOrderItems(),
@@ -82,14 +78,10 @@ const readFromCsv = async <T>(csvPath: string): Promise<Array<T>> => {
     });
 };
 
-const createUsersWithCarts = async (userService: UserService): Promise<void> => {
+const createUsers = async (userService: UserService): Promise<void> => {
     const usersCSV = await readFromCsv<UserCSV>(USERS_CSV_PATH);
     const users = usersCSV.map((userCSV) => UserCSV.toModel(userCSV));
     await userService.createBulk(users);
-};
-
-const createAvatars = async (): Promise<void> => {
-    const avatars = await readFromCsv<Avatar>(AVATARS_CSV_PATH);
 };
 
 const createCartItems = async (): Promise<void> => {

@@ -1,13 +1,6 @@
-import {
-    Model,
-    DataTypes,
-    Optional,
-    Association,
-    HasOneGetAssociationMixin,
-    HasOneSetAssociationMixin,
-    Sequelize,
-} from "sequelize";
+import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssociationMixin, Sequelize } from "sequelize";
 
+import Avatar from "../domain/Avatar";
 import UserDao from "../../user/infrastructure/UserDao";
 
 interface AvatarAttributes {
@@ -29,11 +22,13 @@ class AvatarDao extends Model<AvatarAttributes, AvatarCreationAttributes> implem
     public getUser!: HasOneGetAssociationMixin<UserDao>;
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public readonly user?: UserDao;
-
-    public static associations: {
-        user: Association<AvatarDao, UserDao>;
-    };
+    public toModel(): Avatar {
+        return {
+            id: this.id,
+            publicId: this.publicId,
+            url: this.url,
+        };
+    }
 }
 
 const init = (sequelize: Sequelize) => {

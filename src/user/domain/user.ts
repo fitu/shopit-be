@@ -1,4 +1,5 @@
-import Cart from "cart/domain/Cart";
+import Avatar from "../../avatar/domain/Avatar";
+import Cart from "../../cart/domain/Cart";
 
 type UserRole = "user" | "admin";
 
@@ -12,8 +13,8 @@ class User {
         public password: string,
         public resetPasswordToken: string | null,
         public resetPasswordExpire: Date | null,
-        // TODO: is this ?
-        public cart?: Cart
+        public cart?: Cart,
+        public avatar?: Avatar
     ) {}
 }
 

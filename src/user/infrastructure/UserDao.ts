@@ -50,9 +50,9 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public readonly updatedAt!: Date;
 
     public readonly cart?: CartDao;
+    public readonly avatar?: AvatarDao;
     // public readonly products?: Array<ProductDao>;
     // public readonly orders?: Array<OrderDao>;
-    // public readonly avatar?: AvatarDao;
     // public readonly reviews?: Array<ReviewDao>;
     // public readonly paymentsInfo?: Array<PaymentInfoDao>;
     // public readonly shippingsInfo?: Array<ShippingInfoDao>;
@@ -73,8 +73,8 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public getCart!: HasOneGetAssociationMixin<CartDao>;
     public setCart!: HasOneSetAssociationMixin<CartDao, number>;
 
-    // public getAvatar!: HasOneGetAssociationMixin<AvatarDao>;
-    // public setAvatar!: HasOneSetAssociationMixin<AvatarDao, number>;
+    public getAvatar!: HasOneGetAssociationMixin<AvatarDao>;
+    public setAvatar!: HasOneSetAssociationMixin<AvatarDao, number>;
 
     // public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
     // public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
@@ -105,6 +105,7 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
             resetPasswordToken: this.resetPasswordToken,
             resetPasswordExpire: this.resetPasswordExpire,
             cart: this.cart?.toModel(),
+            avatar: this.avatar?.toModel(),
         };
     }
 }
