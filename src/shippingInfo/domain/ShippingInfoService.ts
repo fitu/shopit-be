@@ -13,8 +13,8 @@ class ShippingInfoService {
         return await this.shippingInfoRepository.save(shippingInfo);
     }
 
-    public async createBulk(shippingInfos: Array<ShippingInfo>): Promise<Array<ShippingInfo>> {
-        return await this.shippingInfoRepository.saveBulk(shippingInfos);
+    public async createBulk(shippingsInfo: Array<ShippingInfo>): Promise<Array<ShippingInfo>> {
+        return await this.shippingInfoRepository.saveBulk(shippingsInfo);
     }
 }
 

@@ -2,7 +2,6 @@ import {
     Model,
     DataTypes,
     Optional,
-    Association,
     HasOneSetAssociationMixin,
     HasOneGetAssociationMixin,
     HasManyGetAssociationsMixin,
@@ -15,7 +14,7 @@ import {
 
 import OrderDao from "../../order/infrastructure/OrderDao";
 import UserDao from "../../user/infrastructure/UserDao";
-import { PaymentStatus } from "../domain/PaymentInfo";
+import PaymentInfo, { PaymentStatus } from "../domain/PaymentInfo";
 
 interface PaymentInfoAttributes {
     id: number;
@@ -34,22 +33,25 @@ class PaymentInfoDao
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
+    public readonly user?: UserDao;
+    public readonly orders?: Array<OrderDao>;
+
     public getUser!: HasOneGetAssociationMixin<UserDao>;
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
+    // TODO: check this
     public getOrders!: HasManyGetAssociationsMixin<OrderDao>;
     public addOrders!: HasManyAddAssociationMixin<OrderDao, number>;
     public hasOrders!: HasManyHasAssociationMixin<OrderDao, number>;
     public setOrders!: HasManySetAssociationsMixin<OrderDao, number>;
     public countOrders!: HasManyCountAssociationsMixin;
 
-    public readonly user?: UserDao;
-    public readonly orders?: Array<OrderDao>;
-
-    public static associations: {
-        user: Association<PaymentInfoDao, UserDao>;
-        orders: Association<UserDao, OrderDao>;
-    };
+    public toModel(): PaymentInfo {
+        return {
+            id: this.id,
+            status: this.status,
+        };
+    }
 }
 
 const init = (sequelize: Sequelize) => {
@@ -65,6 +67,7 @@ const init = (sequelize: Sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
+                    // TODO: get from model
                     isIn: [["not-paid", "paid"]],
                 },
             },

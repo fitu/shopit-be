@@ -51,10 +51,10 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
 
     public readonly cart?: CartDao;
     public readonly avatar?: AvatarDao;
+    public readonly paymentsInfo?: Array<PaymentInfoDao>;
     // public readonly products?: Array<ProductDao>;
     // public readonly orders?: Array<OrderDao>;
     // public readonly reviews?: Array<ReviewDao>;
-    // public readonly paymentsInfo?: Array<PaymentInfoDao>;
     // public readonly shippingsInfo?: Array<ShippingInfoDao>;
 
     // public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
@@ -75,6 +75,12 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
 
     public getAvatar!: HasOneGetAssociationMixin<AvatarDao>;
     public setAvatar!: HasOneSetAssociationMixin<AvatarDao, number>;
+    
+    public getPaymentsInfo!: HasManyGetAssociationsMixin<PaymentInfoDao>;
+    public addPaymentsInfo!: HasManyAddAssociationMixin<PaymentInfoDao, number>;
+    public hasPaymentsInfo!: HasManyHasAssociationMixin<PaymentInfoDao, number>;
+    public setPaymentsInfo!: HasManySetAssociationsMixin<PaymentInfoDao, number>;
+    public countPaymentsInfo!: HasManyCountAssociationsMixin;
 
     // public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
     // public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
@@ -82,11 +88,6 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     // public setReviews!: HasManySetAssociationsMixin<ReviewDao, number>;
     // public countReviews!: HasManyCountAssociationsMixin;
 
-    // public getPaymentsInfo!: HasManyGetAssociationsMixin<PaymentInfoDao>;
-    // public addPaymentsInfo!: HasManyAddAssociationMixin<PaymentInfoDao, number>;
-    // public hasPaymentsInfo!: HasManyHasAssociationMixin<PaymentInfoDao, number>;
-    // public setPaymentsInfo!: HasManySetAssociationsMixin<PaymentInfoDao, number>;
-    // public countPaymentsInfo!: HasManyCountAssociationsMixin;
 
     // public getShippingsInfo!: HasManyGetAssociationsMixin<ShippingInfoDao>;
     // public addShippingsInfo!: HasManyAddAssociationMixin<ShippingInfoDao, number>;
@@ -144,6 +145,7 @@ const init = (sequelize: Sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
+                    // TODO: get from model
                     isIn: [["user", "admin"]],
                 },
             },

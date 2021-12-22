@@ -112,6 +112,7 @@ const init = (sequelize: Sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
+                    // TODO: get from model
                     isIn: [["processing", "shipped", "delivered"]],
                 },
             },

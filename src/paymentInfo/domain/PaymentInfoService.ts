@@ -9,12 +9,12 @@ class PaymentInfoService {
         this.paymentInfoRepository = paymentInfoRepository;
     }
 
-    public async create(paymentInfo: PaymentInfo): Promise<PaymentInfo> {
-        return await this.paymentInfoRepository.save(paymentInfo);
+    public async create(paymentInfo: PaymentInfo, userId: number): Promise<PaymentInfo> {
+        return await this.paymentInfoRepository.save(paymentInfo, userId);
     }
 
-    public async createBulk(paymentInfos: Array<PaymentInfo>): Promise<Array<PaymentInfo>> {
-        return await this.paymentInfoRepository.saveBulk(paymentInfos);
+    public async createBulk(paymentsInfo: Array<PaymentInfo>, userIds: Array<number>): Promise<Array<PaymentInfo>> {
+        return await this.paymentInfoRepository.saveBulk(paymentsInfo, userIds);
     }
 }
 

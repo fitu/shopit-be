@@ -2,7 +2,7 @@ import ShippingInfo from "../domain/ShippingInfo";
 
 interface Repository {
     save: (shippingInfo: ShippingInfo) => Promise<ShippingInfo>;
-    saveBulk: (shippingInfos: Array<ShippingInfo>) => Promise<Array<ShippingInfo>>;
+    saveBulk: (shippingsInfo: Array<ShippingInfo>) => Promise<Array<ShippingInfo>>;
 }
 
 class ShippingInfoRepository implements Repository {
@@ -10,7 +10,7 @@ class ShippingInfoRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async saveBulk(shippingInfos: Array<ShippingInfo>): Promise<Array<ShippingInfo>> {
+    public async saveBulk(shippingsInfo: Array<ShippingInfo>): Promise<Array<ShippingInfo>> {
         return new Promise(() => {});
     }
 }

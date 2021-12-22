@@ -19,11 +19,12 @@ import ReviewService from "../../review/domain/ReviewService";
 import validateEnv from "../../shared/env/envUtils";
 
 import Db from "./SqlDb";
+import PaymentInfoCSV from "paymentInfo/infrastructure/data/PaymentInfoCSV";
 
-const PAYMENT_INFOS_CSV_PATH = "./src/paymentInfo/infrastructure/data/paymentInfos.csv";
+const PAYMENTS_INFO_CSV_PATH = "./src/paymentInfo/infrastructure/data/paymentsInfo.csv";
 const PRODUCTS_CSV_PATH = "./src/product/infrastructure/data/products.csv";
 const REVIEWS_CSV_PATH = "./src/review/infrastructure/data/reviews.csv";
-const SHIPPING_INFOS_CSV_PATH = "./src/shippingInfo/infrastructure/data/shippingInfos.csv";
+const SHIPPINGS_INFO_CSV_PATH = "./src/shippingInfo/infrastructure/data/shippingsInfo.csv";
 const USERS_CSV_PATH = "./src/user/infrastructure/data/users.csv";
 
 const seedProducts = async () => {
@@ -50,8 +51,8 @@ const seedProducts = async () => {
         const reviewService = new ReviewService(reviewRepository);
 
         await createUsers(userService);
-        await createPaymentInfos(paymentInfoService);
-        await createShippingInfos(shippingInfoService);
+        await createPaymentsInfo(paymentInfoService);
+        await createShippingsInfo(shippingInfoService);
         await createProducts(productService);
         await createReviews(reviewService);
     } catch (error) {
@@ -82,12 +83,15 @@ const createUsers = async (userService: UserService): Promise<void> => {
     await userService.createBulk(users);
 };
 
-const createPaymentInfos = async (paymentInfoService: PaymentInfoService): Promise<void> => {
-    const paymentInfos = await readFromCsv<PaymentInfo>(PAYMENT_INFOS_CSV_PATH);
+const createPaymentsInfo = async (paymentInfoService: PaymentInfoService): Promise<void> => {
+    const paymentsInfoCSV = await readFromCsv<PaymentInfoCSV>(PAYMENTS_INFO_CSV_PATH);
+    const paymentsInfo = paymentsInfoCSV.map((paymentInfoCSV) => PaymentInfoCSV.toModel(paymentInfoCSV));
+    const userIds = paymentsInfoCSV.map((paymentInfoCSV) => paymentInfoCSV.userId);
+    await paymentInfoService.createBulk(paymentsInfo, userIds);
 };
 
-const createShippingInfos = async (shippingInfoService: ShippingInfoService): Promise<void> => {
-    const shippingInfos = await readFromCsv<ShippingInfo>(SHIPPING_INFOS_CSV_PATH);
+const createShippingsInfo = async (shippingInfoService: ShippingInfoService): Promise<void> => {
+    const shippingsInfo = await readFromCsv<ShippingInfo>(SHIPPINGS_INFO_CSV_PATH);
 };
 
 const createProducts = async (productService: ProductService): Promise<void> => {

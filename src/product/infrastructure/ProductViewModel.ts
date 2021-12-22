@@ -1,5 +1,5 @@
-import ProductData from "product/application/ProductData";
-import { ProductCategory } from "product/domain/Product";
+import ProductData from "../application/ProductData";
+import { ProductCategory } from "../domain/Product";
 
 class ProductViewModel {
     constructor(
