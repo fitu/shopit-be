@@ -20,13 +20,13 @@ class PaymentInfoRepository implements Repository {
     }
 
     public async saveBulk(paymentsInfo: Array<PaymentInfo>, userIds: Array<number>): Promise<Array<PaymentInfo>> {
-        const paymentInfoToSave = paymentsInfo.map((paymentInfo) => {
+        const paymentsInfoToSave = paymentsInfo.map((paymentInfo) => {
             return {
                 status: paymentInfo.status,
             };
         });
 
-        const savedPaymentsInfo = await PaymentInfoDao.bulkCreate(paymentInfoToSave);
+        const savedPaymentsInfo = await PaymentInfoDao.bulkCreate(paymentsInfoToSave);
         const usersWithPaymentsInfoPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
             return await user.setPaymentsInfo([savedPaymentsInfo[index]]);

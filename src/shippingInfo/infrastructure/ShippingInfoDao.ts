@@ -4,7 +4,6 @@ import {
     Optional,
     HasOneGetAssociationMixin,
     HasOneSetAssociationMixin,
-    Association,
     HasManyGetAssociationsMixin,
     HasManyHasAssociationMixin,
     HasManySetAssociationsMixin,
@@ -15,6 +14,7 @@ import {
 
 import OrderDao from "../../order/infrastructure/OrderDao";
 import UserDao from "../../user/infrastructure/UserDao";
+import ShippingInfo from "../domain/ShippingInfo";
 
 interface ShippingInfoAttributes {
     id: number;
@@ -41,22 +41,29 @@ class ShippingInfoDao
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
+    public readonly user?: UserDao;
+    public readonly orders?: Array<OrderDao>;
+
+    public getUser!: HasOneGetAssociationMixin<UserDao>;
+    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
+
+    // TODO: check this
     public getOrders!: HasManyGetAssociationsMixin<OrderDao>;
     public addOrders!: HasManyAddAssociationMixin<OrderDao, number>;
     public hasOrders!: HasManyHasAssociationMixin<OrderDao, number>;
     public setOrders!: HasManySetAssociationsMixin<OrderDao, number>;
     public countOrders!: HasManyCountAssociationsMixin;
 
-    public getUser!: HasOneGetAssociationMixin<UserDao>;
-    public setUser!: HasOneSetAssociationMixin<UserDao, number>;
-
-    public readonly user?: UserDao;
-    public readonly orders?: Array<OrderDao>;
-
-    public static associations: {
-        user: Association<ShippingInfoDao, UserDao>;
-        orders: Association<UserDao, OrderDao>;
-    };
+    public toModel(): ShippingInfo {
+        return {
+            id: this.id,
+            address: this.address,
+            city: this.city,
+            phone: this.phone,
+            postalCode: this.postalCode,
+            country: this.country,
+        };
+    }
 }
 
 const init = (sequelize: Sequelize) => {

@@ -73,13 +73,13 @@ class SqlDb implements Database {
         OrderDao.belongsToMany(ProductDao, { through: OrderItemDao, targetKey: "id", foreignKey: "orderId" });
         OrderDao.belongsToMany(PaymentInfoDao, { through: PaymentOrderDao, targetKey: "id", foreignKey: "orderId" });
 
-        PaymentInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        PaymentInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "paymentInfoId" });
+        PaymentInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
         PaymentInfoDao.belongsToMany(OrderDao, {
             through: PaymentOrderDao,
             targetKey: "id",
             foreignKey: "paymentInfoId",
         });
-        PaymentInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "paymentInfoId" });
 
         ProductDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "productId" });
         ProductDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
@@ -90,7 +90,7 @@ class SqlDb implements Database {
         ReviewDao.belongsTo(ProductDao, { targetKey: "id", foreignKey: "productId" });
 
         ShippingInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "shippingInfoId" });
-        ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
 
         UserDao.hasOne(CartDao, {
             sourceKey: "id",
@@ -104,8 +104,8 @@ class SqlDb implements Database {
         UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId" });
-        UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId" });
-        UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId", as: "paymentInfo" });
+        UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId", as: "shippingInfo" });
     };
 
     // FIXME: check this

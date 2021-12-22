@@ -52,10 +52,10 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public readonly cart?: CartDao;
     public readonly avatar?: AvatarDao;
     public readonly paymentsInfo?: Array<PaymentInfoDao>;
+    public readonly shippingsInfo?: Array<ShippingInfoDao>;
     // public readonly products?: Array<ProductDao>;
     // public readonly orders?: Array<OrderDao>;
     // public readonly reviews?: Array<ReviewDao>;
-    // public readonly shippingsInfo?: Array<ShippingInfoDao>;
 
     // public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
     // public addProducts!: HasManyAddAssociationMixin<ProductDao, number>;
@@ -75,25 +75,24 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
 
     public getAvatar!: HasOneGetAssociationMixin<AvatarDao>;
     public setAvatar!: HasOneSetAssociationMixin<AvatarDao, number>;
-    
+
     public getPaymentsInfo!: HasManyGetAssociationsMixin<PaymentInfoDao>;
     public addPaymentsInfo!: HasManyAddAssociationMixin<PaymentInfoDao, number>;
     public hasPaymentsInfo!: HasManyHasAssociationMixin<PaymentInfoDao, number>;
     public setPaymentsInfo!: HasManySetAssociationsMixin<PaymentInfoDao, number>;
     public countPaymentsInfo!: HasManyCountAssociationsMixin;
 
+    public getShippingsInfo!: HasManyGetAssociationsMixin<ShippingInfoDao>;
+    public addShippingsInfo!: HasManyAddAssociationMixin<ShippingInfoDao, number>;
+    public hasShippingsInfo!: HasManyHasAssociationMixin<ShippingInfoDao, number>;
+    public setShippingsInfo!: HasManySetAssociationsMixin<ShippingInfoDao, number>;
+    public countShippingsInfo!: HasManyCountAssociationsMixin;
+
     // public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
     // public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
     // public hasReviews!: HasManyHasAssociationMixin<ReviewDao, number>;
     // public setReviews!: HasManySetAssociationsMixin<ReviewDao, number>;
     // public countReviews!: HasManyCountAssociationsMixin;
-
-
-    // public getShippingsInfo!: HasManyGetAssociationsMixin<ShippingInfoDao>;
-    // public addShippingsInfo!: HasManyAddAssociationMixin<ShippingInfoDao, number>;
-    // public hasShippingsInfo!: HasManyHasAssociationMixin<ShippingInfoDao, number>;
-    // public setShippingsInfo!: HasManySetAssociationsMixin<ShippingInfoDao, number>;
-    // public countShippingsInfo!: HasManyCountAssociationsMixin;
 
     public toModel(): User {
         return {
