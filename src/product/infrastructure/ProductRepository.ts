@@ -1,24 +1,58 @@
+import UserDao from "../../user/infrastructure/UserDao";
 import Product from "../domain/Product";
 
 import ProductDao from "./ProductDao";
 
 interface Repository {
-    save: (product: Product) => Promise<Product>;
+    save: (product: Product, userId: number) => Promise<Product>;
+    saveBulk: (products: Array<Product>, userIds: Array<number>) => Promise<Array<Product>>;
+    getAllProducts: () => Promise<Array<Product>>;
+    getProductById: (productId: number) => Promise<Product> | null;
+    deleteProductById: (productId: number) => Promise<void>;
+    updateProductById: (productId: number, product: Product) => Promise<Product> | null;
 }
 
 class ProductRepository implements Repository {
-    public async save(product: Product): Promise<Product> {
+    public async save(product: Product, userId: number): Promise<Product> {
         const newProduct = await ProductDao.create({
             title: product.title,
             description: product.description,
             price: product.price,
-            imageUrl: product.imageUrl,
             ratings: product.ratings,
+            imageUrl: product.imageUrl,
             category: product.category,
             stock: product.stock,
         });
 
-        return newProduct;
+        const user = await UserDao.findByPk(userId);
+        await user.setProducts([newProduct]);
+
+        return newProduct.toModel();
+    }
+
+    public async saveBulk(products: Array<Product>, userIds: Array<number>): Promise<Array<Product>> {
+        const productsToSave = products.map((product) => {
+            return {
+                title: product.title,
+                description: product.description,
+                price: product.price,
+                ratings: product.ratings,
+                imageUrl: product.imageUrl,
+                category: product.category,
+                stock: product.stock,
+            };
+        });
+
+        const newProducts = await ProductDao.bulkCreate(productsToSave);
+
+        const usersWithProductsPromises = userIds.map(async (userId, index) => {
+            const user = await UserDao.findByPk(userId);
+            // FIXME: this is not working
+            return await user.setProducts([newProducts[index]]);
+        });
+        await Promise.all(usersWithProductsPromises);
+
+        return newProducts.map((newProduct) => newProduct.toModel());
     }
 
     public async getAllProducts(): Promise<Array<Product>> {

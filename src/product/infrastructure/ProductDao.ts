@@ -2,7 +2,6 @@ import {
     Model,
     DataTypes,
     Optional,
-    Association,
     HasManyGetAssociationsMixin,
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
@@ -13,11 +12,9 @@ import {
     Sequelize,
 } from "sequelize";
 
-import CartItemDao from "../../cartItem/infrastructure/CartItemDao";
-import OrderItemDao from "../../orderItem/infrastructure/OrderItemDao";
 import ReviewDao from "../../review/infrastructure/ReviewDao";
 import UserDao from "../../user/infrastructure/UserDao";
-import { ProductCategory } from "../domain/Product";
+import Product, { ProductCategory } from "../domain/Product";
 
 interface ProductAttributes {
     id: number;
@@ -45,17 +42,22 @@ class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> imp
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
-    public getCartItems!: HasManyGetAssociationsMixin<CartItemDao>;
-    public addCartItems!: HasManyAddAssociationMixin<CartItemDao, number>;
-    public hasCartItems!: HasManyHasAssociationMixin<CartItemDao, number>;
-    public setCartItems!: HasManySetAssociationsMixin<CartItemDao, number>;
-    public countCartItems!: HasManyCountAssociationsMixin;
+    // public readonly cartItems?: Array<CartItemDao>;
+    // public readonly orderItems?: Array<OrderItemDao>;
+    public readonly reviews?: Array<ReviewDao>;
+    public readonly user?: UserDao;
 
-    public getOrderItems!: HasManyGetAssociationsMixin<OrderItemDao>;
-    public addOrderItems!: HasManyAddAssociationMixin<OrderItemDao, number>;
-    public hasOrderItems!: HasManyHasAssociationMixin<OrderItemDao, number>;
-    public setOrderItems!: HasManySetAssociationsMixin<OrderItemDao, number>;
-    public countOrderItems!: HasManyCountAssociationsMixin;
+    // public getCartItems!: HasManyGetAssociationsMixin<CartItemDao>;
+    // public addCartItems!: HasManyAddAssociationMixin<CartItemDao, number>;
+    // public hasCartItems!: HasManyHasAssociationMixin<CartItemDao, number>;
+    // public setCartItems!: HasManySetAssociationsMixin<CartItemDao, number>;
+    // public countCartItems!: HasManyCountAssociationsMixin;
+
+    // public getOrderItems!: HasManyGetAssociationsMixin<OrderItemDao>;
+    // public addOrderItems!: HasManyAddAssociationMixin<OrderItemDao, number>;
+    // public hasOrderItems!: HasManyHasAssociationMixin<OrderItemDao, number>;
+    // public setOrderItems!: HasManySetAssociationsMixin<OrderItemDao, number>;
+    // public countOrderItems!: HasManyCountAssociationsMixin;
 
     public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
     public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
@@ -66,17 +68,18 @@ class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> imp
     public getUser!: HasOneGetAssociationMixin<UserDao>;
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public readonly cartItems?: Array<CartItemDao>;
-    public readonly orderItems?: Array<OrderItemDao>;
-    public readonly reviews?: Array<ReviewDao>;
-    public readonly user?: UserDao;
-
-    public static associations: {
-        cartItems: Association<ProductDao, CartItemDao>;
-        orderItems: Association<ProductDao, OrderItemDao>;
-        reviews: Association<ProductDao, ReviewDao>;
-        user: Association<ProductDao, UserDao>;
-    };
+    public toModel(): Product {
+        return {
+            id: this.id,
+            title: this.title,
+            description: this.description,
+            price: this.price,
+            ratings: this.ratings,
+            imageUrl: this.imageUrl,
+            category: this.category,
+            stock: this.stock,
+        };
+    }
 }
 
 const init = (sequelize: Sequelize) => {

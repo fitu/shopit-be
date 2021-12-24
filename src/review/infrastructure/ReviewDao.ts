@@ -4,12 +4,12 @@ import {
     Optional,
     HasOneGetAssociationMixin,
     HasOneSetAssociationMixin,
-    Association,
     Sequelize,
 } from "sequelize";
 
 import ProductDao from "../../product/infrastructure/ProductDao";
 import UserDao from "../../user/infrastructure/UserDao";
+import Review from "../domain/Review";
 
 interface ReviewAttributes {
     id: number;
@@ -29,19 +29,23 @@ class ReviewDao extends Model<ReviewAttributes, ReviewCreationAttributes> implem
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
+    public readonly product?: ProductDao;
+    public readonly user?: UserDao;
+
     public getProduct!: HasOneGetAssociationMixin<ProductDao>;
     public setProduct!: HasOneSetAssociationMixin<ProductDao, number>;
 
     public getUser!: HasOneGetAssociationMixin<UserDao>;
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
-    public readonly product?: ProductDao;
-    public readonly user?: UserDao;
-
-    public static associations: {
-        product: Association<ReviewDao, ProductDao>;
-        user: Association<ReviewDao, UserDao>;
-    };
+    public toModel(): Review {
+        return {
+            id: this.id,
+            name: this.name,
+            rating: this.rating,
+            comment: this.comment,
+        };
+    }
 }
 
 const init = (sequelize: Sequelize) => {

@@ -1,19 +1,18 @@
 import csv from "csv-parser";
 import fs from "fs";
 
-import Product from "../../product/domain/Product";
-import Review from "../../review/domain/Review";
-import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
+import ProductCSV from "../../product/infrastructure/data/ProductCSV";
+import ReviewCSV from "../../review/infrastructure/data/ReviewCSV";
+import ShippingInfoCSV from "../../shippingInfo/infrastructure/data/ShippingInfoCSV";
 import UserCSV from "../../user/infrastructure/data/UserCSV";
 import ProductRepository from "../../product/infrastructure/ProductRepository";
-import UserRepository from "../../user/infrastructure/UserRepository";
-import ShippingInfoRepository from "../../shippingInfo/infrastructure/ShippingInfoRepository";
 import ReviewRepository from "../../review/infrastructure/ReviewRepository";
-import UserService from "../../user/domain/UserService";
-import ShippingInfoService from "../../shippingInfo/domain/ShippingInfoService";
+import ShippingInfoRepository from "../../shippingInfo/infrastructure/ShippingInfoRepository";
+import UserRepository from "../../user/infrastructure/UserRepository";
 import ProductService from "../../product/domain/ProductService";
 import ReviewService from "../../review/domain/ReviewService";
-import ShippingInfoCSV from "../../shippingInfo/infrastructure/data/ShippingInfoCSV";
+import ShippingInfoService from "../../shippingInfo/domain/ShippingInfoService";
+import UserService from "../../user/domain/UserService";
 import validateEnv from "../../shared/env/envUtils";
 
 import Db from "./SqlDb";
@@ -41,7 +40,7 @@ const seedProducts = async () => {
 
         const userService = new UserService(userRepository);
         const shippingInfoService = new ShippingInfoService(shippingInfoRepository);
-        const productService = new ProductService(productRepository, userRepository);
+        const productService = new ProductService(productRepository);
         const reviewService = new ReviewService(reviewRepository);
 
         await createUsers(userService);
@@ -84,11 +83,17 @@ const createShippingsInfo = async (shippingInfoService: ShippingInfoService): Pr
 };
 
 const createProducts = async (productService: ProductService): Promise<void> => {
-    const products = await readFromCsv<Product>(PRODUCTS_CSV_PATH);
+    const productsCSV = await readFromCsv<ProductCSV>(PRODUCTS_CSV_PATH);
+    const products = productsCSV.map((productCSV) => ProductCSV.toModel(productCSV));
+    const userIds = productsCSV.map((productCSV) => productCSV.userId);
+    await productService.createBulk(products, userIds);
 };
 
 const createReviews = async (reviewService: ReviewService): Promise<void> => {
-    const reviews = await readFromCsv<Review>(REVIEWS_CSV_PATH);
+    const reviewsCSV = await readFromCsv<ReviewCSV>(REVIEWS_CSV_PATH);
+    const reviews = reviewsCSV.map((reviewCSV) => ReviewCSV.toModel(reviewCSV));
+    const userIds = reviewsCSV.map((reviewCSV) => reviewCSV.userId);
+    await reviewService.createBulk(reviews, userIds);
 };
 
 seedProducts();

@@ -26,7 +26,7 @@ import App from "./app";
         const cartRepository = new CartRepository();
 
         // Create Services
-        const productService = new ProductService(productRepository, userRepository);
+        const productService = new ProductService(productRepository);
 
         // Create the app and start listening for connections
         const app = new App([

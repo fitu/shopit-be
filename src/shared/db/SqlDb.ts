@@ -81,13 +81,13 @@ class SqlDb implements Database {
             foreignKey: "paymentInfoId",
         });
 
-        ProductDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "productId" });
-        ProductDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
+        ProductDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "productId", as: "reviews" });
+        ProductDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
         ProductDao.belongsToMany(CartDao, { through: CartItemDao, targetKey: "id", foreignKey: "productId" });
         ProductDao.belongsToMany(OrderDao, { through: OrderItemDao, targetKey: "id", foreignKey: "productId" });
 
-        ReviewDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
-        ReviewDao.belongsTo(ProductDao, { targetKey: "id", foreignKey: "productId" });
+        ReviewDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
+        ReviewDao.belongsTo(ProductDao, { targetKey: "id", foreignKey: "productId", as: "product" });
 
         ShippingInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "shippingInfoId" });
         ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
@@ -101,9 +101,9 @@ class SqlDb implements Database {
             as: "cart",
         });
         UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId", as: "avatar" });
-        UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId", as: "products" });
         UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
-        UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId" });
+        UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId", as: "reviews" });
         UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId", as: "paymentInfo" });
         UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId", as: "shippingInfo" });
     };

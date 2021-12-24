@@ -53,15 +53,21 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public readonly avatar?: AvatarDao;
     public readonly paymentsInfo?: Array<PaymentInfoDao>;
     public readonly shippingsInfo?: Array<ShippingInfoDao>;
-    // public readonly products?: Array<ProductDao>;
+    public readonly products?: Array<ProductDao>;
+    public readonly reviews?: Array<ReviewDao>;
     // public readonly orders?: Array<OrderDao>;
-    // public readonly reviews?: Array<ReviewDao>;
 
-    // public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
-    // public addProducts!: HasManyAddAssociationMixin<ProductDao, number>;
-    // public hasProducts!: HasManyHasAssociationMixin<ProductDao, number>;
-    // public setProducts!: HasManySetAssociationsMixin<ProductDao, number>;
-    // public countProducts!: HasManyCountAssociationsMixin;
+    public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
+    public addProducts!: HasManyAddAssociationMixin<ProductDao, number>;
+    public hasProducts!: HasManyHasAssociationMixin<ProductDao, number>;
+    public setProducts!: HasManySetAssociationsMixin<ProductDao, number>;
+    public countProducts!: HasManyCountAssociationsMixin;
+
+    public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
+    public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
+    public hasReviews!: HasManyHasAssociationMixin<ReviewDao, number>;
+    public setReviews!: HasManySetAssociationsMixin<ReviewDao, number>;
+    public countReviews!: HasManyCountAssociationsMixin;
 
     // public getOrders!: HasManyGetAssociationsMixin<OrderDao>;
     // public addOrders!: HasManyAddAssociationMixin<OrderDao, number>;
@@ -88,12 +94,6 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public setShippingsInfo!: HasManySetAssociationsMixin<ShippingInfoDao, number>;
     public countShippingsInfo!: HasManyCountAssociationsMixin;
 
-    // public getReviews!: HasManyGetAssociationsMixin<ReviewDao>;
-    // public addReviews!: HasManyAddAssociationMixin<ReviewDao, number>;
-    // public hasReviews!: HasManyHasAssociationMixin<ReviewDao, number>;
-    // public setReviews!: HasManySetAssociationsMixin<ReviewDao, number>;
-    // public countReviews!: HasManyCountAssociationsMixin;
-
     public toModel(): User {
         return {
             id: this.id,
@@ -106,6 +106,8 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
             resetPasswordExpire: this.resetPasswordExpire,
             cart: this.cart?.toModel(),
             avatar: this.avatar?.toModel(),
+            products: this.products?.map((product) => product.toModel()),
+            reviews: this.reviews?.map((review) => review.toModel()),
         };
     }
 }

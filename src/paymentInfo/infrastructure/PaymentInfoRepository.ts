@@ -26,15 +26,15 @@ class PaymentInfoRepository implements Repository {
             };
         });
 
-        const savedPaymentsInfo = await PaymentInfoDao.bulkCreate(paymentsInfoToSave);
+        const newPaymentsInfo = await PaymentInfoDao.bulkCreate(paymentsInfoToSave);
         const usersWithPaymentsInfoPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
-            return await user.setPaymentsInfo([savedPaymentsInfo[index]]);
+            return await user.setPaymentsInfo([newPaymentsInfo[index]]);
         });
 
         await Promise.all(usersWithPaymentsInfoPromises);
 
-        return savedPaymentsInfo.map((savedPaymentInfo) => savedPaymentInfo.toModel());
+        return newPaymentsInfo.map((newPaymentInfo) => newPaymentInfo.toModel());
     }
 }
 

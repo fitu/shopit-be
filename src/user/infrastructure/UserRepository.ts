@@ -56,14 +56,14 @@ class UserRepository implements Repository {
             };
         });
 
-        const savedUsers = await UserDao.bulkCreate(usersToSave, {
+        const newUsers = await UserDao.bulkCreate(usersToSave, {
             include: [
                 { model: CartDao, as: "cart" },
                 { model: AvatarDao, as: "avatar" },
             ],
         });
 
-        return savedUsers.map((savedUser) => savedUser.toModel());
+        return newUsers.map((newUser) => newUser.toModel());
     }
 
     public async addProduct(userId: number, productId: number): Promise<void> {

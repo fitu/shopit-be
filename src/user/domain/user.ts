@@ -1,3 +1,5 @@
+import Product from "../../product/domain/Product";
+import Review from "../../review/domain/Review";
 import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
 
@@ -14,7 +16,9 @@ class User {
         public resetPasswordToken: string | null,
         public resetPasswordExpire: Date | null,
         public cart?: Cart,
-        public avatar?: Avatar
+        public avatar?: Avatar,
+        public products?: Array<Product>,
+        public reviews?: Array<Review>,
     ) {}
 }
 

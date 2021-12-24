@@ -35,15 +35,16 @@ class ShippingInfoRepository implements Repository {
             };
         });
 
-        const savedShippingsInfo = await ShippingInfoDao.bulkCreate(shippingsInfoToSave);
+        const newShippingsInfo = await ShippingInfoDao.bulkCreate(shippingsInfoToSave);
         const usersWithShippingsInfoPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
-            return await user.setShippingsInfo([savedShippingsInfo[index]]);
+            // FIXME: this is not working
+            return await user.setShippingsInfo([newShippingsInfo[index]]);
         });
 
         await Promise.all(usersWithShippingsInfoPromises);
 
-        return savedShippingsInfo.map((savedShippingsInfo) => savedShippingsInfo.toModel());
+        return newShippingsInfo.map((newShippingInfo) => newShippingInfo.toModel());
     }
 }
 
