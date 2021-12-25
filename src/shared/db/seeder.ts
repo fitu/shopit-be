@@ -45,8 +45,8 @@ const seedProducts = async () => {
 
         await createUsers(userService);
         await createShippingsInfo(shippingInfoService);
-        await createProducts(productService);
-        await createReviews(reviewService);
+        // await createProducts(productService);
+        // await createReviews(reviewService);
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {

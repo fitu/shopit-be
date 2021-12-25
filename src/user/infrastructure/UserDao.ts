@@ -15,7 +15,6 @@ import {
 } from "sequelize";
 
 import ProductDao from "../../product/infrastructure/ProductDao";
-import OrderDao from "../../order/infrastructure/OrderDao";
 import CartDao from "../../cart/infrastructure/CartDao";
 import AvatarDao from "../../avatar/infrastructure/AvatarDao";
 import ReviewDao from "../../review/infrastructure/ReviewDao";
@@ -108,6 +107,7 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
             avatar: this.avatar?.toModel(),
             products: this.products?.map((product) => product.toModel()),
             reviews: this.reviews?.map((review) => review.toModel()),
+            shippingsInfo: this.shippingsInfo?.map((shippingsInfo) => shippingsInfo.toModel()),
         };
     }
 }

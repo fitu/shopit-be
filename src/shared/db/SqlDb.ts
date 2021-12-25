@@ -104,8 +104,8 @@ class SqlDb implements Database {
         UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId", as: "products" });
         UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
         UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId", as: "reviews" });
-        UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId", as: "paymentInfo" });
-        UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId", as: "shippingInfo" });
+        UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId", as: "paymentsInfo" });
+        UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId", as: "shippingsInfo" });
     };
 
     // FIXME: check this

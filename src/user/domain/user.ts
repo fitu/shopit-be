@@ -2,6 +2,7 @@ import Product from "../../product/domain/Product";
 import Review from "../../review/domain/Review";
 import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
+import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
 
 type UserRole = "user" | "admin";
 
@@ -19,6 +20,7 @@ class User {
         public avatar?: Avatar,
         public products?: Array<Product>,
         public reviews?: Array<Review>,
+        public shippingsInfo?: Array<ShippingInfo>
     ) {}
 }
 
