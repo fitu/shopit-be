@@ -20,7 +20,8 @@ class ProductCSV {
             description: productCSV.description,
             price: productCSV.price,
             ratings: productCSV.ratings,
-            imageUrl: productCSV.imageUrl,
+            // TODO: improve this with array of images
+            imageUrl: productCSV["images/0/url"],
             category: productCSV.category,
             stock: productCSV.stock,
         };

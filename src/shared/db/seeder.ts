@@ -45,8 +45,8 @@ const seedProducts = async () => {
 
         await createUsers(userService);
         await createShippingsInfo(shippingInfoService);
-        // await createProducts(productService);
-        // await createReviews(reviewService);
+        await createProducts(productService);
+        await createReviews(reviewService);
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
@@ -92,8 +92,9 @@ const createProducts = async (productService: ProductService): Promise<void> => 
 const createReviews = async (reviewService: ReviewService): Promise<void> => {
     const reviewsCSV = await readFromCsv<ReviewCSV>(REVIEWS_CSV_PATH);
     const reviews = reviewsCSV.map((reviewCSV) => ReviewCSV.toModel(reviewCSV));
+    const productIds = reviewsCSV.map((reviewCSV) => reviewCSV.productId);
     const userIds = reviewsCSV.map((reviewCSV) => reviewCSV.userId);
-    await reviewService.createBulk(reviews, userIds);
+    await reviewService.createBulk(reviews, productIds, userIds);
 };
 
 seedProducts();

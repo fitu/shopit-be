@@ -36,6 +36,7 @@ class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> imp
     public price!: number;
     public ratings!: number;
     public imageUrl!: string;
+
     public category!: ProductCategory;
     public stock!: number;
 

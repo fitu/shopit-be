@@ -1,3 +1,4 @@
+import { cpSync } from "fs";
 import UserDao from "../../user/infrastructure/UserDao";
 import Product from "../domain/Product";
 
@@ -35,11 +36,11 @@ class ProductRepository implements Repository {
             return {
                 title: product.title,
                 description: product.description,
-                price: product.price,
-                ratings: product.ratings,
+                price: +product.price,
+                ratings: +product.ratings,
                 imageUrl: product.imageUrl,
                 category: product.category,
-                stock: product.stock,
+                stock: +product.stock,
             };
         });
 
@@ -47,7 +48,6 @@ class ProductRepository implements Repository {
 
         const usersWithProductsPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
-            // FIXME: this is not working
             return await user.setProducts([newProducts[index]]);
         });
         await Promise.all(usersWithProductsPromises);

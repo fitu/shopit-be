@@ -6,7 +6,8 @@ class ReviewCSV {
         public name: string,
         public rating: number,
         public comment: string,
-        public userId: number
+        public userId: number,
+        public productId: number
     ) {}
 
     static toModel(reviewCSV: ReviewCSV): Review {
