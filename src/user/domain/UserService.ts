@@ -1,4 +1,4 @@
-import UserRepository from "../infrastructure/UserRepository";
+import { Repository as UserRepository } from "../infrastructure/Repository";
 
 import User from "./User";
 

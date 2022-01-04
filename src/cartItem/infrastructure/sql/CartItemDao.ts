@@ -8,8 +8,8 @@ import {
     Sequelize,
 } from "sequelize";
 
-import CartDao from "../../cart/infrastructure/CartDao";
-import ProductDao from "../../product/infrastructure/ProductDao";
+import CartDao from "../../../cart/infrastructure/sql/CartDao";
+import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 
 interface CartItemAttributes {
     id: number;

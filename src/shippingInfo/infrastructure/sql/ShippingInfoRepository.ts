@@ -1,12 +1,8 @@
-import UserDao from "../../user/infrastructure/UserDao";
-import ShippingInfo from "../domain/ShippingInfo";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
+import ShippingInfo from "../../domain/ShippingInfo";
+import { Repository } from "../Repository";
 
 import ShippingInfoDao from "./ShippingInfoDao";
-
-interface Repository {
-    save: (shippingInfo: ShippingInfo, userId: number) => Promise<ShippingInfo>;
-    saveBulk: (shippingsInfo: Array<ShippingInfo>, userIds: Array<number>) => Promise<Array<ShippingInfo>>;
-}
 
 class ShippingInfoRepository implements Repository {
     public async save(shippingInfo: ShippingInfo, userId: number): Promise<ShippingInfo> {

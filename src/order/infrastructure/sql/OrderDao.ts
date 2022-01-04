@@ -13,12 +13,12 @@ import {
     Sequelize,
 } from "sequelize";
 
-import { OrderStatus } from "../domain/Order";
-import OrderItemDao from "../../orderItem/infrastructure/OrderItemDao";
-import PaymentInfoDao from "../../paymentInfo/infrastructure/PaymentInfoDao";
-import ProductDao from "../../product/infrastructure/ProductDao";
-import ShippingInfoDao from "../../shippingInfo/infrastructure/ShippingInfoDao";
-import UserDao from "../../user/infrastructure/UserDao";
+import { OrderStatus } from "../../domain/Order";
+import OrderItemDao from "../../../orderItem/infrastructure/sql/OrderItemDao";
+import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
+import ProductDao from "../../../product/infrastructure/sql/ProductDao";
+import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
 
 interface OrderAttributes {
     id: number;

@@ -1,4 +1,4 @@
-import ProductRepository from "../infrastructure/ProductRepository";
+import { Repository as ProductRepository } from "../infrastructure/Repository";
 
 import Product from "./Product";
 

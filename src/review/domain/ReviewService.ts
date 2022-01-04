@@ -1,4 +1,4 @@
-import ReviewRepository from "../infrastructure/ReviewRepository";
+import { Repository as ReviewRepository } from "../infrastructure/Repository";
 
 import Review from "./Review";
 

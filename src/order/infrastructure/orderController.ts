@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
 
 import Controller from "../../shared/Controller";
-import OrderDao from "./OrderDao";
-import UserDao from "../../user/infrastructure/UserDao";
+import OrderDao from "./sql/OrderDao";
+import UserDao from "../../user/infrastructure/sql/UserDao";
 
 class OrderController implements Controller {
     public path = "/orders";

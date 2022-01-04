@@ -1,10 +1,7 @@
-import Cart from "../domain/Cart";
+import Cart from "../../domain/Cart";
+import { Repository } from "../Repository";
 
 import CartDao from "./CartDao";
-
-interface Repository {
-    save: (cart: Cart, userId: number) => Promise<Cart>;
-}
 
 class CartRepository implements Repository {
     public async save(cart: Cart, userId: number): Promise<Cart> {

@@ -1,4 +1,4 @@
-import CartRepository from "../infrastructure/CartRepository";
+import { Repository as CartRepository } from "../infrastructure/Repository";
 
 import Cart from "./Cart";
 

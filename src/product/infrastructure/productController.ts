@@ -9,7 +9,6 @@ import DeleteProductByIdInteractor from "../application/DeleteProductByIdInterac
 import UpdateProductByIdInteractor from "../application/UpdateProductById";
 import ProductService from "../domain/ProductService";
 
-import ProductDao from "./ProductDao";
 import ProductViewModel from "./ProductViewModel";
 
 class ProductController implements Controller {

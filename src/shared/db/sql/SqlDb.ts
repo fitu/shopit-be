@@ -1,18 +1,18 @@
 import { Sequelize } from "sequelize";
 
-import ProductDao, { init as initProduct } from "../../product/infrastructure/ProductDao";
-import UserDao, { init as initUser } from "../../user/infrastructure/UserDao";
-import CartDao, { init as initCart } from "../../cart/infrastructure/CartDao";
-import CartItemDao, { init as initCartItem } from "../../cartItem/infrastructure/CartItemDao";
-import OrderDao, { init as initOrder } from "../../order/infrastructure/OrderDao";
-import OrderItemDao, { init as initOrderItem } from "../../orderItem/infrastructure/OrderItemDao";
-import AvatarDao, { init as initAvatar } from "../../avatar/infrastructure/AvatarDao";
-import ReviewDao, { init as initReview } from "../../review/infrastructure/ReviewDao";
-import PaymentOrderDao, { init as initPaymentOrder } from "../../paymentOrder/infrastructure/PaymentOrderDao";
-import PaymentInfoDao, { init as initPaymentInfo } from "../../paymentInfo/infrastructure/PaymentInfoDao";
-import ShippingInfoDao, { init as initShippingInfo } from "../../shippingInfo/infrastructure/ShippingInfoDao";
+import ProductDao, { init as initProduct } from "../../../product/infrastructure/sql/ProductDao";
+import UserDao, { init as initUser } from "../../../user/infrastructure/sql/UserDao";
+import CartDao, { init as initCart } from "../../../cart/infrastructure/sql/CartDao";
+import CartItemDao, { init as initCartItem } from "../../../cartItem/infrastructure/sql/CartItemDao";
+import OrderDao, { init as initOrder } from "../../../order/infrastructure/sql/OrderDao";
+import OrderItemDao, { init as initOrderItem } from "../../../orderItem/infrastructure/sql/OrderItemDao";
+import AvatarDao, { init as initAvatar } from "../../../avatar/infrastructure/sql/AvatarDao";
+import ReviewDao, { init as initReview } from "../../../review/infrastructure/sql/ReviewDao";
+import PaymentOrderDao, { init as initPaymentOrder } from "../../../paymentOrder/infrastructure/sql/PaymentOrderDao";
+import PaymentInfoDao, { init as initPaymentInfo } from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
+import ShippingInfoDao, { init as initShippingInfo } from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
 
-import Database, { DatabaseOptions } from "./database";
+import Database, { DatabaseOptions } from "../database";
 
 class SqlDb implements Database {
     private env: any;
@@ -34,11 +34,11 @@ class SqlDb implements Database {
     };
 
     private createDbConnection = (): Sequelize => {
-        const dbName = this.env.DB_NAME;
-        const dbUserName = this.env.DB_USER_NAME;
-        const dbPassword = this.env.DB_PASSWORD;
-        const dbHost = this.env.DB_HOST;
-        const dbPort = this.env.DB_PORT;
+        const dbName = this.env.DB_SQL_NAME;
+        const dbUserName = this.env.DB_SQL_USER_NAME;
+        const dbPassword = this.env.DB_SQL_PASSWORD;
+        const dbHost = this.env.DB_SQL_HOST;
+        const dbPort = this.env.DB_SQL_PORT;
 
         return new Sequelize(dbName, dbUserName, dbPassword, {
             dialect: "postgres",

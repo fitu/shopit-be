@@ -1,7 +1,7 @@
 import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssociationMixin, Sequelize } from "sequelize";
 
-import Avatar from "../domain/Avatar";
-import UserDao from "../../user/infrastructure/UserDao";
+import Avatar from "../../domain/Avatar";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
 
 interface AvatarAttributes {
     id: number;

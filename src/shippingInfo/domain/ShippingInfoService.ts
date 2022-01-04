@@ -1,4 +1,4 @@
-import ShippingInfoRepository from "../infrastructure/ShippingInfoRepository";
+import { Repository as ShippingInfoRepository } from "../infrastructure/Repository";
 
 import ShippingInfo from "./ShippingInfo";
 

@@ -1,11 +1,8 @@
-import UserDao from "user/infrastructure/UserDao";
-import PaymentInfo from "../domain/PaymentInfo";
-import PaymentInfoDao from "./PaymentInfoDao";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
+import PaymentInfo from "../../domain/PaymentInfo";
+import { Repository } from "../Repository";
 
-interface Repository {
-    save: (paymentInfo: PaymentInfo, userId: number) => Promise<PaymentInfo>;
-    saveBulk: (paymentsInfo: Array<PaymentInfo>, userIds: Array<number>) => Promise<Array<PaymentInfo>>;
-}
+import PaymentInfoDao from "./PaymentInfoDao";
 
 class PaymentInfoRepository implements Repository {
     public async save(paymentInfo: PaymentInfo, userId: number): Promise<PaymentInfo> {

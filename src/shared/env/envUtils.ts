@@ -7,11 +7,17 @@ const validateEnv = (): any => {
 
     // Validate and clear envs
     const env = cleanEnv(process.env, {
-        DB_NAME: str(),
-        DB_USER_NAME: str(),
-        DB_PASSWORD: str(),
-        DB_HOST: str(),
-        DB_PORT: port(),
+        DB_TYPE: str(),
+        DB_SQL_NAME: str(),
+        DB_SQL_USER_NAME: str(),
+        DB_SQL_PASSWORD: str(),
+        DB_SQL_HOST: str(),
+        DB_SQL_PORT: port(),
+        DB_NO_SQL_NAME: str(),
+        DB_NO_SQL_USER_NAME: str(),
+        DB_NO_SQL_PASSWORD: str(),
+        DB_NO_SQL_HOST: str(),
+        DB_NO_SQL_PORT: port(),
     });
 
     return env;

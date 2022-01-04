@@ -1,4 +1,4 @@
-import PaymentInfoRepository from "../infrastructure/PaymentInfoRepository";
+import { Repository as PaymentInfoRepository } from "../infrastructure/Repository";
 
 import PaymentInfo from "./PaymentInfo";
 

@@ -1,15 +1,9 @@
-import AvatarDao from "../../avatar/infrastructure/AvatarDao";
-import CartDao from "../../cart/infrastructure/CartDao";
-import User from "../domain/User";
+import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
+import CartDao from "../../../cart/infrastructure/sql/CartDao";
+import User from "../../domain/User";
+import { Repository } from "../Repository";
 
 import UserDao from "./UserDao";
-
-interface Repository {
-    save: (user: User) => Promise<User>;
-    saveBulk: (users: Array<User>) => Promise<Array<User>>;
-    addProduct: (userId: number, productId: number) => Promise<void>;
-    getUserById: (userId: number) => Promise<User>;
-}
 
 class UserRepository implements Repository {
     public async save(user: User): Promise<User> {

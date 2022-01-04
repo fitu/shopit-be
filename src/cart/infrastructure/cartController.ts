@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 
-import UserDao from "../../user/infrastructure/UserDao";
-import ProductDao from "../../product/infrastructure/ProductDao";
+import UserDao from "../../user/infrastructure/sql/UserDao";
+import ProductDao from "../../product/infrastructure/sql/ProductDao";
 import Controller from "../../shared/Controller";
 
 class CartController implements Controller {

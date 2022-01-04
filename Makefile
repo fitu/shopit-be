@@ -1,6 +1,7 @@
 # DB
 populatedb:
-	docker-compose run shopit npm run seeder
+	docker-compose run shopit npm run seeder:sql
+	docker-compose run shopit npm run seeder:noSql
 
 # Config
 envs:
@@ -10,7 +11,7 @@ app-shell:
 	docker-compose run shopit bash
 
 ordersdb-shell:
-	docker-compose run noSQLDB bash
+	docker-compose run noSqlDB bash
 
 usersdb-shell:
 	docker-compose run sqlDB bash

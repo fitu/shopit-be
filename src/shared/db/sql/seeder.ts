@@ -1,19 +1,19 @@
 import csv from "csv-parser";
 import fs from "fs";
 
-import ProductCSV from "../../product/infrastructure/data/ProductCSV";
-import ReviewCSV from "../../review/infrastructure/data/ReviewCSV";
-import ShippingInfoCSV from "../../shippingInfo/infrastructure/data/ShippingInfoCSV";
-import UserCSV from "../../user/infrastructure/data/UserCSV";
-import ProductRepository from "../../product/infrastructure/ProductRepository";
-import ReviewRepository from "../../review/infrastructure/ReviewRepository";
-import ShippingInfoRepository from "../../shippingInfo/infrastructure/ShippingInfoRepository";
-import UserRepository from "../../user/infrastructure/UserRepository";
-import ProductService from "../../product/domain/ProductService";
-import ReviewService from "../../review/domain/ReviewService";
-import ShippingInfoService from "../../shippingInfo/domain/ShippingInfoService";
-import UserService from "../../user/domain/UserService";
-import validateEnv from "../../shared/env/envUtils";
+import ProductCSV from "../../../product/infrastructure/data/ProductCSV";
+import ReviewCSV from "../../../review/infrastructure/data/ReviewCSV";
+import ShippingInfoCSV from "../../../shippingInfo/infrastructure/data/ShippingInfoCSV";
+import UserCSV from "../../../user/infrastructure/data/UserCSV";
+import ProductRepository from "../../../product/infrastructure/sql/ProductRepository";
+import ReviewRepository from "../../../review/infrastructure/sql/ReviewRepository";
+import ShippingInfoRepository from "../../../shippingInfo/infrastructure/sql/ShippingInfoRepository";
+import UserRepository from "../../../user/infrastructure/sql/UserRepository";
+import ProductService from "../../../product/domain/ProductService";
+import ReviewService from "../../../review/domain/ReviewService";
+import ShippingInfoService from "../../../shippingInfo/domain/ShippingInfoService";
+import UserService from "../../../user/domain/UserService";
+import validateEnv from "../../env/envUtils";
 
 import Db from "./SqlDb";
 

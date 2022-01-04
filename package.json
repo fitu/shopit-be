@@ -8,7 +8,8 @@
     "dev": "npm run build && NODE_ENV=DEVELOPMENT nodemon --watch '**/*.ts' --exec 'ts-node' ./src/server.ts",
     "clean": "rm -rf ./dist",
     "build": "tsc",
-    "seeder": "npm run clean && npm run build && NODE_ENV=DEVELOPMENT && node dist/shared/db/seeder.js",
+    "seeder:sql": "npm run clean && npm run build && NODE_ENV=DEVELOPMENT && node dist/shared/db/sql/seeder.js",
+    "seeder:noSql": "npm run clean && npm run build && NODE_ENV=DEVELOPMENT && node dist/shared/db/noSql/seeder.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

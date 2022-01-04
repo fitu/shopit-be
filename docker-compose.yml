@@ -7,15 +7,15 @@ services:
         ports:
             - "4000:4000"
         links:
-            - noSQLDB
+            - noSqlDB
             - sqlDB
         depends_on:
-            - noSQLDB
+            - noSqlDB
             - sqlDB
         volumes:
             - .:/usr/src/shopit
-    noSQLDB:
-        container_name: noSQLDB
+    noSqlDB:
+        container_name: noSqlDB
         image: mongo:latest
         restart: always
         volumes:

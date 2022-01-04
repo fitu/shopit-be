@@ -1,13 +1,11 @@
 import CartController from "./cart/infrastructure/CartController";
-import CartRepository from "./cart/infrastructure/CartRepository";
 import OrderController from "./order/infrastructure/OrderController";
 import ProductController from "./product/infrastructure/ProductController";
-import ProductService from "./product/domain/ProductService";
-import ProductRepository from "./product/infrastructure/ProductRepository";
-import UserRepository from "./user/infrastructure/UserRepository";
 import UserController from "./user/infrastructure/UserController";
-import Db from "./shared/db/SqlDb";
+import ProductService from "./product/domain/ProductService";
 import validateEnv from "./shared/env/envUtils";
+import getRepositories from "./shared/repository/Repository";
+import { getDb } from "./shared/db/database";
 
 import App from "./app";
 
@@ -17,13 +15,11 @@ import App from "./app";
         const env = validateEnv();
 
         // Initialize and connect to DB
-        const db = new Db(env);
+        const db = getDb(env);
         await db.init();
 
-        // Create Repos
-        const productRepository = new ProductRepository();
-        const userRepository = new UserRepository();
-        const cartRepository = new CartRepository();
+        // Create Repositories
+        const { productRepository, userRepository, cartRepository } = getRepositories(env);
 
         // Create Services
         const productService = new ProductService(productRepository);

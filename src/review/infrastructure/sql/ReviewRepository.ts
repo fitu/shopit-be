@@ -1,12 +1,9 @@
-import ProductDao from "../../product/infrastructure/ProductDao";
-import UserDao from "../../user/infrastructure/UserDao";
-import Review from "../domain/Review";
+import ProductDao from "../../../product/infrastructure/sql/ProductDao";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
+import Review from "../../domain/Review";
+import { Repository } from "../Repository";
 
 import ReviewDao from "./ReviewDao";
-interface Repository {
-    save: (review: Review, userId: number) => Promise<Review>;
-    saveBulk: (reviews: Array<Review>, productIds: Array<number>, userIds: Array<number>) => Promise<Array<Review>>;
-}
 
 class ReviewRepository implements Repository {
     public async save(review: Review, userId: number): Promise<Review> {

@@ -1,17 +1,8 @@
-import { cpSync } from "fs";
-import UserDao from "../../user/infrastructure/UserDao";
-import Product from "../domain/Product";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
+import Product from "../../domain/Product";
+import { Repository } from "../Repository";
 
 import ProductDao from "./ProductDao";
-
-interface Repository {
-    save: (product: Product, userId: number) => Promise<Product>;
-    saveBulk: (products: Array<Product>, userIds: Array<number>) => Promise<Array<Product>>;
-    getAllProducts: () => Promise<Array<Product>>;
-    getProductById: (productId: number) => Promise<Product> | null;
-    deleteProductById: (productId: number) => Promise<void>;
-    updateProductById: (productId: number, product: Product) => Promise<Product> | null;
-}
 
 class ProductRepository implements Repository {
     public async save(product: Product, userId: number): Promise<Product> {

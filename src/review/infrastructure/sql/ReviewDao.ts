@@ -7,9 +7,9 @@ import {
     Sequelize,
 } from "sequelize";
 
-import ProductDao from "../../product/infrastructure/ProductDao";
-import UserDao from "../../user/infrastructure/UserDao";
-import Review from "../domain/Review";
+import ProductDao from "../../../product/infrastructure/sql/ProductDao";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
+import Review from "../../domain/Review";
 
 interface ReviewAttributes {
     id: number;

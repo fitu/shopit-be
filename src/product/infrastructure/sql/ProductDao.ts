@@ -12,9 +12,9 @@ import {
     Sequelize,
 } from "sequelize";
 
-import ReviewDao from "../../review/infrastructure/ReviewDao";
-import UserDao from "../../user/infrastructure/UserDao";
-import Product, { ProductCategory } from "../domain/Product";
+import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
+import Product, { ProductCategory } from "../../domain/Product";
 
 interface ProductAttributes {
     id: number;

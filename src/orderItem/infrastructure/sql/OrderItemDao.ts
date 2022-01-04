@@ -8,8 +8,8 @@ import {
     Sequelize,
 } from "sequelize";
 
-import OrderDao from "../../order/infrastructure/OrderDao";
-import ProductDao from "../../product/infrastructure/ProductDao";
+import OrderDao from "../../../order/infrastructure/sql/OrderDao";
+import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 
 interface OrderItemAttributes {
     id: number;

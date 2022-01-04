@@ -12,9 +12,9 @@ import {
     Sequelize,
 } from "sequelize";
 
-import CartItemDao from "../../cartItem/infrastructure/CartItemDao";
-import UserDao from "../../user/infrastructure/UserDao";
-import Cart from "../domain/Cart";
+import CartItemDao from "../../../cartItem/infrastructure/sql/CartItemDao";
+import UserDao from "../../../user/infrastructure/sql/UserDao";
+import Cart from "../../domain/Cart";
 
 interface CartAttributes {
     id: number;

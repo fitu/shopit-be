@@ -14,13 +14,13 @@ import {
     HasOneGetAssociationMixin,
 } from "sequelize";
 
-import ProductDao from "../../product/infrastructure/ProductDao";
-import CartDao from "../../cart/infrastructure/CartDao";
-import AvatarDao from "../../avatar/infrastructure/AvatarDao";
-import ReviewDao from "../../review/infrastructure/ReviewDao";
-import PaymentInfoDao from "../../paymentInfo/infrastructure/PaymentInfoDao";
-import ShippingInfoDao from "../../shippingInfo/infrastructure/ShippingInfoDao";
-import User, { UserRole } from "../domain/User";
+import ProductDao from "../../../product/infrastructure/sql/ProductDao";
+import CartDao from "../../../cart/infrastructure/sql/CartDao";
+import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
+import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
+import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
+import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
+import User, { UserRole } from "../../domain/User";
 
 interface UserAttributes {
     id: number;
