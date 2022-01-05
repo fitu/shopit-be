@@ -11,7 +11,6 @@ import ReviewDao, { init as initReview } from "../../../review/infrastructure/sq
 import PaymentOrderDao, { init as initPaymentOrder } from "../../../paymentOrder/infrastructure/sql/PaymentOrderDao";
 import PaymentInfoDao, { init as initPaymentInfo } from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 import ShippingInfoDao, { init as initShippingInfo } from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
-
 import Database, { DatabaseOptions } from "../database";
 
 class SqlDb implements Database {
