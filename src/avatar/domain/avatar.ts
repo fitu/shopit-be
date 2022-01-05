@@ -1,5 +1,13 @@
 class Avatar {
-    constructor(public id: number, public publicId: string, public url: string) {}
+    readonly id: number;
+    readonly publicId: string;
+    readonly url: string;
+
+    constructor({ id, publicId, url }: { id: number; publicId: string; url: string }) {
+        this.id = id;
+        this.publicId = publicId;
+        this.url = url;
+    }
 }
 
 export default Avatar;

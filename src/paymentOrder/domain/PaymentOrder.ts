@@ -1,5 +1,11 @@
 class PaymentOrder {
-    constructor(public id: number, public amount: number) {}
+    readonly id: number;
+    readonly amount: number;
+
+    constructor({ id, amount }: { id: number; amount: number }) {
+        this.id = id;
+        this.amount = amount;
+    }
 }
 
 export default PaymentOrder;

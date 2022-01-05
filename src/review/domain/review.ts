@@ -1,5 +1,15 @@
 class Review {
-    constructor(public id: number, public name: string, public rating: number, public comment: string) {}
+    readonly id: number;
+    readonly name: string;
+    readonly rating: number;
+    readonly comment: string;
+
+    constructor({ id, name, rating, comment }: { id: number; name: string; rating: number; comment: string }) {
+        this.id = id;
+        this.name = name;
+        this.rating = rating;
+        this.comment = comment;
+    }
 }
 
 export default Review;

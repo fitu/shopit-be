@@ -22,16 +22,16 @@ class AddProductInteractor implements Interactor {
     public async execute(): Promise<ProductData> {
         // TODO: Validate
 
-        const newProduct = new Product(
-            1, // TODO: remove hardcoded
-            this.data.productData.title,
-            this.data.productData.description,
-            this.data.productData.price,
-            this.data.productData.ratings,
-            this.data.productData.imageUrl,
-            this.data.productData.category,
-            this.data.productData.stock
-        );
+        const newProduct = new Product({
+            id: 1, // TODO: remove hardcoded
+            title: this.data.productData.title,
+            description: this.data.productData.description,
+            price: this.data.productData.price,
+            ratings: this.data.productData.ratings,
+            imageUrl: this.data.productData.imageUrl,
+            category: this.data.productData.category,
+            stock: this.data.productData.stock,
+        });
         const createdProduct = await this.productService.create(newProduct, this.data.userId);
 
         return ProductData.fromModel(createdProduct);

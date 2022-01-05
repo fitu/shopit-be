@@ -13,16 +13,43 @@ type ProductCategory =
     | "Home";
 
 class Product {
-    constructor(
-        public id: number,
-        public title: string,
-        public description: string | null,
-        public price: number,
-        public ratings: number,
-        public imageUrl: string,
-        public category: ProductCategory,
-        public stock: number
-    ) {}
+    readonly id: number;
+    readonly title: string;
+    readonly description: string | null;
+    readonly price: number;
+    readonly ratings: number;
+    readonly imageUrl: string;
+    readonly category: ProductCategory;
+    readonly stock: number;
+
+    constructor({
+        id,
+        title,
+        description,
+        price,
+        ratings,
+        imageUrl,
+        category,
+        stock,
+    }: {
+        id: number;
+        title: string;
+        description: string | null;
+        price: number;
+        ratings: number;
+        imageUrl: string;
+        category: ProductCategory;
+        stock: number;
+    }) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.ratings = ratings;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.stock = stock;
+    }
 }
 
 export type { ProductCategory };

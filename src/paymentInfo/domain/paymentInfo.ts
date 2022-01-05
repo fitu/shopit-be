@@ -1,7 +1,13 @@
 type PaymentStatus = "not-paid" | "paid";
 
 class PaymentInfo {
-    constructor(public id: number, public status: PaymentStatus) {}
+    readonly id: number;
+    readonly status: PaymentStatus;
+
+    constructor({ id, status }: { id: number; status: PaymentStatus }) {
+        this.id = id;
+        this.status = status;
+    }
 }
 
 export type { PaymentStatus };
