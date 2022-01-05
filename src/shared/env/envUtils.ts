@@ -1,13 +1,15 @@
 import { cleanEnv, str, port } from "envalid";
 import dotenv from "dotenv";
 
+import { DbType } from "../db/database";
+
 const validateEnv = (): any => {
     // Load envs
     dotenv.config();
 
     // Validate and clear envs
     const env = cleanEnv(process.env, {
-        DB_TYPE: str(),
+        DB_TYPE: str({ choices: [DbType.SQL.toString(), DbType.NO_SQL.toString()] }),
         DB_SQL_NAME: str(),
         DB_SQL_USER_NAME: str(),
         DB_SQL_PASSWORD: str(),

@@ -1,7 +1,7 @@
 {
   "name": "shopit-be",
   "version": "1.0.0",
-  "description": "Initial commit",
+  "description": "Shopit!",
   "main": "app.js",
   "scripts": {
     "start": "npm run build && NODE_ENV=DEVELOPMENT && node dist/server.js",
