@@ -19,7 +19,7 @@ import App from "./app";
         await db.init();
 
         // Create Repositories
-        const { productRepository, userRepository, cartRepository } = getRepositories(env);
+        const { productRepository } = getRepositories(env);
 
         // Create Services
         const productService = new ProductService(productRepository);

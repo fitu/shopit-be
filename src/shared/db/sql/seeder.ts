@@ -1,19 +1,14 @@
-import csv from "csv-parser";
-import fs from "fs";
-
 import ProductCSV from "../../../product/infrastructure/data/ProductCSV";
 import ReviewCSV from "../../../review/infrastructure/data/ReviewCSV";
 import ShippingInfoCSV from "../../../shippingInfo/infrastructure/data/ShippingInfoCSV";
 import UserCSV from "../../../user/infrastructure/data/UserCSV";
-import ProductRepository from "../../../product/infrastructure/sql/ProductRepository";
-import ReviewRepository from "../../../review/infrastructure/sql/ReviewRepository";
-import ShippingInfoRepository from "../../../shippingInfo/infrastructure/sql/ShippingInfoRepository";
-import UserRepository from "../../../user/infrastructure/sql/UserRepository";
 import ProductService from "../../../product/domain/ProductService";
 import ReviewService from "../../../review/domain/ReviewService";
 import ShippingInfoService from "../../../shippingInfo/domain/ShippingInfoService";
 import UserService from "../../../user/domain/UserService";
 import validateEnv from "../../env/envUtils";
+import getRepositories from "../../../shared/repository/Repository";
+import { readFromCsv } from "../../../shared/data/csvUtils";
 
 import Db from "./SqlDb";
 
@@ -22,7 +17,7 @@ const REVIEWS_CSV_PATH = "./src/review/infrastructure/data/reviews.csv";
 const SHIPPINGS_INFO_CSV_PATH = "./src/shippingInfo/infrastructure/data/shippingsInfo.csv";
 const USERS_CSV_PATH = "./src/user/infrastructure/data/users.csv";
 
-const seedProducts = async () => {
+const seedDb = async () => {
     try {
         // Validate env before start
         const env = validateEnv();
@@ -33,10 +28,8 @@ const seedProducts = async () => {
 
         await db.clearDB();
 
-        const userRepository = new UserRepository();
-        const shippingInfoRepository = new ShippingInfoRepository();
-        const productRepository = new ProductRepository();
-        const reviewRepository = new ReviewRepository();
+        // Create Repositories
+        const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories(env);
 
         const userService = new UserService(userRepository);
         const shippingInfoService = new ShippingInfoService(shippingInfoRepository);
@@ -53,20 +46,6 @@ const seedProducts = async () => {
         console.log("DB fulfilled!");
         process.exit();
     }
-};
-
-const readFromCsv = async <T>(csvPath: string): Promise<Array<T>> => {
-    console.log(`Loading file: ${csvPath}`);
-    const items: Array<T> = [];
-
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(csvPath)
-            .pipe(csv())
-            .on("data", (data) => items.push(data))
-            .on("end", async () => {
-                resolve(items);
-            });
-    });
 };
 
 const createUsers = async (userService: UserService): Promise<void> => {
@@ -97,4 +76,4 @@ const createReviews = async (reviewService: ReviewService): Promise<void> => {
     await reviewService.createBulk(reviews, productIds, userIds);
 };
 
-seedProducts();
+seedDb();
