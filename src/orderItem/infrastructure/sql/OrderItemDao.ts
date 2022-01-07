@@ -40,7 +40,7 @@ class OrderItemDao extends Model<OrderItemAttributes, OrderItemCreationAttribute
     };
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     OrderItemDao.init(
         {
             id: {

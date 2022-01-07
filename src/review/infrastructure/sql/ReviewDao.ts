@@ -1,11 +1,4 @@
-import {
-    Model,
-    DataTypes,
-    Optional,
-    HasOneGetAssociationMixin,
-    HasOneSetAssociationMixin,
-    Sequelize,
-} from "sequelize";
+import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssociationMixin, Sequelize } from "sequelize";
 
 import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
@@ -48,7 +41,7 @@ class ReviewDao extends Model<ReviewAttributes, ReviewCreationAttributes> implem
     }
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     ReviewDao.init(
         {
             id: {

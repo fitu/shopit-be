@@ -3,6 +3,12 @@ populatedb:
 	docker-compose run shopit npm run seeder:sql
 	docker-compose run shopit npm run seeder:noSql
 
+populate-sqñ:
+	docker-compose run shopit npm run seeder:sql
+
+populate-nosql:
+	docker-compose run shopit npm run seeder:noSql
+
 # Config
 envs:
 	docker-compose run shopit env

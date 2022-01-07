@@ -1,12 +1,15 @@
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
+import UserDao from "./UserDao";
+
 class UserRepository implements Repository {
     public async save(user: User): Promise<User> {
         return new Promise(() => {});
     }
 
     public async saveBulk(users: Array<User>): Promise<Array<User>> {
+        await UserDao.getModel().create(users[0]);
         return new Promise(() => {});
     }
 

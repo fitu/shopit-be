@@ -1,18 +1,32 @@
-import mongoose from "mongoose";
+import mongoose, { Model, Mongoose } from "mongoose";
 
-const reviewSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    rating: {
-        type: Number,
-        required: true,
-    },
-    comment: {
-        type: String,
-        required: true,
-    },
-});
+class ReviewDao {
+    private static model: Model<ReviewDao>;
 
-export default reviewSchema;
+    constructor() {}
+
+    public init(instance: Mongoose): void {
+        const schema = new mongoose.Schema({
+            name: {
+                type: String,
+                required: true,
+            },
+            rating: {
+                type: Number,
+                required: true,
+            },
+            comment: {
+                type: String,
+                required: true,
+            },
+        });
+
+        ReviewDao.model = instance.model("Review", schema);
+    }
+
+    public static getModel(): Model<ReviewDao> {
+        return ReviewDao.model;
+    }
+}
+
+export default ReviewDao;

@@ -83,7 +83,7 @@ class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> imp
     }
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     ProductDao.init(
         {
             id: {

@@ -6,7 +6,6 @@ import {
     HasManyGetAssociationsMixin,
     HasManyAddAssociationMixin,
     HasManyHasAssociationMixin,
-    HasOne,
     HasOneSetAssociationMixin,
     HasManySetAssociationsMixin,
     HasManyCountAssociationsMixin,
@@ -112,7 +111,7 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     }
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     UserDao.init(
         {
             id: {

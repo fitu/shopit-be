@@ -40,7 +40,7 @@ class CartItemDao extends Model<CartItemAttributes, CartItemCreationAttributes> 
     };
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     CartItemDao.init(
         {
             id: {

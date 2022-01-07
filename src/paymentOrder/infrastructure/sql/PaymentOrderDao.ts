@@ -43,7 +43,7 @@ class PaymentOrderDao
     };
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     PaymentOrderDao.init(
         {
             id: {

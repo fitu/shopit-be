@@ -55,7 +55,7 @@ class CartDao extends Model<CartAttributes, CartCreationAttributes> implements C
     }
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     CartDao.init(
         {
             id: {

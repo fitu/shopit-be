@@ -31,7 +31,7 @@ class AvatarDao extends Model<AvatarAttributes, AvatarCreationAttributes> implem
     }
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     AvatarDao.init(
         {
             id: {

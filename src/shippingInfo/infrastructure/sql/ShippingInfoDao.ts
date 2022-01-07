@@ -66,7 +66,7 @@ class ShippingInfoDao
     }
 }
 
-const init = (sequelize: Sequelize) => {
+const init = (sequelize: Sequelize): void => {
     ShippingInfoDao.init(
         {
             id: {
