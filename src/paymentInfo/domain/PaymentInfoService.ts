@@ -10,11 +10,11 @@ class PaymentInfoService {
     }
 
     public async create(paymentInfo: PaymentInfo, userId: number): Promise<PaymentInfo> {
-        return await this.paymentInfoRepository.save(paymentInfo, userId);
+        return this.paymentInfoRepository.save(paymentInfo, userId);
     }
 
     public async createBulk(paymentsInfo: Array<PaymentInfo>, userIds: Array<number>): Promise<Array<PaymentInfo>> {
-        return await this.paymentInfoRepository.saveBulk(paymentsInfo, userIds);
+        return this.paymentInfoRepository.saveBulk(paymentsInfo, userIds);
     }
 }
 

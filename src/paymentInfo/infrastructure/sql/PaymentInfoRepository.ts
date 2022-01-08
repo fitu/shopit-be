@@ -26,7 +26,7 @@ class PaymentInfoRepository implements Repository {
         const newPaymentsInfo = await PaymentInfoDao.bulkCreate(paymentsInfoToSave);
         const usersWithPaymentsInfoPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
-            return await user.setPaymentsInfo([newPaymentsInfo[index]]);
+            return user.setPaymentsInfo([newPaymentsInfo[index]]);
         });
 
         await Promise.all(usersWithPaymentsInfoPromises);

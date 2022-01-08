@@ -10,15 +10,16 @@ class UserService {
     }
 
     public async create(user: User): Promise<User> {
-        return await this.userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     public async createBulk(users: Array<User>): Promise<Array<User>> {
-        return await this.userRepository.saveBulk(users);
+        console.log(users)
+        return this.userRepository.saveBulk(users);
     }
 
     public async getUserById(userId: number): Promise<User> {
-        return await this.userRepository.getUserById(userId);
+        return this.userRepository.getUserById(userId);
     }
 }
 

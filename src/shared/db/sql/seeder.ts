@@ -9,6 +9,7 @@ import UserService from "../../../user/domain/UserService";
 import validateEnv from "../../env/envUtils";
 import getRepositories from "../../../shared/repository/Repository";
 import { readFromCsv } from "../../../shared/data/csvUtils";
+import { DbType } from "../database";
 
 import Db from "./SqlDb";
 
@@ -29,7 +30,10 @@ const seedDb = async () => {
         await db.clearDB();
 
         // Create Repositories
-        const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories(env);
+        const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories({
+            ...env,
+            DB_TYPE: DbType.SQL.toString(),
+        });
 
         const userService = new UserService(userRepository);
         const shippingInfoService = new ShippingInfoService(shippingInfoRepository);

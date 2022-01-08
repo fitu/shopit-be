@@ -65,7 +65,7 @@ class UserRepository implements Repository {
     }
 
     public async getUserById(userId: number): Promise<User> {
-        return await UserDao.findByPk(userId);
+        return UserDao.findByPk(userId);
     }
 }
 

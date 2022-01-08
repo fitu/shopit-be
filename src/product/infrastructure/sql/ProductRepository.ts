@@ -39,6 +39,7 @@ class ProductRepository implements Repository {
 
         const usersWithProductsPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
+            // TODO: is this required?
             return await user.setProducts([newProducts[index]]);
         });
         await Promise.all(usersWithProductsPromises);

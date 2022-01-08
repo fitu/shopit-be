@@ -10,11 +10,11 @@ class ShippingInfoService {
     }
 
     public async create(shippingInfo: ShippingInfo, userId: number): Promise<ShippingInfo> {
-        return await this.shippingInfoRepository.save(shippingInfo, userId);
+        return this.shippingInfoRepository.save(shippingInfo, userId);
     }
 
     public async createBulk(shippingsInfo: Array<ShippingInfo>, userIds: Array<number>): Promise<Array<ShippingInfo>> {
-        return await this.shippingInfoRepository.saveBulk(shippingsInfo, userIds);
+        return this.shippingInfoRepository.saveBulk(shippingsInfo, userIds);
     }
 }
 

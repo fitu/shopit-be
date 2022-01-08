@@ -10,27 +10,27 @@ class ProductService {
     }
 
     public async create(product: Product, userId: number): Promise<Product> {
-        return await this.productRepository.save(product, userId);
+        return this.productRepository.save(product, userId);
     }
 
     public async createBulk(products: Array<Product>, userIds: Array<number>): Promise<Array<Product>> {
-        return await this.productRepository.saveBulk(products, userIds);
+        return this.productRepository.saveBulk(products, userIds);
     }
 
     public async getAllProducts(): Promise<Array<Product>> {
-        return await this.productRepository.getAllProducts();
+        return this.productRepository.getAllProducts();
     }
 
     public async getProductById(productId: number): Promise<Product> | null {
-        return await this.productRepository.getProductById(productId);
+        return this.productRepository.getProductById(productId);
     }
 
     public async deleteProductById(productId: number): Promise<void> {
-        await this.productRepository.deleteProductById(productId);
+        return this.productRepository.deleteProductById(productId);
     }
 
     public async updateProductById(productId: number, product: Product): Promise<Product> | null {
-        return await this.productRepository.updateProductById(productId, product);
+        return this.productRepository.updateProductById(productId, product);
     }
 }
 

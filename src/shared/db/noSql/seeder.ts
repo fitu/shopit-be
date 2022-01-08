@@ -9,6 +9,7 @@ import UserService from "../../../user/domain/UserService";
 import { readFromCsv } from "../../../shared/data/csvUtils";
 import getRepositories from "../../../shared/repository/Repository";
 import validateEnv from "../../env/envUtils";
+import { DbType } from "../database";
 
 import Db from "./NoSqlDb";
 
@@ -29,7 +30,10 @@ const seedDb = async () => {
         await db.clearDB();
 
         // Create Repositories
-        const { productRepository, userRepository, reviewRepository } = getRepositories(env);
+        const { productRepository, userRepository, reviewRepository } = getRepositories({
+            ...env,
+            DB_TYPE: DbType.NO_SQL.toString(),
+        });
 
         const userService = new UserService(userRepository);
         const productService = new ProductService(productRepository);
