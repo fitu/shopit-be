@@ -1,52 +1,60 @@
-import mongoose, { Model, Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
-class UserDao {
-    private static model: Model<UserDao>;
+import User from "../../../user/domain/User";
 
-    constructor() {}
+const schema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    role: {
+        type: String,
+        required: true,
+        enum: {
+            // TODO: remove hardcoded
+            values: ["user", "admin"],
+            message: "Please select correct category for product",
+        },
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    resetPasswordToken: {
+        type: String,
+    },
+    resetPasswordExpire: {
+        type: Date,
+    },
+    // TODO: add shippingInfo, avatar, paymentInfo, cart
+});
 
-    public init(instance: Mongoose): void {
-        const schema = new mongoose.Schema({
-            firstName: {
-                type: String,
-                required: true,
-            },
-            lastName: {
-                type: String,
-                required: true,
-            },
-            email: {
-                type: String,
-                required: true,
-            },
-            role: {
-                type: String,
-                required: true,
-                enum: {
-                    // TODO: remove hardcoded
-                    values: ["user", "admin"],
-                    message: "Please select correct category for product",
-                },
-            },
-            password: {
-                type: String,
-                required: true,
-            },
-            resetPasswordToken: {
-                type: String,
-            },
-            resetPasswordExpire: {
-                type: Date,
-            },
-            // TODO: add shippingInfo, avatar, paymentInfo, cart
-        });
+schema.methods.toModel = function (): User {
+    return {
+        id: this._id.toString(),
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        role: this.role,
+        password: this.password,
+        resetPasswordToken: this.resetPasswordToken,
+        resetPasswordExpire: this.resetPasswordExpire,
+        cart: null,
+        avatar: null,
+        products: [],
+        reviews: [],
+        shippingsInfo: null,
+    };
+};
 
-        UserDao.model = instance.model("User", schema);
-    }
+const model = mongoose.model("User", schema);
 
-    public static getModel(): Model<UserDao> {
-        return UserDao.model;
-    }
-}
-
-export default UserDao;
+export default model;

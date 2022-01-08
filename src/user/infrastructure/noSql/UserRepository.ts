@@ -5,12 +5,17 @@ import UserDao from "./UserDao";
 
 class UserRepository implements Repository {
     public async save(user: User): Promise<User> {
-        return new Promise(() => {});
+        // TODO: complete this
+        const userToSave = user;
+        const newUser = await UserDao.create(userToSave);
+        return newUser.toModel();
     }
 
     public async saveBulk(users: Array<User>): Promise<Array<User>> {
-        await UserDao.getModel().create(users[0]);
-        return new Promise(() => {});
+        // TODO: complete this
+        const usersToSave = users.map((user) => user);
+        const newUsers = await UserDao.insertMany(usersToSave);
+        return newUsers.map((newUser) => newUser.toModel());
     }
 
     public async addProduct(userId: number, productId: number): Promise<void> {

@@ -14,8 +14,9 @@ class UserService {
     }
 
     public async createBulk(users: Array<User>): Promise<Array<User>> {
-        console.log(users)
-        return this.userRepository.saveBulk(users);
+        const foo = await this.userRepository.saveBulk(users);
+        console.log(foo)
+        return foo;
     }
 
     public async getUserById(userId: number): Promise<User> {
