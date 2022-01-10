@@ -1,13 +1,22 @@
+import { zip } from "lodash";
+
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
+import ProductDao from "./ProductDao";
+
 class ProductRepository implements Repository {
     public async save(product: Product, userId: number): Promise<Product> {
-        return new Promise(() => {});
+        const productToSave = { ...product, userId };
+        const newProduct = await ProductDao.create(productToSave);
+        return newProduct.toModel();
     }
 
     public async saveBulk(products: Array<Product>, userIds: Array<number>): Promise<Array<Product>> {
-        return new Promise(() => {});
+        const productsUsers: Array<[Product, number]> = zip(products, userIds);
+        const productToSave = productsUsers.map(([product, userId]) => ({ ...product, userId }));
+        const newProducts = await ProductDao.insertMany(productToSave);
+        return newProducts.map((newProduct) => newProduct.toModel());
     }
 
     public async getAllProducts(): Promise<Array<Product>> {

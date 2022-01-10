@@ -21,7 +21,7 @@ const schema = new mongoose.Schema({
         enum: {
             // TODO: remove hardcoded
             values: ["user", "admin"],
-            message: "Please select correct category for product",
+            message: "Please select correct role",
         },
     },
     password: {

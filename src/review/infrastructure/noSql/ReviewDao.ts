@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import Review from "../../../review/domain/Review";
+
 const schema = new mongoose.Schema({
     name: {
         type: String,
@@ -14,6 +16,15 @@ const schema = new mongoose.Schema({
         required: true,
     },
 });
+
+schema.methods.toModel = function (): Review {
+    return {
+        id: this._id.toString(),
+        name: this.name,
+        rating: this.rating,
+        comment: this.comment,
+    };
+};
 
 const model = mongoose.model("Review", schema);
 
