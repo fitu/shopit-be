@@ -1,7 +1,7 @@
 import Avatar from "../../domain/Avatar";
 
 class AvatarCSV {
-    constructor(public id: number, public publicId: string | null, public url: string | null) {}
+    constructor(public id: string, public publicId: string | null, public url: string | null) {}
 
     static toModel(avatarCSV: AvatarCSV): Avatar {
         return {

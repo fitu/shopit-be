@@ -5,8 +5,9 @@ import { Repository } from "../Repository";
 import ProductDao from "./ProductDao";
 
 class ProductRepository implements Repository {
-    public async save(product: Product, userId: number): Promise<Product> {
+    public async save(product: Product, userId: string): Promise<Product> {
         const newProduct = await ProductDao.create({
+            ...(product.id && { id: product.id }),
             title: product.title,
             description: product.description,
             price: product.price,
@@ -22,9 +23,10 @@ class ProductRepository implements Repository {
         return newProduct.toModel();
     }
 
-    public async saveBulk(products: Array<Product>, userIds: Array<number>): Promise<Array<Product>> {
+    public async saveBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         const productsToSave = products.map((product) => {
             return {
+                ...(product.id && { id: product.id }),
                 title: product.title,
                 description: product.description,
                 price: +product.price,
@@ -52,17 +54,17 @@ class ProductRepository implements Repository {
         return allProducts;
     }
 
-    public async getProductById(productId: number): Promise<Product> | null {
+    public async getProductById(productId: string): Promise<Product> | null {
         const product = await ProductDao.findByPk(productId);
         return product;
     }
 
-    public async deleteProductById(productId: number): Promise<void> {
+    public async deleteProductById(productId: string): Promise<void> {
         const productToDelete = await ProductDao.findByPk(productId);
         await productToDelete.destroy();
     }
 
-    public async updateProductById(productId: number, product: Product): Promise<Product> | null {
+    public async updateProductById(productId: string, product: Product): Promise<Product> | null {
         const updatedProduct = await ProductDao.findByPk(productId);
 
         if (!updatedProduct) {

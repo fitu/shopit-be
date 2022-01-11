@@ -17,7 +17,7 @@ import UserDao from "../../../user/infrastructure/sql/UserDao";
 import ShippingInfo from "../../domain/ShippingInfo";
 
 interface ShippingInfoAttributes {
-    id: number;
+    id: string;
     address: string;
     city: string;
     phone: string;
@@ -31,7 +31,7 @@ class ShippingInfoDao
     extends Model<ShippingInfoAttributes, ShippingInfoCreationAttributes>
     implements ShippingInfoAttributes
 {
-    public id!: number;
+    public id!: string;
     public address!: string;
     public city!: string;
     public phone!: string;
@@ -70,8 +70,8 @@ const init = (sequelize: Sequelize): void => {
     ShippingInfoDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

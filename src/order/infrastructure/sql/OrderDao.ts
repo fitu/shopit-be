@@ -21,7 +21,7 @@ import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingIn
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 
 interface OrderAttributes {
-    id: number;
+    id: string;
     itemsPrice: number;
     taxPrice: number;
     shippingPrice: number;
@@ -34,7 +34,7 @@ interface OrderAttributes {
 interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {}
 
 class OrderDao extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
-    public id!: number;
+    public id!: string;
     public itemsPrice!: number;
     public taxPrice!: number;
     public shippingPrice!: number;
@@ -83,8 +83,8 @@ const init = (sequelize: Sequelize): void => {
     OrderDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

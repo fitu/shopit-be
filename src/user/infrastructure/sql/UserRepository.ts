@@ -8,6 +8,7 @@ import UserDao from "./UserDao";
 class UserRepository implements Repository {
     public async save(user: User): Promise<User> {
         const newUser = await UserDao.create({
+            ...(user.id && { id: user.id }),
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -38,6 +39,7 @@ class UserRepository implements Repository {
                 : null;
 
             return {
+                ...(user.id && { id: user.id }),
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
@@ -60,11 +62,11 @@ class UserRepository implements Repository {
         return newUsers.map((newUser) => newUser.toModel());
     }
 
-    public async addProduct(userId: number, productId: number): Promise<void> {
+    public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
     }
 
-    public async getUserById(userId: number): Promise<User> {
+    public async getUserById(userId: string): Promise<User> {
         return UserDao.findByPk(userId);
     }
 }

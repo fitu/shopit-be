@@ -17,7 +17,7 @@ import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product, { ProductCategory } from "../../domain/Product";
 
 interface ProductAttributes {
-    id: number;
+    id: string;
     title: string;
     description: string | null;
     price: number;
@@ -30,7 +30,7 @@ interface ProductAttributes {
 interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
 
 class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
-    public id!: number;
+    public id!: string;
     public title!: string;
     public description!: string | null;
     public price!: number;
@@ -87,8 +87,8 @@ const init = (sequelize: Sequelize): void => {
     ProductDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

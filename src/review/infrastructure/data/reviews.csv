@@ -1,3 +1,3 @@
-name,rating,comment,productId,userId
-nice,5,it was really good,1,1
-bad,1,it was really bad,2,1
+id,name,rating,comment,productId,userId
+ba740677-f525-47bf-82a2-8104707d4246,nice,5,it was really good,baab934b-483f-4d45-9cf5-e75237eeb75b,bf889d9c-59a9-401c-a581-f5be6917a516
+c964e6f8-da7d-468f-96d0-c7a3ebee0801,bad,1,it was really bad,baab934b-483f-4d45-9cf5-e75237eeb75b,bf889d9c-59a9-401c-a581-f5be6917a516

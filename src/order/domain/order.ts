@@ -1,7 +1,7 @@
 type OrderStatus = "processing" | "shipped" | "delivered";
 
 class Order {
-    readonly id: number;
+    readonly id: string;
     readonly itemsPrice: number;
     readonly taxPrice: number;
     readonly shippingPrice: number;
@@ -20,7 +20,7 @@ class Order {
         deliveredAt,
         paidAt,
     }: {
-        id: number;
+        id: string;
         itemsPrice: number;
         taxPrice: number;
         shippingPrice: number;

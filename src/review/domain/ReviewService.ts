@@ -9,14 +9,14 @@ class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public async create(review: Review, productId: number, userId: number): Promise<Review> {
+    public async create(review: Review, productId: string, userId: string): Promise<Review> {
         return this.reviewRepository.save(review, productId, userId);
     }
 
     public async createBulk(
         reviews: Array<Review>,
-        productIds: Array<number>,
-        userIds: Array<number>
+        productIds: Array<string>,
+        userIds: Array<string>
     ): Promise<Array<Review>> {
         return this.reviewRepository.saveBulk(reviews, productIds, userIds);
     }

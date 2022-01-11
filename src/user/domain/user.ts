@@ -7,7 +7,7 @@ import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
 type UserRole = "user" | "admin";
 
 class User {
-    readonly id: number;
+    readonly id: string;
     readonly firstName: string;
     readonly lastName: string;
     readonly email: string;
@@ -36,7 +36,7 @@ class User {
         reviews,
         shippingsInfo,
     }: {
-        id: number;
+        id: string;
         firstName: string;
         lastName: string;
         email: string;

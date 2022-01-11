@@ -2,12 +2,12 @@ import Review from "../../domain/Review";
 
 class ReviewCSV {
     constructor(
-        public id: number,
+        public id: string,
         public name: string,
         public rating: number,
         public comment: string,
-        public userId: number,
-        public productId: number
+        public userId: string,
+        public productId: string
     ) {}
 
     static toModel(reviewCSV: ReviewCSV): Review {

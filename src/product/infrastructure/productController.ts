@@ -10,6 +10,7 @@ import UpdateProductByIdInteractor from "../application/UpdateProductById";
 import ProductService from "../domain/ProductService";
 
 import ProductViewModel from "./ProductViewModel";
+import { ProductCategory } from "product/domain/Product";
 
 class ProductController implements Controller {
     public path = "/products";
@@ -42,7 +43,7 @@ class ProductController implements Controller {
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
         // TODO: validate
-        const data = { productId: +id };
+        const data = { productId: id };
 
         const interactor = new GetProductByIdInteractor(data, this.productService);
         const result = await interactor.execute();
@@ -58,10 +59,31 @@ class ProductController implements Controller {
     };
 
     private addProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { title, description, price, imageUrl, category, stock } = req.body;
-        const userId = 1; // TODO: remove hardcoded
+        const {
+            title,
+            description,
+            price,
+            imageUrl,
+            category,
+            stock,
+        }: {
+            title: string;
+            description: string;
+            price: number;
+            imageUrl: string;
+            category: ProductCategory;
+            stock: number;
+        } = req.body;
+        const userId = "bf889d9c-59a9-401c-a581-f5be6917a516"; // TODO: remove hardcoded
 
-        const productData = new ProductData(title, description, price, imageUrl, category, stock);
+        const productData = new ProductData({
+            title,
+            description,
+            price,
+            imageUrl,
+            category,
+            stock,
+        });
         const data = { productData, userId };
 
         const interactor = new AddProductInteractor(data, this.productService);
@@ -75,7 +97,7 @@ class ProductController implements Controller {
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
         // TODO: validate
-        const data = { productId: +id };
+        const data = { productId: id };
 
         const interactor = new DeleteProductByIdInteractor(data, this.productService);
         await interactor.execute();
@@ -85,11 +107,25 @@ class ProductController implements Controller {
 
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        const { title, description, price, imageUrl, category, stock } = req.body;
+        const {
+            title,
+            description,
+            price,
+            imageUrl,
+            category,
+            stock,
+        }: {
+            title: string;
+            description: string;
+            price: number;
+            imageUrl: string;
+            category: ProductCategory;
+            stock: number;
+        } = req.body;
 
-        const productData = new ProductData(title, description, price, imageUrl, category, stock);
+        const productData = new ProductData({ title, description, price, imageUrl, category, stock });
         // TODO: validate
-        const data = { productId: +id, productData };
+        const data = { productId: id, productData };
 
         const interactor = new UpdateProductByIdInteractor(data, this.productService);
         const result = await interactor.execute();

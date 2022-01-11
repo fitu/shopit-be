@@ -4,7 +4,7 @@ import ProductService from "../domain/ProductService";
 import ProductData from "./ProductData";
 
 interface DeleteProductByIdData {
-    productId: number;
+    productId: string;
 }
 
 class DeleteProductByIdInteractor implements Interactor {

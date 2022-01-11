@@ -5,7 +5,7 @@ import Product from "../domain/Product";
 import ProductData from "./ProductData";
 
 interface UpdateProductByIdData {
-    productId: number;
+    productId: string;
     productData: ProductData;
 }
 
@@ -22,7 +22,7 @@ class UpdateProductByIdInteractor implements Interactor {
     public async execute(): Promise<ProductData> | null {
         // TODO: Validate
         const productToUpdate = new Product({
-            id: 1, // TODO: remove hardcoded
+            id: '56f2a3e0-37fa-4cdb-91a7-f6194299432a', // TODO: remove hardcoded
             title: this.data.productData.title,
             description: this.data.productData.description,
             price: this.data.productData.price,

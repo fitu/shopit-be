@@ -2,7 +2,7 @@ import Cart from "../../domain/Cart";
 import { Repository } from "../Repository";
 
 class CartRepository implements Repository {
-    public async save(cart: Cart, userId: number): Promise<Cart> {
+    public async save(cart: Cart, userId: string): Promise<Cart> {
         return new Promise(() => {});
     }
 }

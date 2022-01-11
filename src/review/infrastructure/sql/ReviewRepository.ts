@@ -6,12 +6,16 @@ import { Repository } from "../Repository";
 import ReviewDao from "./ReviewDao";
 
 class ReviewRepository implements Repository {
-    public async save(review: Review, userId: number): Promise<Review> {
+    public async save(review: Review, productId: string, userId: string): Promise<Review> {
         const newReview = await ReviewDao.create({
+            ...(review.id && { id: review.id }),
             name: review.name,
             rating: review.rating,
             comment: review.comment,
         });
+
+        const product = await ProductDao.findByPk(productId);
+        await product.setReviews([newReview]);
 
         const user = await UserDao.findByPk(userId);
         await user.setReviews([newReview]);
@@ -21,11 +25,12 @@ class ReviewRepository implements Repository {
 
     public async saveBulk(
         reviews: Array<Review>,
-        productIds: Array<number>,
-        userIds: Array<number>
+        productIds: Array<string>,
+        userIds: Array<string>
     ): Promise<Array<Review>> {
         const reviewsToSave = reviews.map((review) => {
             return {
+                ...(review.id && { id: review.id }),
                 name: review.name,
                 rating: +review.rating,
                 comment: review.comment,

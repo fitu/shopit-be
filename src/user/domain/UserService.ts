@@ -17,7 +17,7 @@ class UserService {
         return this.userRepository.saveBulk(users);
     }
 
-    public async getUserById(userId: number): Promise<User> {
+    public async getUserById(userId: string): Promise<User> {
         return this.userRepository.getUserById(userId);
     }
 }

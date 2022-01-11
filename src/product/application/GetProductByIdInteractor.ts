@@ -4,7 +4,7 @@ import ProductService from "../domain/ProductService";
 import ProductData from "./ProductData";
 
 interface GetProductByIdData {
-    productId: number;
+    productId: string;
 }
 
 class GetProductByIdInteractor implements Interactor {

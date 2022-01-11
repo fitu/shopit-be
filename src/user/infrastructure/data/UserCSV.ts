@@ -4,7 +4,7 @@ import User, { UserRole } from "../../domain/User";
 
 class UserCSV {
     constructor(
-        public id: number,
+        public id: string,
         public firstName: string,
         public lastName: string,
         public email: string,
@@ -16,7 +16,7 @@ class UserCSV {
 
     static toModel(userCSV: UserCSV): User {
         const cart = CartCSV.toModel({
-            id: +userCSV["cart/id"],
+            id: userCSV["cart/id"],
             itemsPrice: +userCSV["cart/itemsPrice"],
             taxPrice: +userCSV["cart/taxPrice"],
             totalPrice: +userCSV["cart/totalPrice"],
@@ -24,7 +24,7 @@ class UserCSV {
 
         const avatar = userCSV["avatar/id"]
             ? AvatarCSV.toModel({
-                  id: +userCSV["avatar/id"],
+                  id: userCSV["avatar/id"],
                   publicId: userCSV["avatar/publicId"],
                   url: userCSV["avatar/url"],
               })

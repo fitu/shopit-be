@@ -22,7 +22,7 @@ import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingIn
 import User, { UserRole } from "../../domain/User";
 
 interface UserAttributes {
-    id: number;
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -35,7 +35,7 @@ interface UserAttributes {
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
 class UserDao extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-    public id!: number;
+    public id!: string;
     public firstName!: string;
     public lastName!: string;
     public email!: string;
@@ -115,8 +115,8 @@ const init = (sequelize: Sequelize): void => {
     UserDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

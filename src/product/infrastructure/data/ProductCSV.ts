@@ -2,7 +2,7 @@ import Product, { ProductCategory } from "../../domain/Product";
 
 class ProductCSV {
     constructor(
-        public id: number,
+        public id: string,
         public title: string,
         public description: string | null,
         public price: number,
@@ -10,7 +10,7 @@ class ProductCSV {
         public imageUrl: string,
         public category: ProductCategory,
         public stock: number,
-        public userId: number
+        public userId: string
     ) {}
 
     static toModel(productCSV: ProductCSV): Product {

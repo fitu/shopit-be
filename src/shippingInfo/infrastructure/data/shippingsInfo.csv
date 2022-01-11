@@ -1,3 +1,3 @@
-address,city,phone,postalCode,country,userId
-10 n 1111,La Plata,5492214611171,1900,Argentina,1
-6 n 2222,La Plata,5492212383361,1901,Argentina,1
+id,address,city,phone,postalCode,country,userId
+4681127e-fe12-4d13-bcda-21cdcf4a7d57,10 n 1111,La Plata,5492214611171,1900,Argentina,bf889d9c-59a9-401c-a581-f5be6917a516
+4b36d383-de64-4417-a6be-cf1613a6ead7,6 n 2222,La Plata,5492212383361,1901,Argentina,bf889d9c-59a9-401c-a581-f5be6917a516

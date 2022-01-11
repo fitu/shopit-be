@@ -1,5 +1,5 @@
 class ShippingInfo {
-    readonly id: number;
+    readonly id: string;
     readonly address: string;
     readonly city: string;
     readonly phone: string;
@@ -14,7 +14,7 @@ class ShippingInfo {
         postalCode,
         country,
     }: {
-        id: number;
+        id: string;
         address: string;
         city: string;
         phone: string;

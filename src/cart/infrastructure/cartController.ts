@@ -19,7 +19,7 @@ class CartController implements Controller {
     };
 
     private getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
+        const user = await UserDao.findByPk('bf889d9c-59a9-401c-a581-f5be6917a516'); // TODO: remove hardcoded
         // const cart = await user.cart;
         // const cartItems = await cart.getCartItems();
         // const products = cartItems.map(async (cartItem) => await cartItem.product);
@@ -30,7 +30,7 @@ class CartController implements Controller {
     private addProductToCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { productId } = req.body;
 
-        const user = await UserDao.findByPk(1); // TODO: remove hardcoded
+        const user = await UserDao.findByPk('bf889d9c-59a9-401c-a581-f5be6917a516'); // TODO: remove hardcoded
         // const cart = await user.cart;
         // const productsInCart = await cart.getCartItems({ where: { id: productId } });
 

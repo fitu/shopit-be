@@ -17,7 +17,7 @@ import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Cart from "../../domain/Cart";
 
 interface CartAttributes {
-    id: number;
+    id: string;
     itemsPrice: number;
     taxPrice: number;
     totalPrice: number;
@@ -26,7 +26,7 @@ interface CartAttributes {
 interface CartCreationAttributes extends Optional<CartAttributes, "id"> {}
 
 class CartDao extends Model<CartAttributes, CartCreationAttributes> implements CartAttributes {
-    public id!: number;
+    public id!: string;
     public itemsPrice!: number;
     public taxPrice!: number;
     public totalPrice!: number;
@@ -59,8 +59,8 @@ const init = (sequelize: Sequelize): void => {
     CartDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

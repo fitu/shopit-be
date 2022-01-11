@@ -9,11 +9,11 @@ class ProductService {
         this.productRepository = productRepository;
     }
 
-    public async create(product: Product, userId: number): Promise<Product> {
+    public async create(product: Product, userId: string): Promise<Product> {
         return this.productRepository.save(product, userId);
     }
 
-    public async createBulk(products: Array<Product>, userIds: Array<number>): Promise<Array<Product>> {
+    public async createBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         return this.productRepository.saveBulk(products, userIds);
     }
 
@@ -21,15 +21,15 @@ class ProductService {
         return this.productRepository.getAllProducts();
     }
 
-    public async getProductById(productId: number): Promise<Product> | null {
+    public async getProductById(productId: string): Promise<Product> | null {
         return this.productRepository.getProductById(productId);
     }
 
-    public async deleteProductById(productId: number): Promise<void> {
+    public async deleteProductById(productId: string): Promise<void> {
         return this.productRepository.deleteProductById(productId);
     }
 
-    public async updateProductById(productId: number, product: Product): Promise<Product> | null {
+    public async updateProductById(productId: string, product: Product): Promise<Product> | null {
         return this.productRepository.updateProductById(productId, product);
     }
 }

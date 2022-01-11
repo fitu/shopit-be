@@ -2,13 +2,13 @@ import ShippingInfo from "../../domain/ShippingInfo";
 
 class ShippingInfoCSV {
     constructor(
-        public id: number,
+        public id: string,
         public address: string,
         public city: string,
         public phone: string,
         public postalCode: string,
         public country: string,
-        public userId: number
+        public userId: string
     ) {}
 
     static toModel(shippingInfoCSV: ShippingInfoCSV): ShippingInfo {

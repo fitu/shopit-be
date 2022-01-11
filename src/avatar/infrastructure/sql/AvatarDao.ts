@@ -4,7 +4,7 @@ import Avatar from "../../domain/Avatar";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 
 interface AvatarAttributes {
-    id: number;
+    id: string;
     publicId: string;
     url: string;
 }
@@ -12,7 +12,7 @@ interface AvatarAttributes {
 interface AvatarCreationAttributes extends Optional<AvatarAttributes, "id"> {}
 
 class AvatarDao extends Model<AvatarAttributes, AvatarCreationAttributes> implements AvatarAttributes {
-    public id!: number;
+    public id!: string;
     public publicId!: string;
     public url!: string;
 
@@ -35,8 +35,8 @@ const init = (sequelize: Sequelize): void => {
     AvatarDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

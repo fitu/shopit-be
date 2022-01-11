@@ -17,7 +17,7 @@ import UserDao from "../../../user/infrastructure/sql/UserDao";
 import PaymentInfo, { PaymentStatus } from "../../domain/PaymentInfo";
 
 interface PaymentInfoAttributes {
-    id: number;
+    id: string;
     status: PaymentStatus;
 }
 
@@ -27,7 +27,7 @@ class PaymentInfoDao
     extends Model<PaymentInfoAttributes, PaymentInfoCreationAttributes>
     implements PaymentInfoAttributes
 {
-    public id!: number;
+    public id!: string;
     public status!: PaymentStatus;
 
     public readonly createdAt!: Date;
@@ -58,8 +58,8 @@ const init = (sequelize: Sequelize): void => {
     PaymentInfoDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

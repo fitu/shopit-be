@@ -13,7 +13,7 @@ type ProductCategory =
     | "Home";
 
 class Product {
-    readonly id: number;
+    readonly id: string;
     readonly title: string;
     readonly description: string | null;
     readonly price: number;
@@ -32,7 +32,7 @@ class Product {
         category,
         stock,
     }: {
-        id: number;
+        id: string;
         title: string;
         description: string | null;
         price: number;

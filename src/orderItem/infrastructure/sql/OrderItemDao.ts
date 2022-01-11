@@ -12,14 +12,14 @@ import OrderDao from "../../../order/infrastructure/sql/OrderDao";
 import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 
 interface OrderItemAttributes {
-    id: number;
+    id: string;
     quantity: number;
 }
 
 interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {}
 
 class OrderItemDao extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
-    public id!: number;
+    public id!: string;
     public quantity!: number;
 
     public readonly createdAt!: Date;
@@ -44,8 +44,8 @@ const init = (sequelize: Sequelize): void => {
     OrderItemDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

@@ -5,7 +5,7 @@ import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Review from "../../domain/Review";
 
 interface ReviewAttributes {
-    id: number;
+    id: string;
     name: string;
     rating: number;
     comment: string;
@@ -14,7 +14,7 @@ interface ReviewAttributes {
 interface ReviewCreationAttributes extends Optional<ReviewAttributes, "id"> {}
 
 class ReviewDao extends Model<ReviewAttributes, ReviewCreationAttributes> implements ReviewAttributes {
-    public id!: number;
+    public id!: string;
     public name!: string;
     public rating!: number;
     public comment!: string;
@@ -45,8 +45,8 @@ const init = (sequelize: Sequelize): void => {
     ReviewDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

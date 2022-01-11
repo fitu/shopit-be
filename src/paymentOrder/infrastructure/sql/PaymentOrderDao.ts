@@ -12,7 +12,7 @@ import OrderDao from "../../../order/infrastructure/sql/OrderDao";
 import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 
 interface PaymentOrderAttributes {
-    id: number;
+    id: string;
     amount: number;
 }
 
@@ -22,7 +22,7 @@ class PaymentOrderDao
     extends Model<PaymentOrderAttributes, OrderItemCreationAttributes>
     implements PaymentOrderAttributes
 {
-    public id!: number;
+    public id!: string;
     public amount!: number;
 
     public readonly createdAt!: Date;
@@ -47,8 +47,8 @@ const init = (sequelize: Sequelize): void => {
     PaymentOrderDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },

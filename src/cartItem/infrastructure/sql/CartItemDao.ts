@@ -12,14 +12,14 @@ import CartDao from "../../../cart/infrastructure/sql/CartDao";
 import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 
 interface CartItemAttributes {
-    id: number;
+    id: string;
     quantity: number;
 }
 
 interface CartItemCreationAttributes extends Optional<CartItemAttributes, "id"> {}
 
 class CartItemDao extends Model<CartItemAttributes, CartItemCreationAttributes> implements CartItemAttributes {
-    public id!: number;
+    public id!: string;
     public quantity!: number;
 
     public readonly createdAt!: Date;
@@ -44,8 +44,8 @@ const init = (sequelize: Sequelize): void => {
     CartItemDao.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                autoIncrement: true,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },
