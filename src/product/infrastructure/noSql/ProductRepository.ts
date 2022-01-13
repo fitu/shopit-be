@@ -14,8 +14,8 @@ class ProductRepository implements Repository {
 
     public async saveBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         const productsUsers: Array<[Product, string]> = zip(products, userIds);
-        const productToSave = productsUsers.map(([product, userId]) => ({ ...product, userId }));
-        const newProducts = await ProductDao.insertMany(productToSave);
+        const productsToSave = productsUsers.map(([product, userId]) => ({ ...product, userId }));
+        const newProducts = await ProductDao.insertMany(productsToSave);
         return newProducts.map((newProduct) => newProduct.toModel());
     }
 

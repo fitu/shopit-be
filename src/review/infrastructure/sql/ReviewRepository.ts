@@ -41,15 +41,13 @@ class ReviewRepository implements Repository {
 
         const productsWithReviewsPromises = productIds.map(async (productId, index) => {
             const product = await ProductDao.findByPk(productId);
-            // TODO: is this required?
-            return await product.setReviews([newReviews[index]]);
+            await product.setReviews([newReviews[index]]);
         });
         await Promise.all(productsWithReviewsPromises);
 
         const usersWithReviewsPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
-            // TODO: is this required?
-            return await user.setReviews([newReviews[index]]);
+            await user.setReviews([newReviews[index]]);
         });
         await Promise.all(usersWithReviewsPromises);
 

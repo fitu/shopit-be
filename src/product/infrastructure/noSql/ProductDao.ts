@@ -1,6 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-import Product from "../../../product/domain/Product";
+import Product, { ProductCategory } from "../../domain/Product";
+
+interface ProductDocument extends Document {
+    title: string;
+    description: string;
+    price: number;
+    ratings: number;
+    imageUrl: string;
+    category: ProductCategory;
+    stock: number;
+    toModel: () => Product;
+}
 
 const schema = new mongoose.Schema({
     title: {
@@ -51,18 +62,21 @@ const schema = new mongoose.Schema({
 });
 
 schema.methods.toModel = function (): Product {
+    const product = this as ProductDocument;
+
     return {
-        id: this._id.toString(),
-        title: this.title,
-        description: this.description,
-        price: this.price,
-        ratings: this.ratings,
-        imageUrl: this.imageUrl,
-        category: this.category,
-        stock: this.stock,
+        id: product._id.toString(),
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        ratings: product.ratings,
+        imageUrl: product.imageUrl,
+        category: product.category,
+        stock: product.stock,
     };
 };
 
-const model = mongoose.model("Product", schema);
+const model = mongoose.model<ProductDocument>("Product", schema);
 
+export type { ProductDocument };
 export default model;

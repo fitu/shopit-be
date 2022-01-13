@@ -1,6 +1,19 @@
-import mongoose from "mongoose";
+import crypto from "crypto";
+import mongoose, { Document } from "mongoose";
 
-import User from "../../../user/domain/User";
+import User, { UserRole } from "../../domain/User";
+
+interface UserDocument extends Document {
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: UserRole;
+    password: string;
+    resetPasswordToken: string;
+    resetPasswordExpire: Date;
+    toModel: () => User;
+    validatePassword(password: string): boolean;
+}
 
 const schema = new mongoose.Schema({
     firstName: {
@@ -37,16 +50,23 @@ const schema = new mongoose.Schema({
     // TODO: add shippingInfo, avatar, paymentInfo, cart
 });
 
+schema.methods.validatePassword = async function (password: string) {
+    // FIXME: fix this
+    return true;
+};
+
 schema.methods.toModel = function (): User {
+    const user = this as UserDocument;
+
     return {
-        id: this._id.toString(),
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        role: this.role,
-        password: this.password,
-        resetPasswordToken: this.resetPasswordToken,
-        resetPasswordExpire: this.resetPasswordExpire,
+        id: user._id.toString(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+        password: user.password,
+        resetPasswordToken: user.resetPasswordToken,
+        resetPasswordExpire: user.resetPasswordExpire,
         cart: null,
         avatar: null,
         products: [],
@@ -55,6 +75,20 @@ schema.methods.toModel = function (): User {
     };
 };
 
-const model = mongoose.model("User", schema);
+schema.pre("save", function (next) {
+    const user = this as UserDocument;
 
+    // Only hash the password if it has been modified (or is new)
+    if (!user.isModified("password")) {
+        return next();
+    }
+
+    const hash = crypto.createHash("md5").update(user.password).digest("hex");
+    user.password = hash;
+    next();
+});
+
+const model = mongoose.model<UserDocument>("User", schema);
+
+export type { UserDocument };
 export default model;

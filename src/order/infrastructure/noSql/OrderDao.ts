@@ -1,4 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+import Order, { OrderStatus } from "../../domain/Order";
+
+interface OrderDocument extends Document {
+    itemsPrice: number;
+    taxPrice: number;
+    shippingPrice: number;
+    totalPrice: number;
+    orderStatus: OrderStatus;
+    deliveredAt: Date;
+    paidAt: Date;
+    toModel: () => Order;
+}
 
 const schema = new mongoose.Schema({
     itemsPrice: {
@@ -35,6 +48,23 @@ const schema = new mongoose.Schema({
     },
 });
 
-const model = mongoose.model("Order", schema);
+schema.methods.toModel = function (): Order {
+    const review = this as OrderDocument;
 
+    return {
+        id: review.id,
+        itemsPrice: review.itemsPrice,
+        taxPrice: review.taxPrice,
+        shippingPrice: review.shippingPrice,
+        totalPrice: review.totalPrice,
+        orderStatus: review.orderStatus,
+        deliveredAt: review.deliveredAt,
+        paidAt: review.paidAt,
+    };
+};
+
+
+const model = mongoose.model<OrderDocument>("Order", schema);
+
+export type { OrderDocument };
 export default model;

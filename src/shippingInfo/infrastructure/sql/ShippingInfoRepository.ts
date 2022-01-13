@@ -36,8 +36,7 @@ class ShippingInfoRepository implements Repository {
         const newShippingsInfo = await ShippingInfoDao.bulkCreate(shippingsInfoToSave);
         const usersWithShippingsInfoPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
-            // TODO: is this required?
-            return await user.setShippingsInfo([newShippingsInfo[index]]);
+            await user.setShippingsInfo([newShippingsInfo[index]]);
         });
 
         await Promise.all(usersWithShippingsInfoPromises);

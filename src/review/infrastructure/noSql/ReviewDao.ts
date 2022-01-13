@@ -1,6 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-import Review from "../../../review/domain/Review";
+import Review from "../../domain/Review";
+
+interface ReviewDocument extends Document {
+    name: string;
+    rating: number;
+    comment: string;
+    toModel: () => Review;
+}
 
 const schema = new mongoose.Schema({
     name: {
@@ -18,14 +25,17 @@ const schema = new mongoose.Schema({
 });
 
 schema.methods.toModel = function (): Review {
+    const review = this as ReviewDocument;
+
     return {
-        id: this._id.toString(),
-        name: this.name,
-        rating: this.rating,
-        comment: this.comment,
+        id: review._id.toString(),
+        name: review.name,
+        rating: review.rating,
+        comment: review.comment,
     };
 };
 
-const model = mongoose.model("Review", schema);
+const model = mongoose.model<ReviewDocument>("Review", schema);
 
+export type { ReviewDocument };
 export default model;
