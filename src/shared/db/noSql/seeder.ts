@@ -4,7 +4,6 @@ import ShippingInfoCSV from "../../../shippingInfo/infrastructure/data/ShippingI
 import UserCSV from "../../../user/infrastructure/data/UserCSV";
 import ProductService from "../../../product/domain/ProductService";
 import ReviewService from "../../../review/domain/ReviewService";
-import ShippingInfoService from "../../../shippingInfo/domain/ShippingInfoService";
 import UserService from "../../../user/domain/UserService";
 import { readFromCsv } from "../../../shared/data/csvUtils";
 import getRepositories from "../../../shared/repository/Repository";
@@ -40,8 +39,6 @@ const seedDb = async () => {
         const reviewService = new ReviewService(reviewRepository);
 
         await createUsers(userService);
-        // FIXME: this
-        // await createShippingsInfo(userService);
         await createProducts(productService);
         await createReviews(reviewService);
     } catch (error) {
@@ -55,14 +52,23 @@ const seedDb = async () => {
 const createUsers = async (userService: UserService): Promise<void> => {
     const usersCSV = await readFromCsv<UserCSV>(USERS_CSV_PATH);
     const users = usersCSV.map((userCSV) => UserCSV.toModel(userCSV));
-    await userService.createBulk(users);
-};
 
-const createShippingsInfo = async (shippingInfoService: ShippingInfoService): Promise<void> => {
     const shippingsInfoCSV = await readFromCsv<ShippingInfoCSV>(SHIPPINGS_INFO_CSV_PATH);
     const shippingsInfo = shippingsInfoCSV.map((shippingInfoCSV) => ShippingInfoCSV.toModel(shippingInfoCSV));
     const userIds = shippingsInfoCSV.map((shippingInfoCSV) => shippingInfoCSV.userId);
-    await shippingInfoService.createBulk(shippingsInfo, userIds);
+
+    const usersWithShippingInfo = users.map((user) => {
+        const userIdShippingInfo = userIds.findIndex((userId) => userId === user.id);
+        if (userIdShippingInfo === -1) {
+            return user;
+        }
+
+        const userShippingInfo = shippingsInfo[userIdShippingInfo];
+        // TODO: could be more than 1 shipping indo
+        return { ...user, shippingsInfo: [userShippingInfo] };
+    });
+
+    await userService.createBulk(usersWithShippingInfo);
 };
 
 const createProducts = async (productService: ProductService): Promise<void> => {

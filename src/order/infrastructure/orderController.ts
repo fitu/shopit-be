@@ -18,31 +18,11 @@ class OrderController implements Controller {
     };
 
     private getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // const user = await UserDao.findByPk('bf889d9c-59a9-401c-a581-f5be6917a516'); // TODO: remove hardcoded
-        // const orders = await user.getOrders({ include: ["products"] });
-
-        // res.status(200).json({ success: true, data: orders });
+        res.status(200).json({ success: true, data: [] });
     };
 
     private createOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // const user = await UserDao.findByPk('bf889d9c-59a9-401c-a581-f5be6917a516'); // TODO: remove hardcoded
-        // const cart = await user.cart;
-        // const order = await OrderDao.create();
-        // await user.setOrders([order]);
-
-        // const cartItems = await cart.getCartItems();
-        // const productsToSave = cartItems.map(async (cartItem) => {
-        //     const product = await cartItem.product;
-
-        //     return {
-        //         ...product,
-        //         orderItem: { quantity: cartItem.quantity },
-        //     };
-        // });
-        // await order.addProducts(productsToSave);
-        // await cart.setCartItems(cartItems);
-
-        // res.status(200).json({ success: true });
+        res.status(200).json({ success: true, data: [] });
     };
 }
 

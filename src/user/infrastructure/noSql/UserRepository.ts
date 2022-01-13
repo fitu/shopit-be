@@ -13,6 +13,7 @@ class UserRepository implements Repository {
 
     public async saveBulk(users: Array<User>): Promise<Array<User>> {
         // TODO: complete this
+
         const usersToSave = users.map((user) => user);
         const newUsers = await UserDao.insertMany(usersToSave);
         return newUsers.map((newUser) => newUser.toModel());
