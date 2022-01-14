@@ -1,7 +1,10 @@
+import { zip } from "lodash";
+
 import ProductCSV from "../../../product/infrastructure/data/ProductCSV";
 import ReviewCSV from "../../../review/infrastructure/data/ReviewCSV";
 import ShippingInfoCSV from "../../../shippingInfo/infrastructure/data/ShippingInfoCSV";
 import UserCSV from "../../../user/infrastructure/data/UserCSV";
+import ShippingInfo from "../../../shippingInfo/domain/ShippingInfo";
 import ProductService from "../../../product/domain/ProductService";
 import ReviewService from "../../../review/domain/ReviewService";
 import UserService from "../../../user/domain/UserService";
@@ -55,17 +58,18 @@ const createUsers = async (userService: UserService): Promise<void> => {
 
     const shippingsInfoCSV = await readFromCsv<ShippingInfoCSV>(SHIPPINGS_INFO_CSV_PATH);
     const shippingsInfo = shippingsInfoCSV.map((shippingInfoCSV) => ShippingInfoCSV.toModel(shippingInfoCSV));
-    const userIds = shippingsInfoCSV.map((shippingInfoCSV) => shippingInfoCSV.userId);
+    const userIdsInShippingInfo = shippingsInfoCSV.map((shippingInfoCSV) => shippingInfoCSV.userId);
+    const shippingInfoWithUserIds: Array<[ShippingInfo, string]> = zip(shippingsInfo, userIdsInShippingInfo);
 
     const usersWithShippingInfo = users.map((user) => {
-        const userIdShippingInfo = userIds.findIndex((userId) => userId === user.id);
-        if (userIdShippingInfo === -1) {
+        const shippingInfosOfUser = shippingInfoWithUserIds.filter(([_, userId]) => userId === user.id);
+        if (!shippingInfosOfUser) {
             return user;
         }
 
-        const userShippingInfo = shippingsInfo[userIdShippingInfo];
-        // TODO: could be more than 1 shipping indo
-        return { ...user, shippingsInfo: [userShippingInfo] };
+        const userShippingsInfo = shippingInfosOfUser.map(([shippingInfo, _]) => shippingInfo);
+
+        return { ...user, shippingsInfo: userShippingsInfo };
     });
 
     await userService.createBulk(usersWithShippingInfo);
