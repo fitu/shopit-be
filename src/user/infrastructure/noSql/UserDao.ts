@@ -1,7 +1,6 @@
 import crypto from "crypto";
 import mongoose, { Document } from "mongoose";
 
-import ShippingInfo from "../../../shippingInfo/domain/ShippingInfo";
 import User, { UserRole } from "../../domain/User";
 
 interface UserDao {
@@ -13,7 +12,7 @@ interface UserDao {
     password: string;
     resetPasswordToken: string;
     resetPasswordExpire: Date;
-    shippingsInfo?: Array<ShippingInfo>;
+    shippingsInfo?: Array<ShippingInfoDao>;
 }
 
 interface UserDocument extends Document {
@@ -23,13 +22,16 @@ interface UserDocument extends Document {
 
 type UserFullDocument = UserDao & UserDocument;
 
-interface ShippingInfoDao extends Document {
+interface ShippingInfoDao {
+    _id: string;
     address: string;
     city: string;
     phone: string;
     postalCode: string;
     country: string;
 }
+
+// TODO: Do i need document for shipping info?
 
 const shippingInfoSchema = new mongoose.Schema({
     address: {
@@ -130,5 +132,5 @@ userSchema.pre("save", function (next) {
 
 const model = mongoose.model<UserFullDocument>("User", userSchema);
 
-export type { UserDao };
+export type { UserDao, ShippingInfoDao };
 export default model;
