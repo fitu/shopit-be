@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose";
 
 import Product, { ProductCategory } from "../../domain/Product";
 
-interface ProductDocument extends Document {
+interface ProductDao {
     title: string;
     description: string;
     price: number;
@@ -10,10 +10,15 @@ interface ProductDocument extends Document {
     imageUrl: string;
     category: ProductCategory;
     stock: number;
+}
+
+interface ProductDocument extends Document {
     toModel: () => Product;
 }
 
-const schema = new mongoose.Schema({
+type ProductFullDocument = ProductDao & ProductDocument;
+
+const productSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -61,8 +66,8 @@ const schema = new mongoose.Schema({
     },
 });
 
-schema.methods.toModel = function (): Product {
-    const product = this as ProductDocument;
+productSchema.methods.toModel = function (): Product {
+    const product = this as ProductFullDocument;
 
     return {
         id: product._id.toString(),
@@ -76,7 +81,7 @@ schema.methods.toModel = function (): Product {
     };
 };
 
-const model = mongoose.model<ProductDocument>("Product", schema);
+const model = mongoose.model<ProductFullDocument>("Product", productSchema);
 
-export type { ProductDocument };
+export type { ProductDao };
 export default model;

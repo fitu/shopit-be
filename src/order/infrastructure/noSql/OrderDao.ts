@@ -13,7 +13,7 @@ interface OrderDocument extends Document {
     toModel: () => Order;
 }
 
-const schema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema({
     itemsPrice: {
         type: Number,
         required: true,
@@ -48,7 +48,7 @@ const schema = new mongoose.Schema({
     },
 });
 
-schema.methods.toModel = function (): Order {
+orderSchema.methods.toModel = function (): Order {
     const review = this as OrderDocument;
 
     return {
@@ -64,7 +64,7 @@ schema.methods.toModel = function (): Order {
 };
 
 
-const model = mongoose.model<OrderDocument>("Order", schema);
+const model = mongoose.model<OrderDocument>("Order", orderSchema);
 
 export type { OrderDocument };
 export default model;

@@ -3,19 +3,19 @@ import { zip } from "lodash";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDao from "./ProductDao";
+import ProductDocument, { ProductDao } from "./ProductDao";
 
 class ProductRepository implements Repository {
     public async save(product: Product, userId: string): Promise<Product> {
         const productToSave = { ...product, userId };
-        const newProduct = await ProductDao.create(productToSave);
+        const newProduct = await ProductDocument.create(productToSave);
         return newProduct.toModel();
     }
 
     public async saveBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         const productsUsers: Array<[Product, string]> = zip(products, userIds);
-        const productsToSave = productsUsers.map(([product, userId]) => ({ ...product, userId }));
-        const newProducts = await ProductDao.insertMany(productsToSave);
+        const productsToSave: Array<ProductDao> = productsUsers.map(([product, userId]) => ({ ...product, userId }));
+        const newProducts = await ProductDocument.insertMany(productsToSave);
         return newProducts.map((newProduct) => newProduct.toModel());
     }
 

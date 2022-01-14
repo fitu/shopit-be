@@ -9,7 +9,7 @@ interface ReviewDocument extends Document {
     toModel: () => Review;
 }
 
-const schema = new mongoose.Schema({
+const reviewSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -24,7 +24,7 @@ const schema = new mongoose.Schema({
     },
 });
 
-schema.methods.toModel = function (): Review {
+reviewSchema.methods.toModel = function (): Review {
     const review = this as ReviewDocument;
 
     return {
@@ -35,7 +35,7 @@ schema.methods.toModel = function (): Review {
     };
 };
 
-const model = mongoose.model<ReviewDocument>("Review", schema);
+const model = mongoose.model<ReviewDocument>("Review", reviewSchema);
 
 export type { ReviewDocument };
 export default model;

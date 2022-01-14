@@ -1,9 +1,10 @@
 import crypto from "crypto";
 import mongoose, { Document } from "mongoose";
 
+import ShippingInfo from "../../../shippingInfo/domain/ShippingInfo";
 import User, { UserRole } from "../../domain/User";
 
-interface UserDocument extends Document {
+interface UserDao {
     firstName: string;
     lastName: string;
     email: string;
@@ -11,11 +12,48 @@ interface UserDocument extends Document {
     password: string;
     resetPasswordToken: string;
     resetPasswordExpire: Date;
+    shippingsInfo?: Array<ShippingInfo>;
+}
+
+interface UserDocument extends Document {
     toModel: () => User;
     validatePassword(password: string): boolean;
 }
 
-const schema = new mongoose.Schema({
+type UserFullDocument = UserDao & UserDocument;
+
+interface ShippingInfoDao extends Document {
+    address: string;
+    city: string;
+    phone: string;
+    postalCode: string;
+    country: string;
+}
+
+const shippingInfoSchema = new mongoose.Schema({
+    address: {
+        type: String,
+        required: true,
+    },
+    city: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+    },
+    postalCode: {
+        type: String,
+        required: true,
+    },
+    country: {
+        type: String,
+        required: true,
+    },
+});
+
+const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true,
@@ -47,16 +85,17 @@ const schema = new mongoose.Schema({
     resetPasswordExpire: {
         type: Date,
     },
-    // TODO: add shippingInfo, avatar, paymentInfo, cart
+    shippingsInfo: [shippingInfoSchema],
+    // TODO: add avatar, paymentInfo, cart
 });
 
-schema.methods.validatePassword = async function (password: string) {
+userSchema.methods.validatePassword = async function (password: string) {
     // FIXME: fix this
     return true;
 };
 
-schema.methods.toModel = function (): User {
-    const user = this as UserDocument;
+userSchema.methods.toModel = function (): User {
+    const user = this as UserFullDocument;
 
     return {
         id: user._id.toString(),
@@ -75,8 +114,8 @@ schema.methods.toModel = function (): User {
     };
 };
 
-schema.pre("save", function (next) {
-    const user = this as UserDocument;
+userSchema.pre("save", function (next) {
+    const user = this as UserFullDocument;
 
     // Only hash the password if it has been modified (or is new)
     if (!user.isModified("password")) {
@@ -88,7 +127,7 @@ schema.pre("save", function (next) {
     next();
 });
 
-const model = mongoose.model<UserDocument>("User", schema);
+const model = mongoose.model<UserFullDocument>("User", userSchema);
 
-export type { UserDocument };
+export type { UserDao };
 export default model;

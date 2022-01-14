@@ -1,21 +1,18 @@
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDao from "./UserDao";
+import UserDocument, { UserDao } from "./UserDao";
 
 class UserRepository implements Repository {
     public async save(user: User): Promise<User> {
-        // TODO: complete this
-        const userToSave = user;
-        const newUser = await UserDao.create(userToSave);
+        const userToSave: UserDao = user;
+        const newUser = await UserDocument.create(userToSave);
         return newUser.toModel();
     }
 
     public async saveBulk(users: Array<User>): Promise<Array<User>> {
-        // TODO: complete this
-
-        const usersToSave = users.map((user) => user);
-        const newUsers = await UserDao.insertMany(usersToSave);
+        const usersToSave: Array<UserDao> = users.map((user) => user);
+        const newUsers = await UserDocument.insertMany(usersToSave);
         return newUsers.map((newUser) => newUser.toModel());
     }
 
