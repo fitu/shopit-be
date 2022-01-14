@@ -22,7 +22,7 @@ class UpdateProductByIdInteractor implements Interactor {
     public async execute(): Promise<ProductData> | null {
         // TODO: Validate
         const productToUpdate = new Product({
-            id: '56f2a3e0-37fa-4cdb-91a7-f6194299432a', // TODO: remove hardcoded
+            id: '56f2a3e037fa4cdb91a7f619', // TODO: remove hardcoded
             title: this.data.productData.title,
             description: this.data.productData.description,
             price: this.data.productData.price,

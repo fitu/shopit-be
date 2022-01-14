@@ -1,13 +1,21 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 import Review from "../../domain/Review";
 
-interface ReviewDocument extends Document {
+interface ReviewDao {
+    _id: string;
     name: string;
     rating: number;
     comment: string;
+    productId: Types.ObjectId;
+    userId: Types.ObjectId;
+}
+
+interface ReviewDocument extends Document {
     toModel: () => Review;
 }
+
+type ReviewFullDocument = ReviewDao & ReviewDocument;
 
 const reviewSchema = new mongoose.Schema({
     name: {
@@ -22,10 +30,21 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    productId: {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
+    },
+
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
 });
 
 reviewSchema.methods.toModel = function (): Review {
-    const review = this as ReviewDocument;
+    const review = this as ReviewFullDocument;
 
     return {
         id: review._id.toString(),
@@ -35,7 +54,7 @@ reviewSchema.methods.toModel = function (): Review {
     };
 };
 
-const model = mongoose.model<ReviewDocument>("Review", reviewSchema);
+const model = mongoose.model<ReviewFullDocument>("Review", reviewSchema);
 
-export type { ReviewDocument };
+export type { ReviewDao };
 export default model;

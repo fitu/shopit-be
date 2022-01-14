@@ -5,13 +5,13 @@ import UserDocument, { UserDao } from "./UserDao";
 
 class UserRepository implements Repository {
     public async save(user: User): Promise<User> {
-        const userToSave: UserDao = user;
+        const userToSave: UserDao = { ...user, _id: user.id };
         const newUser = await UserDocument.create(userToSave);
         return newUser.toModel();
     }
 
     public async saveBulk(users: Array<User>): Promise<Array<User>> {
-        const usersToSave: Array<UserDao> = users.map((user) => user);
+        const usersToSave: Array<UserDao> = users.map((user) => ({ ...user, _id: user.id }));
         const newUsers = await UserDocument.insertMany(usersToSave);
         return newUsers.map((newUser) => newUser.toModel());
     }

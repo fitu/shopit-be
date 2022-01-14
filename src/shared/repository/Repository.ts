@@ -8,7 +8,6 @@ import SqlProductRepository from "../../product/infrastructure/sql/ProductReposi
 import SqlReviewRepository from "../../review/infrastructure/sql/ReviewRepository";
 import SqlShippingInfoRepository from "../../shippingInfo/infrastructure/sql/ShippingInfoRepository";
 import SqlUserRepository from "../../user/infrastructure/sql/UserRepository";
-import NoSqlCartRepository from "../../cart/infrastructure/noSql/CartRepository";
 import NoSqlProductRepository from "../../product/infrastructure/noSql/ProductRepository";
 import NoSqlUserRepository from "../../user/infrastructure/noSql/UserRepository";
 import NoSqlReviewRepository from "../../review/infrastructure/noSql/ReviewRepository";
@@ -32,7 +31,7 @@ const getRepositories = (env: any): Repos =>
               userRepository: new SqlUserRepository(),
           }
         : {
-              cartRepository: new NoSqlCartRepository(),
+              cartRepository: null,
               productRepository: new NoSqlProductRepository(),
               reviewRepository: new NoSqlReviewRepository(),
               userRepository: new NoSqlUserRepository(),

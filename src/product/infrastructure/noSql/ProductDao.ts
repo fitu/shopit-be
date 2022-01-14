@@ -1,8 +1,9 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Types, Schema } from "mongoose";
 
 import Product, { ProductCategory } from "../../domain/Product";
 
 interface ProductDao {
+    _id: string;
     title: string;
     description: string;
     price: number;
@@ -10,6 +11,7 @@ interface ProductDao {
     imageUrl: string;
     category: ProductCategory;
     stock: number;
+    userId: Types.ObjectId;
 }
 
 interface ProductDocument extends Document {
@@ -62,6 +64,11 @@ const productSchema = new mongoose.Schema({
     },
     stock: {
         type: Number,
+        required: true,
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
 });

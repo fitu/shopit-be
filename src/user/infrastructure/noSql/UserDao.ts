@@ -5,6 +5,7 @@ import ShippingInfo from "../../../shippingInfo/domain/ShippingInfo";
 import User, { UserRole } from "../../domain/User";
 
 interface UserDao {
+    _id: string;
     firstName: string;
     lastName: string;
     email: string;
