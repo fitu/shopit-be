@@ -74,7 +74,7 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
-        const userId = "bf889d9c59a9401ca581f5be"; // TODO: remove hardcoded
+        const userId = "79ab1f50-5d32-4cb4-aeea-76fec5e5cc91"; // TODO: remove hardcoded
 
         const productData = new ProductData({
             title,

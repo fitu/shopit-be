@@ -1,9 +1,9 @@
 import { zip } from "lodash";
 
-import ProductCSV from "../../../product/infrastructure/data/ProductCSV";
-import ReviewCSV from "../../../review/infrastructure/data/ReviewCSV";
-import ShippingInfoCSV from "../../../shippingInfo/infrastructure/data/ShippingInfoCSV";
-import UserCSV from "../../../user/infrastructure/data/UserCSV";
+import ProductCSV from "../../../product/infrastructure/noSql/ProductCSV";
+import ReviewCSV from "../../../review/infrastructure/noSql/ReviewCSV";
+import ShippingInfoCSV from "../../../shippingInfo/infrastructure/noSql/ShippingInfoCSV";
+import UserCSV from "../../../user/infrastructure/noSql/UserCSV";
 import ShippingInfo from "../../../shippingInfo/domain/ShippingInfo";
 import ProductService from "../../../product/domain/ProductService";
 import ReviewService from "../../../review/domain/ReviewService";

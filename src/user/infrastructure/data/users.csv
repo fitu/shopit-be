@@ -1,3 +1,3 @@
 id,firstName,lastName,email,role,password,resetPasswordToken,resetPasswordExpire,cart/id,cart/itemsPrice,cart/taxPrice,cart/totalPrice,avatar/id,avatar/publicId,avatar/url
-bf889d9c59a9401ca581f5be,Victorio,Matteucci,victorio.matteucci@shopit.com,admin,computadorar,token123,2022-01-13T03:00:00.000Z,8892966a2ce2413cb70a44e5,0,0,0,ccc572d2665742b3bab7960d,1,https://images.unsplash.com/photo-1639044486469-d92dbe38c641
-3a00bf85f6f54307938804f3,Fitu,Lp,fitu.lp@gmail.com,user,computadorar,token234,2022-01-13T04:00:00.000Z,76ccd2c53ff544669c9480e2,0,0,0,,,
+79ab1f50-5d32-4cb4-aeea-76fec5e5cc91,Victorio,Matteucci,victorio.matteucci@shopit.com,admin,computadorar,token123,2022-01-13T03:00:00.000Z,8892966a2ce2413cb70a44e5,0,0,0,29fb020b-fefc-42d0-85a0-7c79146f177b,1,https://images.unsplash.com/photo-1639044486469-d92dbe38c641
+003cd546-75a7-40c4-8e0c-7763a8b25a74,Fitu,Lp,fitu.lp@gmail.com,user,computadorar,token234,2022-01-13T04:00:00.000Z,76ccd2c53ff544669c9480e2,0,0,0,,,

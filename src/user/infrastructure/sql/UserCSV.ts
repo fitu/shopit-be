@@ -1,5 +1,5 @@
-import AvatarCSV from "../../../avatar/infrastructure/data/AvatarCSV";
-import CartCSV from "../../../cart/infrastructure/data/CartCSV";
+import AvatarCSV from "../../../avatar/infrastructure/sql/AvatarCSV";
+import CartCSV from "../../../cart/infrastructure/sql/CartCSV";
 import User, { UserRole } from "../../domain/User";
 
 class UserCSV {
