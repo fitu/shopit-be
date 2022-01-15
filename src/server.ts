@@ -25,12 +25,13 @@ import App from "./app";
         const productService = new ProductService(productRepository);
 
         // Create the app and start listening for connections
-        const app = new App([
+        const controllers = [
             new CartController(),
             new OrderController(),
             new ProductController(productService),
             new UserController(),
-        ]);
+        ];
+        const app = new App(env, db, controllers);
 
         app.listen();
     } catch (error) {

@@ -1,17 +1,25 @@
 import express, { Application } from "express";
 import path from "path";
+import session from "express-session";
 
 import { handleAppErrors } from "./shared/error/errorController";
 import { handleGeneralErrors } from "./shared/error/errors";
 import Controller from "./shared/Controller";
+import Database from "./shared/db/database";
 
 const BASE_VERSION = "/api/v1";
 
 class App {
     private app: Application;
+    private env: any;
+    private db: Database;
 
-    constructor(controllers: Controller[]) {
+    constructor(env: any, db: Database, controllers: Controller[]) {
         this.app = express();
+
+        this.env = env;
+        this.db = db;
+
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
         this.initializeErrorHandling();
@@ -33,6 +41,14 @@ class App {
     private initializeMiddlewares = (): void => {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(
+            session({
+                secret: this.env.KEY_SESSIONS_SECRET,
+                store: this.db.getSessionStore(),
+                resave: false,
+                saveUninitialized: false,
+            })
+        );
     };
 
     private initializeControllers(controllers: Controller[]) {
