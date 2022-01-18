@@ -1,6 +1,16 @@
-# Login user
-POST http://localhost:4000/api/v1/login
-Content-Type: application/json
+@hostname = localhost
+@port = 4000
+@baseUrl = api/v1
+@host = {{hostname}}:{{port}}/{{baseUrl}}
+@contentType = application/json
+@csrf = oWxCa8qf-T2teypHnWTPkH8x6psH7DmduNvU
 
-{
-}
+# Login user
+GET http://{{host}}/users/login
+Content-Type: {{contentType}}
+
+###
+
+POST http://{{host}}/users/login
+Content-Type: {{contentType}}
+CSRF-Token: {{csrf}}

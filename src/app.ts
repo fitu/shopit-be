@@ -1,8 +1,9 @@
 import express, { Application } from "express";
 import path from "path";
-import session from "express-session";
-import csrf from "csurf";
 import cors from "cors";
+import csrf from "csurf";
+import cookieParser from "cookie-parser";
+import session from "express-session";
 
 import { handleAppErrors } from "./shared/error/errorController";
 import { handleGeneralErrors } from "./shared/error/errors";
@@ -43,18 +44,38 @@ class App {
     private initializeMiddlewares = (): void => {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(cors());
+
+        const corsOptions = {
+            origin: "*",
+            credentials: true,
+        };
+        this.app.use(cors(corsOptions));
+
+        this.app.use(cookieParser());
+
+        // FIXME: fix sql session
         this.app.use(
             session({
                 secret: this.env.KEY_SESSIONS_SECRET,
                 store: this.db.getSessionStore(),
                 resave: false,
                 saveUninitialized: false,
+                cookie: { httpOnly: true },
             })
         );
 
-        const csrfProtection = csrf();
-        this.app.use(csrfProtection);
+        const csrfOptions = {
+            cookie: false,
+            
+            // TODO: use this cookie instead of session?
+            // cookie: {
+            //     key: "_csrf",
+            //     secure: false,
+            //     maxAge: 60 * 60, // 1 hour
+            //     httpOnly: true,
+            // },
+        };
+        this.app.use(csrf(csrfOptions));
     };
 
     private initializeControllers(controllers: Controller[]) {

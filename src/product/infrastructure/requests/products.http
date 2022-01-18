@@ -1,16 +1,23 @@
+@hostname = localhost
+@port = 4000
+@baseUrl = api/v1
+@host = {{hostname}}:{{port}}/{{baseUrl}}
+@contentType = application/json
+
+
 # Get all products
-GET http://localhost:4000/api/v1/products
+GET http://{{host}}/products
 
 ###
 
 # Get product by id
-GET http://localhost:4000/api/v1/products/4681127e-fe12-4d13-bcda-21cdcf4a7d57
+GET http://{{host}}/products/4681127e-fe12-4d13-bcda-21cdcf4a7d57
 
 ###
 
 # Create product
-POST http://localhost:4000/api/v1/products
-Content-Type: application/json
+POST http://{{host}}/products
+Content-Type: {{contentType}}
 
 {
     "title": "title",
@@ -25,13 +32,13 @@ Content-Type: application/json
 ###
 
 # Delete product by id
-DELETE http://localhost:4000/api/v1/products/4681127e-fe12-4d13-bcda-21cdcf4a7d57
+DELETE http://{{host}}/products/4681127e-fe12-4d13-bcda-21cdcf4a7d57
 
 ###
 
 # Update product by id
-PUT http://localhost:4000/api/v1/products/4681127e-fe12-4d13-bcda-21cdcf4a7d57
-Content-Type: application/json
+PUT http://{{host}}/products/4681127e-fe12-4d13-bcda-21cdcf4a7d57
+Content-Type: {{contentType}}
 
 {
     "title": "title*",
