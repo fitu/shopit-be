@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import mongoose, { Document } from "mongoose";
 
 import User, { UserRole } from "../../domain/User";

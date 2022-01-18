@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 
+import isAuth from "../../shared/middlewares/isAuth";
 import Controller from "../../shared/Controller";
 
 class CartController implements Controller {
@@ -12,9 +13,9 @@ class CartController implements Controller {
     }
 
     private initializeRoutes = (): void => {
-        this.router.get(this.path, this.getCart);
-        this.router.post(this.path, this.addProductToCart);
-        this.router.delete(this.path, this.deleteProductFromCart);
+        this.router.get(this.path, isAuth, this.getCart);
+        this.router.post(this.path, isAuth, this.addProductToCart);
+        this.router.delete(this.path, isAuth, this.deleteProductFromCart);
     };
 
     private getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

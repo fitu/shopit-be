@@ -1,6 +1,8 @@
 import express, { Application } from "express";
 import path from "path";
 import session from "express-session";
+import csrf from "csurf";
+import cors from "cors";
 
 import { handleAppErrors } from "./shared/error/errorController";
 import { handleGeneralErrors } from "./shared/error/errors";
@@ -41,6 +43,7 @@ class App {
     private initializeMiddlewares = (): void => {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(cors());
         this.app.use(
             session({
                 secret: this.env.KEY_SESSIONS_SECRET,
@@ -49,6 +52,9 @@ class App {
                 saveUninitialized: false,
             })
         );
+
+        const csrfProtection = csrf();
+        this.app.use(csrfProtection);
     };
 
     private initializeControllers(controllers: Controller[]) {

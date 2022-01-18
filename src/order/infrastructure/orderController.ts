@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 
+import isAuth from "../../shared/middlewares/isAuth";
 import Controller from "../../shared/Controller";
 
 class OrderController implements Controller {
@@ -12,8 +13,8 @@ class OrderController implements Controller {
     }
 
     private initializeRoutes = (): void => {
-        this.router.get(this.path, this.getOrders);
-        this.router.post(this.path, this.createOrder);
+        this.router.get(this.path, isAuth, this.getOrders);
+        this.router.post(this.path, isAuth, this.createOrder);
     };
 
     private getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

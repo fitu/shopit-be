@@ -15,8 +15,14 @@ class UserController implements Controller {
     };
 
     private loginUser = (req: Request, res: Response, next: NextFunction): void => {
-        res.status(httpStatus.OK).json({ success: true });
+        // res.cookie('csrf-token', req.csrfToken());
+        res.status(httpStatus.OK).json({ success: true, foo: req.csrfToken() });
     };
 }
+
+// TODO: implement this on Frontend
+// import cookie from 'react-cookies';
+// this.csrf = cookie.load('csrf-token');
+// axios.post(..., headers: { 'csrf-token': this.csrf })
 
 export default UserController;

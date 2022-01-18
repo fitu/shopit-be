@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 
 import Controller from "../../shared/Controller";
+import isAuth from "../../shared/middlewares/isAuth";
 import ProductData from "../application/ProductData";
 import AddProductInteractor from "../application/AddProductInteractor";
 import GetAllProductsInteractor from "../application/GetAllProductsInteractor";
@@ -27,9 +28,9 @@ class ProductController implements Controller {
     private initializeRoutes = (): void => {
         this.router.get(this.path, this.getProducts);
         this.router.get(`${this.path}/:id`, this.getProductById);
-        this.router.post(this.path, this.addProduct);
-        this.router.delete(`${this.path}/:id`, this.removeProductById);
-        this.router.put(`${this.path}/:id`, this.updateProductById);
+        this.router.post(this.path, isAuth, this.addProduct);
+        this.router.delete(`${this.path}/:id`, isAuth, this.removeProductById);
+        this.router.put(`${this.path}/:id`, isAuth, this.updateProductById);
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
