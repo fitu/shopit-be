@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import bcrypt from 'bcrypt';
 import mongoose, { Document } from "mongoose";
 
 import User, { UserRole } from "../../domain/User";
@@ -93,8 +93,8 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.validatePassword = async function (password: string) {
-    // FIXME: fix this
-    return true;
+    const passwordsMatch = await bcrypt.compare(password, this.user.password)
+    return passwordsMatch;
 };
 
 userSchema.methods.toModel = function (): User {
@@ -117,7 +117,7 @@ userSchema.methods.toModel = function (): User {
     };
 };
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save", async function (next) {
     const user = this as UserFullDocument;
 
     // Only hash the password if it has been modified (or is new)
@@ -125,8 +125,10 @@ userSchema.pre("save", function (next) {
         return next();
     }
 
-    const hash = crypto.createHash("md5").update(user.password).digest("hex");
-    user.password = hash;
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+    user.password = hashedPassword;
+        
     next();
 });
 

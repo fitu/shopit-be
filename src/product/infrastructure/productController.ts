@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
+import httpStatus from "http-status";
 
 import Controller from "../../shared/Controller";
 import ProductData from "../application/ProductData";
@@ -37,7 +38,7 @@ class ProductController implements Controller {
 
         const allProducts = result.map((product) => ProductViewModel.fromData(product));
 
-        res.status(200).json({ success: true, data: allProducts });
+        res.status(httpStatus.OK).json({ success: true, data: allProducts });
     };
 
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -49,13 +50,13 @@ class ProductController implements Controller {
         const result = await interactor.execute();
 
         if (!result) {
-            res.status(404).json({ success: false });
+            res.status(httpStatus.NOT_FOUND).json({ success: false });
             return;
         }
 
         const product = ProductViewModel.fromData(result);
 
-        res.status(200).json({ success: true, data: product });
+        res.status(httpStatus.OK).json({ success: true, data: product });
     };
 
     private addProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -91,7 +92,7 @@ class ProductController implements Controller {
 
         const newProduct = ProductViewModel.fromData(result);
 
-        res.status(200).json({ success: true, data: newProduct });
+        res.status(httpStatus.OK).json({ success: true, data: newProduct });
     };
 
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -102,7 +103,7 @@ class ProductController implements Controller {
         const interactor = new DeleteProductByIdInteractor(data, this.productService);
         await interactor.execute();
 
-        res.status(200).json({ success: true });
+        res.status(httpStatus.OK).json({ success: true });
     };
 
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -131,13 +132,13 @@ class ProductController implements Controller {
         const result = await interactor.execute();
 
         if (!result) {
-            res.status(404).json({ success: false });
+            res.status(httpStatus.NOT_FOUND).json({ success: false });
             return;
         }
 
         const updatedProduct = ProductViewModel.fromData(result);
 
-        res.status(200).json({ success: true, data: updatedProduct });
+        res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
     };
 }
 

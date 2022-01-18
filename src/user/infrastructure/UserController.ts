@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
+import httpStatus from "http-status";
 
 import Controller from "../../shared/Controller";
 class UserController implements Controller {
@@ -14,7 +15,7 @@ class UserController implements Controller {
     };
 
     private loginUser = (req: Request, res: Response, next: NextFunction): void => {
-        res.status(200).json({ success: true });
+        res.status(httpStatus.OK).json({ success: true });
     };
 }
 

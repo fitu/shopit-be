@@ -1,7 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
+import httpStatus from "http-status";
 
-import UserDao from "../../user/infrastructure/sql/UserDao";
-import ProductDao from "../../product/infrastructure/sql/ProductDao";
 import Controller from "../../shared/Controller";
 
 class CartController implements Controller {
@@ -19,15 +18,15 @@ class CartController implements Controller {
     };
 
     private getCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        res.status(200).json({ success: true, data: [] });
+        res.status(httpStatus.OK).json({ success: true, data: [] });
     };
 
     private addProductToCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        res.status(200).json({ success: true, data: [] });
+        res.status(httpStatus.OK).json({ success: true, data: [] });
     };
 
     private deleteProductFromCart = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        res.status(200).json({ success: true, data: [] });
+        res.status(httpStatus.OK).json({ success: true, data: [] });
     };
 }
 
