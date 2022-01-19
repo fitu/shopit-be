@@ -1,3 +1,4 @@
+import { noop } from "lodash";
 import mongoose, { Mongoose } from "mongoose";
 import session from "express-session";
 import MongoDBSessionStore from "connect-mongodb-session";
@@ -40,6 +41,8 @@ class NoSqlDb implements Database {
             collection,
         });
     };
+
+    public syncStore = noop;
 }
 
 export default NoSqlDb;

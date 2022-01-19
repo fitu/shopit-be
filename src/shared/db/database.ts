@@ -13,6 +13,7 @@ interface DatabaseOptions {
 interface Database {
     init: (options?: DatabaseOptions) => Promise<void>;
     getSessionStore: () => any;
+    syncStore: () => void;
     clearDB: () => void;
 }
 

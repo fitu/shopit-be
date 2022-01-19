@@ -18,6 +18,7 @@ import Database, { DatabaseOptions } from "../database";
 class SqlDb implements Database {
     private env: any;
     private instance: Sequelize;
+    private sessionStore: any;
 
     constructor(env: any) {
         this.env = env;
@@ -134,8 +135,13 @@ class SqlDb implements Database {
 
     public getSessionStore = (): any => {
         const SessionStore = SequelizeSessionStore(session.Store);
-        return new SessionStore({ db: this.instance });
+        this.sessionStore = new SessionStore({ db: this.instance });
+        return this.sessionStore;
     };
+
+    public syncStore = (): void => {
+        this.sessionStore.sync();
+    }
 }
 
 export default SqlDb;

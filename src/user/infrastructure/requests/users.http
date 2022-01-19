@@ -3,7 +3,7 @@
 @baseUrl = api/v1
 @host = {{hostname}}:{{port}}/{{baseUrl}}
 @contentType = application/json
-@csrf = oWxCa8qf-T2teypHnWTPkH8x6psH7DmduNvU
+@csrf = EgZVIjbQ-s8Jg4TsDCD9Dql3FO7vKH_IlL-E
 
 # Login user
 GET http://{{host}}/users/login

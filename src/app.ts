@@ -53,7 +53,6 @@ class App {
 
         this.app.use(cookieParser());
 
-        // FIXME: fix sql session
         this.app.use(
             session({
                 secret: this.env.KEY_SESSIONS_SECRET,
@@ -63,6 +62,7 @@ class App {
                 cookie: { httpOnly: true },
             })
         );
+        this.db.syncStore();
 
         const csrfOptions = {
             cookie: false,
