@@ -5,7 +5,7 @@ import sendGridTransport from "nodemailer-sendgrid-transport";
 
 import Controller from "../../shared/Controller";
 
-const transportOptions = { auth: { api_key: "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" } };
+const transportOptions = { auth: { api_key: "foo" } };
 const transporter = nodemailer.createTransport(sendGridTransport(transportOptions));
 
 class UserController implements Controller {

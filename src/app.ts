@@ -25,6 +25,7 @@ class App {
 
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
+        this.initializeServices();
         this.initializeErrorHandling();
         this.initializeStaticResources();
     }
@@ -82,6 +83,10 @@ class App {
         controllers.forEach((controller) => {
             this.app.use(BASE_VERSION, controller.router);
         });
+    }
+
+    private initializeServices(): void {
+
     }
 
     private initializeErrorHandling(): void {
