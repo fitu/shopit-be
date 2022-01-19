@@ -5,6 +5,7 @@ import UserController from "./user/infrastructure/UserController";
 import ProductService from "./product/domain/ProductService";
 import validateEnv from "./shared/env/envUtils";
 import getRepositories from "./shared/repository/Repository";
+import EmailService from "./shared/integrations/emails/EmailService";
 import { getDb } from "./shared/db/database";
 
 import App from "./app";
@@ -19,17 +20,21 @@ import App from "./app";
         await db.init();
 
         // Create Repositories
-        const { productRepository } = getRepositories(env);
+        const { productRepository, emailRepository } = getRepositories(env);
 
         // Create Services
         const productService = new ProductService(productRepository);
+        const emailService = new EmailService(emailRepository);
+
+        // Create/Initialize third party integrations
+        emailService.init(env.KEY_EMAILS);
 
         // Create the app and start listening for connections
         const controllers = [
             new CartController(),
             new OrderController(),
             new ProductController(productService),
-            new UserController(),
+            new UserController(emailService),
         ];
         const app = new App(env, db, controllers);
 

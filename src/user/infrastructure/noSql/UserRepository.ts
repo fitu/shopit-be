@@ -37,5 +37,4 @@ class UserRepository implements Repository {
     }
 }
 
-export type { Repository };
 export default UserRepository;

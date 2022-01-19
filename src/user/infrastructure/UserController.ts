@@ -1,18 +1,18 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import nodemailer from "nodemailer";
-import sendGridTransport from "nodemailer-sendgrid-transport";
 
+import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
-
-const transportOptions = { auth: { api_key: "foo" } };
-const transporter = nodemailer.createTransport(sendGridTransport(transportOptions));
 
 class UserController implements Controller {
     public path = "/users";
     public router = Router();
 
-    constructor() {
+    private emailService: EmailService;
+
+    constructor(emailService: EmailService) {
+        this.emailService = emailService;
+
         this.initializeRoutes();
     }
 
@@ -27,13 +27,13 @@ class UserController implements Controller {
     };
 
     private signUpUser = (req: Request, res: Response, next: NextFunction): void => {
-        const email = req.body.email;
-        transporter.sendMail({
-            to: email,
-            from: "victorio.matteucci.shopit@gmail.com",
-            subject: "Thanks for creating a new account!",
-            html: "<h1>You successfully signed up! :)</h1>",
-        });
+        // TODO: remove hardcoded
+        const to = req.body.email;
+        const from = "victorio.matteucci.shopit@gmail.com";
+        const subject = "Thanks for creating a new account!";
+        const body = "<h1>You successfully signed up! :)</h1>";
+
+        this.emailService.sendEmail(to, from, subject, body);
 
         res.status(httpStatus.OK).json({ success: true });
     };
@@ -43,20 +43,5 @@ class UserController implements Controller {
         res.status(httpStatus.OK).json({ success: true });
     };
 }
-
-// TODO: implement this on Frontend
-// import cookie from 'react-cookies';
-// this.csrf = cookie.load('csrf-token');
-// axios.post(..., headers: { 'csrf-token': this.csrf })
-// Many SPA frameworks like Angular have CSRF support built in automatically. Typically they will reflect the value from a specific cookie, like XSRF-TOKEN (which is the case for Angular).
-
-// To take advantage of this, set the value from req.csrfToken() in the cookie used by the SPA framework. This is only necessary to do on the route that renders the page (where res.render or res.sendFile is called in Express, for example).
-
-// The following is an example for Express of a typical SPA response:
-
-// app.all('*', function (req, res) {
-//   res.cookie('XSRF-TOKEN', req.csrfToken())
-//   res.render('index')
-// })
 
 export default UserController;

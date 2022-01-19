@@ -35,5 +35,4 @@ class PaymentInfoRepository implements Repository {
     }
 }
 
-export type { Repository };
 export default PaymentInfoRepository;

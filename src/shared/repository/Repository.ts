@@ -3,6 +3,7 @@ import { Repository as ProductRepository } from "../../product/infrastructure/Re
 import { Repository as ReviewRepository } from "../../review/infrastructure/Repository";
 import { Repository as ShippingInfoRepository } from "../../shippingInfo/infrastructure/Repository";
 import { Repository as UserRepository } from "../../user/infrastructure/Repository";
+import { Repository as EmailRepository } from "../integrations/emails/Repository";
 import SqlCartRepository from "../../cart/infrastructure/sql/CartRepository";
 import SqlProductRepository from "../../product/infrastructure/sql/ProductRepository";
 import SqlReviewRepository from "../../review/infrastructure/sql/ReviewRepository";
@@ -11,6 +12,7 @@ import SqlUserRepository from "../../user/infrastructure/sql/UserRepository";
 import NoSqlProductRepository from "../../product/infrastructure/noSql/ProductRepository";
 import NoSqlUserRepository from "../../user/infrastructure/noSql/UserRepository";
 import NoSqlReviewRepository from "../../review/infrastructure/noSql/ReviewRepository";
+import SendGridRepository from "../integrations/emails/SendGridRepository";
 import { DbType } from "../db/database";
 
 type Repos = {
@@ -19,6 +21,7 @@ type Repos = {
     reviewRepository: ReviewRepository;
     shippingInfoRepository?: ShippingInfoRepository;
     userRepository: UserRepository;
+    emailRepository: EmailRepository;
 };
 
 const getRepositories = (env: any): Repos =>
@@ -29,12 +32,14 @@ const getRepositories = (env: any): Repos =>
               shippingInfoRepository: new SqlShippingInfoRepository(),
               reviewRepository: new SqlReviewRepository(),
               userRepository: new SqlUserRepository(),
+              emailRepository: new SendGridRepository(),
           }
         : {
               cartRepository: null,
               productRepository: new NoSqlProductRepository(),
               reviewRepository: new NoSqlReviewRepository(),
               userRepository: new NoSqlUserRepository(),
+              emailRepository: new SendGridRepository(),
           };
 
 export default getRepositories;

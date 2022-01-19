@@ -17,5 +17,4 @@ class CartRepository implements Repository {
     }
 }
 
-export type { Repository };
 export default CartRepository;

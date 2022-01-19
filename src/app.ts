@@ -25,7 +25,6 @@ class App {
 
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
-        this.initializeServices();
         this.initializeErrorHandling();
         this.initializeStaticResources();
     }
@@ -75,6 +74,21 @@ class App {
             //     maxAge: 60 * 60, // 1 hour
             //     httpOnly: true,
             // },
+
+            // TODO: implement this on Frontend
+            // import cookie from 'react-cookies';
+            // this.csrf = cookie.load('csrf-token');
+            // axios.post(..., headers: { 'csrf-token': this.csrf })
+            // Many SPA frameworks like Angular have CSRF support built in automatically. Typically they will reflect the value from a specific cookie, like XSRF-TOKEN (which is the case for Angular).
+
+            // To take advantage of this, set the value from req.csrfToken() in the cookie used by the SPA framework. This is only necessary to do on the route that renders the page (where res.render or res.sendFile is called in Express, for example).
+
+            // The following is an example for Express of a typical SPA response:
+
+            // app.all('*', function (req, res) {
+            //   res.cookie('XSRF-TOKEN', req.csrfToken())
+            //   res.render('index')
+            // })
         };
         this.app.use(csrf(csrfOptions));
     };
@@ -83,10 +97,6 @@ class App {
         controllers.forEach((controller) => {
             this.app.use(BASE_VERSION, controller.router);
         });
-    }
-
-    private initializeServices(): void {
-
     }
 
     private initializeErrorHandling(): void {
