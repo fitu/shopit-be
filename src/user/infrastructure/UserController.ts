@@ -1,7 +1,13 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
+import nodemailer from "nodemailer";
+import sendGridTransport from "nodemailer-sendgrid-transport";
 
 import Controller from "../../shared/Controller";
+
+const transportOptions = { auth: { api_key: "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" } };
+const transporter = nodemailer.createTransport(sendGridTransport(transportOptions));
+
 class UserController implements Controller {
     public path = "/users";
     public router = Router();
@@ -11,16 +17,29 @@ class UserController implements Controller {
     }
 
     private initializeRoutes = (): void => {
-        this.router.get(`${this.path}/login`, this.getCSRFForLogin);
-        this.router.post(`${this.path}/login`, this.loginUser);
+        this.router.get(`${this.path}/sign-in`, this.getCSRFForLogin);
+        this.router.post(`${this.path}/sign-in`, this.signInUser);
+        this.router.post(`${this.path}/sign-up`, this.signUpUser);
     };
 
-    private loginUser = (req: Request, res: Response, next: NextFunction): void => {
+    private signInUser = (req: Request, res: Response, next: NextFunction): void => {
+        res.status(httpStatus.OK).json({ success: true });
+    };
+
+    private signUpUser = (req: Request, res: Response, next: NextFunction): void => {
+        const email = req.body.email;
+        transporter.sendMail({
+            to: email,
+            from: "victorio.matteucci.shopit@gmail.com",
+            subject: "Thanks for creating a new account!",
+            html: "<h1>You successfully signed up! :)</h1>",
+        });
+
         res.status(httpStatus.OK).json({ success: true });
     };
 
     private getCSRFForLogin = (req: Request, res: Response, next: NextFunction): void => {
-        res.cookie('XSRF-TOKEN', req.csrfToken())
+        res.cookie("XSRF-TOKEN", req.csrfToken());
         res.status(httpStatus.OK).json({ success: true });
     };
 }

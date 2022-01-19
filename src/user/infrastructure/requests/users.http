@@ -3,14 +3,26 @@
 @baseUrl = api/v1
 @host = {{hostname}}:{{port}}/{{baseUrl}}
 @contentType = application/json
-@csrf = EgZVIjbQ-s8Jg4TsDCD9Dql3FO7vKH_IlL-E
+@csrf = RwYQtC9A-KetMVAXmheCepbVyVqb244XNYcc
 
-# Login user
-GET http://{{host}}/users/login
+# Sign-in user view
+GET http://{{host}}/users/sign-in
 Content-Type: {{contentType}}
 
 ###
 
-POST http://{{host}}/users/login
+# Sign-in user
+POST http://{{host}}/users/sign-in
 Content-Type: {{contentType}}
 CSRF-Token: {{csrf}}
+
+###
+
+# Sign-up user
+POST http://{{host}}/users/sign-up
+Content-Type: {{contentType}}
+CSRF-Token: {{csrf}}
+
+{
+    "email": "victorio.matteucci@gmail.com"
+}
