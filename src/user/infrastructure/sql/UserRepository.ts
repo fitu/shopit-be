@@ -69,6 +69,7 @@ class UserRepository implements Repository {
     public async getUserById(userId: string): Promise<User> {
         return UserDao.findByPk(userId);
     }
+
 }
 
 export default UserRepository;

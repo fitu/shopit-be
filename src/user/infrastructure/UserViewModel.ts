@@ -1,12 +1,12 @@
-import Product from "../../product/domain/Product";
-import Review from "../../review/domain/Review";
 import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
+import Product from "../../product/domain/Product";
+import Review from "../../review/domain/Review";
 import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
+import UserData from "../application/UserData";
+import { UserRole } from "../domain/User";
 
-type UserRole = "user" | "admin";
-
-class User {
+class UserViewModel {
     readonly id: string;
     readonly firstName: string;
     readonly lastName: string;
@@ -36,14 +36,14 @@ class User {
         reviews,
         shippingsInfo,
     }: {
-        id?: string;
+        id: string;
         firstName: string;
         lastName: string;
         email: string;
         role: UserRole;
         password: string;
-        resetPasswordToken?: string | null;
-        resetPasswordExpirationDate?: Date | null;
+        resetPasswordToken: string | null;
+        resetPasswordExpirationDate: Date | null;
         cart?: Cart;
         avatar?: Avatar;
         products?: Array<Product>;
@@ -64,7 +64,24 @@ class User {
         this.reviews = reviews;
         this.shippingsInfo = shippingsInfo;
     }
+
+    public static fromData(userData: UserData): UserViewModel {
+        return new UserViewModel({
+            id: userData.id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            role: userData.role,
+            password: userData.password,
+            resetPasswordToken: userData.resetPasswordToken,
+            resetPasswordExpirationDate: userData.resetPasswordExpirationDate,
+            cart: userData.cart,
+            avatar: userData.avatar,
+            products: userData.products,
+            reviews: userData.reviews,
+            shippingsInfo: userData.shippingsInfo,
+        });
+    }
 }
 
-export type { UserRole };
-export default User;
+export default UserViewModel;

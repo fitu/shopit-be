@@ -4,17 +4,17 @@ import ProductService from "../domain/ProductService";
 
 import ProductData from "./ProductData";
 
-interface AddProductData {
+interface CreateProductData {
     productData: ProductData;
     userId: string;
 }
 
-class AddProductInteractor implements Interactor {
-    private data: AddProductData;
+class CreateProductInteractor implements Interactor {
+    private data: CreateProductData;
 
     private productService: ProductService;
 
-    constructor(data: AddProductData, productService: ProductService) {
+    constructor(data: CreateProductData, productService: ProductService) {
         this.data = data;
         this.productService = productService;
     }
@@ -38,5 +38,5 @@ class AddProductInteractor implements Interactor {
     }
 }
 
-export type { AddProductData };
-export default AddProductInteractor;
+export type { CreateProductData };
+export default CreateProductInteractor;

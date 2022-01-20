@@ -1,20 +1,19 @@
-import Product from "../../product/domain/Product";
-import Review from "../../review/domain/Review";
+import User, { UserRole } from "../domain/User";
 import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
+import Product from "../../product/domain/Product";
+import Review from "../../review/domain/Review";
 import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
 
-type UserRole = "user" | "admin";
-
-class User {
-    readonly id: string;
+class UserData {
+    readonly id?: string;
     readonly firstName: string;
     readonly lastName: string;
     readonly email: string;
     readonly role: UserRole;
     readonly password: string;
-    readonly resetPasswordToken: string | null;
-    readonly resetPasswordExpirationDate: Date | null;
+    readonly resetPasswordToken?: string | null;
+    readonly resetPasswordExpirationDate?: Date | null;
     readonly cart?: Cart;
     readonly avatar?: Avatar;
     readonly products?: Array<Product>;
@@ -64,7 +63,24 @@ class User {
         this.reviews = reviews;
         this.shippingsInfo = shippingsInfo;
     }
+
+    public static fromModel(user: User): UserData {
+        return new UserData({
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            password: user.password,
+            resetPasswordToken: user.resetPasswordToken,
+            resetPasswordExpirationDate: user.resetPasswordExpirationDate,
+            cart: user.cart,
+            avatar: user.avatar,
+            products: user.products,
+            reviews: user.reviews,
+            shippingsInfo: user.shippingsInfo,
+        });
+    }
 }
 
-export type { UserRole };
-export default User;
+export default UserData;

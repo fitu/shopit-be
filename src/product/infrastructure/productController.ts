@@ -4,7 +4,7 @@ import httpStatus from "http-status";
 import Controller from "../../shared/Controller";
 import isAuth from "../../shared/middlewares/isAuth";
 import ProductData from "../application/ProductData";
-import AddProductInteractor from "../application/AddProductInteractor";
+import CreateProductInteractor from "../application/CreateProductInteractor";
 import GetAllProductsInteractor from "../application/GetAllProductsInteractor";
 import GetProductByIdInteractor from "../application/GetProductByIdInteractor";
 import DeleteProductByIdInteractor from "../application/DeleteProductByIdInteractor";
@@ -28,7 +28,7 @@ class ProductController implements Controller {
     private initializeRoutes = (): void => {
         this.router.get(this.path, this.getProducts);
         this.router.get(`${this.path}/:id`, this.getProductById);
-        this.router.post(this.path, isAuth, this.addProduct);
+        this.router.post(this.path, isAuth, this.createProduct);
         this.router.delete(`${this.path}/:id`, isAuth, this.removeProductById);
         this.router.put(`${this.path}/:id`, isAuth, this.updateProductById);
     };
@@ -60,7 +60,7 @@ class ProductController implements Controller {
         res.status(httpStatus.OK).json({ success: true, data: product });
     };
 
-    private addProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const {
             title,
             description,
@@ -88,7 +88,7 @@ class ProductController implements Controller {
         });
         const data = { productData, userId };
 
-        const interactor = new AddProductInteractor(data, this.productService);
+        const interactor = new CreateProductInteractor(data, this.productService);
         const result = await interactor.execute();
 
         const newProduct = ProductViewModel.fromData(result);

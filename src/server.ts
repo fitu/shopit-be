@@ -2,6 +2,7 @@ import CartController from "./cart/infrastructure/CartController";
 import OrderController from "./order/infrastructure/OrderController";
 import ProductController from "./product/infrastructure/ProductController";
 import UserController from "./user/infrastructure/UserController";
+import UserService from "./user/domain/UserService";
 import ProductService from "./product/domain/ProductService";
 import validateEnv from "./shared/env/envUtils";
 import getRepositories from "./shared/repository/Repository";
@@ -20,10 +21,11 @@ import App from "./app";
         await db.init();
 
         // Create Repositories
-        const { productRepository, emailRepository } = getRepositories(env);
+        const { productRepository, userRepository, emailRepository } = getRepositories(env);
 
         // Create Services
         const productService = new ProductService(productRepository);
+        const userService = new UserService(userRepository);
         const emailService = new EmailService(emailRepository);
 
         // Create/Initialize third party integrations
@@ -34,7 +36,7 @@ import App from "./app";
             new CartController(),
             new OrderController(),
             new ProductController(productService),
-            new UserController(emailService),
+            new UserController(userService, emailService),
         ];
         const app = new App(env, db, controllers);
 
