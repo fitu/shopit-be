@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import {
     Model,
     DataTypes,
@@ -20,6 +19,7 @@ import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
 import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
 import User, { UserRole } from "../../domain/User";
+import { hashPassword } from "../../../shared/utils/hash";
 
 interface UserAttributes {
     id: string;
@@ -29,7 +29,7 @@ interface UserAttributes {
     role: UserRole;
     password: string;
     resetPasswordToken: string | null;
-    resetPasswordExpire: Date | null;
+    resetPasswordExpirationDate: Date | null;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
@@ -42,7 +42,7 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public role!: UserRole;
     public password!: string;
     public resetPasswordToken!: string | null;
-    public resetPasswordExpire!: Date | null;
+    public resetPasswordExpirationDate!: Date | null;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -101,7 +101,7 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
             role: this.role,
             password: this.password,
             resetPasswordToken: this.resetPasswordToken,
-            resetPasswordExpire: this.resetPasswordExpire,
+            resetPasswordExpirationDate: this.resetPasswordExpirationDate,
             cart: this.cart?.toModel(),
             avatar: this.avatar?.toModel(),
             products: this.products?.map((product) => product.toModel()),
@@ -155,15 +155,15 @@ const init = (sequelize: Sequelize): void => {
                 validate: {
                     min: 8,
                 },
-                set(value: string) {
-                    const hash = crypto.createHash("md5").update(value).digest("hex");
-                    this.setDataValue("password", hash);
+                async set(value: string) {
+                    const hashedPassword = await hashPassword(value);
+                    this.setDataValue("password", hashedPassword);
                 },
             },
             resetPasswordToken: {
                 type: DataTypes.STRING,
             },
-            resetPasswordExpire: {
+            resetPasswordExpirationDate: {
                 type: DataTypes.DATE,
             },
         },

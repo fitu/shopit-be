@@ -15,7 +15,7 @@ class UserRepository implements Repository {
             role: user.role,
             password: user.password,
             resetPasswordToken: user.resetPasswordToken,
-            resetPasswordExpire: new Date(user.resetPasswordExpire),
+            resetPasswordExpirationDate: new Date(user.resetPasswordExpirationDate),
         });
 
         return newUser.toModel();
@@ -46,7 +46,7 @@ class UserRepository implements Repository {
                 role: user.role,
                 password: user.password,
                 resetPasswordToken: user.resetPasswordToken,
-                resetPasswordExpire: new Date(user.resetPasswordExpire),
+                resetPasswordExpirationDate: new Date(user.resetPasswordExpirationDate),
                 cart,
                 ...(avatar && { avatar }),
             };

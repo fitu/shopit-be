@@ -1,6 +1,6 @@
-import bcrypt from 'bcryptjs';
 import mongoose, { Document } from "mongoose";
 
+import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hash";
 import User, { UserRole } from "../../domain/User";
 
 interface UserDao {
@@ -11,7 +11,7 @@ interface UserDao {
     role: UserRole;
     password: string;
     resetPasswordToken: string;
-    resetPasswordExpire: Date;
+    resetPasswordExpirationDate: Date;
     shippingsInfo?: Array<ShippingInfoDao>;
 }
 
@@ -85,17 +85,12 @@ const userSchema = new mongoose.Schema({
     resetPasswordToken: {
         type: String,
     },
-    resetPasswordExpire: {
+    resetPasswordExpirationDate: {
         type: Date,
     },
     shippingsInfo: [shippingInfoSchema],
     // TODO: add avatar, paymentInfo, cart
 });
-
-userSchema.methods.validatePassword = async function (password: string) {
-    const passwordsMatch = await bcrypt.compare(password, this.user.password)
-    return passwordsMatch;
-};
 
 userSchema.methods.toModel = function (): User {
     const user = this as UserFullDocument;
@@ -108,13 +103,17 @@ userSchema.methods.toModel = function (): User {
         role: user.role,
         password: user.password,
         resetPasswordToken: user.resetPasswordToken,
-        resetPasswordExpire: user.resetPasswordExpire,
+        resetPasswordExpirationDate: user.resetPasswordExpirationDate,
         cart: null,
         avatar: null,
         products: [],
         reviews: [],
         shippingsInfo: null,
     };
+};
+
+userSchema.methods.validatePassword = async function (password: string) {
+    return doPasswordsMatch(password, this.user.password);
 };
 
 userSchema.pre("save", async function (next) {
@@ -125,8 +124,7 @@ userSchema.pre("save", async function (next) {
         return next();
     }
 
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+    const hashedPassword = await hashPassword(user.password);
     user.password = hashedPassword;
         
     next();

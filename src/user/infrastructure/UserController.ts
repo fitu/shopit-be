@@ -20,6 +20,7 @@ class UserController implements Controller {
         this.router.get(`${this.path}/sign-in`, this.getCSRFForLogin);
         this.router.post(`${this.path}/sign-in`, this.signInUser);
         this.router.post(`${this.path}/sign-up`, this.signUpUser);
+        this.router.post(`${this.path}/reset-password/`, this.resetPassword);
     };
 
     private signInUser = (req: Request, res: Response, next: NextFunction): void => {
@@ -38,8 +39,13 @@ class UserController implements Controller {
         res.status(httpStatus.OK).json({ success: true });
     };
 
+    // TODO: not required here
     private getCSRFForLogin = (req: Request, res: Response, next: NextFunction): void => {
         res.cookie("XSRF-TOKEN", req.csrfToken());
+        res.status(httpStatus.OK).json({ success: true });
+    };
+
+    private resetPassword = (req: Request, res: Response, next: NextFunction): void => {
         res.status(httpStatus.OK).json({ success: true });
     };
 }

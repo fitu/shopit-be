@@ -1,6 +1,6 @@
 interface Repository {
-    init: (key: String) => void;
-    sendEmail: (to: String, from: String, subject: String, body: String) => Promise<boolean>;
+    init: (key: string) => void;
+    sendEmail: (to: string, from: string, subject: string, body: string) => Promise<boolean>;
 }
 
 export type { Repository };

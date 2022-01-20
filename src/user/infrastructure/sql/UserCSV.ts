@@ -11,7 +11,7 @@ class UserCSV {
         public role: UserRole,
         public password: string,
         public resetPasswordToken: string,
-        public resetPasswordExpire: Date
+        public resetPasswordExpirationDate: Date
     ) {}
 
     static toModel(userCSV: UserCSV): User {
@@ -38,7 +38,7 @@ class UserCSV {
             role: userCSV.role,
             password: userCSV.password,
             resetPasswordToken: userCSV.resetPasswordToken,
-            resetPasswordExpire: userCSV.resetPasswordExpire,
+            resetPasswordExpirationDate: userCSV.resetPasswordExpirationDate,
             cart,
             avatar,
         };

@@ -14,7 +14,7 @@ class User {
     readonly role: UserRole;
     readonly password: string;
     readonly resetPasswordToken: string | null;
-    readonly resetPasswordExpire: Date | null;
+    readonly resetPasswordExpirationDate: Date | null;
     readonly cart?: Cart;
     readonly avatar?: Avatar;
     readonly products?: Array<Product>;
@@ -29,7 +29,7 @@ class User {
         role,
         password,
         resetPasswordToken,
-        resetPasswordExpire,
+        resetPasswordExpirationDate,
         cart,
         avatar,
         products,
@@ -43,7 +43,7 @@ class User {
         role: UserRole;
         password: string;
         resetPasswordToken: string | null;
-        resetPasswordExpire: Date | null;
+        resetPasswordExpirationDate: Date | null;
         cart?: Cart;
         avatar?: Avatar;
         products?: Array<Product>;
@@ -57,7 +57,7 @@ class User {
         this.role = role;
         this.password = password;
         this.resetPasswordToken = resetPasswordToken;
-        this.resetPasswordExpire = resetPasswordExpire;
+        this.resetPasswordExpirationDate = resetPasswordExpirationDate;
         this.cart = cart;
         this.avatar = avatar;
         this.products = products;

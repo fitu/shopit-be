@@ -7,11 +7,11 @@ class EmailService {
         this.emailRepository = emailRepository;
     }
 
-    public init(key: String): void {
+    public init(key: string): void {
         this.emailRepository.init(key);
     }
 
-    public async sendEmail(to: String, from: String, subject: String, body: String): Promise<boolean> {
+    public async sendEmail(to: string, from: string, subject: string, body: string): Promise<boolean> {
         return this.emailRepository.sendEmail(to, from, subject, body);
     }
 }
