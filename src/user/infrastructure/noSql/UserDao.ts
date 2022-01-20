@@ -1,6 +1,6 @@
 import mongoose, { Document } from "mongoose";
 
-import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hash";
+import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hashUtils";
 import User, { UserRole } from "../../domain/User";
 
 interface UserDao {

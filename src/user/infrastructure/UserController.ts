@@ -8,6 +8,8 @@ import { UserRole } from "../domain/User";
 import UserService from "../domain/UserService";
 import UserViewModel from "./UserViewModel";
 import CreateUserInteractor from "../application/CreateUserInteractor";
+import ForgotPasswordInteractor from "../application/ForgotPasswordInteractor";
+import ResetPasswordInteractor from "../application/ResetPasswordInteractor";
 
 class UserController implements Controller {
     public path = "/users";
@@ -27,6 +29,7 @@ class UserController implements Controller {
         this.router.get(`${this.path}/sign-in`, this.getCSRFForLogin);
         this.router.post(`${this.path}/sign-in`, this.signInUser);
         this.router.post(`${this.path}/sign-up`, this.signUpUser);
+        this.router.post(`${this.path}/forgot-password/`, this.forgotPassword);
         this.router.post(`${this.path}/reset-password/`, this.resetPassword);
     };
 
@@ -48,7 +51,7 @@ class UserController implements Controller {
             role: UserRole;
             password: string;
         } = req.body;
-    
+
         const userData = new UserData({
             firstName,
             lastName,
@@ -57,12 +60,12 @@ class UserController implements Controller {
             password,
         });
         const data = { userData };
-    
+
         const interactor = new CreateUserInteractor(this.userService, this.emailService);
         const result = await interactor.execute(data);
-    
+
         const newUser = UserViewModel.fromData(result);
-    
+
         res.status(httpStatus.OK).json({ success: true, data: newUser });
     };
 
@@ -72,8 +75,30 @@ class UserController implements Controller {
         res.status(httpStatus.OK).json({ success: true });
     };
 
-    private resetPassword = (req: Request, res: Response, next: NextFunction): void => {
+    private forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { email }: { email: string } = req.body;
+
+        const data = { email };
+
+        const interactor = new ForgotPasswordInteractor(this.userService, this.emailService);
+        await interactor.execute(data);
+
         res.status(httpStatus.OK).json({ success: true });
+    };
+
+    private resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const {
+            email,
+            newPassword,
+            resetPasswordToken,
+        }: { email: string; newPassword: string; resetPasswordToken: string } = req.body;
+
+        const data = { email, newPassword, resetPasswordToken };
+
+        const interactor = new ResetPasswordInteractor(this.userService);
+        const result = await interactor.execute(data);
+
+        res.status(httpStatus.OK).json({ success: result });
     };
 }
 

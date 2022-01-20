@@ -70,6 +70,9 @@ class UserRepository implements Repository {
         return UserDao.findByPk(userId);
     }
 
+    public async getUserByEmail(email: string): Promise<User> {
+        return UserDao.findOne({ where: { email } });
+    }
 }
 
 export default UserRepository;

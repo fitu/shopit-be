@@ -12,7 +12,6 @@ class UserViewModel {
     readonly lastName: string;
     readonly email: string;
     readonly role: UserRole;
-    readonly password: string;
     readonly resetPasswordToken: string | null;
     readonly resetPasswordExpirationDate: Date | null;
     readonly cart: Cart | null;
@@ -27,7 +26,6 @@ class UserViewModel {
         lastName,
         email,
         role,
-        password,
         resetPasswordToken,
         resetPasswordExpirationDate,
         cart,
@@ -41,7 +39,6 @@ class UserViewModel {
         lastName: string;
         email: string;
         role: UserRole;
-        password: string;
         resetPasswordToken: string | null;
         resetPasswordExpirationDate: Date | null;
         cart: Cart | null;
@@ -55,7 +52,6 @@ class UserViewModel {
         this.lastName = lastName;
         this.email = email;
         this.role = role;
-        this.password = password;
         this.resetPasswordToken = resetPasswordToken;
         this.resetPasswordExpirationDate = resetPasswordExpirationDate;
         this.cart = cart;
@@ -72,7 +68,6 @@ class UserViewModel {
             lastName: userData.lastName,
             email: userData.email,
             role: userData.role,
-            password: userData.password,
             resetPasswordToken: userData.resetPasswordToken,
             resetPasswordExpirationDate: userData.resetPasswordExpirationDate,
             cart: userData.cart,

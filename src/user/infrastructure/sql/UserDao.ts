@@ -19,7 +19,7 @@ import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
 import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
 import User, { UserRole } from "../../domain/User";
-import { hashPassword } from "../../../shared/utils/hash";
+import { hashPassword } from "../../../shared/utils/hashUtils";
 
 interface UserAttributes {
     id: string;
@@ -140,6 +140,7 @@ const init = (sequelize: Sequelize): void => {
                 validate: {
                     isEmail: true,
                 },
+                unique: true,
             },
             role: {
                 type: DataTypes.STRING,

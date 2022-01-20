@@ -5,6 +5,7 @@ interface Repository {
     saveBulk: (users: Array<User>) => Promise<Array<User>>;
     addProduct: (userId: string, productId: string) => Promise<void>;
     getUserById: (userId: string) => Promise<User>;
+    getUserByEmail: (email: string) => Promise<User>;
 }
 
 export type { Repository };

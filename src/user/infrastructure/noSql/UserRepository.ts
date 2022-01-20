@@ -47,6 +47,10 @@ class UserRepository implements Repository {
     public async getUserById(userId: string): Promise<User> {
         return new Promise(() => {});
     }
+
+    public async getUserByEmail(email: string): Promise<User> {
+        return new Promise(() => {});
+    }
 }
 
 export default UserRepository;
