@@ -30,7 +30,7 @@ class UserCSV {
               })
             : null;
 
-        return {
+        return new User({
             id: userCSV.id,
             firstName: userCSV.firstName,
             lastName: userCSV.lastName,
@@ -41,7 +41,7 @@ class UserCSV {
             resetPasswordExpirationDate: userCSV.resetPasswordExpirationDate,
             cart,
             avatar,
-        };
+        });
     }
 }
 

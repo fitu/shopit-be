@@ -28,18 +28,19 @@ import App from "./app";
         const userService = new UserService(userRepository);
         const emailService = new EmailService(emailRepository);
 
-        // Create/Initialize third party integrations
+        // Initialize Third Party Integrations
         emailService.init(env.KEY_EMAILS);
 
-        // Create the app and start listening for connections
+        // Create Controllers
         const controllers = [
             new CartController(),
             new OrderController(),
             new ProductController(productService),
             new UserController(userService, emailService),
         ];
-        const app = new App(env, db, controllers);
 
+        // Create app and launch it!
+        const app = new App(env, db, controllers);
         app.listen();
     } catch (error) {
         console.error("Error while connecting to the database", error);

@@ -31,7 +31,7 @@ class UserCSV {
               })
             : null;
 
-        return {
+        return new User({
             id: convertUUIDToId(userCSV.id),
             firstName: userCSV.firstName,
             lastName: userCSV.lastName,
@@ -42,7 +42,7 @@ class UserCSV {
             resetPasswordExpirationDate: userCSV.resetPasswordExpirationDate,
             cart,
             avatar,
-        };
+        });
     }
 }
 

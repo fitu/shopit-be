@@ -14,7 +14,7 @@ class ProductCSV {
     ) {}
 
     static toModel(productCSV: ProductCSV): Product {
-        return {
+        return new Product({
             id: productCSV.id,
             title: productCSV.title,
             description: productCSV.description,
@@ -24,7 +24,7 @@ class ProductCSV {
             imageUrl: productCSV["images/0/url"],
             category: productCSV.category,
             stock: productCSV.stock,
-        };
+        });
     }
 }
 

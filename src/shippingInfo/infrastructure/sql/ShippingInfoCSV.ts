@@ -12,14 +12,14 @@ class ShippingInfoCSV {
     ) {}
 
     static toModel(shippingInfoCSV: ShippingInfoCSV): ShippingInfo {
-        return {
+        return new ShippingInfo({
             id: shippingInfoCSV.id,
             address: shippingInfoCSV.address,
             city: shippingInfoCSV.city,
             phone: shippingInfoCSV.phone,
             postalCode: shippingInfoCSV.postalCode,
             country: shippingInfoCSV.country,
-        };
+        });
     }
 }
 

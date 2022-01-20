@@ -11,12 +11,12 @@ class ReviewCSV {
     ) {}
 
     static toModel(reviewCSV: ReviewCSV): Review {
-        return {
+        return new Review({
             id: reviewCSV.id,
             name: reviewCSV.name,
             rating: reviewCSV.rating,
             comment: reviewCSV.comment,
-        };
+        });
     }
 }
 
