@@ -7,19 +7,19 @@ import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
 type UserRole = "user" | "admin";
 
 class User {
-    readonly id: string;
+    readonly id?: string;
     readonly firstName: string;
     readonly lastName: string;
     readonly email: string;
     readonly role: UserRole;
     readonly password: string;
-    readonly resetPasswordToken: string | null;
-    readonly resetPasswordExpirationDate: Date | null;
-    readonly cart?: Cart;
-    readonly avatar?: Avatar;
-    readonly products?: Array<Product>;
-    readonly reviews?: Array<Review>;
-    readonly shippingsInfo?: Array<ShippingInfo>;
+    readonly resetPasswordToken?: string | null;
+    readonly resetPasswordExpirationDate?: Date | null;
+    readonly cart?: Cart | null;
+    readonly avatar?: Avatar | null;
+    readonly products?: Array<Product> | null;
+    readonly reviews?: Array<Review> | null;
+    readonly shippingsInfo?: Array<ShippingInfo> | null;
 
     constructor({
         id,
@@ -44,11 +44,11 @@ class User {
         password: string;
         resetPasswordToken?: string | null;
         resetPasswordExpirationDate?: Date | null;
-        cart?: Cart;
-        avatar?: Avatar;
-        products?: Array<Product>;
-        reviews?: Array<Review>;
-        shippingsInfo?: Array<ShippingInfo>;
+        cart?: Cart | null;
+        avatar?: Avatar | null;
+        products?: Array<Product> | null;
+        reviews?: Array<Review> | null;
+        shippingsInfo?: Array<ShippingInfo> | null;
     }) {
         this.id = id;
         this.firstName = firstName;

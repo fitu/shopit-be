@@ -58,8 +58,8 @@ class UserController implements Controller {
         });
         const data = { userData };
     
-        const interactor = new CreateUserInteractor(data, this.userService, this.emailService);
-        const result = await interactor.execute();
+        const interactor = new CreateUserInteractor(this.userService, this.emailService);
+        const result = await interactor.execute(data);
     
         const newUser = UserViewModel.fromData(result);
     

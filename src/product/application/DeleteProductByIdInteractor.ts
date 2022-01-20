@@ -1,26 +1,19 @@
-import Interactor from "../../shared/Interactor";
 import ProductService from "../domain/ProductService";
-
-import ProductData from "./ProductData";
 
 interface DeleteProductByIdData {
     productId: string;
 }
 
-class DeleteProductByIdInteractor implements Interactor {
-    private data: DeleteProductByIdData;
-
+class DeleteProductByIdInteractor {
     private productService: ProductService;
 
-    constructor(data: DeleteProductByIdData, productService: ProductService) {
-        this.data = data;
+    constructor(productService: ProductService) {
         this.productService = productService;
     }
 
-    public async execute(): Promise<void> {
+    public async execute(data: DeleteProductByIdData): Promise<void> {
         // TODO: Validate
-
-        await this.productService.deleteProductById(this.data.productId);
+        await this.productService.deleteProductById(data.productId);
     }
 }
 

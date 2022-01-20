@@ -8,7 +8,7 @@ import CreateProductInteractor from "../application/CreateProductInteractor";
 import GetAllProductsInteractor from "../application/GetAllProductsInteractor";
 import GetProductByIdInteractor from "../application/GetProductByIdInteractor";
 import DeleteProductByIdInteractor from "../application/DeleteProductByIdInteractor";
-import UpdateProductByIdInteractor from "../application/UpdateProductById";
+import UpdateProductByIdInteractor from "../application/UpdateProductByIdInteractor";
 import ProductService from "../domain/ProductService";
 
 import ProductViewModel from "./ProductViewModel";
@@ -47,8 +47,8 @@ class ProductController implements Controller {
         // TODO: validate
         const data = { productId: id };
 
-        const interactor = new GetProductByIdInteractor(data, this.productService);
-        const result = await interactor.execute();
+        const interactor = new GetProductByIdInteractor(this.productService);
+        const result = await interactor.execute(data);
 
         if (!result) {
             res.status(httpStatus.NOT_FOUND).json({ success: false });
@@ -88,8 +88,8 @@ class ProductController implements Controller {
         });
         const data = { productData, userId };
 
-        const interactor = new CreateProductInteractor(data, this.productService);
-        const result = await interactor.execute();
+        const interactor = new CreateProductInteractor(this.productService);
+        const result = await interactor.execute(data);
 
         const newProduct = ProductViewModel.fromData(result);
 
@@ -101,8 +101,8 @@ class ProductController implements Controller {
         // TODO: validate
         const data = { productId: id };
 
-        const interactor = new DeleteProductByIdInteractor(data, this.productService);
-        await interactor.execute();
+        const interactor = new DeleteProductByIdInteractor(this.productService);
+        await interactor.execute(data);
 
         res.status(httpStatus.OK).json({ success: true });
     };
@@ -129,8 +129,8 @@ class ProductController implements Controller {
         // TODO: validate
         const data = { productId: id, productData };
 
-        const interactor = new UpdateProductByIdInteractor(data, this.productService);
-        const result = await interactor.execute();
+        const interactor = new UpdateProductByIdInteractor(this.productService);
+        const result = await interactor.execute(data);
 
         if (!result) {
             res.status(httpStatus.NOT_FOUND).json({ success: false });

@@ -28,7 +28,7 @@ class ProductRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async getProductById(productId: string): Promise<Product> | null {
+    public async getProductById(productId: string): Promise<Product> {
         return new Promise(() => {});
     }
 
@@ -36,7 +36,7 @@ class ProductRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async updateProductById(productId: string, product: Product): Promise<Product> | null {
+    public async updateProductById(productId: string, product: Product): Promise<Product> {
         return new Promise(() => {});
     }
 }

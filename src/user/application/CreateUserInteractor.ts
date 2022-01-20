@@ -1,5 +1,4 @@
 import EmailService from "../../shared/integrations/emails/EmailService";
-import Interactor from "../../shared/Interactor";
 import User from "../domain/User";
 import UserService from "../domain/UserService";
 
@@ -9,37 +8,26 @@ interface CreateUserData {
     userData: UserData;
 }
 
-class CreateUserInteractor implements Interactor {
-    private data: CreateUserData;
-
+class CreateUserInteractor {
     private userService: UserService;
     private emailService: EmailService;
 
-    constructor(data: CreateUserData, userService: UserService, emailService: EmailService) {
-        this.data = data;
+    constructor(userService: UserService, emailService: EmailService) {
         this.userService = userService;
         this.emailService = emailService;
     }
 
-    public async execute(): Promise<UserData> {
+    public async execute(data: CreateUserData): Promise<UserData> {
         const newUser = new User({
-            id: null,
-            firstName: this.data.userData.firstName,
-            lastName: this.data.userData.lastName,
-            email: this.data.userData.email,
-            role: this.data.userData.role,
-            password: this.data.userData.password,
-            resetPasswordToken: null,
-            resetPasswordExpirationDate: null,
-            cart: null,
-            avatar: null,
-            products: null,
-            reviews: null,
-            shippingsInfo: null,
+            firstName: data.userData.firstName,
+            lastName: data.userData.lastName,
+            email: data.userData.email,
+            role: data.userData.role,
+            password: data.userData.password,
         });
         const createdUser = await this.userService.create(newUser);
 
-        await this.emailService.sendWelcomeEmail(this.data.userData.email);
+        await this.emailService.sendWelcomeEmail(data.userData.email);
 
         return UserData.fromModel(createdUser);
     }

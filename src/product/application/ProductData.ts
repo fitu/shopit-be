@@ -3,11 +3,11 @@ import Product, { ProductCategory } from "../domain/Product";
 class ProductData {
     readonly id?: string;
     readonly title: string;
-    readonly description: string | null;
+    readonly description: string;
     readonly price: number;
     readonly imageUrl: string;
     readonly category: ProductCategory;
-    readonly stock: number;
+    readonly stock?: number;
     readonly ratings?: number;
 
     constructor({
@@ -22,11 +22,11 @@ class ProductData {
     }: {
         id?: string | null;
         title: string;
-        description: string | null;
+        description: string;
         price: number;
         imageUrl: string;
         category: ProductCategory;
-        stock: number;
+        stock?: number;
         ratings?: number;
     }) {
         this.id = id;
@@ -35,7 +35,7 @@ class ProductData {
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
-        this.stock = stock;
+        this.stock = stock ?? 0;
         this.ratings = ratings ?? 0;
     }
 

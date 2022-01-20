@@ -5,7 +5,7 @@ class ProductCSV {
     constructor(
         public id: string,
         public title: string,
-        public description: string | null,
+        public description: string,
         public price: number,
         public ratings: number,
         public imageUrl: string,

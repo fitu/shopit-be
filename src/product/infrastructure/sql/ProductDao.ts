@@ -19,7 +19,7 @@ import Product, { ProductCategory } from "../../domain/Product";
 interface ProductAttributes {
     id: string;
     title: string;
-    description: string | null;
+    description: string;
     price: number;
     ratings: number;
     imageUrl: string;
@@ -32,7 +32,7 @@ interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
 class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
     public id!: string;
     public title!: string;
-    public description!: string | null;
+    public description!: string;
     public price!: number;
     public ratings!: number;
     public imageUrl!: string;
@@ -98,6 +98,7 @@ const init = (sequelize: Sequelize): void => {
             },
             description: {
                 type: DataTypes.STRING,
+                allowNull: false,
             },
             price: {
                 type: DataTypes.DOUBLE,

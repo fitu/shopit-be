@@ -15,11 +15,11 @@ class UserViewModel {
     readonly password: string;
     readonly resetPasswordToken: string | null;
     readonly resetPasswordExpirationDate: Date | null;
-    readonly cart?: Cart;
-    readonly avatar?: Avatar;
-    readonly products?: Array<Product>;
-    readonly reviews?: Array<Review>;
-    readonly shippingsInfo?: Array<ShippingInfo>;
+    readonly cart: Cart | null;
+    readonly avatar: Avatar | null;
+    readonly products: Array<Product> | null;
+    readonly reviews: Array<Review> | null;
+    readonly shippingsInfo: Array<ShippingInfo> | null;
 
     constructor({
         id,
@@ -44,11 +44,11 @@ class UserViewModel {
         password: string;
         resetPasswordToken: string | null;
         resetPasswordExpirationDate: Date | null;
-        cart?: Cart;
-        avatar?: Avatar;
-        products?: Array<Product>;
-        reviews?: Array<Review>;
-        shippingsInfo?: Array<ShippingInfo>;
+        cart: Cart | null;
+        avatar: Avatar | null;
+        products: Array<Product> | null;
+        reviews: Array<Review> | null;
+        shippingsInfo: Array<ShippingInfo> | null;
     }) {
         this.id = id;
         this.firstName = firstName;

@@ -1,5 +1,5 @@
 class Cart {
-    readonly id: string;
+    readonly id?: string;
     readonly itemsPrice: number;
     readonly taxPrice: number;
     readonly totalPrice: number;
@@ -10,7 +10,7 @@ class Cart {
         taxPrice,
         totalPrice,
     }: {
-        id: string;
+        id?: string;
         itemsPrice: number;
         taxPrice: number;
         totalPrice: number;

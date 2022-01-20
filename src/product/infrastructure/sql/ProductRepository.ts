@@ -53,7 +53,7 @@ class ProductRepository implements Repository {
         return allProducts;
     }
 
-    public async getProductById(productId: string): Promise<Product> | null {
+    public async getProductById(productId: string): Promise<Product> {
         const product = await ProductDao.findByPk(productId);
         return product;
     }
@@ -63,7 +63,7 @@ class ProductRepository implements Repository {
         await productToDelete.destroy();
     }
 
-    public async updateProductById(productId: string, product: Product): Promise<Product> | null {
+    public async updateProductById(productId: string, product: Product): Promise<Product> {
         const updatedProduct = await ProductDao.findByPk(productId);
 
         if (!updatedProduct) {

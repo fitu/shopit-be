@@ -1,9 +1,8 @@
-import Interactor from "../../shared/Interactor";
 import ProductService from "../domain/ProductService";
 
 import ProductData from "./ProductData";
 
-class GetAllProductsInteractor implements Interactor {
+class GetAllProductsInteractor {
     private productService: ProductService;
 
     constructor(productService: ProductService) {

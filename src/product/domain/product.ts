@@ -13,9 +13,9 @@ type ProductCategory =
     | "Home";
 
 class Product {
-    readonly id: string;
+    readonly id?: string;
     readonly title: string;
-    readonly description: string | null;
+    readonly description: string;
     readonly price: number;
     readonly ratings: number;
     readonly imageUrl: string;
@@ -32,9 +32,9 @@ class Product {
         category,
         stock,
     }: {
-        id: string;
+        id?: string;
         title: string;
-        description: string | null;
+        description: string;
         price: number;
         ratings: number;
         imageUrl: string;

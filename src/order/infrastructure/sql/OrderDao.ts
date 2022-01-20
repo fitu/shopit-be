@@ -27,8 +27,8 @@ interface OrderAttributes {
     shippingPrice: number;
     totalPrice: number;
     orderStatus: OrderStatus;
-    deliveredAt: Date | null;
-    paidAt: Date | null;
+    deliveredAt?: Date | null;
+    paidAt?: Date | null;
 }
 
 interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {}

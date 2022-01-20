@@ -2,9 +2,9 @@ import ProductData from "../application/ProductData";
 import { ProductCategory } from "../domain/Product";
 
 class ProductViewModel {
-    readonly id?: string;
+    readonly id: string;
     readonly title: string;
-    readonly description: string | null;
+    readonly description: string;
     readonly price: number;
     readonly imageUrl: string;
     readonly category: ProductCategory;
@@ -21,9 +21,9 @@ class ProductViewModel {
         stock,
         ratings,
     }: {
-        id?: string | null;
+        id: string;
         title: string;
-        description: string | null;
+        description: string;
         price: number;
         imageUrl: string;
         category: ProductCategory;

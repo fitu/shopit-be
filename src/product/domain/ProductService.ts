@@ -21,7 +21,7 @@ class ProductService {
         return this.productRepository.getAllProducts();
     }
 
-    public async getProductById(productId: string): Promise<Product> | null {
+    public async getProductById(productId: string): Promise<Product> {
         return this.productRepository.getProductById(productId);
     }
 
@@ -29,7 +29,7 @@ class ProductService {
         return this.productRepository.deleteProductById(productId);
     }
 
-    public async updateProductById(productId: string, product: Product): Promise<Product> | null {
+    public async updateProductById(productId: string, product: Product): Promise<Product> {
         return this.productRepository.updateProductById(productId, product);
     }
 }

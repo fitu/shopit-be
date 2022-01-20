@@ -1,22 +1,24 @@
-import Product from "../domain/Product";
 import ProductService from "../domain/ProductService";
+import Product from "../domain/Product";
 
 import ProductData from "./ProductData";
 
-interface CreateProductData {
+interface UpdateProductByIdData {
+    productId: string;
     productData: ProductData;
-    userId: string;
 }
 
-class CreateProductInteractor {
+class UpdateProductByIdInteractor {
     private productService: ProductService;
 
     constructor(productService: ProductService) {
         this.productService = productService;
     }
 
-    public async execute(data: CreateProductData): Promise<ProductData> {
-        const newProduct = new Product({
+    public async execute(data: UpdateProductByIdData): Promise<ProductData> {
+        // TODO: Validate
+        const productToUpdate = new Product({
+            id: data.productData.id,
             title: data.productData.title,
             description: data.productData.description,
             price: data.productData.price,
@@ -25,11 +27,14 @@ class CreateProductInteractor {
             category: data.productData.category,
             stock: data.productData.stock,
         });
-        const createdProduct = await this.productService.create(newProduct, data.userId);
 
-        return ProductData.fromModel(createdProduct);
+        const product = await this.productService.updateProductById(data.productId, productToUpdate);
+        
+        // TODO: throw exception if fails
+
+        return ProductData.fromModel(product);
     }
 }
 
-export type { CreateProductData };
-export default CreateProductInteractor;
+export type { UpdateProductByIdData };
+export default UpdateProductByIdInteractor;

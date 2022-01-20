@@ -12,8 +12,8 @@ class UserData {
     readonly email: string;
     readonly role: UserRole;
     readonly password: string;
-    readonly resetPasswordToken?: string | null;
-    readonly resetPasswordExpirationDate?: Date | null;
+    readonly resetPasswordToken?: string;
+    readonly resetPasswordExpirationDate?: Date;
     readonly cart?: Cart;
     readonly avatar?: Avatar;
     readonly products?: Array<Product>;
@@ -41,8 +41,8 @@ class UserData {
         email: string;
         role: UserRole;
         password: string;
-        resetPasswordToken?: string | null;
-        resetPasswordExpirationDate?: Date | null;
+        resetPasswordToken?: string;
+        resetPasswordExpirationDate?: Date;
         cart?: Cart;
         avatar?: Avatar;
         products?: Array<Product>;

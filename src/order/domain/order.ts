@@ -1,14 +1,14 @@
 type OrderStatus = "processing" | "shipped" | "delivered";
 
 class Order {
-    readonly id: string;
+    readonly id?: string;
     readonly itemsPrice: number;
     readonly taxPrice: number;
     readonly shippingPrice: number;
     readonly totalPrice: number;
     readonly orderStatus: OrderStatus;
-    readonly deliveredAt: Date | null;
-    readonly paidAt: Date | null;
+    readonly deliveredAt?: Date | null;
+    readonly paidAt?: Date | null;
 
     constructor({
         id,
@@ -20,14 +20,14 @@ class Order {
         deliveredAt,
         paidAt,
     }: {
-        id: string;
+        id?: string;
         itemsPrice: number;
         taxPrice: number;
         shippingPrice: number;
         totalPrice: number;
         orderStatus: OrderStatus;
-        deliveredAt: Date | null;
-        paidAt: Date | null;
+        deliveredAt?: Date | null;
+        paidAt?: Date | null;
     }) {
         this.id = id;
         this.itemsPrice = itemsPrice;

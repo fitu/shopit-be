@@ -1,4 +1,3 @@
-import Interactor from "../../shared/Interactor";
 import ProductService from "../domain/ProductService";
 
 import ProductData from "./ProductData";
@@ -7,22 +6,20 @@ interface GetProductByIdData {
     productId: string;
 }
 
-class GetProductByIdInteractor implements Interactor {
-    private data: GetProductByIdData;
-
+class GetProductByIdInteractor {
     private productService: ProductService;
 
-    constructor(data: GetProductByIdData, productService: ProductService) {
-        this.data = data;
+    constructor(productService: ProductService) {
         this.productService = productService;
     }
 
-    public async execute(): Promise<ProductData> | null {
+    public async execute(data: GetProductByIdData): Promise<ProductData> {
         // TODO: Validate
 
-        const product = await this.productService.getProductById(this.data.productId);
+        const product = await this.productService.getProductById(data.productId);
 
-        return product ? ProductData.fromModel(product) : null;
+        // TODO: throw exception if fails
+        return ProductData.fromModel(product);
     }
 }
 

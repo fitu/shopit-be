@@ -10,9 +10,9 @@ interface UserDao {
     email: string;
     role: UserRole;
     password: string;
-    resetPasswordToken: string;
-    resetPasswordExpirationDate: Date;
-    shippingsInfo?: Array<ShippingInfoDao>;
+    resetPasswordToken?: string | null;
+    resetPasswordExpirationDate?: Date | null;
+    shippingsInfo?: Array<ShippingInfoDao> | null;
 }
 
 interface UserDocument extends Document {

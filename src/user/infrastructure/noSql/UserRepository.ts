@@ -10,8 +10,14 @@ class UserRepository implements Repository {
                 ...shippingInfo,
                 _id: shippingInfo.id,
             })) ?? [];
-        const userToSave: UserDao = { ...user, _id: user.id, shippingsInfo: shippingsInfoToSave };
+        const userToSave: UserDao = {
+            ...user,
+            _id: user.id,
+            shippingsInfo: shippingsInfoToSave,
+        };
+
         const newUser = await UserDocument.create(userToSave);
+
         return newUser.toModel();
     }
 
@@ -22,9 +28,15 @@ class UserRepository implements Repository {
                     ...shippingInfo,
                     _id: shippingInfo.id,
                 })) ?? [];
-            return { ...user, _id: user.id, shippingsInfo: shippingsInfoToSave };
+            return {
+                ...user,
+                _id: user.id,
+                shippingsInfo: shippingsInfoToSave,
+            };
         });
+
         const newUsers = await UserDocument.insertMany(usersToSave);
+
         return newUsers.map((newUser) => newUser.toModel());
     }
 
