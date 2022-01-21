@@ -27,7 +27,7 @@ class CreateUserInteractor {
         });
         const createdUser = await this.userService.create(newUser);
 
-        await this.emailService.sendWelcomeEmail(data.userData.email);
+        this.emailService.sendWelcomeEmail(data.userData.email);
 
         return UserData.fromModel(createdUser);
     }

@@ -45,6 +45,7 @@ class App {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
 
+        // TODO: check this
         const corsOptions = {
             origin: "*",
             credentials: true,

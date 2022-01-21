@@ -5,7 +5,7 @@ import CartDao from "./CartDao";
 
 class CartRepository implements Repository {
     // TODO: is this in use?
-    public async save(cart: Cart, userId: string): Promise<Cart> {
+    public async create(cart: Cart, userId: string): Promise<Cart> {
         const newCart = await CartDao.create({
             ...(cart.id && { id: cart.id }),
             itemsPrice: cart.itemsPrice,

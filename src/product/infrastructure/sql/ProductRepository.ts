@@ -5,7 +5,7 @@ import { Repository } from "../Repository";
 import ProductDao from "./ProductDao";
 
 class ProductRepository implements Repository {
-    public async save(product: Product, userId: string): Promise<Product> {
+    public async create(product: Product, userId: string): Promise<Product> {
         const newProduct = await ProductDao.create({
             ...(product.id && { id: product.id }),
             title: product.title,
@@ -23,7 +23,7 @@ class ProductRepository implements Repository {
         return newProduct.toModel();
     }
 
-    public async saveBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
+    public async createBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         const productsToSave = products.map((product) => {
             return {
                 ...(product.id && { id: product.id }),
@@ -46,6 +46,10 @@ class ProductRepository implements Repository {
         await Promise.all(usersWithProductsPromises);
 
         return newProducts.map((newProduct) => newProduct.toModel());
+    }
+
+    public async update(product: Product, userId: string): Promise<Product> {
+        return new Promise(() => {});
     }
 
     public async getAllProducts(): Promise<Array<Product>> {

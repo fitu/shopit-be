@@ -3,7 +3,7 @@
 @baseUrl = api/v1
 @host = {{hostname}}:{{port}}/{{baseUrl}}
 @contentType = application/json
-@csrf = RwYQtC9A-KetMVAXmheCepbVyVqb244XNYcc
+@csrf = ihAwf02j-lReA_W7QORh1PvRUwSDjMeVd7yQ
 
 # Sign-in user view
 GET http://{{host}}/users/sign-in
@@ -24,5 +24,33 @@ Content-Type: {{contentType}}
 CSRF-Token: {{csrf}}
 
 {
-    "email": "victorio.matteucci@gmail.com"
+    "email": "victorio.matteucci.shopit@gmail.com",
+    "password": "computadorar",
+    "firstName": "vitto",
+    "lastName": "matt",
+    "role": "admin"
+}
+
+###
+
+# Forgot password
+POST http://{{host}}/users/forgot-password
+Content-Type: {{contentType}}
+CSRF-Token: {{csrf}}
+
+{
+    "email": "victorio.matteucci.shopit@gmail.com"
+}
+
+###
+
+# Reset password
+POST http://{{host}}/users/reset-password
+Content-Type: {{contentType}}
+CSRF-Token: {{csrf}}
+
+{
+    "email": "victorio.matteucci.shopit@gmail.com",
+    "newPassword": "computadorar",
+    "resetPasswordToken": "da7b272271ea54ee44a122ab0dfde0472c8896d7a1b8508f315ad861a762eec0"
 }

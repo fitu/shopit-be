@@ -10,7 +10,7 @@ class ReviewService {
     }
 
     public async create(review: Review, productId: string, userId: string): Promise<Review> {
-        return this.reviewRepository.save(review, productId, userId);
+        return this.reviewRepository.create(review, productId, userId);
     }
 
     public async createBulk(
@@ -18,7 +18,7 @@ class ReviewService {
         productIds: Array<string>,
         userIds: Array<string>
     ): Promise<Array<Review>> {
-        return this.reviewRepository.saveBulk(reviews, productIds, userIds);
+        return this.reviewRepository.createBulk(reviews, productIds, userIds);
     }
 }
 

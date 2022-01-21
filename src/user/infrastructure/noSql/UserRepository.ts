@@ -4,7 +4,7 @@ import { Repository } from "../Repository";
 import UserDocument, { UserDao, ShippingInfoDao } from "./UserDao";
 
 class UserRepository implements Repository {
-    public async save(user: User): Promise<User> {
+    public async create(user: User): Promise<User> {
         const shippingsInfoToSave: Array<ShippingInfoDao> =
             user.shippingsInfo?.map((shippingInfo) => ({
                 ...shippingInfo,
@@ -21,7 +21,7 @@ class UserRepository implements Repository {
         return newUser.toModel();
     }
 
-    public async saveBulk(users: Array<User>): Promise<Array<User>> {
+    public async createBulk(users: Array<User>): Promise<Array<User>> {
         const usersToSave: Array<UserDao> = users.map((user) => {
             const shippingsInfoToSave: Array<ShippingInfoDao> =
                 user.shippingsInfo?.map((shippingInfo) => ({
@@ -38,6 +38,10 @@ class UserRepository implements Repository {
         const newUsers = await UserDocument.insertMany(usersToSave);
 
         return newUsers.map((newUser) => newUser.toModel());
+    }
+
+    public async update(user: User): Promise<User> {
+        return new Promise(() => {});
     }
 
     public async addProduct(userId: string, productId: string): Promise<void> {

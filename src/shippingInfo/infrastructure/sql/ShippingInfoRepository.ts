@@ -5,7 +5,7 @@ import { Repository } from "../Repository";
 import ShippingInfoDao from "./ShippingInfoDao";
 
 class ShippingInfoRepository implements Repository {
-    public async save(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
+    public async create(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
         const newShippingInfo = await ShippingInfoDao.create({
             ...(shippingInfo.id && { id: shippingInfo.id }),
             address: shippingInfo.address,
@@ -21,7 +21,7 @@ class ShippingInfoRepository implements Repository {
         return newShippingInfo.toModel();
     }
 
-    public async saveBulk(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
+    public async createBulk(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
         const shippingsInfoToSave = shippingsInfo.map((shippingInfo) => {
             return {
                 ...(shippingInfo.id && { id: shippingInfo.id }),

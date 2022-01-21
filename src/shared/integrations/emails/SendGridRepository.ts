@@ -11,12 +11,13 @@ class SendGridRepository implements Repository {
         this.transporter = nodemailer.createTransport(sendGridTransport(transportOptions));
     }
 
-    public async sendEmail(to: string, from: string, subject: string, body: string): Promise<boolean> {
+    public async sendEmail(to: string, from: string, subject: string, body: string): Promise<void> {
+        // TODO: improve this
         try {
-            await this.transporter.sendMail({ to, from, subject, body });
-            return true;
-        } catch {
-            return false;
+            await this.transporter.sendMail({ to, from, subject, html: body });
+        } catch(error) {
+            // TODO: use logger
+            console.log(`Error when sending email: ${error}`);
         }
     }
 }

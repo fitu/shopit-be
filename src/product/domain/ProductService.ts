@@ -10,11 +10,11 @@ class ProductService {
     }
 
     public async create(product: Product, userId: string): Promise<Product> {
-        return this.productRepository.save(product, userId);
+        return this.productRepository.create(product, userId);
     }
 
     public async createBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        return this.productRepository.saveBulk(products, userIds);
+        return this.productRepository.createBulk(products, userIds);
     }
 
     public async getAllProducts(): Promise<Array<Product>> {

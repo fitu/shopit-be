@@ -29,8 +29,8 @@ class UserController implements Controller {
         this.router.get(`${this.path}/sign-in`, this.getCSRFForLogin);
         this.router.post(`${this.path}/sign-in`, this.signInUser);
         this.router.post(`${this.path}/sign-up`, this.signUpUser);
-        this.router.post(`${this.path}/forgot-password/`, this.forgotPassword);
-        this.router.post(`${this.path}/reset-password/`, this.resetPassword);
+        this.router.post(`${this.path}/forgot-password`, this.forgotPassword);
+        this.router.post(`${this.path}/reset-password`, this.resetPassword);
     };
 
     private signInUser = (req: Request, res: Response, next: NextFunction): void => {

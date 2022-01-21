@@ -6,22 +6,25 @@ import { Repository } from "../Repository";
 import UserDao from "./UserDao";
 
 class UserRepository implements Repository {
-    public async save(user: User): Promise<User> {
-        const newUser = await UserDao.create({
+    public async create(user: User): Promise<User> {
+        const userToSave = {
             ...(user.id && { id: user.id }),
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
             role: user.role,
             password: user.password,
-            resetPasswordToken: user.resetPasswordToken,
-            resetPasswordExpirationDate: new Date(user.resetPasswordExpirationDate),
-        });
+            resetPasswordToken: user.resetPasswordToken ?? null,
+            resetPasswordExpirationDate: user.resetPasswordExpirationDate
+                ? new Date(user.resetPasswordExpirationDate)
+                : null,
+        };
+        const newUser = await UserDao.create(userToSave);
 
         return newUser.toModel();
     }
 
-    public async saveBulk(users: Array<User>): Promise<Array<User>> {
+    public async createBulk(users: Array<User>): Promise<Array<User>> {
         const usersToSave = users.map((user) => {
             const cart = {
                 id: user.cart.id,
@@ -45,8 +48,10 @@ class UserRepository implements Repository {
                 email: user.email,
                 role: user.role,
                 password: user.password,
-                resetPasswordToken: user.resetPasswordToken,
-                resetPasswordExpirationDate: new Date(user.resetPasswordExpirationDate),
+                resetPasswordToken: user.resetPasswordToken ?? null,
+                resetPasswordExpirationDate: user.resetPasswordExpirationDate
+                    ? new Date(user.resetPasswordExpirationDate)
+                    : null,
                 cart,
                 ...(avatar && { avatar }),
             };
@@ -62,6 +67,23 @@ class UserRepository implements Repository {
         return newUsers.map((newUser) => newUser.toModel());
     }
 
+    public async update(user: User): Promise<User> {
+        const userDao = await UserDao.findByPk(user.id);
+
+        userDao.id = user.id;
+        userDao.firstName = user.firstName;
+        userDao.lastName = user.lastName;
+        userDao.email = user.email;
+        userDao.role = user.role;
+        userDao.password = user.password;
+        userDao.resetPasswordToken = user.resetPasswordToken;
+        userDao.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
+
+        const updatedUser = await userDao.save();
+
+        return updatedUser.toModel();
+    }
+
     public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
     }
@@ -71,7 +93,8 @@ class UserRepository implements Repository {
     }
 
     public async getUserByEmail(email: string): Promise<User> {
-        return UserDao.findOne({ where: { email } });
+        const user = await UserDao.findOne({ where: { email } });
+        return user.toModel();
     }
 }
 

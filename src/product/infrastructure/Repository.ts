@@ -1,8 +1,9 @@
 import Product from "../domain/Product";
 
 interface Repository {
-    save: (product: Product, userId: string) => Promise<Product>;
-    saveBulk: (products: Array<Product>, userIds: Array<string>) => Promise<Array<Product>>;
+    create: (product: Product, userId: string) => Promise<Product>;
+    createBulk: (products: Array<Product>, userIds: Array<string>) => Promise<Array<Product>>;
+    update: (product: Product, userId: string) => Promise<Product>;
     getAllProducts: () => Promise<Array<Product>>;
     getProductById: (productId: string) => Promise<Product>;
     deleteProductById: (productId: string) => Promise<void>;

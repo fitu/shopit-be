@@ -12,8 +12,8 @@ class EmailService {
         this.emailRepository.init(key);
     }
 
-    public async sendEmail(email: Email): Promise<boolean> {
-        return this.emailRepository.sendEmail(email.to, email.from, email.subject, email.body);
+    public async sendEmail(email: Email): Promise<void> {
+        this.emailRepository.sendEmail(email.to, email.from, email.subject, email.body);
     }
 
     public async sendWelcomeEmail(to: string): Promise<void> {

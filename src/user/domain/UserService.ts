@@ -13,11 +13,11 @@ class UserService {
     }
 
     public async create(user: User): Promise<User> {
-        return this.userRepository.save(user);
+        return this.userRepository.create(user);
     }
 
     public async createBulk(users: Array<User>): Promise<Array<User>> {
-        return this.userRepository.saveBulk(users);
+        return this.userRepository.createBulk(users);
     }
 
     public async getUserById(userId: string): Promise<User> {
@@ -30,7 +30,7 @@ class UserService {
         user.resetPasswordToken = token;
         user.resetPasswordExpirationDate = moment().add(1, "day").toDate();
 
-        await this.userRepository.save(user);
+        await this.userRepository.update(user);
     }
 
     public async updatePassword(email: string, newPassword: string, resetPasswordToken: string): Promise<void> {
@@ -45,7 +45,7 @@ class UserService {
         user.resetPasswordToken = null;
         user.resetPasswordExpirationDate = null;
 
-        await this.userRepository.save(user);
+        await this.userRepository.update(user);
     }
 }
 
