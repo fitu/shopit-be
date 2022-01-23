@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
+import { body } from "express-validator";
 
 import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
@@ -27,17 +28,55 @@ class UserController implements Controller {
 
     private initializeRoutes = (): void => {
         this.router.get(`${this.path}/sign-in`, this.getCSRFForLogin);
-        this.router.post(`${this.path}/sign-in`, this.signInUser);
-        this.router.post(`${this.path}/sign-up`, this.signUpUser);
-        this.router.post(`${this.path}/forgot-password`, this.forgotPassword);
-        this.router.post(`${this.path}/reset-password`, this.resetPassword);
+        this.router.post(
+            `${this.path}/sign-in`,
+            [body("email").notEmpty().isEmail().trim(), body("password").notEmpty().isLength({ min: 6 })],
+            this.signInUser
+        );
+        this.router.post(
+            `${this.path}/sign-up`,
+            [
+                body("firstName").notEmpty().isString().trim(),
+                body("lastName").notEmpty().isString().trim(),
+                body("email").notEmpty().isEmail().trim(),
+                body("role")
+                    .notEmpty()
+                    .custom((value) => {
+                        // TODO: remove hardcoded
+                        if (value !== "admin" && value !== "user") {
+                            // TODO: remove hardcoded
+                            throw new Error("Invalid role input");
+                        }
+                        return true;
+                    })
+                    .trim(),
+                body("password").notEmpty().isLength({ min: 6 }),
+            ],
+            this.signUpUser
+        );
+        this.router.post(
+            `${this.path}/forgot-password`,
+            body("email").notEmpty().isEmail().trim(),
+            this.forgotPassword
+        );
+        this.router.post(
+            `${this.path}/reset-password`,
+            [
+                body("email").notEmpty().isEmail().trim(),
+                body("newPassword").notEmpty().isLength({ min: 6 }),
+                body("resetPasswordToken").notEmpty().isString().trim(),
+            ],
+            this.resetPassword
+        );
     };
 
     private signInUser = (req: Request, res: Response, next: NextFunction): void => {
+        // TODO: add validations
         res.status(httpStatus.OK).json({ success: true });
     };
 
     private signUpUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        // TODO: add validations
         const {
             firstName,
             lastName,
@@ -76,6 +115,7 @@ class UserController implements Controller {
     };
 
     private forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        // TODO: add validations
         const { email }: { email: string } = req.body;
 
         const data = { email };
@@ -87,6 +127,7 @@ class UserController implements Controller {
     };
 
     private resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        // TODO: add validations
         const {
             email,
             newPassword,

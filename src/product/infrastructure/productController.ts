@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
+import { body, param } from "express-validator";
 
 import Controller from "../../shared/Controller";
 import isAuth from "../../shared/middlewares/isAuth";
@@ -27,10 +28,77 @@ class ProductController implements Controller {
 
     private initializeRoutes = (): void => {
         this.router.get(this.path, this.getProducts);
-        this.router.get(`${this.path}/:id`, this.getProductById);
-        this.router.post(this.path, isAuth, this.createProduct);
-        this.router.delete(`${this.path}/:id`, isAuth, this.removeProductById);
-        this.router.put(`${this.path}/:id`, isAuth, this.updateProductById);
+        this.router.get(`${this.path}/:id`, param("id").notEmpty().isUUID(), this.getProductById);
+        this.router.post(
+            this.path,
+            isAuth,
+            [
+                body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
+                body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
+                body("price").notEmpty().isNumeric(),
+                body("imageUrl").notEmpty().isURL(),
+                body("category")
+                    .notEmpty()
+                    .custom((value) => {
+                        // TODO: remove hardcoded
+                        if (
+                            value !== "Electronics" &&
+                            value !== "Cameras" &&
+                            value !== "Laptops" &&
+                            value !== "Accessories" &&
+                            value !== "Headphones" &&
+                            value !== "Food" &&
+                            value !== "Books" &&
+                            value !== "Clothes/Shoes" &&
+                            value !== "Beauty/Health" &&
+                            value !== "Sports" &&
+                            value !== "Outdoor" &&
+                            value !== "Home"
+                        ) {
+                            // TODO: remove hardcoded
+                            throw new Error("Invalid category input");
+                        }
+                        return true;
+                    }),
+                body("stock").notEmpty().isNumeric(),
+            ],
+            this.createProduct
+        );
+        this.router.delete(`${this.path}/:id`, isAuth, param("id").notEmpty().isUUID(), this.removeProductById);
+        this.router.put(
+            `${this.path}/:id`,
+            isAuth,
+            [
+                param("id").notEmpty().isUUID(),
+                body("title").isString().isLength({ min: 5 }).trim(),
+                body("description").isString().isLength({ min: 10, max: 400 }).trim(),
+                body("price").isNumeric(),
+                body("imageUrl").isURL(),
+                body("category").custom((value) => {
+                    // TODO: remove hardcoded
+                    if (
+                        value !== "Electronics" &&
+                        value !== "Cameras" &&
+                        value !== "Laptops" &&
+                        value !== "Accessories" &&
+                        value !== "Headphones" &&
+                        value !== "Food" &&
+                        value !== "Books" &&
+                        value !== "Clothes/Shoes" &&
+                        value !== "Beauty/Health" &&
+                        value !== "Sports" &&
+                        value !== "Outdoor" &&
+                        value !== "Home"
+                    ) {
+                        // TODO: remove hardcoded
+                        throw new Error("Invalid category input");
+                    }
+                    return true;
+                }),
+                body("stock").isNumeric(),
+            ],
+            this.updateProductById
+        );
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -44,7 +112,7 @@ class ProductController implements Controller {
 
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        // TODO: validate
+
         const data = { productId: id };
 
         const interactor = new GetProductByIdInteractor(this.productService);
@@ -61,6 +129,8 @@ class ProductController implements Controller {
     };
 
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        // TODO: add validations
+
         const {
             title,
             description,
@@ -98,7 +168,7 @@ class ProductController implements Controller {
 
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
-        // TODO: validate
+
         const data = { productId: id };
 
         const interactor = new DeleteProductByIdInteractor(this.productService);
@@ -108,6 +178,8 @@ class ProductController implements Controller {
     };
 
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        // TODO: add validations
+
         const { id } = req.params;
         const {
             title,
@@ -126,7 +198,7 @@ class ProductController implements Controller {
         } = req.body;
 
         const productData = new ProductData({ title, description, price, imageUrl, category, stock });
-        // TODO: validate
+
         const data = { productId: id, productData };
 
         const interactor = new UpdateProductByIdInteractor(this.productService);
