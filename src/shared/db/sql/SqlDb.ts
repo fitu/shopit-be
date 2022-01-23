@@ -131,6 +131,8 @@ class SqlDb implements Database {
 
         console.log("Delete reviews");
         await ReviewDao.destroy({ where: {} });
+
+        // TODO: delete sessions
     };
 
     public getSessionStore = (): any => {
@@ -141,7 +143,7 @@ class SqlDb implements Database {
 
     public syncStore = (): void => {
         this.sessionStore.sync();
-    }
+    };
 }
 
 export default SqlDb;

@@ -8,11 +8,9 @@ class UserRepository implements Repository {
         const shippingsInfoToSave: Array<ShippingInfoDao> =
             user.shippingsInfo?.map((shippingInfo) => ({
                 ...shippingInfo,
-                _id: shippingInfo.id,
             })) ?? [];
         const userToSave: UserDao = {
             ...user,
-            _id: user.id,
             shippingsInfo: shippingsInfoToSave,
         };
 
@@ -26,11 +24,9 @@ class UserRepository implements Repository {
             const shippingsInfoToSave: Array<ShippingInfoDao> =
                 user.shippingsInfo?.map((shippingInfo) => ({
                     ...shippingInfo,
-                    _id: shippingInfo.id,
                 })) ?? [];
             return {
                 ...user,
-                _id: user.id,
                 shippingsInfo: shippingsInfoToSave,
             };
         });
@@ -41,7 +37,21 @@ class UserRepository implements Repository {
     }
 
     public async update(user: User): Promise<User> {
-        return new Promise(() => {});
+        const userDao = await UserDocument.findById(user.id).exec();
+
+        // TODO: this does not scale
+        userDao.id = user.id;
+        userDao.firstName = user.firstName;
+        userDao.lastName = user.lastName;
+        userDao.email = user.email;
+        userDao.role = user.role;
+        userDao.password = user.password;
+        userDao.resetPasswordToken = user.resetPasswordToken;
+        userDao.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
+
+        const updatedUser = await userDao.save();
+
+        return updatedUser.toModel();
     }
 
     public async addProduct(userId: string, productId: string): Promise<void> {
@@ -49,11 +59,11 @@ class UserRepository implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User> {
-        return new Promise(() => {});
+        return UserDocument.findById(userId).exec();
     }
 
     public async getUserByEmail(email: string): Promise<User> {
-        return new Promise(() => {});
+        return UserDocument.findOne({ email }).exec();
     }
 }
 

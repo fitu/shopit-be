@@ -3,7 +3,7 @@ import mongoose, { Document, Types, Schema } from "mongoose";
 import Product, { ProductCategory } from "../../domain/Product";
 
 interface ProductDao {
-    _id: string;
+    _id?: string;
     title: string;
     description: string;
     price: number;

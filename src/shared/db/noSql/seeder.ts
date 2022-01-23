@@ -14,6 +14,7 @@ import validateEnv from "../../env/envUtils";
 import { DbType } from "../database";
 
 import Db from "./NoSqlDb";
+import { convertUUIDToId } from "./csvUtils";
 
 const PRODUCTS_CSV_PATH = "./src/product/infrastructure/data/products.csv";
 const REVIEWS_CSV_PATH = "./src/review/infrastructure/data/reviews.csv";
@@ -78,15 +79,15 @@ const createUsers = async (userService: UserService): Promise<void> => {
 const createProducts = async (productService: ProductService): Promise<void> => {
     const productsCSV = await readFromCsv<ProductCSV>(PRODUCTS_CSV_PATH);
     const products = productsCSV.map((productCSV) => ProductCSV.toModel(productCSV));
-    const userIds = productsCSV.map((productCSV) => productCSV.userId);
+    const userIds = productsCSV.map((productCSV) => convertUUIDToId(productCSV.userId));
     await productService.createBulk(products, userIds);
 };
 
 const createReviews = async (reviewService: ReviewService): Promise<void> => {
     const reviewsCSV = await readFromCsv<ReviewCSV>(REVIEWS_CSV_PATH);
     const reviews = reviewsCSV.map((reviewCSV) => ReviewCSV.toModel(reviewCSV));
-    const productIds = reviewsCSV.map((reviewCSV) => reviewCSV.productId);
-    const userIds = reviewsCSV.map((reviewCSV) => reviewCSV.userId);
+    const productIds = reviewsCSV.map((reviewCSV) => convertUUIDToId(reviewCSV.productId));
+    const userIds = reviewsCSV.map((reviewCSV) => convertUUIDToId(reviewCSV.userId));
     await reviewService.createBulk(reviews, productIds, userIds);
 };
 

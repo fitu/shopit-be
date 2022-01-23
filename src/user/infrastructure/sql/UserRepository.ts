@@ -70,6 +70,7 @@ class UserRepository implements Repository {
     public async update(user: User): Promise<User> {
         const userDao = await UserDao.findByPk(user.id);
 
+        // TODO: this does not scale
         userDao.id = user.id;
         userDao.firstName = user.firstName;
         userDao.lastName = user.lastName;

@@ -8,7 +8,7 @@ import ProductDocument, { ProductDao } from "./ProductDao";
 
 class ProductRepository implements Repository {
     public async create(product: Product, userId: string): Promise<Product> {
-        const productToSave: ProductDao = { ...product, _id: product.id, userId: new Types.ObjectId(userId) };
+        const productToSave: ProductDao = { ...product, userId: new Types.ObjectId(userId) };
         const newProduct = await ProductDocument.create(productToSave);
         return newProduct.toModel();
     }
@@ -17,7 +17,6 @@ class ProductRepository implements Repository {
         const productsUsers: Array<[Product, string]> = zip(products, userIds);
         const productsToSave: Array<ProductDao> = productsUsers.map(([product, userId]) => ({
             ...product,
-            _id: product.id,
             userId: new Types.ObjectId(userId),
         }));
         const newProducts = await ProductDocument.insertMany(productsToSave);

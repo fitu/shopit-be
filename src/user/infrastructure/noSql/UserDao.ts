@@ -4,7 +4,7 @@ import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hashUtils"
 import User, { UserRole } from "../../domain/User";
 
 interface UserDao {
-    _id: string;
+    _id?: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -23,7 +23,7 @@ interface UserDocument extends Document {
 type UserFullDocument = UserDao & UserDocument;
 
 interface ShippingInfoDao {
-    _id: string;
+    _id?: string;
     address: string;
     city: string;
     phone: string;
