@@ -33,7 +33,7 @@ class ProductController implements Controller {
         this.router.get(`${this.path}/:id`, param("id").notEmpty().isUUID(), this.getProductById);
         this.router.post(
             this.path,
-            // isAuth,
+            isAuth,
             multer(generateImageUploaderConfig()).single("image"),
             [
                 body("title").notEmpty().isString().isLength({ min: 5 }).trim(),

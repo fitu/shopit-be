@@ -7,3 +7,6 @@ dist
 
 # Images
 images/
+
+# Invoices
+/data/*
