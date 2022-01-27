@@ -4,3 +4,6 @@ dist
 
 # Secrets
 .env
+
+# Images
+images/

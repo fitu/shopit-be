@@ -33,7 +33,7 @@ class ProductController implements Controller {
         this.router.get(`${this.path}/:id`, param("id").notEmpty().isUUID(), this.getProductById);
         this.router.post(
             this.path,
-            isAuth,
+            // isAuth,
             multer(generateImageUploaderConfig()).single("image"),
             [
                 body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
@@ -75,7 +75,6 @@ class ProductController implements Controller {
                 body("title").isString().isLength({ min: 5 }).trim(),
                 body("description").isString().isLength({ min: 10, max: 400 }).trim(),
                 body("price").isNumeric(),
-                body("imageUrl").isURL(),
                 body("category").custom((value) => {
                     // TODO: remove hardcoded
                     if (
@@ -131,7 +130,6 @@ class ProductController implements Controller {
     };
 
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // FIXME: fix this
         const {
             title,
             description,
@@ -145,15 +143,19 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
-        const userId = "79ab1f50-5d32-4cb4-aeea-76fec5e5cc91"; // TODO: remove hardcoded
+        const userId = "79ab1f505d324cb4aeea76fe"; // TODO: remove hardcoded
 
-        const imageName = req.file.filename;
+        const imageUri = req.file.filename;
+        if (!imageUri) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
+            return;
+        }
+
         const productData = new ProductData({
             title,
             description,
             price,
-            // TODO: do some change here?
-            imageUrl: imageName,
+            imageUrl: imageUri,
             category,
             stock,
         });
