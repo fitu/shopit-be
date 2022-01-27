@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request } from "express";
 import path from "path";
 import cors from "cors";
 import csrf from "csurf";
@@ -9,6 +9,7 @@ import { handleAppErrors } from "./shared/error/errorController";
 import { handleGeneralErrors } from "./shared/error/errors";
 import Controller from "./shared/Controller";
 import Database from "./shared/db/database";
+import { IMAGES_FOLDER_NAME } from "./shared/utils/imageUtils";
 
 const BASE_VERSION = "/api/v1";
 
@@ -25,8 +26,8 @@ class App {
 
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
-        this.initializeErrorHandling();
         this.initializeStaticResources();
+        this.initializeErrorHandling();
     }
 
     public getServer(): Application {
@@ -67,7 +68,7 @@ class App {
 
         const csrfOptions = {
             cookie: false,
-            
+
             // TODO: use this cookie instead of session?
             // cookie: {
             //     key: "_csrf",
@@ -91,7 +92,8 @@ class App {
             //   res.render('index')
             // })
         };
-        this.app.use(csrf(csrfOptions));
+        // TODO: turn on CSFR
+        // this.app.use(csrf(csrfOptions));
     };
 
     private initializeControllers(controllers: Controller[]) {
@@ -100,13 +102,19 @@ class App {
         });
     }
 
+    private initializeStaticResources = (): void => {
+        // Static files
+        const STATICS_FOLDER_NAME = "public";
+        this.app.use(express.static(path.join(__dirname, STATICS_FOLDER_NAME)));
+
+        // Images
+        const PATH_URL_FOR_IMAGES = "/images";
+        this.app.use(PATH_URL_FOR_IMAGES, express.static(path.join(__dirname, IMAGES_FOLDER_NAME)));
+    };
+
     private initializeErrorHandling(): void {
         this.app.use(handleAppErrors);
     }
-
-    private initializeStaticResources = (): void => {
-        this.app.use(express.static(path.join(__dirname, "public")));
-    };
 }
 
 export default App;

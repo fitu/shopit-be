@@ -1,9 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param } from "express-validator";
+import multer from "multer";
 
 import Controller from "../../shared/Controller";
 import isAuth from "../../shared/middlewares/isAuth";
+import { generateImageUploaderConfig } from "../../shared/utils/imageUtils";
 import ProductData from "../application/ProductData";
 import CreateProductInteractor from "../application/CreateProductInteractor";
 import GetAllProductsInteractor from "../application/GetAllProductsInteractor";
@@ -11,9 +13,9 @@ import GetProductByIdInteractor from "../application/GetProductByIdInteractor";
 import DeleteProductByIdInteractor from "../application/DeleteProductByIdInteractor";
 import UpdateProductByIdInteractor from "../application/UpdateProductByIdInteractor";
 import ProductService from "../domain/ProductService";
+import { ProductCategory } from "../domain/Product";
 
 import ProductViewModel from "./ProductViewModel";
-import { ProductCategory } from "product/domain/Product";
 
 class ProductController implements Controller {
     public path = "/products";
@@ -32,11 +34,11 @@ class ProductController implements Controller {
         this.router.post(
             this.path,
             isAuth,
+            multer(generateImageUploaderConfig()).single("image"),
             [
                 body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
                 body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
                 body("price").notEmpty().isNumeric(),
-                body("imageUrl").notEmpty().isURL(),
                 body("category")
                     .notEmpty()
                     .custom((value) => {
@@ -129,30 +131,29 @@ class ProductController implements Controller {
     };
 
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // TODO: add validations
-
+        // FIXME: fix this
         const {
             title,
             description,
             price,
-            imageUrl,
             category,
             stock,
         }: {
             title: string;
             description: string;
             price: number;
-            imageUrl: string;
             category: ProductCategory;
             stock: number;
         } = req.body;
         const userId = "79ab1f50-5d32-4cb4-aeea-76fec5e5cc91"; // TODO: remove hardcoded
 
+        const imageName = req.file.filename;
         const productData = new ProductData({
             title,
             description,
             price,
-            imageUrl,
+            // TODO: do some change here?
+            imageUrl: imageName,
             category,
             stock,
         });

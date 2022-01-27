@@ -44,6 +44,5 @@ import App from "./app";
         app.listen();
     } catch (error) {
         console.error("Error while connecting to the database", error);
-        return error;
     }
 })();
