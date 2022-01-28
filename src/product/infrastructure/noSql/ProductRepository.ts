@@ -1,6 +1,7 @@
 import { zip } from "lodash";
 import { Types } from "mongoose";
 
+import Page, { DEFAULT_ITEMS_PER_PAGE } from "../../../shared/Page";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
@@ -27,8 +28,27 @@ class ProductRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async getAllProducts(): Promise<Array<Product>> {
-        return new Promise(() => {});
+    public async getAllProducts(
+        page?: number,
+        itemsPerPage: number = DEFAULT_ITEMS_PER_PAGE
+    ): Promise<Array<Product> | Page<Array<Product>>> {
+        if (page) {
+            const totalDocuments = await ProductDocument.countDocuments();
+            const products = await ProductDocument.find()
+                .skip((page - 1) * itemsPerPage)
+                .limit(itemsPerPage);
+            const productModels = products.map((product) => product.toModel());
+
+            return new Page<Array<Product>>({
+                data: productModels,
+                currentPage: page,
+                totalNumberOfDocuments: totalDocuments,
+                itemsPerPage,
+            });
+        }
+
+        const products = await ProductDocument.find();
+        return products.map((product) => product.toModel());
     }
 
     public async getProductById(productId: string): Promise<Product> {

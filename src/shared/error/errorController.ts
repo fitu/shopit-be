@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { ErrorHandler } from "./errors";
+import { ErrorHandler } from "./ErrorHandler";
 
 const handleAppErrors = (err: ErrorHandler, req: Request, res: Response, next: NextFunction): void => {
     err.statusCode = err.statusCode || 500;

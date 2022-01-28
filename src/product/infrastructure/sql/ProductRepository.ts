@@ -1,3 +1,4 @@
+import Page from "../../../shared/Page";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
@@ -52,7 +53,7 @@ class ProductRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async getAllProducts(): Promise<Array<Product>> {
+    public async getAllProducts(page?: number, itemsPerPage?: number): Promise<Array<Product> | Page<Array<Product>>> {
         const allProducts = await ProductDao.findAll();
         return allProducts;
     }

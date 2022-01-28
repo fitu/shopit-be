@@ -1,10 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import multer from "multer";
 
 import Controller from "../../shared/Controller";
 import isAuth from "../../shared/middlewares/isAuth";
+import Page from "../../shared/Page";
 import { generateImageUploaderConfig } from "../../shared/utils/imageUtils";
 import ProductData from "../application/ProductData";
 import CreateProductInteractor from "../application/CreateProductInteractor";
@@ -29,7 +30,7 @@ class ProductController implements Controller {
     }
 
     private initializeRoutes = (): void => {
-        this.router.get(this.path, this.getProducts);
+        this.router.get(this.path, [query("page").isNumeric(), query("itemsPerPage").isNumeric()], this.getProducts);
         this.router.get(`${this.path}/:id`, param("id").notEmpty().isUUID(), this.getProductById);
         this.router.post(
             this.path,
@@ -103,11 +104,22 @@ class ProductController implements Controller {
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { page, itemsPerPage } = req.query;
+
         const interactor = new GetAllProductsInteractor(this.productService);
-        const result = await interactor.execute();
+        // TODO: check the cast
+        const result = await interactor.execute(+page, itemsPerPage ? +itemsPerPage : null);
 
-        const allProducts = result.map((product) => ProductViewModel.fromData(product));
+        if (!page) {
+            const allProducts = (result as Array<ProductData>).map((product) => ProductViewModel.fromData(product));
+            res.status(httpStatus.OK).json({ success: true, data: allProducts });
+            return;
+        }
 
+        const allProducts = {
+            ...result,
+            data: (result as Page<Array<ProductData>>).data.map((product) => ProductViewModel.fromData(product)),
+        };
         res.status(httpStatus.OK).json({ success: true, data: allProducts });
     };
 

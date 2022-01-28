@@ -1,3 +1,4 @@
+import Page from "../../shared/Page";
 import { Repository as ProductRepository } from "../infrastructure/Repository";
 
 import Product from "./Product";
@@ -17,8 +18,8 @@ class ProductService {
         return this.productRepository.createBulk(products, userIds);
     }
 
-    public async getAllProducts(): Promise<Array<Product>> {
-        return this.productRepository.getAllProducts();
+    public async getAllProducts(page?: number, itemsPerPage?: number): Promise<Array<Product> | Page<Array<Product>>> {
+        return this.productRepository.getAllProducts(page, itemsPerPage);
     }
 
     public async getProductById(productId: string): Promise<Product> {

@@ -1,3 +1,4 @@
+import { Server } from "http";
 import express, { Application, Request } from "express";
 import path from "path";
 import cors from "cors";
@@ -6,7 +7,6 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 
 import { handleAppErrors } from "./shared/error/errorController";
-import { handleGeneralErrors } from "./shared/error/errors";
 import Controller from "./shared/Controller";
 import Database from "./shared/db/database";
 import { IMAGES_FOLDER_NAME } from "./shared/utils/imageUtils";
@@ -39,7 +39,21 @@ class App {
             console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
         });
 
-        handleGeneralErrors(server);
+        this.handleErrors(server);
+    }
+
+    private handleErrors(server: Server): void {
+        process.on("uncaughtException", (err: Error) => {
+            console.log(`Error; ${err.message}`);
+            console.log(`Shutting down the server due to Uncaught exception`);
+            server.close(() => process.exit(1));
+        });
+
+        process.on("unhandledRejection", (err: Error): void => {
+            console.log(`Error; ${err.message}`);
+            console.log(`Shutting down the server due to Unhandled promise rejection`);
+            server.close(() => process.exit(1));
+        });
     }
 
     private initializeMiddlewares = (): void => {
