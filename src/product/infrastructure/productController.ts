@@ -107,20 +107,14 @@ class ProductController implements Controller {
         const { page, itemsPerPage } = req.query;
 
         const interactor = new GetAllProductsInteractor(this.productService);
-        // TODO: check the cast
-        const result = await interactor.execute(+page, itemsPerPage ? +itemsPerPage : null);
-
-        if (!page) {
-            const allProducts = (result as Array<ProductData>).map((product) => ProductViewModel.fromData(product));
-            res.status(httpStatus.OK).json({ success: true, data: allProducts });
-            return;
-        }
+        // TODO: automate cast
+        const result = await interactor.execute(page ? +page : null, itemsPerPage ? +itemsPerPage : null);
 
         const allProducts = {
             ...result,
             data: (result as Page<Array<ProductData>>).data.map((product) => ProductViewModel.fromData(product)),
         };
-        res.status(httpStatus.OK).json({ success: true, data: allProducts });
+        res.status(httpStatus.OK).json({ success: true, ...allProducts });
     };
 
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

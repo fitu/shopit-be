@@ -11,16 +11,12 @@ class GetAllProductsInteractor {
         this.productService = productService;
     }
 
-    public async execute(page?: number, itemsPerPage?: number): Promise<Array<ProductData> | Page<Array<ProductData>>> {
+    public async execute(page?: number, itemsPerPage?: number): Promise<Page<Array<ProductData>>> {
         const allProducts = await this.productService.getAllProducts(page, itemsPerPage);
-
-        if (!page) {
-            return (allProducts as Array<Product>).map((product) => ProductData.fromModel(product));
-        }
 
         return {
             ...allProducts,
-            data: (allProducts as Page<Array<Product>>).data.map((product) => ProductData.fromModel(product)),
+            data: allProducts.data.map((product) => ProductData.fromModel(product)),
         };
     }
 }

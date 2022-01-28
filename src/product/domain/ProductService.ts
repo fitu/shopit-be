@@ -18,7 +18,7 @@ class ProductService {
         return this.productRepository.createBulk(products, userIds);
     }
 
-    public async getAllProducts(page?: number, itemsPerPage?: number): Promise<Array<Product> | Page<Array<Product>>> {
+    public async getAllProducts(page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> {
         return this.productRepository.getAllProducts(page, itemsPerPage);
     }
 

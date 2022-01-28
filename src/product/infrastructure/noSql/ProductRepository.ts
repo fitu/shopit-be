@@ -28,27 +28,25 @@ class ProductRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async getAllProducts(
-        page?: number,
-        itemsPerPage: number = DEFAULT_ITEMS_PER_PAGE
-    ): Promise<Array<Product> | Page<Array<Product>>> {
-        if (page) {
-            const totalDocuments = await ProductDocument.countDocuments();
-            const products = await ProductDocument.find()
-                .skip((page - 1) * itemsPerPage)
-                .limit(itemsPerPage);
-            const productModels = products.map((product) => product.toModel());
+    public async getAllProducts(page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> {
+        const currentPage = page ? page : 1;
+        const currentItemsPerPage = itemsPerPage ? itemsPerPage : DEFAULT_ITEMS_PER_PAGE;
 
-            return new Page<Array<Product>>({
-                data: productModels,
-                currentPage: page,
-                totalNumberOfDocuments: totalDocuments,
-                itemsPerPage,
-            });
-        }
+        const products = currentPage
+            ? await ProductDocument.find()
+                  .skip((currentPage - 1) * currentItemsPerPage)
+                  .limit(currentItemsPerPage)
+            : await ProductDocument.find();
+        const productModels = products.map((product) => product.toModel());
 
-        const products = await ProductDocument.find();
-        return products.map((product) => product.toModel());
+        const totalDocuments = page ? await ProductDocument.countDocuments() : products.length;
+
+        return new Page<Array<Product>>({
+            data: productModels,
+            currentPage: currentPage,
+            totalNumberOfDocuments: totalDocuments,
+            itemsPerPage: currentItemsPerPage,
+        });
     }
 
     public async getProductById(productId: string): Promise<Product> {

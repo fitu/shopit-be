@@ -2,6 +2,7 @@ const DEFAULT_ITEMS_PER_PAGE = 5;
 
 class Page<T> {
     readonly data: T;
+    readonly total: number;
     readonly currentPage: number;
     readonly previousPage: number;
     readonly nextPage: number;
@@ -24,6 +25,7 @@ class Page<T> {
         const hasLessPages = currentPage > 1;
 
         this.data = data;
+        this.total = totalNumberOfDocuments;
         this.currentPage = currentPage;
         this.previousPage = hasLessPages ? currentPage - 1 : null;
         this.nextPage = hasMorePages ? currentPage + 1 : null;
