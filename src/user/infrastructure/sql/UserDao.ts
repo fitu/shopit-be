@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import {
     Model,
     DataTypes,
@@ -20,7 +19,7 @@ import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
 import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
 import User, { UserRole } from "../../domain/User";
-import { hashPassword } from "../../../shared/utils/hashUtils";
+import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 
 interface UserAttributes {
     id: string;
@@ -157,9 +156,8 @@ const init = (sequelize: Sequelize): void => {
                 validate: {
                     min: 8,
                 },
-                set(value: string) {
-                    // TODO: check this with the other crypto
-                    const hash = crypto.createHash("md5").update(value).digest("hex");
+                set(value: string) {                    
+                    const hash = hashPasswordSync(value);
                     this.setDataValue("password", hash);
                 },
             },

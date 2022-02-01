@@ -1,9 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body } from "express-validator";
+import jwt from "jsonwebtoken";
 
 import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
+import { generateJWTToken } from "../../shared/utils/hashUtils";
 import UserData from "../application/UserData";
 import { UserRole } from "../domain/User";
 import UserService from "../domain/UserService";
@@ -11,6 +13,7 @@ import UserViewModel from "./UserViewModel";
 import CreateUserInteractor from "../application/CreateUserInteractor";
 import ForgotPasswordInteractor from "../application/ForgotPasswordInteractor";
 import ResetPasswordInteractor from "../application/ResetPasswordInteractor";
+import SignInUserInteractor from "../application/SignInUserInteractor";
 
 class UserController implements Controller {
     public path = "/users";
@@ -27,7 +30,6 @@ class UserController implements Controller {
     }
 
     private initializeRoutes = (): void => {
-        this.router.get(`${this.path}/sign-in`, this.getCSRFForLogin);
         this.router.post(
             `${this.path}/sign-in`,
             [body("email").notEmpty().isEmail(), body("password").notEmpty().isLength({ min: 6 })],
@@ -54,11 +56,7 @@ class UserController implements Controller {
             ],
             this.signUpUser
         );
-        this.router.post(
-            `${this.path}/forgot-password`,
-            body("email").notEmpty().isEmail(),
-            this.forgotPassword
-        );
+        this.router.post(`${this.path}/forgot-password`, body("email").notEmpty().isEmail(), this.forgotPassword);
         this.router.post(
             `${this.path}/reset-password`,
             [
@@ -70,9 +68,20 @@ class UserController implements Controller {
         );
     };
 
-    private signInUser = (req: Request, res: Response, next: NextFunction): void => {
-        // TODO: add validations
-        res.status(httpStatus.OK).json({ success: true });
+    private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { email, password }: { email: string; password: string } = req.body;
+
+        const data = { email, password };
+
+        const interactor = new SignInUserInteractor(this.userService);
+        try {
+            const result = await interactor.execute(data);
+            const token = await generateJWTToken(result.email);
+
+            res.status(httpStatus.OK).json({ success: true, data: token });
+        } catch (err) {
+            next(new Error(err));
+        }
     };
 
     private signUpUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -106,11 +115,6 @@ class UserController implements Controller {
         const newUser = UserViewModel.fromData(result);
 
         res.status(httpStatus.OK).json({ success: true, data: newUser });
-    };
-
-    // TODO: not required here
-    private getCSRFForLogin = (req: Request, res: Response, next: NextFunction): void => {
-        res.status(httpStatus.OK).json({ success: true });
     };
 
     private forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

@@ -24,6 +24,10 @@ class UserService {
         return this.userRepository.getUserById(userId);
     }
 
+    public async signIn(email: string, password: string): Promise<User> {
+        return this.userRepository.signIn(email, password);
+    }
+
     public async addTokenToUser(email: string, token: string): Promise<void> {
         const user = await this.userRepository.getUserByEmail(email);
 

@@ -126,7 +126,19 @@ userSchema.pre("save", async function (next) {
 
     const hashedPassword = await hashPassword(user.password);
     user.password = hashedPassword;
-        
+
+    next();
+});
+
+userSchema.pre("insertMany", async function (next, docs) {
+    const usersPromises = docs.map(async function (user) {
+        const hashedPassword = await hashPassword(user.password);
+        user.password = hashedPassword;
+        return user;
+    });
+
+    docs = await Promise.all(usersPromises);
+
     next();
 });
 

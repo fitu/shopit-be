@@ -1,4 +1,4 @@
-import { generateToken } from "../../shared/utils/hashUtils";
+import { generateRandomToken } from "../../shared/utils/hashUtils";
 
 import EmailService from "../../shared/integrations/emails/EmailService";
 import UserService from "../domain/UserService";
@@ -17,7 +17,7 @@ class ForgotPasswordInteractor {
     }
 
     public async execute(data: ForgotPasswordData): Promise<void> {
-        const token = await generateToken();
+        const token = await generateRandomToken();
 
         await this.userService.addTokenToUser(data.email, token);
 

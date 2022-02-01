@@ -1,3 +1,4 @@
+import { doPasswordsMatch } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
@@ -60,6 +61,17 @@ class UserRepository implements Repository {
 
     public async getUserById(userId: string): Promise<User> {
         return UserDocument.findById(userId).exec();
+    }
+
+    public async signIn(email: string, password: string): Promise<User> {
+        const user = await UserDocument.findOne({ email }).exec();
+        const doMatch = await doPasswordsMatch(password, user.password);
+        if (!doMatch) {
+            // TODO: check errors
+            throw new Error();
+        }
+
+        return user;
     }
 
     public async getUserByEmail(email: string): Promise<User> {

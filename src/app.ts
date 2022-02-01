@@ -30,7 +30,7 @@ class App {
     }
 
     public listen(): void {
-        const server = this.app.listen(process.env.PORT, () => {
+        this.app.listen(process.env.PORT, () => {
             console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
         });
     }
@@ -38,7 +38,8 @@ class App {
     private initializeMiddlewares = (): void => {
         this.initializeParsers();
         this.initializeCORS();
-        this.initializeCSRF();
+        // TODO: check this
+        // this.initializeCSRF();
     };
 
     private initializeParsers() {

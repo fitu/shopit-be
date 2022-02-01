@@ -1,5 +1,3 @@
-import { Server } from "http";
-
 class ErrorHandler extends Error {
     statusCode: number;
 

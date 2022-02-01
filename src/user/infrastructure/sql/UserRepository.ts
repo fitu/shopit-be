@@ -1,3 +1,4 @@
+import { doPasswordsMatch } from "../../../shared/utils/hashUtils";
 import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
 import CartDao from "../../../cart/infrastructure/sql/CartDao";
 import User from "../../domain/User";
@@ -91,6 +92,17 @@ class UserRepository implements Repository {
 
     public async getUserById(userId: string): Promise<User> {
         return UserDao.findByPk(userId);
+    }
+
+    public async signIn(email: string, password: string): Promise<User> {
+        const user = await UserDao.findOne({ where: { email } });
+        const doMatch = await doPasswordsMatch(password, user.password);
+        if (!doMatch) {
+            // TODO: check errors
+            throw new Error();
+        }
+
+        return user;
     }
 
     public async getUserByEmail(email: string): Promise<User> {
