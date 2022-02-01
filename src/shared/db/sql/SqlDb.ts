@@ -1,6 +1,4 @@
 import { Sequelize } from "sequelize";
-import session from "express-session";
-import SequelizeSessionStore from "connect-session-sequelize";
 
 import ProductDao, { init as initProduct } from "../../../product/infrastructure/sql/ProductDao";
 import UserDao, { init as initUser } from "../../../user/infrastructure/sql/UserDao";
@@ -133,16 +131,6 @@ class SqlDb implements Database {
         await ReviewDao.destroy({ where: {} });
 
         // TODO: delete sessions
-    };
-
-    public getSessionStore = (): any => {
-        const SessionStore = SequelizeSessionStore(session.Store);
-        this.sessionStore = new SessionStore({ db: this.instance });
-        return this.sessionStore;
-    };
-
-    public syncStore = (): void => {
-        this.sessionStore.sync();
     };
 }
 

@@ -30,7 +30,7 @@ class UserController implements Controller {
         this.router.get(`${this.path}/sign-in`, this.getCSRFForLogin);
         this.router.post(
             `${this.path}/sign-in`,
-            [body("email").notEmpty().isEmail().trim(), body("password").notEmpty().isLength({ min: 6 })],
+            [body("email").notEmpty().isEmail(), body("password").notEmpty().isLength({ min: 6 })],
             this.signInUser
         );
         this.router.post(
@@ -38,7 +38,7 @@ class UserController implements Controller {
             [
                 body("firstName").notEmpty().isString().trim(),
                 body("lastName").notEmpty().isString().trim(),
-                body("email").notEmpty().isEmail().trim(),
+                body("email").notEmpty().isEmail(),
                 body("role")
                     .notEmpty()
                     .custom((value) => {
@@ -56,13 +56,13 @@ class UserController implements Controller {
         );
         this.router.post(
             `${this.path}/forgot-password`,
-            body("email").notEmpty().isEmail().trim(),
+            body("email").notEmpty().isEmail(),
             this.forgotPassword
         );
         this.router.post(
             `${this.path}/reset-password`,
             [
-                body("email").notEmpty().isEmail().trim(),
+                body("email").notEmpty().isEmail(),
                 body("newPassword").notEmpty().isLength({ min: 6 }),
                 body("resetPasswordToken").notEmpty().isString().trim(),
             ],
@@ -110,7 +110,6 @@ class UserController implements Controller {
 
     // TODO: not required here
     private getCSRFForLogin = (req: Request, res: Response, next: NextFunction): void => {
-        res.cookie("XSRF-TOKEN", req.csrfToken());
         res.status(httpStatus.OK).json({ success: true });
     };
 
@@ -121,9 +120,12 @@ class UserController implements Controller {
         const data = { email };
 
         const interactor = new ForgotPasswordInteractor(this.userService, this.emailService);
-        await interactor.execute(data);
-
-        res.status(httpStatus.OK).json({ success: true });
+        try {
+            await interactor.execute(data);
+            res.status(httpStatus.OK).json({ success: true });
+        } catch (err) {
+            next(new Error(err));
+        }
     };
 
     private resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -137,9 +139,12 @@ class UserController implements Controller {
         const data = { email, newPassword, resetPasswordToken };
 
         const interactor = new ResetPasswordInteractor(this.userService);
-        const result = await interactor.execute(data);
-
-        res.status(httpStatus.OK).json({ success: result });
+        try {
+            const result = await interactor.execute(data);
+            res.status(httpStatus.OK).json({ success: result });
+        } catch (err) {
+            next(new Error(err));
+        }
     };
 }
 

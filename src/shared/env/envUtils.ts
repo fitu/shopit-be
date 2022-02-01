@@ -20,7 +20,6 @@ const validateEnv = (): any => {
         DB_NO_SQL_PASSWORD: str(),
         DB_NO_SQL_HOST: str(),
         DB_NO_SQL_PORT: port(),
-        KEY_SESSIONS_SECRET: str(),
         KEY_EMAILS: str(),
     });
 

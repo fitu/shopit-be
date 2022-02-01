@@ -23,11 +23,8 @@ const generateImageUploaderConfig = (): any => {
 
     type FileFilterCallback = (error: Error | null, accepted: boolean) => void;
     const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
-        if (IMAGES_MIMETYPE_ACCEPTED.includes(file.mimetype)) {
-            return cb(null, true);
-        }
-
-        cb(null, false);
+        const accepted = IMAGES_MIMETYPE_ACCEPTED.includes(file.mimetype);
+        cb(null, accepted);
     };
 
     return { storage, fileFilter };

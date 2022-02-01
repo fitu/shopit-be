@@ -1,7 +1,4 @@
-import { noop } from "lodash";
 import mongoose, { Mongoose } from "mongoose";
-import session from "express-session";
-import MongoDBSessionStore from "connect-mongodb-session";
 
 import UserDocument from "../../../user/infrastructure/noSql/UserDao";
 import ProductDocument from "../../../product/infrastructure/noSql/ProductDao";
@@ -41,22 +38,6 @@ class NoSqlDb implements Database {
 
         // TODO: delete sessions
     };
-
-    public getSessionStore = (): any => {
-        const host = this.env.DB_NO_SQL_HOST;
-        const user = this.env.DB_NO_SQL_USER_NAME;
-        const password = this.env.DB_NO_SQL_PASSWORD;
-        const dbName = this.env.DB_NO_SQL_NAME;
-        const collection = "sessions";
-
-        const SessionStore = MongoDBSessionStore(session);
-        return new SessionStore({
-            uri: `mongodb+srv://${user}:${password}@${host}/${dbName}`,
-            collection,
-        });
-    };
-
-    public syncStore = noop;
 }
 
 export default NoSqlDb;

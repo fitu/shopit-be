@@ -40,7 +40,7 @@ import App from "./app";
         ];
 
         // Create app and launch it!
-        const app = new App(env, db, controllers);
+        const app = new App(env, controllers);
         app.listen();
     } catch (error) {
         console.error("Error while connecting to the database", error);
