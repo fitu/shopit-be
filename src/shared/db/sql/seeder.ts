@@ -1,3 +1,5 @@
+import { Server } from "socket.io";
+
 import ProductCSV from "../../../product/infrastructure/sql/ProductCSV";
 import ReviewCSV from "../../../review/infrastructure/sql/ReviewCSV";
 import ShippingInfoCSV from "../../../shippingInfo/infrastructure/sql/ShippingInfoCSV";
@@ -35,9 +37,13 @@ const seedDb = async () => {
             DB_TYPE: DbType.SQL.toString(),
         });
 
+        // Create socket
+        const io = new Server();
+
+        // Create services
         const userService = new UserService(userRepository);
         const shippingInfoService = new ShippingInfoService(shippingInfoRepository);
-        const productService = new ProductService(productRepository);
+        const productService = new ProductService(io, productRepository);
         const reviewService = new ReviewService(reviewRepository);
 
         await createUsers(userService);

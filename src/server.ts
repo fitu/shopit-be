@@ -1,3 +1,5 @@
+import { Server } from "socket.io";
+
 import CartController from "./cart/infrastructure/CartController";
 import OrderController from "./order/infrastructure/OrderController";
 import ProductController from "./product/infrastructure/ProductController";
@@ -23,13 +25,17 @@ import App from "./app";
         // Create Repositories
         const { productRepository, userRepository, emailRepository } = getRepositories(env);
 
+        // Create Socket
+        const io = new Server();
+
         // Create Services
-        const productService = new ProductService(productRepository);
+        const productService = new ProductService(io, productRepository);
         const userService = new UserService(userRepository);
         const emailService = new EmailService(emailRepository);
 
         // Initialize Third Party Integrations
         emailService.init(env.KEY_EMAILS);
+
 
         // Create Controllers
         const controllers = [
@@ -40,7 +46,7 @@ import App from "./app";
         ];
 
         // Create app and launch it!
-        const app = new App(env, controllers);
+        const app = new App(io, controllers);
         app.listen();
     } catch (error) {
         console.error("Error while connecting to the database", error);

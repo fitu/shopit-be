@@ -1,3 +1,4 @@
+import { Server } from "socket.io";
 import { zip } from "lodash";
 
 import ProductCSV from "../../../product/infrastructure/noSql/ProductCSV";
@@ -38,8 +39,12 @@ const seedDb = async () => {
             DB_TYPE: DbType.NO_SQL.toString(),
         });
 
+        // Create socket
+        const io = new Server()
+
+        // Create services
         const userService = new UserService(userRepository);
-        const productService = new ProductService(productRepository);
+        const productService = new ProductService(io, productRepository);
         const reviewService = new ReviewService(reviewRepository);
 
         await createUsers(userService);

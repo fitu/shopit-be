@@ -2,14 +2,14 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+const TOKEN_SALT_ROUNDS = 12;
+
 const hashPasswordSync = (password: string): string => {
-    const SALT_ROUNDS = 12;
-    return bcrypt.hashSync(password, SALT_ROUNDS);
+    return bcrypt.hashSync(password, TOKEN_SALT_ROUNDS);
 };
 
 const hashPassword = async (password: string): Promise<string> => {
-    const SALT_ROUNDS = 12;
-    return bcrypt.hash(password, SALT_ROUNDS);
+    return bcrypt.hash(password, TOKEN_SALT_ROUNDS);
 };
 
 const doPasswordsMatch = async function (password: string, hashedUserPassword): Promise<boolean> {
@@ -31,12 +31,13 @@ const generateRandomToken = async function (): Promise<string> {
     });
 };
 
+const TOKEN_TYPE = "Bearer";
+const TOKEN_EXPIRATION_TIME = "1h";
+
 const generateJWTToken = async (email: string): Promise<string> => {
     const JWT_SECRET = process.env.JWT;
-    const TOKEN_EXPIRATION_TIME = "1h";
     const token = await jwt.sign({ email }, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION_TIME });
-    const TOKEN_TYPE = "Bearer";
-    return `${TOKEN_TYPE} ${token}`;
+    return token;
 };
 
-export { hashPasswordSync, hashPassword, doPasswordsMatch, generateRandomToken, generateJWTToken };
+export { hashPasswordSync, hashPassword, doPasswordsMatch, generateRandomToken, generateJWTToken, TOKEN_TYPE };

@@ -1,4 +1,5 @@
 import express, { Application, Request, Response, NextFunction } from "express";
+import { Server } from "socket.io";
 import path from "path";
 import cors from "cors";
 import csrf from "csurf";
@@ -12,12 +13,11 @@ const BASE_VERSION = "/api/v1";
 
 class App {
     private app: Application;
-    private env: any;
+    private io: Server;
 
-    constructor(env: any, controllers: Controller[]) {
+    constructor(io: Server, controllers: Controller[]) {
         this.app = express();
-
-        this.env = env;
+        this.io = io;
 
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
@@ -25,14 +25,12 @@ class App {
         this.initializeErrorHandling();
     }
 
-    public getServer(): Application {
-        return this.app;
-    }
-
     public listen(): void {
-        this.app.listen(process.env.PORT, () => {
+        const server = this.app.listen(process.env.PORT, () => {
             console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
         });
+
+        this.io.attach(server);
     }
 
     private initializeMiddlewares = (): void => {
