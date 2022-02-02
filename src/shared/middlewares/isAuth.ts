@@ -8,17 +8,20 @@ import { ErrorHandler } from "../error/ErrorHandler";
 const isAuth = (req, res, next) => {
     const authHeader = req.get("Authorization");
     if (!authHeader) {
-        const error = new ErrorHandler("Not authenticated", 401);
-        throw error;
+        throw new ErrorHandler("Not authenticated", 401);
     }
 
-    // Remove token type: "Bearer foo" -> "foo"
-    const token = authHeader.split(" ")[1];
+    // Token example: "Bearer foo"
+    const tokenWithType = authHeader.split(" ");
+    if (tokenWithType.length <= 1) {
+        throw new ErrorHandler("Not authenticated", 401);
+    }
+
+    const token = tokenWithType[1];
     const JWT_SECRET = process.env.JWT;
     const decodedToken = jwt.verify(token, JWT_SECRET);
     if (!decodedToken) {
-        const error = new ErrorHandler("Not authenticated", 401);
-        throw error;
+        throw new ErrorHandler("Not authenticated", 401);
     }
 
     req.email = decodedToken.email;
