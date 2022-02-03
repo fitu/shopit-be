@@ -1,11 +1,13 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import { Server } from "socket.io";
+import fs from "fs";
 import path from "path";
 import cors from "cors";
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import compression from "compression";
+import morgan from "morgan";
 
 import { handleAppErrors } from "./shared/error/errorController";
 import Controller from "./shared/Controller";
@@ -38,6 +40,7 @@ class App {
     private initializeMiddlewares = (): void => {
         this.initializeParsers();
         this.initializeCORSAndHeaders();
+        this.initializeLogs();
         // TODO: check this
         // this.initializeCSRF();
     };
@@ -56,6 +59,13 @@ class App {
         };
         this.app.use(cors(corsOptions));
         this.app.use(helmet());
+    }
+
+    private initializeLogs() {
+        const LOG_FOLDER_NAME = "logs";
+        const LOG_FILE_NAME = "access.log";
+        const accessLogStream = fs.createWriteStream(path.join(__dirname, '..', LOG_FOLDER_NAME, LOG_FILE_NAME), { flags: "a" });
+        this.app.use(morgan("combined", { stream: accessLogStream }));
     }
 
     private initializeCSRF() {
