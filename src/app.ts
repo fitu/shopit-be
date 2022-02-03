@@ -5,6 +5,7 @@ import cors from "cors";
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import compression from "compression";
 
 import { handleAppErrors } from "./shared/error/errorController";
 import Controller from "./shared/Controller";
@@ -91,6 +92,9 @@ class App {
         // Images
         const PATH_URL_FOR_IMAGES = "/images";
         this.app.use(PATH_URL_FOR_IMAGES, express.static(path.join(__dirname, IMAGES_FOLDER_NAME)));
+
+        // Compression
+        this.app.use(compression());
     };
 
     private initializeErrorHandling(): void {
