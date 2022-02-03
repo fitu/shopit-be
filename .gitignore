@@ -13,3 +13,6 @@ images/
 
 # Logs
 /logs/*
+
+# SSL/TLS
+*.key

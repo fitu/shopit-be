@@ -1,7 +1,9 @@
-import express, { Application, Request, Response, NextFunction } from "express";
-import { Server } from "socket.io";
 import fs from "fs";
 import path from "path";
+import https from "https";
+
+import express, { Application, Request, Response, NextFunction } from "express";
+import { Server } from "socket.io";
 import cors from "cors";
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
@@ -30,9 +32,17 @@ class App {
     }
 
     public listen(): void {
-        const server = this.app.listen(process.env.PORT, () => {
-            console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
-        });
+        const PRIVATE_KEY_FILE_NAME = "server.key";
+        const privateKey = fs.readFileSync(PRIVATE_KEY_FILE_NAME);
+
+        const CERTIFICATE_FILE_NAME = "server.cert";
+        const certificate = fs.readFileSync(CERTIFICATE_FILE_NAME);
+
+        const server = https
+            .createServer({ key: privateKey, cert: certificate }, this.app)
+            .listen(process.env.PORT, () => {
+                console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
+            });
 
         this.io.attach(server);
     }
@@ -64,7 +74,9 @@ class App {
     private initializeLogs() {
         const LOG_FOLDER_NAME = "logs";
         const LOG_FILE_NAME = "access.log";
-        const accessLogStream = fs.createWriteStream(path.join(__dirname, '..', LOG_FOLDER_NAME, LOG_FILE_NAME), { flags: "a" });
+        const accessLogStream = fs.createWriteStream(path.join(__dirname, "..", LOG_FOLDER_NAME, LOG_FILE_NAME), {
+            flags: "a",
+        });
         this.app.use(morgan("combined", { stream: accessLogStream }));
     }
 
