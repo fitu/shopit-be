@@ -43,6 +43,7 @@
     "envalid": "^7.2.2",
     "express": "^4.17.1",
     "express-validator": "^6.14.0",
+    "helmet": "^5.0.2",
     "http-status": "^1.5.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",

@@ -4,6 +4,7 @@ import path from "path";
 import cors from "cors";
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
 import { handleAppErrors } from "./shared/error/errorController";
 import Controller from "./shared/Controller";
@@ -35,7 +36,7 @@ class App {
 
     private initializeMiddlewares = (): void => {
         this.initializeParsers();
-        this.initializeCORS();
+        this.initializeCORSAndHeaders();
         // TODO: check this
         // this.initializeCSRF();
     };
@@ -46,13 +47,14 @@ class App {
         this.app.use(cookieParser());
     }
 
-    private initializeCORS() {
+    private initializeCORSAndHeaders() {
         // TODO: check this
         const corsOptions = {
             origin: "*",
             credentials: true,
         };
         this.app.use(cors(corsOptions));
+        this.app.use(helmet());
     }
 
     private initializeCSRF() {

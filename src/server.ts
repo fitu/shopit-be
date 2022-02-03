@@ -36,7 +36,6 @@ import App from "./app";
         // Initialize Third Party Integrations
         emailService.init(env.KEY_EMAILS);
 
-
         // Create Controllers
         const controllers = [
             new CartController(),
