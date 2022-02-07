@@ -34,9 +34,9 @@ const generateRandomToken = async function (): Promise<string> {
 const TOKEN_TYPE = "Bearer";
 const TOKEN_EXPIRATION_TIME = "1h";
 
-const generateJWTToken = async (email: string): Promise<string> => {
+const generateJWTToken = async (email: string, userId: string): Promise<string> => {
     const JWT_SECRET = process.env.JWT;
-    const token = await jwt.sign({ email }, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION_TIME });
+    const token = await jwt.sign({ email, userId }, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION_TIME });
     return token;
 };
 

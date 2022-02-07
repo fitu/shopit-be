@@ -76,7 +76,7 @@ class UserController implements Controller {
         const interactor = new SignInUserInteractor(this.userService);
         try {
             const result = await interactor.execute(data);
-            const token = await generateJWTToken(result.email);
+            const token = await generateJWTToken(result.email, result.id);
 
             res.status(httpStatus.OK).json({ success: true, data: token });
         } catch (err) {
