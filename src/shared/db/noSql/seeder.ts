@@ -44,7 +44,7 @@ const seedDb = async () => {
 
         // Create services
         const userService = new UserService(userRepository);
-        const productService = new ProductService(io, productRepository);
+        const productService = new ProductService(productRepository);
         const reviewService = new ReviewService(reviewRepository);
 
         await createUsers(userService);

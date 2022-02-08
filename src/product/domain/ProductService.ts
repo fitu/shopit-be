@@ -6,17 +6,20 @@ import { Repository as ProductRepository } from "../infrastructure/Repository";
 import Product from "./Product";
 
 class ProductService {
-    private io: Server;
+    // private io: Server;
     private productRepository: ProductRepository;
 
-    constructor(io: Server, productRepository: ProductRepository) {
-        this.io = io;
+    constructor(
+        // io: Server,
+        productRepository: ProductRepository
+    ) {
+        // this.io = io;
         this.productRepository = productRepository;
     }
 
     public async create(product: Product, userId: string): Promise<Product> {
         const newProduct = this.productRepository.create(product, userId);
-        this.io.emit("products", { type: "create", data: newProduct });
+        // this.io.emit("products", { type: "create", data: newProduct });
         return newProduct;
     }
 

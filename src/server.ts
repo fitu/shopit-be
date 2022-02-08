@@ -29,7 +29,7 @@ import App from "./app";
         const io = new Server();
 
         // Create Services
-        const productService = new ProductService(io, productRepository);
+        const productService = new ProductService(productRepository);
         const userService = new UserService(userRepository);
         const emailService = new EmailService(emailRepository);
 
@@ -45,7 +45,7 @@ import App from "./app";
         ];
 
         // Create app and launch it!
-        const app = new App(io, controllers);
+        const app = new App(controllers);
         await app.init();
         await app.listen();
     } catch (error) {

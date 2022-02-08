@@ -19,12 +19,15 @@ const BASE_VERSION = "/api/v1";
 
 class App {
     private app: Application;
-    private io: Server;
+    // private io: Server;
     private controllers: Array<Controller>;
 
-    constructor(io: Server, controllers: Array<Controller>) {
+    constructor(
+        // io: Server,
+        controllers: Array<Controller>
+    ) {
         this.app = express();
-        this.io = io;
+        // this.io = io;
         this.controllers = controllers;
     }
 
@@ -33,7 +36,7 @@ class App {
         this.initializeControllers(this.controllers);
         this.initializeStaticResources();
         this.initializeErrorHandling();
-    } 
+    }
 
     public async listen(): Promise<void> {
         const PRIVATE_KEY_FILE_NAME = "server.key";
@@ -48,7 +51,7 @@ class App {
                 console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
             });
 
-        this.io.attach(server);
+        // this.io.attach(server);
     }
 
     private initializeMiddlewares = async (): Promise<void> => {
