@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import https from "https";
 
@@ -20,23 +20,27 @@ const BASE_VERSION = "/api/v1";
 class App {
     private app: Application;
     private io: Server;
+    private controllers: Array<Controller>;
 
-    constructor(io: Server, controllers: Controller[]) {
+    constructor(io: Server, controllers: Array<Controller>) {
         this.app = express();
         this.io = io;
-
-        this.initializeMiddlewares();
-        this.initializeControllers(controllers);
-        this.initializeStaticResources();
-        this.initializeErrorHandling();
+        this.controllers = controllers;
     }
 
-    public listen(): void {
+    public async init(): Promise<void> {
+        await this.initializeMiddlewares();
+        this.initializeControllers(this.controllers);
+        this.initializeStaticResources();
+        this.initializeErrorHandling();
+    } 
+
+    public async listen(): Promise<void> {
         const PRIVATE_KEY_FILE_NAME = "server.key";
-        const privateKey = fs.readFileSync(PRIVATE_KEY_FILE_NAME);
+        const privateKey = await fs.readFile(PRIVATE_KEY_FILE_NAME);
 
         const CERTIFICATE_FILE_NAME = "server.cert";
-        const certificate = fs.readFileSync(CERTIFICATE_FILE_NAME);
+        const certificate = await fs.readFile(CERTIFICATE_FILE_NAME);
 
         const server = https
             .createServer({ key: privateKey, cert: certificate }, this.app)
@@ -47,21 +51,21 @@ class App {
         this.io.attach(server);
     }
 
-    private initializeMiddlewares = (): void => {
+    private initializeMiddlewares = async (): Promise<void> => {
         this.initializeParsers();
         this.initializeCORSAndHeaders();
-        this.initializeLogs();
+        await this.initializeLogs();
         // TODO: check this
         // this.initializeCSRF();
     };
 
-    private initializeParsers() {
+    private initializeParsers(): void {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(cookieParser());
     }
 
-    private initializeCORSAndHeaders() {
+    private initializeCORSAndHeaders(): void {
         // TODO: check this
         const corsOptions = {
             origin: "*",
@@ -71,16 +75,14 @@ class App {
         this.app.use(helmet());
     }
 
-    private initializeLogs() {
+    private async initializeLogs(): Promise<void> {
         const LOG_FOLDER_NAME = "logs";
         const LOG_FILE_NAME = "access.log";
-        const accessLogStream = fs.createWriteStream(path.join(__dirname, "..", LOG_FOLDER_NAME, LOG_FILE_NAME), {
-            flags: "a",
-        });
-        this.app.use(morgan("combined", { stream: accessLogStream }));
+        const logFile = await fs.open(path.join(__dirname, "..", LOG_FOLDER_NAME, LOG_FILE_NAME), "a");
+        this.app.use(morgan("combined", { stream: logFile.createWriteStream() }));
     }
 
-    private initializeCSRF() {
+    private initializeCSRF(): void {
         const cookieExpirationInSeconds = 60 * 60;
         const csrfOptions = {
             cookie: {
@@ -100,7 +102,7 @@ class App {
         });
     }
 
-    private initializeControllers(controllers: Controller[]) {
+    private initializeControllers(controllers: Controller[]): void {
         controllers.forEach((controller) => {
             this.app.use(BASE_VERSION, controller.router);
         });

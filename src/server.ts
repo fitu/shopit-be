@@ -46,7 +46,8 @@ import App from "./app";
 
         // Create app and launch it!
         const app = new App(io, controllers);
-        app.listen();
+        await app.init();
+        await app.listen();
     } catch (error) {
         console.error("Error while connecting to the database", error);
     }

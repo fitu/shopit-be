@@ -1,5 +1,6 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
+
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { param } from "express-validator";
@@ -34,11 +35,12 @@ class OrderController implements Controller {
         // TODO: move this out of controller
         const invoiceName = "invoice-" + id + ".pdf";
         const invoicePath = path.join("data", "invoices", invoiceName);
+        const invoiceFile = await fs.open(invoicePath, "a");
 
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
 
-        pdf.pipe(fs.createWriteStream(invoicePath));
+        pdf.pipe(invoiceFile.createWriteStream());
         pdf.pipe(res);
 
         pdf.fontSize(26).text("This is a PDF example!", { underline: true });
