@@ -9,7 +9,8 @@
         "rootDir": "./src",
         "baseUrl": "./src",
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "typeRoots": ["./src/types", "./node_modules/@types"]
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

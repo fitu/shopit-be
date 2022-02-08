@@ -37,6 +37,9 @@ prod:
 # TODO: add the prod file
 	docker-compose -f docker-compose-prod.yml up
 
+run-tests:
+	docker-compose run shopit npm test
+
 stop:
 	docker-compose stop
 
