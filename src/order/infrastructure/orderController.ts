@@ -6,7 +6,7 @@ import httpStatus from "http-status";
 import { param } from "express-validator";
 import PDFDocument from "pdfkit";
 
-import isAuth from "../../shared/middlewares/isAuth";
+import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import Controller from "../../shared/Controller";
 
 class OrderController implements Controller {
@@ -18,9 +18,9 @@ class OrderController implements Controller {
     }
 
     private initializeRoutes = (): void => {
-        this.router.get(this.path, isAuth, this.getOrders);
-        this.router.get(this.path, isAuth, this.getOrders);
-        this.router.get(`${this.path}/:id/invoice`, isAuth, param("id").notEmpty().isUUID(), this.getInvoice);
+        this.router.get(this.path, isAuthMiddleware, this.getOrders);
+        this.router.get(this.path, isAuthMiddleware, this.getOrders);
+        this.router.get(`${this.path}/:id/invoice`, isAuthMiddleware, param("id").notEmpty().isUUID(), this.getInvoice);
     };
 
     private getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

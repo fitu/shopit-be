@@ -4,7 +4,7 @@ import { body, param, query } from "express-validator";
 import multer from "multer";
 
 import Controller from "../../shared/Controller";
-import isAuth from "../../shared/middlewares/isAuth";
+import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import Page from "../../shared/Page";
 import { generateImageUploaderConfig } from "../../shared/utils/imageUtils";
 import ProductData from "../application/ProductData";
@@ -34,7 +34,7 @@ class ProductController implements Controller {
         this.router.get(`${this.path}/:id`, param("id").notEmpty().isUUID(), this.getProductById);
         this.router.post(
             this.path,
-            isAuth,
+            isAuthMiddleware,
             multer(generateImageUploaderConfig()).single("image"),
             [
                 body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
@@ -67,10 +67,10 @@ class ProductController implements Controller {
             ],
             this.createProduct
         );
-        this.router.delete(`${this.path}/:id`, isAuth, param("id").notEmpty().isUUID(), this.removeProductById);
+        this.router.delete(`${this.path}/:id`, isAuthMiddleware, param("id").notEmpty().isUUID(), this.removeProductById);
         this.router.put(
             `${this.path}/:id`,
-            isAuth,
+            isAuthMiddleware,
             [
                 param("id").notEmpty().isUUID(),
                 body("title").isString().isLength({ min: 5 }).trim(),
