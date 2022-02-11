@@ -67,7 +67,12 @@ class ProductController implements Controller {
             ],
             this.createProduct
         );
-        this.router.delete(`${this.path}/:id`, isAuthMiddleware, param("id").notEmpty().isUUID(), this.removeProductById);
+        this.router.delete(
+            `${this.path}/:id`,
+            isAuthMiddleware,
+            param("id").notEmpty().isUUID(),
+            this.removeProductById
+        );
         this.router.put(
             `${this.path}/:id`,
             isAuthMiddleware,
@@ -123,17 +128,14 @@ class ProductController implements Controller {
 
         const data = { productId: id };
 
-        const interactor = new GetProductByIdInteractor(this.productService);
-        const result = await interactor.execute(data);
-
-        if (!result) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false });
-            return;
+        try {
+            const interactor = new GetProductByIdInteractor(this.productService);
+            const result = await interactor.execute(data);
+            const product = ProductViewModel.fromData(result);
+            res.status(httpStatus.OK).json({ success: true, data: product });
+        } catch (error: any) {
+            res.status(httpStatus.NOT_FOUND).json({ success: false, message: error.message });
         }
-
-        const product = ProductViewModel.fromData(result);
-
-        res.status(httpStatus.OK).json({ success: true, data: product });
     };
 
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

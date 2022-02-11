@@ -6,7 +6,7 @@ interface Repository {
     createBulk: (products: Array<Product>, userIds: Array<string>) => Promise<Array<Product>>;
     update: (product: Product, userId: string) => Promise<Product>;
     getAllProducts: (page?: number, itemsPerPage?: number) => Promise<Page<Array<Product>>>;
-    getProductById: (productId: string) => Promise<Product>;
+    getProductById: (productId: string) => Promise<Product | null>;
     deleteProductById: (productId: string) => Promise<void>;
     updateProductById: (productId: string, product: Product) => Promise<Product>;
 }

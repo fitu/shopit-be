@@ -14,11 +14,7 @@ class GetProductByIdInteractor {
     }
 
     public async execute(data: GetProductByIdData): Promise<ProductData> {
-        // TODO: Validate
-
         const product = await this.productService.getProductById(data.productId);
-
-        // TODO: throw exception if fails
         return ProductData.fromModel(product);
     }
 }

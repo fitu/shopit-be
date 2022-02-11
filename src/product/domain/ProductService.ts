@@ -1,6 +1,8 @@
+import { isEmpty, isNil } from "lodash";
 import { Server } from "socket.io";
 
 import Page from "../../shared/Page";
+import { NotFoundError } from "../../shared/error/NotFoundError";
 import { Repository as ProductRepository } from "../infrastructure/Repository";
 
 import Product from "./Product";
@@ -31,8 +33,15 @@ class ProductService {
         return this.productRepository.getAllProducts(page, itemsPerPage);
     }
 
-    public async getProductById(productId: string): Promise<Product> {
-        return this.productRepository.getProductById(productId);
+    public async getProductById(productId: string): Promise<Product | null> {
+        const product = await this.productRepository.getProductById(productId);
+
+        if (isNil(product) || isEmpty(product)) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError("Product not found");
+        }
+
+        return product;
     }
 
     public async deleteProductById(productId: string): Promise<void> {

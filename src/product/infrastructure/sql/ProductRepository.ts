@@ -73,7 +73,7 @@ class ProductRepository implements Repository {
         });
     }
 
-    public async getProductById(productId: string): Promise<Product> {
+    public async getProductById(productId: string): Promise<Product | null> {
         const product = await ProductDao.findByPk(productId);
         return product;
     }

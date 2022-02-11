@@ -49,7 +49,7 @@ class ProductRepository implements Repository {
         });
     }
 
-    public async getProductById(productId: string): Promise<Product> {
+    public async getProductById(productId: string): Promise<Product | null> {
         return new Promise(() => {});
     }
 
