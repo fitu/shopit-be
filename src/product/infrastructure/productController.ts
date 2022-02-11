@@ -134,7 +134,7 @@ class ProductController implements Controller {
             const product = ProductViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: product });
         } catch (error: any) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, message: error.message });
+            res.status(httpStatus.NOT_FOUND).json({ success: false, error: error.message });
         }
     };
 
@@ -217,7 +217,7 @@ class ProductController implements Controller {
         const result = await interactor.execute(data);
 
         if (!result) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false });
+            res.status(httpStatus.NOT_FOUND).json({ success: false, error: "" });
             return;
         }
 

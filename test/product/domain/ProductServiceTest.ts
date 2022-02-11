@@ -4,28 +4,26 @@ import { Repository as ProductRepository } from "../../../src/product/infrastruc
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { getEmptyProduct } from "../../shared/utils/ProductFactory";
+import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
 
 describe("ProductService", function () {
     let repository: ProductRepository;
+    let service: ProductService;
 
     beforeEach(() => {
         repository = <ProductRepository>{};
+        service = new ProductService(repository);
     });
 
     it("getProductById should throw NotFoundError if product not found", async function () {
         // Given
-        const service = new ProductService(repository);
-
         repository.getProductById = async (productId: string): Promise<Product | null> => {
             return null;
         };
 
-        const productId = "foo";
-
         try {
             // When
-            await service.getProductById(productId);
+            await service.getProductById("foo");
         } catch (error) {
             // Then
             expect(error).instanceOf(NotFoundError);
@@ -34,10 +32,8 @@ describe("ProductService", function () {
 
     it("getProductById should returns a product if found", async function () {
         // Given
-        const service = new ProductService(repository);
-
         repository.getProductById = async (productId: string): Promise<Product | null> => {
-            return getEmptyProduct();
+            return getEmptyProductWithId(productId);
         };
 
         const productId = "foo";
@@ -47,5 +43,6 @@ describe("ProductService", function () {
 
         // Then
         expect(product).to.be.instanceOf(Product);
+        expect(product.id).to.be.equal(productId);
     });
 });

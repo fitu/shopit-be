@@ -4,22 +4,23 @@ import GetProductByIdInteractor from "../../../src/product/application/GetProduc
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { getEmptyProduct } from "../../shared/utils/ProductFactory";
+import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
 import ProductData from "../../../src/product/application/ProductData";
 
 describe("GetProductByIdInteractor", function () {
     let service: ProductService;
+    let interactor: GetProductByIdInteractor;
 
     beforeEach(() => {
         service = <ProductService>{};
+        interactor = new GetProductByIdInteractor(service);
     });
 
     it("getProductById should throw NotFoundError if product not found", async function () {
         // Given
-        const interactor = new GetProductByIdInteractor(service);
-
+        const errorMessage = "foo";
         service.getProductById = async (productId: string): Promise<Product | null> => {
-            throw new NotFoundError("foo");
+            throw new NotFoundError(errorMessage);
         };
 
         const data = { productId: "foo" };
@@ -30,23 +31,24 @@ describe("GetProductByIdInteractor", function () {
         } catch (error) {
             // Then
             expect(error).instanceOf(NotFoundError);
+            expect(error.message).to.be.equal(errorMessage);
         }
     });
 
     it("getProductById should returns a product if found", async function () {
         // Given
-        const interactor = new GetProductByIdInteractor(service);
-
         service.getProductById = async (productId: string): Promise<Product | null> => {
-            return getEmptyProduct();
+            return getEmptyProductWithId(productId);
         };
 
-        const data = { productId: "foo" };
+        const productId = "foo";
+        const data = { productId };
 
         // When
         const product = await interactor.execute(data);
 
         // Then
         expect(product).to.be.instanceOf(ProductData);
+        expect(product.id).to.be.equal(productId);
     });
 });
