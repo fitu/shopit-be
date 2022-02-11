@@ -4,12 +4,17 @@ import { Repository as ProductRepository } from "../../../src/product/infrastruc
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { emptyProduct } from "../../shared/utils/ProductFactory";
+import { getEmptyProduct } from "../../shared/utils/ProductFactory";
 
 describe("ProductService", function () {
+    let repository: ProductRepository;
+
+    beforeEach(() => {
+        repository = <ProductRepository>{};
+    });
+
     it("getProductById should throw NotFoundError if product not found", async function () {
         // Given
-        const repository = <ProductRepository>{};
         const service = new ProductService(repository);
 
         repository.getProductById = async (productId: string): Promise<Product | null> => {
@@ -27,13 +32,12 @@ describe("ProductService", function () {
         }
     });
 
-    it("getProductById should returns an object if found", async function () {
+    it("getProductById should returns a product if found", async function () {
         // Given
-        const repository = <ProductRepository>{};
         const service = new ProductService(repository);
 
         repository.getProductById = async (productId: string): Promise<Product | null> => {
-            return emptyProduct;
+            return getEmptyProduct();
         };
 
         const productId = "foo";
