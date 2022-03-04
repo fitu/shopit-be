@@ -122,8 +122,7 @@ class ProductController implements Controller {
         res.status(httpStatus.OK).json({ success: true, ...allProducts });
     };
 
-    // FIXME: do not make it public!
-    public getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
 
         const data = { productId: id };

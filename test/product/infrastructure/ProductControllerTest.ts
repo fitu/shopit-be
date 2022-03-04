@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import { Request, Response, NextFunction } from "express";
-import { noop } from "lodash";
 import { expect } from "chai";
+import request from "supertest";
+import { Server } from "http";
 
 import ProductController from "../../../src/product/infrastructure/ProductController";
 import ProductService from "../../../src/product/domain/ProductService";
@@ -9,60 +9,34 @@ import ProductViewModel from "../../../src/product/infrastructure/ProductViewMod
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
 import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
+import App, { BASE_VERSION } from "../../../src/app";
 
 describe("ProductController", function () {
-    let req: Partial<Request>;
-    let res: Partial<Response> & {
-        success: boolean;
-        error?: string;
-        data?: ProductViewModel | Array<ProductViewModel>;
-    };
-    let next: NextFunction;
-
     let service: ProductService;
-    let controller: ProductController;
+    let server: Server;
 
-    beforeEach(() => {
-        req = {};
-        res = {
-            statusCode: 500,
-            success: false,
-            error: undefined,
-            data: undefined,
-            status: function (code: number) {
-                this.statusCode = code;
-                return this;
-            },
-            json: function (data: any): Response<any> {
-                this.success = data.success;
-                this.error = data.error;
-                this.data = data.data;
-                return this;
-            },
-        };
-        next = noop;
-
+    before(async () => {
         service = <ProductService>{};
-        controller = new ProductController(service);
+        const controller = new ProductController(service);
+        const app = new App([controller]);
+        await app.init();
+        server = await app.listen();
     });
 
     it("getProductById should return false and 404 if product not found", async function () {
         // Given
-        req = {
-            params: {
-                id: "foo",
-            },
-        };
+        const productId = "foo";
 
         service.getProductById = async (productId: string): Promise<Product> => {
-            throw new NotFoundError("foo");
+            throw new NotFoundError(productId);
         };
 
         // When
-        await controller.getProductById(req as Request, res as Response, next);
+        const response = await request(server).get(`${BASE_VERSION}/products/${productId}`);
 
         // Then
-        const { success, statusCode, error } = res;
+        const { body, statusCode } = response;
+        const { success, error } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
@@ -73,25 +47,24 @@ describe("ProductController", function () {
         // Given
         const productId = "foo";
 
-        req = {
-            params: {
-                id: productId,
-            },
-        };
-
         service.getProductById = async (productId: string): Promise<Product> => {
             return getEmptyProductWithId(productId);
         };
 
         // When
-        await controller.getProductById(req as Request, res as Response, next);
+        const response = await request(server).get(`${BASE_VERSION}/products/${productId}`);
 
         // Then
-        const { success, statusCode, data } = res;
+        const { body, statusCode } = response;
+        const { success, data } = body;
         const productViewModel = data as ProductViewModel;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModel.id).to.be.equal(productId);
+    });
+
+    after(() => {
+        server.close();
     });
 });

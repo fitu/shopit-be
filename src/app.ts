@@ -1,9 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
 import https from "https";
+import { Server } from "http";
 
 import express, { Application, Request, Response, NextFunction } from "express";
-import { Server } from "socket.io";
 import cors from "cors";
 import csrf from "csurf";
 import cookieParser from "cookie-parser";
@@ -38,20 +38,25 @@ class App {
         this.initializeErrorHandling();
     }
 
-    public async listen(): Promise<void> {
+    public async listen(): Promise<Server> {
         const PRIVATE_KEY_FILE_NAME = "server.key";
         const privateKey = await fs.readFile(PRIVATE_KEY_FILE_NAME);
 
         const CERTIFICATE_FILE_NAME = "server.cert";
         const certificate = await fs.readFile(CERTIFICATE_FILE_NAME);
 
-        const server = https
-            .createServer({ key: privateKey, cert: certificate }, this.app)
-            .listen(process.env.PORT, () => {
-                console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
-            });
+        // const server = https
+        //     .createServer({ key: privateKey, cert: certificate }, this.app)
+        //     .listen(process.env.PORT, () => {
+        //         console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
+        //     });
+
+        const server = this.app.listen(process.env.PORT, () => {
+            console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
+        });
 
         // this.io.attach(server);
+        return server;
     }
 
     private initializeMiddlewares = async (): Promise<void> => {
@@ -129,4 +134,5 @@ class App {
     }
 }
 
+export { BASE_VERSION };
 export default App;
