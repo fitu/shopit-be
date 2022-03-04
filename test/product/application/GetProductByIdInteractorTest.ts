@@ -35,7 +35,7 @@ describe("GetProductByIdInteractor", function () {
         }
     });
 
-    it("getProductById should returns a product if found", async function () {
+    it("getProductById should return a product if found", async function () {
         // Given
         service.getProductById = async (productId: string): Promise<Product | null> => {
             return getEmptyProductWithId(productId);

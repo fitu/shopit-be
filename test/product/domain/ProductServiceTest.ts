@@ -5,6 +5,7 @@ import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
 import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
+import Page from "../../../src/shared/Page";
 
 describe("ProductService", function () {
     let repository: ProductRepository;
@@ -13,6 +14,42 @@ describe("ProductService", function () {
     beforeEach(() => {
         repository = <ProductRepository>{};
         service = new ProductService(repository);
+    });
+
+    it("getAllProducts should return an empty list if there are no product", async function () {
+        // Given
+        repository.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> => {
+            return new Page({
+                data: [],
+                currentPage: page,
+                totalNumberOfDocuments: 0,
+                itemsPerPage: itemsPerPage,
+            });
+        };
+
+        // When
+        const products = await service.getAllProducts(-1, -1);
+
+        // Then
+        expect(products.data).to.be.empty;
+    });
+
+    it("getAllProducts should return an all products if there are products", async function () {
+        // Given
+        repository.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> => {
+            return new Page({
+                data: [getEmptyProductWithId("foo"), getEmptyProductWithId("bar")],
+                currentPage: page,
+                totalNumberOfDocuments: 2,
+                itemsPerPage: itemsPerPage,
+            });
+        };
+
+        // When
+        const products = await service.getAllProducts(-1, -1);
+
+        // Then
+        expect(products.data).to.not.be.empty;
     });
 
     it("getProductById should throw NotFoundError if product not found", async function () {
@@ -30,7 +67,7 @@ describe("ProductService", function () {
         }
     });
 
-    it("getProductById should returns a product if found", async function () {
+    it("getProductById should return a product if found", async function () {
         // Given
         repository.getProductById = async (productId: string): Promise<Product | null> => {
             return getEmptyProductWithId(productId);
