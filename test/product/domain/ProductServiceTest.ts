@@ -4,7 +4,7 @@ import { Repository as ProductRepository } from "../../../src/product/infrastruc
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
+import { getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import Page from "../../../src/shared/Page";
 
 describe("ProductService", function () {
@@ -38,7 +38,7 @@ describe("ProductService", function () {
         // Given
         repository.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> => {
             return new Page({
-                data: [getEmptyProductWithId("foo"), getEmptyProductWithId("bar")],
+                data: [getRandomProductWithId("foo"), getRandomProductWithId("bar")],
                 currentPage: page,
                 totalNumberOfDocuments: 2,
                 itemsPerPage: itemsPerPage,
@@ -70,7 +70,7 @@ describe("ProductService", function () {
     it("getProductById should return a product if found", async function () {
         // Given
         repository.getProductById = async (productId: string): Promise<Product | null> => {
-            return getEmptyProductWithId(productId);
+            return getRandomProductWithId(productId);
         };
 
         const productId = "foo";

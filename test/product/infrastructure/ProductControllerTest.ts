@@ -8,7 +8,7 @@ import ProductService from "../../../src/product/domain/ProductService";
 import ProductViewModel from "../../../src/product/infrastructure/ProductViewModel";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
+import { getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import App, { BASE_VERSION } from "../../../src/app";
 import Page from "../../../src/shared/Page";
 import { getMockPage } from "../../shared/utils/PageFactory";
@@ -50,7 +50,7 @@ describe("ProductController", function () {
         const productId = "foo";
 
         service.getProductById = async (productId: string): Promise<Product> => {
-            return getEmptyProductWithId(productId);
+            return getRandomProductWithId(productId);
         };
 
         // When
@@ -84,10 +84,31 @@ describe("ProductController", function () {
         // Then
         const {body, statusCode} = response;
         const {success, data} = body;
-        const productViewModel = data as ProductViewModel;
+        const productViewModels = data as Array<ProductViewModel>;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(productViewModel).to.be.empty;
+        expect(productViewModels).to.be.empty;
     });
+
+    it("getProducts should return success, 200 and list with products", async function () {
+        // Given
+        const products = [getRandomProduct(), getRandomProduct()];
+
+        service.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>>  => {
+            return getMockPage(products);
+        };
+
+        // When
+        const response = await request(server).get(`${BASE_VERSION}/products`);
+
+        // Then
+        const {body, statusCode} = response;
+        const {success, data} = body;
+        const productViewModels = data as Array<ProductViewModel>;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(productViewModels.length).to.be.eq(2);
+    })
 });

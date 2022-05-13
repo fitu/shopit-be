@@ -4,7 +4,7 @@ import GetProductByIdInteractor from "../../../src/product/application/GetProduc
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
+import { getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import ProductData from "../../../src/product/application/ProductData";
 
 describe("GetProductByIdInteractor", function () {
@@ -38,7 +38,7 @@ describe("GetProductByIdInteractor", function () {
     it("getProductById should return a product if found", async function () {
         // Given
         service.getProductById = async (productId: string): Promise<Product | null> => {
-            return getEmptyProductWithId(productId);
+            return getRandomProductWithId(productId);
         };
 
         const productId = "foo";

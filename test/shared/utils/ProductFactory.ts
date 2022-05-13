@@ -1,31 +1,24 @@
+import { faker } from '@faker-js/faker';
 import Product from "../../../src/product/domain/Product";
 
-const getEmptyProduct = (): Product => {
+const getRandomProduct = (): Product => {
     return new Product({
-        id: "",
-        title: "",
-        description: "",
-        price: 0,
-        ratings: 0,
-        imageUrl: "",
+        title: faker.random.alpha.toString(),
+        description: faker.random.alpha.toString(),
+        price: +faker.random.numeric,
+        ratings: +faker.random.numeric,
+        imageUrl: faker.system.directoryPath.toString(),
         // TODO: do not hardcode this
         category: "Electronics",
-        stock: 0,
+        stock: +faker.random.numeric,
     });
 };
 
-const getEmptyProductWithId = (productId: string): Product => {
+const getRandomProductWithId = (productId: string): Product => {
     return new Product({
+        ...getRandomProduct(),
         id: productId,
-        title: "",
-        description: "",
-        price: 0,
-        ratings: 0,
-        imageUrl: "",
-        // TODO: do not hardcode this
-        category: "Electronics",
-        stock: 0,
     });
 };
 
-export { getEmptyProduct, getEmptyProductWithId };
+export { getRandomProduct, getRandomProductWithId };

@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/fitu/shopit-be#readme",
   "devDependencies": {
+    "@faker-js/faker": "^6.3.1",
     "@types/csurf": "^1.11.2",
     "@types/express": "^4.17.13",
     "@types/lodash": "^4.14.178",
