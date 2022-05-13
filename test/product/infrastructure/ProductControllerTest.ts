@@ -10,6 +10,8 @@ import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
 import { getEmptyProductWithId } from "../../shared/utils/ProductFactory";
 import App, { BASE_VERSION } from "../../../src/app";
+import Page from "../../../src/shared/Page";
+import { getMockPage } from "../../shared/utils/PageFactory";
 
 describe("ProductController", function () {
     let service: ProductService;
@@ -66,5 +68,26 @@ describe("ProductController", function () {
 
     after(() => {
         server.close();
+    });
+
+    it("getProducts should return success, 200 and empty list if no products founds", async function () {
+        // Given
+        const products = [];
+
+        service.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>>  => {
+            return getMockPage(products);
+        };
+
+        // When
+        const response = await request(server).get(`${BASE_VERSION}/products`);
+
+        // Then
+        const {body, statusCode} = response;
+        const {success, data} = body;
+        const productViewModel = data as ProductViewModel;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(productViewModel).to.be.empty;
     });
 });

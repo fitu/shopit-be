@@ -114,10 +114,11 @@ class ProductController implements Controller {
         const interactor = new GetAllProductsInteractor(this.productService);
         // TODO: automate cast
         const result = await interactor.execute(page ? +page : null, itemsPerPage ? +itemsPerPage : null);
+        const productsWithMetadata = result as Page<Array<ProductData>>;
 
         const allProducts = {
-            ...result,
-            data: (result as Page<Array<ProductData>>).data.map((product) => ProductViewModel.fromData(product)),
+            ...productsWithMetadata,
+            data: productsWithMetadata.data.map((product) => ProductViewModel.fromData(product)),
         };
         res.status(httpStatus.OK).json({ success: true, ...allProducts });
     };
