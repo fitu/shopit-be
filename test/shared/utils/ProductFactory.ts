@@ -3,11 +3,11 @@ import Product from "../../../src/product/domain/Product";
 
 const getRandomProduct = (): Product => {
     return new Product({
-        title: faker.random.alpha.toString(),
-        description: faker.random.alpha.toString(),
+        title: faker.random.alpha(10),
+        description: faker.random.alpha(10),
         price: +faker.random.numeric,
         ratings: +faker.random.numeric,
-        imageUrl: faker.system.directoryPath.toString(),
+        imageUrl: faker.system.directoryPath(),
         // TODO: do not hardcode this
         category: "Electronics",
         stock: +faker.random.numeric,

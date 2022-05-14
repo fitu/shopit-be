@@ -83,10 +83,11 @@ describe("ProductController", function () {
 
         // Then
         const {body, statusCode} = response;
-        const {success, data} = body;
+        const {success, data, total} = body;
         const productViewModels = data as Array<ProductViewModel>;
 
         expect(success).to.be.true;
+        expect(total).to.be.eq(0);
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModels).to.be.empty;
     });
@@ -104,10 +105,12 @@ describe("ProductController", function () {
 
         // Then
         const {body, statusCode} = response;
-        const {success, data} = body;
+        const {success, data, total} = body;
+
         const productViewModels = data as Array<ProductViewModel>;
 
         expect(success).to.be.true;
+        expect(total).to.be.eq(2);
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModels.length).to.be.eq(2);
     })

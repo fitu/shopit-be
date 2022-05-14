@@ -6,8 +6,8 @@ const getMockPage = <T> (data: Array<T>): Page<Array<T>> => {
     return new Page<Array<T>>({
         data,
         currentPage: 1,
-        totalNumberOfDocuments: 0,
-        itemsPerPage: ITEMS_PER_PAGE
+        totalNumberOfDocuments: data.length,
+        itemsPerPage: ITEMS_PER_PAGE,
     });
 };
 
