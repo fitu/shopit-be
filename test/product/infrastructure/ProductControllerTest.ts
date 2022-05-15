@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import { expect } from "chai";
-import request from "supertest";
+import supertest, { SuperTest, Test } from "supertest";
 import { Server } from "http";
 
 import ProductController from "../../../src/product/infrastructure/ProductController";
@@ -9,13 +9,15 @@ import ProductViewModel from "../../../src/product/infrastructure/ProductViewMod
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
 import { getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
-import App, { BASE_VERSION } from "../../../src/app";
+import App from "../../../src/app";
 import Page from "../../../src/shared/Page";
 import { getMockPage } from "../../shared/utils/PageFactory";
+import TestRequest from "../../shared/utils/requests";
 
 describe("ProductController", function () {
     let service: ProductService;
     let server: Server;
+    let api: TestRequest;
 
     before(async () => {
         service = <ProductService>{};
@@ -24,9 +26,8 @@ describe("ProductController", function () {
     
         await app.init();
         server = await app.listen();
-
-        // Set the JWT secret
-        process.env.JWT = 'computadorar';
+        const testApi = await supertest(server);
+        api = new TestRequest(testApi);
     });
 
     it("getProductById should return false and 404 if product not found", async function () {
@@ -38,7 +39,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await request(server).get(`${BASE_VERSION}/products/${productId}`);
+        const response = await api.get(`/products/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -58,7 +59,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await request(server).get(`${BASE_VERSION}/products/${productId}`);
+        const response = await api.get(`/products/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -83,7 +84,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await request(server).get(`${BASE_VERSION}/products`);
+        const response = await api.get('/products');
 
         // Then
         const {body, statusCode} = response;
@@ -105,7 +106,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await request(server).get(`${BASE_VERSION}/products`);
+        const response = await api.get('/products');
 
         // Then
         const {body, statusCode} = response;
@@ -121,9 +122,7 @@ describe("ProductController", function () {
 
     it("createProduct should return 422 if image is missing", async function () {
         // When
-        const response = await request(server)
-            .post(`${BASE_VERSION}/products`)
-            .set({ Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmb28iLCJlbWFpbCI6ImZvb0BiYXIuY29tIn0.tW25xY9DtLTNXV5dq6dQEo9j2WIM26n9mrKxZ2qSSPM' });
+        const response = await api.post('/products');
 
         // Then
         const {body, statusCode} = response;
