@@ -154,7 +154,7 @@ class ProductController implements Controller {
         } = req.body;
         const userId = "79ab1f505d324cb4aeea76fe"; // TODO: remove hardcoded
 
-        const imageUri = req.file.filename;
+        const imageUri = req.file?.filename;
         if (!imageUri) {
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
             return;

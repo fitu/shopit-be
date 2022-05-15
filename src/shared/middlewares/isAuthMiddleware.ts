@@ -18,13 +18,17 @@ const isAuth = (req: Request, res: Response, next: NextFunction) => {
 
     const token = tokenWithType[1];
     const JWT_SECRET = process.env.JWT;
-    const decodedToken = jwt.verify(token, JWT_SECRET);
-    if (!decodedToken) {
+    try {
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+        if (!decodedToken) {
+            throw new ErrorHandler("Not authenticated", httpStatus.UNAUTHORIZED);
+        }
+
+        req.userId = decodedToken.userId;
+        req.email = decodedToken.email;
+    } catch (error: any) {
         throw new ErrorHandler("Not authenticated", httpStatus.UNAUTHORIZED);
     }
-
-    req.userId = decodedToken.userId;
-    req.email = decodedToken.email;
 
     next();
 };

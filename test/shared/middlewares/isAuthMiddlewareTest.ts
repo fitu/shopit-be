@@ -26,7 +26,7 @@ describe("isAuthMiddleware", function () {
         // Given
         req = {
             headers: {
-                authorization: "foo",
+                authorization: 'foo',
             },
         };
 
@@ -38,12 +38,12 @@ describe("isAuthMiddleware", function () {
         // Given
         req = {
             headers: {
-                authorization: "Bearer foo",
+                authorization: 'Bearer foo',
             },
         };
 
-        sinon.stub(jwt, "verify");
-        jwt.verify.returns({ userId: "foo", email: "foo@bar.com" });
+        sinon.stub(jwt, 'verify');
+        jwt.verify.returns({ userId: 'foo', email: 'foo@bar.com' });
 
         const nextSpy = sinon.spy(next);
 
@@ -52,8 +52,8 @@ describe("isAuthMiddleware", function () {
 
         // Then
         expect(jwt.verify.called).to.be.true;
-        expect(req).to.have.property("userId", "foo");
-        expect(req).to.have.property("email", "foo@bar.com");
+        expect(req).to.have.property('userId', 'foo');
+        expect(req).to.have.property('email', 'foo@bar.com');
         expect(nextSpy.called).to.be.true;
 
         jwt.verify.restore();

@@ -21,13 +21,17 @@ describe("ProductController", function () {
         service = <ProductService>{};
         const controller = new ProductController(service);
         const app = new App([controller]);
+    
         await app.init();
         server = await app.listen();
+
+        // Set the JWT secret
+        process.env.JWT = 'computadorar';
     });
 
     it("getProductById should return false and 404 if product not found", async function () {
         // Given
-        const productId = "foo";
+        const productId = 'foo';
 
         service.getProductById = async (productId: string): Promise<Product> => {
             throw new NotFoundError(productId);
@@ -47,7 +51,7 @@ describe("ProductController", function () {
 
     it("getProductById should return success and 200 if product found", async function () {
         // Given
-        const productId = "foo";
+        const productId = 'foo';
 
         service.getProductById = async (productId: string): Promise<Product> => {
             return getRandomProductWithId(productId);
@@ -113,5 +117,19 @@ describe("ProductController", function () {
         expect(total).to.be.eq(2);
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModels.length).to.be.eq(2);
-    })
+    });
+
+    it("createProduct should return 422 if image is missing", async function () {
+        // When
+        const response = await request(server)
+            .post(`${BASE_VERSION}/products`)
+            .set({ Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmb28iLCJlbWFpbCI6ImZvb0BiYXIuY29tIn0.tW25xY9DtLTNXV5dq6dQEo9j2WIM26n9mrKxZ2qSSPM' });
+
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
 });
