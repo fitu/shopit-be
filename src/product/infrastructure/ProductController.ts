@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
-import multer from "multer";
 
 import Controller from "../../shared/Controller";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
+import fileUpload from "../../shared/middlewares/fileUploaderMiddleware";
 import Page from "../../shared/Page";
 import { generateImageUploaderConfig } from "../../shared/utils/imageUtils";
 import ProductData from "../application/ProductData";
@@ -15,7 +15,6 @@ import DeleteProductByIdInteractor from "../application/DeleteProductByIdInterac
 import UpdateProductByIdInteractor from "../application/UpdateProductByIdInteractor";
 import ProductService from "../domain/ProductService";
 import { ProductCategory } from "../domain/Product";
-
 import ProductViewModel from "./ProductViewModel";
 
 class ProductController implements Controller {
@@ -35,7 +34,7 @@ class ProductController implements Controller {
         this.router.post(
             this.path,
             isAuthMiddleware,
-            multer(generateImageUploaderConfig()).single("image"),
+            fileUpload(generateImageUploaderConfig()).single("image"),
             [
                 body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
                 body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),

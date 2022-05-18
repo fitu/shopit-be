@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import multer from "multer";
 
 const IMAGES_FOLDER_NAME = "images";
-const IMAGES_MIMETYPE_ACCEPTED = ["image/png","image/jpg", "image/jpeg"];
+const IMAGES_MIMETYPE_ACCEPTED = ["image/png", "image/jpg", "image/jpeg"];
 
 const generateImageUploaderConfig = (): any => {
     type DestinationCallback = (error: Error | null, destination: string) => void;

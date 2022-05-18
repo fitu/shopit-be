@@ -1,16 +1,19 @@
 import httpStatus from "http-status";
 import { expect } from "chai";
-import supertest, { SuperTest, Test } from "supertest";
+import supertest from "supertest";
 import { Server } from "http";
+import sinon from "sinon";
+import { Request, Response, NextFunction } from "express";
 
 import ProductController from "../../../src/product/infrastructure/ProductController";
 import ProductService from "../../../src/product/domain/ProductService";
 import ProductViewModel from "../../../src/product/infrastructure/ProductViewModel";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
+import fileUpload from "../../../src/shared/middlewares/fileUploaderMiddleware";
 import App from "../../../src/app";
 import Page from "../../../src/shared/Page";
+import { getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import { getMockPage } from "../../shared/utils/PageFactory";
 import TestRequest from "../../shared/utils/requests";
 
@@ -120,7 +123,7 @@ describe("ProductController", function () {
         expect(productViewModels.length).to.be.eq(2);
     });
 
-    it("createProduct should return 422 if image is missing", async function () {
+    it("createProduct should return false and 422 if image is missing", async function () {
         // When
         const response = await api.post('/products');
 
@@ -130,5 +133,59 @@ describe("ProductController", function () {
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return success and 200 if image is set", async function () {
+        // Given
+        const productTitle = 'title';
+        const productDescription = 'description';
+        const productPrice = 11.11;
+        const productCategory = 'category';
+        const productStock = 1;
+        const productImageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // Mock image upload
+        sinon.stub(fileUpload).call(
+            () => {
+              return {
+                any() {
+                  return (req, res: Response, next: NextFunction) => {
+                    req.files = [{ location: 'images', key: 'foo-' }];
+                    next();
+                  };
+                },
+              };
+            },
+        );
+
+        // When
+        const response = await api.post('/products')
+            .field({
+                title: productTitle,
+                description: productDescription,
+                price: productPrice,
+                category: productCategory,
+                stock: productStock
+            })
+            .attach('image', productImageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success, data} = body;
+
+        const productViewModel = data as ProductViewModel;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(productViewModel.title).to.be.equal(productTitle);
+        expect(productViewModel.description).to.be.equal(productDescription);
+        expect(+productViewModel.price).to.be.equal(productPrice);
+        expect(productViewModel.category).to.be.equal(productCategory);
+        expect(+productViewModel.stock).to.be.equal(productStock);
+        expect(productViewModel.ratings).to.be.equal(0);
     });
 });
