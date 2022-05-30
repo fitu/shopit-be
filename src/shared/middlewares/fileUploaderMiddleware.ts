@@ -4,4 +4,9 @@ const fileUpload = (...args: any): Multer => {
     return multer(...args);
 };
 
-export default fileUpload;
+interface MulterRequest extends Request {
+    files: any;
+}
+
+export type { MulterRequest };
+export default { fileUpload,  };

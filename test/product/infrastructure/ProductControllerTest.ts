@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import { expect } from "chai";
 import supertest from "supertest";
 import { Server } from "http";
-import sinon from "sinon";
+import sinon, { SinonSandbox } from "sinon";
 import { Request, Response, NextFunction } from "express";
 
 import ProductController from "../../../src/product/infrastructure/ProductController";
@@ -10,7 +10,7 @@ import ProductService from "../../../src/product/domain/ProductService";
 import ProductViewModel from "../../../src/product/infrastructure/ProductViewModel";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import fileUpload from "../../../src/shared/middlewares/fileUploaderMiddleware";
+import fileUploadMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
 import App from "../../../src/app";
 import Page from "../../../src/shared/Page";
 import { getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
@@ -21,6 +21,7 @@ describe("ProductController", function () {
     let service: ProductService;
     let server: Server;
     let api: TestRequest;
+    let sandbox: SinonSandbox;
 
     before(async () => {
         service = <ProductService>{};
@@ -31,6 +32,30 @@ describe("ProductController", function () {
         server = await app.listen();
         const testApi = await supertest(server);
         api = new TestRequest(testApi);
+    });
+
+    beforeEach(() => {
+        sandbox = sinon.createSandbox();
+        sandbox.stub(fileUploadMiddleware, "fileUpload").callsFake(
+            (): any => {
+              return {
+                any() {
+                  return (req: MulterRequest, res: Response, next: NextFunction) => {
+                    req.files = [{ location: 'images', key: 'foo-' }];
+                    next();
+                  };
+                },
+              };
+            },
+        );
+    });
+
+    afterEach(() => {
+        sandbox.restore();
+    });
+
+    after(() => {
+        server.close();
     });
 
     it("getProductById should return false and 404 if product not found", async function () {
@@ -72,10 +97,6 @@ describe("ProductController", function () {
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModel.id).to.be.equal(productId);
-    });
-
-    after(() => {
-        server.close();
     });
 
     it("getProducts should return success, 200 and empty list if no products founds", async function () {
@@ -135,6 +156,23 @@ describe("ProductController", function () {
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
+    it("createProduct should return false and 501 if something went wrong", async function () {
+        // Given
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            throw new Error();
+        };
+
+        // When
+        const response = await api.post('/products');
+
+        // Then
+        const { body, statusCode } = response;
+        const { success } = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
     it("createProduct should return success and 200 if image is set", async function () {
         // Given
         const productTitle = 'title';
@@ -148,20 +186,6 @@ describe("ProductController", function () {
             return product;
         };
         
-        // Mock image upload
-        sinon.stub(fileUpload).call(
-            () => {
-              return {
-                any() {
-                  return (req, res: Response, next: NextFunction) => {
-                    req.files = [{ location: 'images', key: 'foo-' }];
-                    next();
-                  };
-                },
-              };
-            },
-        );
-
         // When
         const response = await api.post('/products')
             .field({

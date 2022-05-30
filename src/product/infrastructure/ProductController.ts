@@ -4,7 +4,7 @@ import { body, param, query } from "express-validator";
 
 import Controller from "../../shared/Controller";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
-import fileUpload from "../../shared/middlewares/fileUploaderMiddleware";
+import fileUploadMiddleware from "../../shared/middlewares/fileUploaderMiddleware";
 import Page from "../../shared/Page";
 import { generateImageUploaderConfig } from "../../shared/utils/imageUtils";
 import ProductData from "../application/ProductData";
@@ -34,7 +34,7 @@ class ProductController implements Controller {
         this.router.post(
             this.path,
             isAuthMiddleware,
-            fileUpload(generateImageUploaderConfig()).single("image"),
+            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single("image"),
             [
                 body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
                 body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
