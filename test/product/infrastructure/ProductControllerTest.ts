@@ -73,7 +73,6 @@ describe("ProductController", function () {
         const { body, statusCode } = response;
         const { success, error } = body;
 
-        // Expect
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
         expect(error).to.be.not.undefined;
@@ -95,7 +94,6 @@ describe("ProductController", function () {
         const { success, data } = body;
         const productViewModel = data as ProductViewModel;
 
-        // Expect
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModel.id).to.be.equal(productId);
@@ -117,7 +115,6 @@ describe("ProductController", function () {
         const {success, data, total} = body;
         const productViewModels = data as Array<ProductViewModel>;
 
-        // Expect
         expect(success).to.be.true;
         expect(total).to.be.eq(0);
         expect(statusCode).to.be.equal(httpStatus.OK);
@@ -141,7 +138,6 @@ describe("ProductController", function () {
 
         const productViewModels = data as Array<ProductViewModel>;
 
-        // Expect
         expect(success).to.be.true;
         expect(total).to.be.eq(2);
         expect(statusCode).to.be.equal(httpStatus.OK);
@@ -156,7 +152,6 @@ describe("ProductController", function () {
         const {body, statusCode} = response;
         const {success} = body;
 
-        // Expect
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -174,7 +169,6 @@ describe("ProductController", function () {
         const { body, statusCode } = response;
         const { success } = body;
 
-        // Expect
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -184,7 +178,7 @@ describe("ProductController", function () {
         const title = 'title';
         const description = 'description';
         const price = 11.11;
-        const category = 'category';
+        const category = 'Electronics';
         const stock = 1;
         const imageUrl = 'test/shared/fixtures/random.jpg';
 
@@ -209,7 +203,6 @@ describe("ProductController", function () {
 
         const productViewModel = data as ProductViewModel;
 
-        // Expect
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModel).to.contain(
@@ -224,11 +217,55 @@ describe("ProductController", function () {
         )
     });
 
-    it.only("createProduct should return false and XXX if title is not set", async function () {
+    it("createProduct should return success and 200 and trim title and description", async function () {
+        // Given
+        const title = '   title   ';
+        const description = '   description   ';
+        const price = 11.11;
+        const category = 'Electronics';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success, data} = body;
+
+        const productViewModel = data as ProductViewModel;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(productViewModel).to.contain(
+            {
+                title: title.trim(),
+                description: description.trim(),
+                price: price.toString(),
+                category,
+                stock: stock.toString(),
+                ratings: 0
+            }
+        )
+    });
+
+    it("createProduct should return false and 422 if title is not set", async function () {
         // Given
         const description = 'description';
         const price = 11.11;
-        const category = 'category';
+        const category = 'Electronics';
         const stock = 1;
         const imageUrl = 'test/shared/fixtures/random.jpg';
 
@@ -248,39 +285,294 @@ describe("ProductController", function () {
         
         // Then
         const {body, statusCode} = response;
-        const {success, data} = body;
-
-        const productViewModel = data as ProductViewModel;
+        const {success} = body;
 
         expect(success).to.be.false;
-       // expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    // body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
-    // body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
-    // body("price").notEmpty().isNumeric(),
-    // body("category")
-    //     .notEmpty()
-    //     .custom((value) => {
-    //         // TODO: remove hardcoded
-    //         if (
-    //             value !== "Electronics" &&
-    //             value !== "Cameras" &&
-    //             value !== "Laptops" &&
-    //             value !== "Accessories" &&
-    //             value !== "Headphones" &&
-    //             value !== "Food" &&
-    //             value !== "Books" &&
-    //             value !== "Clothes/Shoes" &&
-    //             value !== "Beauty/Health" &&
-    //             value !== "Sports" &&
-    //             value !== "Outdoor" &&
-    //             value !== "Home"
-    //         ) {
-    //             // TODO: remove hardcoded
-    //             throw new Error("Invalid category input");
-    //         }
-    //         return true;
-    //     }),
-    // body("stock").notEmpty().isNumeric(),
+    it("createProduct should return false and 422 if description is too short", async function () {
+        // Given
+        const title = 'title';
+        const description = 'foo';
+        const price = 11.11;
+        const category = 'Electronics';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if description is too long", async function () {
+        // Given
+        const title = 'title';
+        const description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. \
+            Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. \
+            Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. \
+            Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,";
+        const price = 11.11;
+        const category = 'Electronics';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if price is not set", async function () {
+        // Given
+        const title = 'title';
+        const description = "description";
+        const category = 'Electronics';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if price is not numeric", async function () {
+        // Given
+        const title = 'title';
+        const description = "description";
+        const price = 'foo';
+        const category = 'Electronics';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if category is not set", async function () {
+        // Given
+        const title = 'title';
+        const description = "description";
+        const price = 11.11;
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if category is not a predefined one", async function () {
+        // Given
+        const title = 'title';
+        const description = "description";
+        const price = 11.11;
+        const category = 'foo';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if category is not a predefined one", async function () {
+        // Given
+        const title = 'title';
+        const description = "description";
+        const price = 11.11;
+        const category = 'foo';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if stock is not set", async function () {
+        // Given
+        const title = 'title';
+        const description = "description";
+        const price = 11.11;
+        const category = 'Electronics';
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("createProduct should return false and 422 if stock is not numeric", async function () {
+        // Given
+        const title = 'title';
+        const description = "description";
+        const price = 11.11;
+        const category = 'Electronics';
+        const stock = 'foo';
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success} = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+    });
 });
