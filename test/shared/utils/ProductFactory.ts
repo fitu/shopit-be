@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+
 import Product from "../../../src/product/domain/Product";
 
 const getRandomProduct = (): Product => {

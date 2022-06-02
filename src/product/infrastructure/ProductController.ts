@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import { body, param, query } from "express-validator";
+import { body, param, query, validationResult } from "express-validator";
 
 import Controller from "../../shared/Controller";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
@@ -29,8 +29,19 @@ class ProductController implements Controller {
     }
 
     private initializeRoutes = (): void => {
-        this.router.get(this.path, [query("page").isNumeric(), query("itemsPerPage").isNumeric()], this.getProducts);
-        this.router.get(`${this.path}/:id`, param("id").notEmpty().isUUID(), this.getProductById);
+        this.router.get(
+            this.path,
+            [
+                query("page").isNumeric(),
+                query("itemsPerPage").isNumeric()
+            ],
+            this.getProducts
+        );
+        this.router.get(
+            `${this.path}/:id`,
+            param("id").notEmpty().isUUID(), 
+            this.getProductById
+        );
         this.router.post(
             this.path,
             isAuthMiddleware,
@@ -112,6 +123,7 @@ class ProductController implements Controller {
 
         const interactor = new GetAllProductsInteractor(this.productService);
         // TODO: automate cast
+
         const result = await interactor.execute(page ? +page : null, itemsPerPage ? +itemsPerPage : null);
         const productsWithMetadata = result as Page<Array<ProductData>>;
 
@@ -153,6 +165,13 @@ class ProductController implements Controller {
         } = req.body;
         const userId = "79ab1f505d324cb4aeea76fe"; // TODO: remove hardcoded
 
+        // TODO: improve validation responses
+        const validations = validationResult(req);
+        if (!validations.isEmpty()) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
+            return;
+        }
+
         const imageUri = req.file?.filename;
         if (!imageUri) {
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
@@ -189,8 +208,6 @@ class ProductController implements Controller {
     };
 
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // TODO: add validations
-
         const { id } = req.params;
         const {
             title,
@@ -207,6 +224,13 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
+
+        // TODO: improve validation responses
+        const validations = validationResult(req);
+        if (!validations.isEmpty()) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
+            return;
+        }
 
         const productData = new ProductData({ title, description, price, imageUrl, category, stock });
 

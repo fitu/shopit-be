@@ -3,7 +3,7 @@ import { expect } from "chai";
 import supertest from "supertest";
 import { Server } from "http";
 import sinon, { SinonSandbox } from "sinon";
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 
 import ProductController from "../../../src/product/infrastructure/ProductController";
 import ProductService from "../../../src/product/domain/ProductService";
@@ -73,6 +73,7 @@ describe("ProductController", function () {
         const { body, statusCode } = response;
         const { success, error } = body;
 
+        // Expect
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
         expect(error).to.be.not.undefined;
@@ -94,6 +95,7 @@ describe("ProductController", function () {
         const { success, data } = body;
         const productViewModel = data as ProductViewModel;
 
+        // Expect
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(productViewModel.id).to.be.equal(productId);
@@ -115,6 +117,7 @@ describe("ProductController", function () {
         const {success, data, total} = body;
         const productViewModels = data as Array<ProductViewModel>;
 
+        // Expect
         expect(success).to.be.true;
         expect(total).to.be.eq(0);
         expect(statusCode).to.be.equal(httpStatus.OK);
@@ -138,6 +141,7 @@ describe("ProductController", function () {
 
         const productViewModels = data as Array<ProductViewModel>;
 
+        // Expect
         expect(success).to.be.true;
         expect(total).to.be.eq(2);
         expect(statusCode).to.be.equal(httpStatus.OK);
@@ -152,6 +156,7 @@ describe("ProductController", function () {
         const {body, statusCode} = response;
         const {success} = body;
 
+        // Expect
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
     });
@@ -169,18 +174,19 @@ describe("ProductController", function () {
         const { body, statusCode } = response;
         const { success } = body;
 
+        // Expect
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it("createProduct should return success and 200 if image is set", async function () {
         // Given
-        const productTitle = 'title';
-        const productDescription = 'description';
-        const productPrice = 11.11;
-        const productCategory = 'category';
-        const productStock = 1;
-        const productImageUrl = 'test/shared/fixtures/random.jpg';
+        const title = 'title';
+        const description = 'description';
+        const price = 11.11;
+        const category = 'category';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
 
         service.create = async (product: Product, userId: string): Promise<Product> => {
             return product;
@@ -189,13 +195,13 @@ describe("ProductController", function () {
         // When
         const response = await api.post('/products')
             .field({
-                title: productTitle,
-                description: productDescription,
-                price: productPrice,
-                category: productCategory,
-                stock: productStock
+                title,
+                description,
+                price,
+                category,
+                stock
             })
-            .attach('image', productImageUrl);
+            .attach('image', imageUrl);
         
         // Then
         const {body, statusCode} = response;
@@ -203,13 +209,78 @@ describe("ProductController", function () {
 
         const productViewModel = data as ProductViewModel;
 
+        // Expect
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(productViewModel.title).to.be.equal(productTitle);
-        expect(productViewModel.description).to.be.equal(productDescription);
-        expect(+productViewModel.price).to.be.equal(productPrice);
-        expect(productViewModel.category).to.be.equal(productCategory);
-        expect(+productViewModel.stock).to.be.equal(productStock);
-        expect(productViewModel.ratings).to.be.equal(0);
+        expect(productViewModel).to.contain(
+            {
+                title,
+                description,
+                price: price.toString(),
+                category,
+                stock: stock.toString(),
+                ratings: 0
+            }
+        )
     });
+
+    it.only("createProduct should return false and XXX if title is not set", async function () {
+        // Given
+        const description = 'description';
+        const price = 11.11;
+        const category = 'category';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+
+        service.create = async (product: Product, userId: string): Promise<Product> => {
+            return product;
+        };
+        
+        // When
+        const response = await api.post('/products')
+            .field({
+                description,
+                price,
+                category,
+                stock
+            })
+            .attach('image', imageUrl);
+        
+        // Then
+        const {body, statusCode} = response;
+        const {success, data} = body;
+
+        const productViewModel = data as ProductViewModel;
+
+        expect(success).to.be.false;
+       // expect(statusCode).to.be.equal(httpStatus.OK);
+    });
+
+    // body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
+    // body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
+    // body("price").notEmpty().isNumeric(),
+    // body("category")
+    //     .notEmpty()
+    //     .custom((value) => {
+    //         // TODO: remove hardcoded
+    //         if (
+    //             value !== "Electronics" &&
+    //             value !== "Cameras" &&
+    //             value !== "Laptops" &&
+    //             value !== "Accessories" &&
+    //             value !== "Headphones" &&
+    //             value !== "Food" &&
+    //             value !== "Books" &&
+    //             value !== "Clothes/Shoes" &&
+    //             value !== "Beauty/Health" &&
+    //             value !== "Sports" &&
+    //             value !== "Outdoor" &&
+    //             value !== "Home"
+    //         ) {
+    //             // TODO: remove hardcoded
+    //             throw new Error("Invalid category input");
+    //         }
+    //         return true;
+    //     }),
+    // body("stock").notEmpty().isNumeric(),
 });
