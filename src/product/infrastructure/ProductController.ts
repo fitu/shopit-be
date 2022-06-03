@@ -201,10 +201,13 @@ class ProductController implements Controller {
 
         const data = { productId: id };
 
-        const interactor = new DeleteProductByIdInteractor(this.productService);
-        await interactor.execute(data);
-
-        res.status(httpStatus.OK).json({ success: true });
+        try {
+            const interactor = new DeleteProductByIdInteractor(this.productService);
+            await interactor.execute(data);
+            res.status(httpStatus.OK).json({ success: true });
+        } catch (error: any) {
+            res.status(httpStatus.NOT_FOUND).json({ success: false, error: error.message });
+        }
     };
 
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -236,17 +239,14 @@ class ProductController implements Controller {
 
         const data = { productId: id, productData };
 
-        const interactor = new UpdateProductByIdInteractor(this.productService);
-        const result = await interactor.execute(data);
-
-        if (!result) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, error: "" });
-            return;
+        try {
+            const interactor = new UpdateProductByIdInteractor(this.productService);
+            const result = await interactor.execute(data);
+            const updatedProduct = ProductViewModel.fromData(result);
+            res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
+        } catch (error: any) {
+            res.status(httpStatus.NOT_FOUND).json({ success: false, error: error.message });
         }
-
-        const updatedProduct = ProductViewModel.fromData(result);
-
-        res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
     };
 }
 

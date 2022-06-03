@@ -575,4 +575,43 @@ describe("ProductController", function () {
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
     });
+
+    it("removeProductId should return false and 404 if product not found", async function () {
+        // Given
+        const productId = 'foo';
+
+        service.deleteProductById = async (productId: string): Promise<void> => {
+            throw new NotFoundError(productId);
+        };
+
+        // When
+        const response = await api.delete(`/products/${productId}`);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, error } = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
+        expect(error).to.be.not.undefined;
+    });
+
+    it("removeProductId should return true and 200 if product was found", async function () {
+        // Given
+        const productId = 'foo';
+
+        service.deleteProductById = async (productId: string): Promise<void> => {
+            return;
+        };
+
+        // When
+        const response = await api.delete(`/products/${productId}`);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, error } = body;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+    });
 });
