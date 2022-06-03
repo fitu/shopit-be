@@ -32,87 +32,88 @@ class ProductController implements Controller {
         this.router.get(
             this.path,
             [
-                query("page").isNumeric(),
-                query("itemsPerPage").isNumeric()
+                query('page').isNumeric(),
+                query('itemsPerPage').isNumeric()
             ],
             this.getProducts
         );
         this.router.get(
             `${this.path}/:id`,
-            param("id").notEmpty().isUUID(), 
+            param('id').notEmpty().isUUID(), 
             this.getProductById
         );
         this.router.post(
             this.path,
             isAuthMiddleware,
-            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single("image"),
+            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single('image'),
             [
-                body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
-                body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
-                body("price").notEmpty().isNumeric(),
-                body("category")
+                body('title').notEmpty().isString().isLength({ min: 5 }).trim(),
+                body('description').notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
+                body('price').notEmpty().isNumeric(),
+                body('category')
                     .notEmpty()
                     .custom((value) => {
                         // TODO: remove hardcoded
                         if (
-                            value !== "Electronics" &&
-                            value !== "Cameras" &&
-                            value !== "Laptops" &&
-                            value !== "Accessories" &&
-                            value !== "Headphones" &&
-                            value !== "Food" &&
-                            value !== "Books" &&
-                            value !== "Clothes/Shoes" &&
-                            value !== "Beauty/Health" &&
-                            value !== "Sports" &&
-                            value !== "Outdoor" &&
-                            value !== "Home"
+                            value !== 'Electronics' &&
+                            value !== 'Cameras' &&
+                            value !== 'Laptops' &&
+                            value !== 'Accessories' &&
+                            value !== 'Headphones' &&
+                            value !== 'Food' &&
+                            value !== 'Books' &&
+                            value !== 'Clothes/Shoes' &&
+                            value !== 'Beauty/Health' &&
+                            value !== 'Sports' &&
+                            value !== 'Outdoor' &&
+                            value !== 'Home'
                         ) {
                             // TODO: remove hardcoded
-                            throw new Error("Invalid category input");
+                            throw new Error('Invalid category input');
                         }
                         return true;
                     }),
-                body("stock").notEmpty().isNumeric(),
+                body('stock').notEmpty().isNumeric(),
             ],
             this.createProduct
         );
         this.router.delete(
             `${this.path}/:id`,
             isAuthMiddleware,
-            param("id").notEmpty().isUUID(),
+            param('id').notEmpty().isUUID(),
             this.removeProductById
         );
         this.router.put(
             `${this.path}/:id`,
             isAuthMiddleware,
             [
-                param("id").notEmpty().isUUID(),
-                body("title").isString().isLength({ min: 5 }).trim(),
-                body("description").isString().isLength({ min: 10, max: 400 }).trim(),
-                body("price").isNumeric(),
-                body("category").custom((value) => {
+                param('id').notEmpty().isUUID(),
+                body('title').isString().isLength({ min: 5 }).trim(),
+                body('description').isString().isLength({ min: 10, max: 400 }).trim(),
+                body('price').isNumeric(),
+                body('imageUrl').isDataURI(),
+                body('category').custom((value) => {
                     // TODO: remove hardcoded
                     if (
-                        value !== "Electronics" &&
-                        value !== "Cameras" &&
-                        value !== "Laptops" &&
-                        value !== "Accessories" &&
-                        value !== "Headphones" &&
-                        value !== "Food" &&
-                        value !== "Books" &&
-                        value !== "Clothes/Shoes" &&
-                        value !== "Beauty/Health" &&
-                        value !== "Sports" &&
-                        value !== "Outdoor" &&
-                        value !== "Home"
+                        value !== 'Electronics' &&
+                        value !== 'Cameras' &&
+                        value !== 'Laptops' &&
+                        value !== 'Accessories' &&
+                        value !== 'Headphones' &&
+                        value !== 'Food' &&
+                        value !== 'Books' &&
+                        value !== 'Clothes/Shoes' &&
+                        value !== 'Beauty/Health' &&
+                        value !== 'Sports' &&
+                        value !== 'Outdoor' &&
+                        value !== 'Home'
                     ) {
                         // TODO: remove hardcoded
-                        throw new Error("Invalid category input");
+                        throw new Error('Invalid category input');
                     }
                     return true;
                 }),
-                body("stock").isNumeric(),
+                body('stock').isNumeric(),
             ],
             this.updateProductById
         );
@@ -139,6 +140,12 @@ class ProductController implements Controller {
 
         const data = { productId: id };
 
+        const validations = validationResult(req);
+        if (!validations.isEmpty()) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
+            return;
+        }
+
         try {
             const interactor = new GetProductByIdInteractor(this.productService);
             const result = await interactor.execute(data);
@@ -163,7 +170,7 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
-        const userId = "79ab1f505d324cb4aeea76fe"; // TODO: remove hardcoded
+        const userId = '79ab1f505d324cb4aeea76fe'; // TODO: remove hardcoded
 
         // TODO: improve validation responses
         const validations = validationResult(req);
@@ -193,13 +200,19 @@ class ProductController implements Controller {
 
         const newProduct = ProductViewModel.fromData(result);
 
-        res.status(httpStatus.OK).json({ success: true, data: newProduct });
+        res.status(httpStatus.CREATED).json({ success: true, data: newProduct });
     };
 
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
 
         const data = { productId: id };
+
+        const validations = validationResult(req);
+        if (!validations.isEmpty()) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
+            return;
+        }
 
         try {
             const interactor = new DeleteProductByIdInteractor(this.productService);
@@ -227,6 +240,8 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
+
+        console.log("foo", req.body)
 
         // TODO: improve validation responses
         const validations = validationResult(req);
