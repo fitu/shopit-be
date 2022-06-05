@@ -272,4 +272,9 @@ class ProductController implements Controller {
     };
 }
 
+
+    // TODO: validate ID
+    // TODO: validate image for update
+    // TODO: errors with messages and translated
+
 export default ProductController;
