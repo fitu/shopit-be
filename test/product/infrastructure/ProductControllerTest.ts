@@ -164,8 +164,22 @@ describe("ProductController", function () {
     });
 
     it("createProduct should return false and 422 if image is missing", async function () {
+        // Given
+        const title = 'title';
+        const description = 'description';
+        const price = 11.11;
+        const category = 'Electronics';
+        const stock = 1;
+
         // When
-        const response = await api.post('/products');
+        const response = await api.post('/products')
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock
+            });
 
         // Then
         const { body, statusCode } = response;
@@ -921,6 +935,36 @@ describe("ProductController", function () {
         expect(error).to.be.not.undefined;
     });
 
+    it("updateProductById should return success and 422 if image is missing", async function () {
+        // Given
+        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
+        const title = 'title';
+        const description = "description";
+        const price = 11.11;
+        const category = 'Electronics';
+        const stock = 1;
+        const imageUrl = 'test/shared/fixtures/random.jpg';
+        
+        // When
+        const response = await api.put(`/products/${productId}`)
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock,
+                imageUrl
+            });
+                
+        // Then
+        const { body, statusCode } = response;
+        const { success, error } = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
+        expect(error).to.be.not.undefined;
+    });
+
     it("updateProductById should return success and 404 if product was not found", async function () {
         // Given
         const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
@@ -928,7 +972,7 @@ describe("ProductController", function () {
         const description = "description";
         const price = 11.11;
         const category = 'Electronics';
-        const stock = 0;
+        const stock = 1;
         const imageUrl = 'test/shared/fixtures/random.jpg';
 
         service.updateProductById = async (productId: string, product: Product): Promise<Product> => {

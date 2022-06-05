@@ -182,7 +182,8 @@ class ProductController implements Controller {
 
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
+            // TODO: remove hardcoded
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: 'There was an error with the image' });
             return;
         }
 
@@ -251,7 +252,8 @@ class ProductController implements Controller {
 
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
+            // TODO: remove hardcoded
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: 'There was an error with the image' });
             return;
         }
 
