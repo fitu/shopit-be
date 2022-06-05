@@ -86,12 +86,13 @@ class ProductController implements Controller {
         this.router.put(
             `${this.path}/:id`,
             isAuthMiddleware,
+            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single('image'),
             [
                 param('id').notEmpty().isUUID(),
                 body('title').isString().isLength({ min: 5 }).trim(),
                 body('description').isString().isLength({ min: 10, max: 400 }).trim(),
                 body('price').isNumeric(),
-                body('imageUrl').isDataURI(),
+                body('imageUrl').isString(),
                 body('category').custom((value) => {
                     // TODO: remove hardcoded
                     if (
@@ -241,12 +242,16 @@ class ProductController implements Controller {
             stock: number;
         } = req.body;
 
-        console.log("foo", req.body)
-
         // TODO: improve validation responses
         const validations = validationResult(req);
         if (!validations.isEmpty()) {
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
+            return;
+        }
+
+        const imageUri = req.file?.filename;
+        if (!imageUri) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
             return;
         }
 

@@ -944,7 +944,8 @@ describe("ProductController", function () {
                 category,
                 stock,
                 imageUrl
-            });
+            })
+            .attach('image', imageUrl);
         
         // Then
         const { body, statusCode } = response;

@@ -22,7 +22,6 @@ class TestRequest {
 
     public post = this.call('post');
 
-
     public put = this.call('put');
 
     public delete = this.call('delete');
