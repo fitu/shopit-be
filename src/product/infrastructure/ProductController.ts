@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import { body, param, query, validationResult } from "express-validator";
+import { body, param, query, ValidationError, validationResult } from "express-validator";
 
 import Controller from "../../shared/Controller";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
@@ -16,6 +16,7 @@ import UpdateProductByIdInteractor from "../application/UpdateProductByIdInterac
 import ProductService from "../domain/ProductService";
 import { ProductCategory } from "../domain/Product";
 import ProductViewModel from "./ProductViewModel";
+import isValid from "../../shared/middlewares/validationMiddleware";
 
 class ProductController implements Controller {
     public path = "/products";
@@ -35,11 +36,13 @@ class ProductController implements Controller {
                 query('page').isNumeric().optional({ nullable: true }),
                 query('itemsPerPage').isNumeric().optional({ nullable: true }),
             ],
+            isValid,
             this.getProducts
         );
         this.router.get(
             `${this.path}/:id`,
             param('id').notEmpty().isUUID(), 
+            isValid,
             this.getProductById
         );
         this.router.post(
@@ -75,12 +78,14 @@ class ProductController implements Controller {
                     }),
                 body('stock').notEmpty().isNumeric(),
             ],
+            isValid,
             this.createProduct
         );
         this.router.delete(
             `${this.path}/:id`,
             isAuthMiddleware,
             param('id').notEmpty().isUUID(),
+            isValid,
             this.removeProductById
         );
         this.router.put(
@@ -116,17 +121,12 @@ class ProductController implements Controller {
                 }),
                 body('stock').isNumeric(),
             ],
+            isValid,
             this.updateProductById
         );
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const validations = validationResult(req);
-        if (!validations.isEmpty()) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
-            return;
-        }
-
         const [page, itemsPerPage] = getPageAndItemsPerPage(req);
 
         const interactor = new GetAllProductsInteractor(this.productService);
@@ -142,12 +142,6 @@ class ProductController implements Controller {
     };
 
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const validations = validationResult(req);
-        if (!validations.isEmpty()) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
-            return;
-        }
-
         const { id } = req.params;
         const data = { productId: id };
 
@@ -157,11 +151,17 @@ class ProductController implements Controller {
             const product = ProductViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: product });
         } catch (error: any) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, error: error.message });
+            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
         }
     };
 
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const imageUri = req.file?.filename;
+        if (!imageUri) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, errors: 'There was an error with the image' });
+            return;
+        }
+
         const {
             title,
             description,
@@ -175,18 +175,6 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
-        const validations = validationResult(req);
-        if (!validations.isEmpty()) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
-            return;
-        }
-
-        const imageUri = req.file?.filename;
-        if (!imageUri) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: 'There was an error with the image' });
-            return;
-        }
-
         const userId = '79ab1f505d324cb4aeea76fe'; // TODO: remove hardcoded
         const productData = new ProductData({
             title,
@@ -207,12 +195,6 @@ class ProductController implements Controller {
     };
 
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const validations = validationResult(req);
-        if (!validations.isEmpty()) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
-            return;
-        }
-
         const { id } = req.params;
         const data = { productId: id };
 
@@ -221,11 +203,17 @@ class ProductController implements Controller {
             await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, error: error.message });
+            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
         }
     };
 
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const imageUri = req.file?.filename;
+        if (!imageUri) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, errors: 'There was an error with the image' });
+            return;
+        }
+
         const { id } = req.params;
         const {
             title,
@@ -242,18 +230,6 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
-        const validations = validationResult(req);
-        if (!validations.isEmpty()) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
-            return;
-        }
-
-        const imageUri = req.file?.filename;
-        if (!imageUri) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: 'There was an error with the image' });
-            return;
-        }
-
         const productData = new ProductData({ title, description, price, imageUrl, category, stock });
         const data = { productId: id, productData };
 
@@ -263,14 +239,13 @@ class ProductController implements Controller {
             const updatedProduct = ProductViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
         } catch (error: any) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, error: error.message });
+            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
         }
     };
 }
-
-
+    // TODO: errors with messages and translated
+    // TODO: remove hardcoded
     // TODO: validate ID
     // TODO: validate image for update
-    // TODO: errors with messages and translated
-
+    
 export default ProductController;

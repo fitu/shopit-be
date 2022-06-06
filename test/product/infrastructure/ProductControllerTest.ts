@@ -67,11 +67,11 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("getProductById should return false and 404 if product was not found", async function () {
@@ -87,11 +87,11 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("getProductById should return success and 200 if product was found", async function () {
@@ -107,12 +107,12 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, data, error } = body;
+        const { success, data, errors } = body;
         const productViewModel = data as ProductViewModel;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
         expect(productViewModel.id).to.be.equal(productId);
     });
 
@@ -129,12 +129,12 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, data, total, error } = body;
+        const { success, data, total, errors } = body;
         const productViewModels = data as Array<ProductViewModel>;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
         expect(total).to.be.eq(0);
         expect(productViewModels).to.be.empty;
     });
@@ -152,13 +152,13 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, data, total, error } = body;
+        const { success, data, total, errors } = body;
 
         const productViewModels = data as Array<ProductViewModel>;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
         expect(total).to.be.eq(2);
         expect(productViewModels.length).to.be.eq(2);
     });
@@ -176,13 +176,13 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, data, total, error } = body;
+        const { success, data, total, errors } = body;
 
         const productViewModels = data as Array<ProductViewModel>;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
         expect(total).to.be.eq(2);
         expect(productViewModels.length).to.be.eq(2);
     });
@@ -199,11 +199,11 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if image is missing", async function () {
@@ -226,11 +226,11 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if title is not set", async function () {
@@ -253,11 +253,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if description is too short", async function () {
@@ -282,11 +282,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if description is too long", async function () {
@@ -314,11 +314,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if price is not set", async function () {
@@ -341,11 +341,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if price is not numeric", async function () {
@@ -370,11 +370,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if category is not set", async function () {
@@ -397,11 +397,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if category is not a predefined one", async function () {
@@ -426,11 +426,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if category is not a predefined one", async function () {
@@ -455,11 +455,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if stock is not set", async function () {
@@ -482,11 +482,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return false and 422 if stock is not numeric", async function () {
@@ -511,11 +511,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("createProduct should return success and 201 if image is set", async function () {
@@ -544,13 +544,13 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, data, error } = body;
+        const { success, data, errors } = body;
 
         const productViewModel = data as ProductViewModel;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.CREATED);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
         expect(productViewModel).to.contain(
             {
                 title,
@@ -589,13 +589,13 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, data, error } = body;
+        const { success, data, errors } = body;
 
         const productViewModel = data as ProductViewModel;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.CREATED);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
         expect(productViewModel).to.contain(
             {
                 title: title.trim(),
@@ -617,11 +617,11 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("removeProductId should return false and 404 if product was not found", async function () {
@@ -637,11 +637,11 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("removeProductId should return true and 200 if product was found", async function () {
@@ -657,11 +657,11 @@ describe("ProductController", function () {
 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
     });
 
     it("updateProductById should return false and 422 if title is not set", async function () {
@@ -685,11 +685,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if description is too short", async function () {
@@ -715,11 +715,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if description is too long", async function () {
@@ -748,11 +748,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if price is not set", async function () {
@@ -776,11 +776,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if price is not numeric", async function () {
@@ -806,11 +806,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if category is not set", async function () {
@@ -834,11 +834,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if category is not a predefined one", async function () {
@@ -864,11 +864,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if category is not a predefined one", async function () {
@@ -894,11 +894,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if stock is not set", async function () {
@@ -922,11 +922,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if stock is not numeric", async function () {
@@ -952,11 +952,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 422 if image is missing", async function () {
@@ -982,11 +982,11 @@ describe("ProductController", function () {
                 
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.UNPROCESSABLE_ENTITY);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return false and 404 if product was not found", async function () {
@@ -1017,11 +1017,11 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, error } = body;
+        const { success, errors } = body;
 
         expect(success).to.be.false;
         expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
-        expect(error).to.be.not.undefined;
+        expect(errors).to.be.not.undefined;
     });
 
     it("updateProductById should return success and 200 if product was not found", async function () {
@@ -1052,13 +1052,13 @@ describe("ProductController", function () {
         
         // Then
         const { body, statusCode } = response;
-        const { success, data, error } = body;
+        const { success, data, errors } = body;
 
         const productViewModel = data as ProductViewModel;
 
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
-        expect(error).to.be.undefined;
+        expect(errors).to.be.undefined;
         expect(productViewModel).to.contain(
             {
                 id: productId,
