@@ -1,3 +1,6 @@
+import { Request } from "express";
+import { isNil } from "lodash";
+
 const DEFAULT_ITEMS_PER_PAGE = 5;
 
 class Page<T> {
@@ -33,7 +36,16 @@ class Page<T> {
         this.hasPreviousPage = hasMorePages;
         this.hasNextPage = hasLessPages;
     }
-}
+};
+
+const getPageAndItemsPerPage = (req: Request): Array<number> => {
+    const { page, itemsPerPage } = req.query;
+    const pageToRequest = !isNil(page) && !isNaN(+page) ? +page : 1;
+    const itemsPerPageToRequest = !isNil(itemsPerPage) && !isNaN(+itemsPerPage) ? +itemsPerPage : DEFAULT_ITEMS_PER_PAGE;
+
+    return [pageToRequest, itemsPerPageToRequest];
+};
 
 export { DEFAULT_ITEMS_PER_PAGE };
 export default Page;
+export { getPageAndItemsPerPage };

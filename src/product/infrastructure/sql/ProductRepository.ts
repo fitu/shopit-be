@@ -1,4 +1,4 @@
-import Page, { DEFAULT_ITEMS_PER_PAGE } from "../../../shared/Page";
+import Page from "../../../shared/Page";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
@@ -53,13 +53,10 @@ class ProductRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async getAllProducts(page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> {
-        const currentPage = page ? page : 1;
-        const currentItemsPerPage = itemsPerPage ? itemsPerPage : DEFAULT_ITEMS_PER_PAGE;
-
+    public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const allProductsWithCount = await ProductDao.findAndCountAll({
-            limit: currentItemsPerPage,
-            offset: (currentPage - 1) * currentItemsPerPage,
+            limit: itemsPerPage,
+            offset: (page - 1) * itemsPerPage,
         });
 
         const productModels = allProductsWithCount.rows.map((product) => product.toModel());
@@ -67,9 +64,9 @@ class ProductRepository implements Repository {
 
         return new Page<Array<Product>>({
             data: productModels,
-            currentPage: currentPage,
+            currentPage: page,
             totalNumberOfDocuments: totalDocuments,
-            itemsPerPage: currentItemsPerPage,
+            itemsPerPage: itemsPerPage,
         });
     }
 

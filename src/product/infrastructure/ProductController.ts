@@ -5,7 +5,7 @@ import { body, param, query, validationResult } from "express-validator";
 import Controller from "../../shared/Controller";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import fileUploadMiddleware from "../../shared/middlewares/fileUploaderMiddleware";
-import Page from "../../shared/Page";
+import Page, { getPageAndItemsPerPage } from "../../shared/Page";
 import { generateImageUploaderConfig } from "../../shared/utils/imageUtils";
 import ProductData from "../application/ProductData";
 import CreateProductInteractor from "../application/CreateProductInteractor";
@@ -32,8 +32,8 @@ class ProductController implements Controller {
         this.router.get(
             this.path,
             [
-                query('page').isNumeric(),
-                query('itemsPerPage').isNumeric()
+                query('page').isNumeric().optional({ nullable: true }),
+                query('itemsPerPage').isNumeric().optional({ nullable: true }),
             ],
             this.getProducts
         );
@@ -121,31 +121,35 @@ class ProductController implements Controller {
     };
 
     private getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { page, itemsPerPage } = req.query;
-
-        const interactor = new GetAllProductsInteractor(this.productService);
-        // TODO: automate cast
-
-        const result = await interactor.execute(page ? +page : null, itemsPerPage ? +itemsPerPage : null);
-        const productsWithMetadata = result as Page<Array<ProductData>>;
-
-        const allProducts = {
-            ...productsWithMetadata,
-            data: productsWithMetadata.data.map((product) => ProductViewModel.fromData(product)),
-        };
-        res.status(httpStatus.OK).json({ success: true, ...allProducts });
-    };
-
-    private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { id } = req.params;
-
-        const data = { productId: id };
-
         const validations = validationResult(req);
         if (!validations.isEmpty()) {
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
             return;
         }
+
+        const [page, itemsPerPage] = getPageAndItemsPerPage(req);
+
+        const interactor = new GetAllProductsInteractor(this.productService);
+        const result = await interactor.execute(page, itemsPerPage);
+
+        const productsWithMetadata = result as Page<Array<ProductData>>;
+        const allProducts = {
+            ...productsWithMetadata,
+            data: productsWithMetadata.data.map((product) => ProductViewModel.fromData(product)),
+        };
+
+        res.status(httpStatus.OK).json({ success: true, ...allProducts });
+    };
+
+    private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const validations = validationResult(req);
+        if (!validations.isEmpty()) {
+            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
+            return;
+        }
+
+        const { id } = req.params;
+        const data = { productId: id };
 
         try {
             const interactor = new GetProductByIdInteractor(this.productService);
@@ -171,9 +175,6 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
-        const userId = '79ab1f505d324cb4aeea76fe'; // TODO: remove hardcoded
-
-        // TODO: improve validation responses
         const validations = validationResult(req);
         if (!validations.isEmpty()) {
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
@@ -182,11 +183,11 @@ class ProductController implements Controller {
 
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            // TODO: remove hardcoded
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: 'There was an error with the image' });
             return;
         }
 
+        const userId = '79ab1f505d324cb4aeea76fe'; // TODO: remove hardcoded
         const productData = new ProductData({
             title,
             description,
@@ -206,15 +207,14 @@ class ProductController implements Controller {
     };
 
     private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { id } = req.params;
-
-        const data = { productId: id };
-
         const validations = validationResult(req);
         if (!validations.isEmpty()) {
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
             return;
         }
+
+        const { id } = req.params;
+        const data = { productId: id };
 
         try {
             const interactor = new DeleteProductByIdInteractor(this.productService);
@@ -242,8 +242,6 @@ class ProductController implements Controller {
             category: ProductCategory;
             stock: number;
         } = req.body;
-
-        // TODO: improve validation responses
         const validations = validationResult(req);
         if (!validations.isEmpty()) {
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: validations.array()})
@@ -252,13 +250,11 @@ class ProductController implements Controller {
 
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            // TODO: remove hardcoded
             res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, error: 'There was an error with the image' });
             return;
         }
 
         const productData = new ProductData({ title, description, price, imageUrl, category, stock });
-
         const data = { productId: id, productData };
 
         try {

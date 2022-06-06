@@ -1,5 +1,4 @@
 import Page from "../../shared/Page";
-import Product from "../domain/Product";
 import ProductService from "../domain/ProductService";
 
 import ProductData from "./ProductData";
@@ -11,7 +10,7 @@ class GetAllProductsInteractor {
         this.productService = productService;
     }
 
-    public async execute(page?: number, itemsPerPage?: number): Promise<Page<Array<ProductData>>> {
+    public async execute(page: number, itemsPerPage: number): Promise<Page<Array<ProductData>>> {
         const allProducts = await this.productService.getAllProducts(page, itemsPerPage);
 
         return {

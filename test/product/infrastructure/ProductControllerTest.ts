@@ -11,11 +11,11 @@ import ProductViewModel from "../../../src/product/infrastructure/ProductViewMod
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
 import fileUploadMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
-import App from "../../../src/app";
-import Page from "../../../src/shared/Page";
 import { getProductWithData, getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import { getMockPage } from "../../shared/utils/PageFactory";
 import TestRequest from "../../shared/utils/requests";
+import Page from "../../../src/shared/Page";
+import App from "../../../src/app";
 
 describe("ProductController", function () {
     let service: ProductService;
@@ -143,7 +143,7 @@ describe("ProductController", function () {
         // Given
         const products = [getRandomProduct(), getRandomProduct()];
 
-        service.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>>  => {
+        service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>>  => {
             return getMockPage(products);
         };
 
@@ -163,8 +163,32 @@ describe("ProductController", function () {
         expect(productViewModels.length).to.be.eq(2);
     });
 
-     // TODO: does this apply to any?
-     it("createProduct should return false and 501 if something went wrong", async function () {
+    it("getProducts should return success, 200 and list with products", async function () {
+        // Given
+        const products = [getRandomProduct(), getRandomProduct()];
+
+        service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>>  => {
+            return getMockPage(products);
+        };
+
+        // When
+        const response = await api.get('/products');
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, data, total, error } = body;
+
+        const productViewModels = data as Array<ProductViewModel>;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(error).to.be.undefined;
+        expect(total).to.be.eq(2);
+        expect(productViewModels.length).to.be.eq(2);
+    });
+
+    // TODO: does this apply to any?
+    it("createProduct should return false and 501 if something went wrong", async function () {
         // Given
         service.create = async (product: Product, userId: string): Promise<Product> => {
             throw new Error();
@@ -999,7 +1023,6 @@ describe("ProductController", function () {
         expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
         expect(error).to.be.not.undefined;
     });
-
 
     it("updateProductById should return success and 200 if product was not found", async function () {
         // Given
