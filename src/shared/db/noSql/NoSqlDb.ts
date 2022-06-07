@@ -27,13 +27,13 @@ class NoSqlDb implements Database {
 
     // TODO: complete this
     public clearDB = async (): Promise<void> => {
-        console.log("Delete users");
+        console.log('Delete users');
         await UserDocument.remove({})
 
-        console.log("Delete products");
+        console.log('Delete products');
         await ProductDocument.remove({})
 
-        console.log("Delete reviews");
+        console.log('Delete reviews');
         await ReviewDocument.remove({})
 
         // TODO: delete sessions

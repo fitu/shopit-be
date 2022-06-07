@@ -2,8 +2,13 @@ import NoSqlDb from "./noSql/NoSqlDb";
 import SqlDb from "./sql/SqlDb";
 
 enum DbType {
-    SQL = "sql",
-    NO_SQL = "nosql",
+    SQL = 'sql',
+    NO_SQL = 'nosql',
+}
+
+enum DbQuery {
+    ORM = 'orm',
+    RAW = 'raw',
 }
 
 interface DatabaseOptions {
@@ -18,5 +23,5 @@ interface Database {
 const getDb = (env: any): Database => (env.DB_TYPE === DbType.SQL.toString() ? new SqlDb(env) : new NoSqlDb(env));
 
 export type { DatabaseOptions };
-export { getDb, DbType };
+export { getDb, DbType, DbQuery };
 export default Database;

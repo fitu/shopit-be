@@ -55,5 +55,4 @@ class ReviewRepository implements Repository {
     }
 }
 
-export type { Repository };
 export default ReviewRepository;

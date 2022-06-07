@@ -99,5 +99,4 @@ class ProductRepository implements Repository {
     }
 }
 
-export type { Repository };
 export default ProductRepository;

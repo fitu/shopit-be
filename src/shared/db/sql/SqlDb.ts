@@ -41,7 +41,7 @@ class SqlDb implements Database {
         const dbPort = this.env.DB_SQL_PORT;
 
         return new Sequelize(dbName, dbUserName, dbPassword, {
-            dialect: "postgres",
+            dialect: 'postgres',
             host: dbHost,
             port: dbPort,
         });
@@ -62,72 +62,72 @@ class SqlDb implements Database {
     };
 
     private initializeRelationships = (): void => {
-        AvatarDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
+        AvatarDao.belongsTo(UserDao, { targetKey: 'id', foreignKey: 'userId', as: 'user' });
 
-        CartDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
-        CartDao.belongsToMany(ProductDao, { through: CartItemDao, targetKey: "id", foreignKey: "cartId" });
+        CartDao.belongsTo(UserDao, { targetKey: 'id', foreignKey: 'userId', as: 'user' });
+        CartDao.belongsToMany(ProductDao, { through: CartItemDao, targetKey: 'id', foreignKey: 'cartId' });
 
-        OrderDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId" });
-        OrderDao.belongsTo(PaymentInfoDao, { targetKey: "id", foreignKey: "paymentInfoId" });
-        OrderDao.belongsTo(ShippingInfoDao, { targetKey: "id", foreignKey: "shippingInfoId" });
-        OrderDao.belongsToMany(ProductDao, { through: OrderItemDao, targetKey: "id", foreignKey: "orderId" });
-        OrderDao.belongsToMany(PaymentInfoDao, { through: PaymentOrderDao, targetKey: "id", foreignKey: "orderId" });
+        OrderDao.belongsTo(UserDao, { targetKey: 'id', foreignKey: 'userId' });
+        OrderDao.belongsTo(PaymentInfoDao, { targetKey: 'id', foreignKey: 'paymentInfoId' });
+        OrderDao.belongsTo(ShippingInfoDao, { targetKey: 'id', foreignKey: 'shippingInfoId' });
+        OrderDao.belongsToMany(ProductDao, { through: OrderItemDao, targetKey: 'id', foreignKey: 'orderId' });
+        OrderDao.belongsToMany(PaymentInfoDao, { through: PaymentOrderDao, targetKey: 'id', foreignKey: 'orderId' });
 
-        PaymentInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "paymentInfoId" });
-        PaymentInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
+        PaymentInfoDao.hasMany(OrderDao, { sourceKey: 'id', foreignKey: 'paymentInfoId' });
+        PaymentInfoDao.belongsTo(UserDao, { targetKey: 'id', foreignKey: 'userId', as: 'user' });
         PaymentInfoDao.belongsToMany(OrderDao, {
             through: PaymentOrderDao,
-            targetKey: "id",
-            foreignKey: "paymentInfoId",
+            targetKey: 'id',
+            foreignKey: 'paymentInfoId',
         });
 
-        ProductDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "productId", as: "reviews" });
-        ProductDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
-        ProductDao.belongsToMany(CartDao, { through: CartItemDao, targetKey: "id", foreignKey: "productId" });
-        ProductDao.belongsToMany(OrderDao, { through: OrderItemDao, targetKey: "id", foreignKey: "productId" });
+        ProductDao.hasMany(ReviewDao, { sourceKey: 'id', foreignKey: 'productId', as: 'reviews' });
+        ProductDao.belongsTo(UserDao, { targetKey: 'id', foreignKey: 'userId', as: 'user' });
+        ProductDao.belongsToMany(CartDao, { through: CartItemDao, targetKey: 'id', foreignKey: 'productId' });
+        ProductDao.belongsToMany(OrderDao, { through: OrderItemDao, targetKey: 'id', foreignKey: 'productId' });
 
-        ReviewDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
-        ReviewDao.belongsTo(ProductDao, { targetKey: "id", foreignKey: "productId", as: "product" });
+        ReviewDao.belongsTo(UserDao, { targetKey: 'id', foreignKey: 'userId', as: 'user' });
+        ReviewDao.belongsTo(ProductDao, { targetKey: 'id', foreignKey: 'productId', as: 'product' });
 
-        ShippingInfoDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "shippingInfoId" });
-        ShippingInfoDao.belongsTo(UserDao, { targetKey: "id", foreignKey: "userId", as: "user" });
+        ShippingInfoDao.hasMany(OrderDao, { sourceKey: 'id', foreignKey: 'shippingInfoId' });
+        ShippingInfoDao.belongsTo(UserDao, { targetKey: 'id', foreignKey: 'userId', as: 'user' });
 
         UserDao.hasOne(CartDao, {
-            sourceKey: "id",
+            sourceKey: 'id',
             foreignKey: {
-                name: "userId",
+                name: 'userId',
                 allowNull: false,
             },
-            as: "cart",
+            as: 'cart',
         });
-        UserDao.hasOne(AvatarDao, { sourceKey: "id", foreignKey: "userId", as: "avatar" });
-        UserDao.hasMany(ProductDao, { sourceKey: "id", foreignKey: "userId", as: "products" });
-        UserDao.hasMany(OrderDao, { sourceKey: "id", foreignKey: "userId" });
-        UserDao.hasMany(ReviewDao, { sourceKey: "id", foreignKey: "userId", as: "reviews" });
-        UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId", as: "paymentsInfo" });
-        UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId", as: "shippingsInfo" });
+        UserDao.hasOne(AvatarDao, { sourceKey: 'id', foreignKey: 'userId', as: 'avatar' });
+        UserDao.hasMany(ProductDao, { sourceKey: 'id', foreignKey: 'userId', as: 'products' });
+        UserDao.hasMany(OrderDao, { sourceKey: 'id', foreignKey: 'userId' });
+        UserDao.hasMany(ReviewDao, { sourceKey: 'id', foreignKey: 'userId', as: 'reviews' });
+        UserDao.hasMany(PaymentInfoDao, { sourceKey: 'id', foreignKey: 'userId', as: 'paymentsInfo' });
+        UserDao.hasMany(ShippingInfoDao, { sourceKey: 'id', foreignKey: 'userId', as: 'shippingsInfo' });
     };
 
     public clearDB = async (): Promise<void> => {
-        console.log("Delete users");
+        console.log('Delete users');
         await UserDao.destroy({ where: {} });
 
-        console.log("Delete carts");
+        console.log('Delete carts');
         await CartDao.destroy({ where: {} });
 
-        console.log("Delete avatars");
+        console.log('Delete avatars');
         await AvatarDao.destroy({ where: {} });
 
-        console.log("Delete payment infos");
+        console.log('Delete payment infos');
         await PaymentInfoDao.destroy({ where: {} });
 
-        console.log("Delete shipping infos");
+        console.log('Delete shipping infos');
         await ShippingInfoDao.destroy({ where: {} });
 
-        console.log("Delete products");
+        console.log('Delete products');
         await ProductDao.destroy({ where: {} });
 
-        console.log("Delete reviews");
+        console.log('Delete reviews');
         await ReviewDao.destroy({ where: {} });
 
         // TODO: delete sessions
