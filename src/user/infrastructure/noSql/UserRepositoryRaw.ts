@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 import { doPasswordsMatch } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";

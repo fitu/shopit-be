@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize";
 import { doPasswordsMatch } from "../../../shared/utils/hashUtils";
 import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
 import CartDao from "../../../cart/infrastructure/sql/CartDao";
@@ -7,6 +8,8 @@ import { Repository } from "../Repository";
 import UserDao from "./UserDao";
 
 class UserRepositoryRaw implements Repository {
+    constructor(public instance: Sequelize) {}
+
     public async create(user: User): Promise<User> {
         return new Promise(() => {});
     }

@@ -27,15 +27,16 @@ const seedDb = async () => {
 
         // Initialize the DB
         const db = new Db(env);
-        await db.init({ force: true });
+        const initializedDb = await db.init({ force: true });
 
         await db.clearDB();
 
         // Create Repositories
-        const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories({
+        const envsWithType = {
             ...env,
             DB_TYPE: DbType.SQL.toString(),
-        });
+        };
+        const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories(envsWithType, initializedDb);
 
         // Create socket
         const io = new Server();
@@ -53,7 +54,7 @@ const seedDb = async () => {
     } catch (error) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
-        console.log("DB fulfilled!");
+        console.log('DB fulfilled!');
         process.exit();
     }
 };

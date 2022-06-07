@@ -1,3 +1,5 @@
+import { Sequelize } from "sequelize";
+
 import { Repository as CartRepository } from "../../cart/infrastructure/Repository";
 import { Repository as ProductRepository } from "../../product/infrastructure/Repository";
 import { Repository as ReviewRepository } from "../../review/infrastructure/Repository";
@@ -21,7 +23,7 @@ import NoSqlProductRepositoryRaw from "../../product/infrastructure/noSql/Produc
 import NoSqlUserRepositoryRaw from "../../user/infrastructure/noSql/UserRepositoryRaw";
 import NoSqlReviewRepositoryRaw from "../../review/infrastructure/noSql/ReviewRepositoryRaw";
 import SendGridRepository from "../integrations/emails/SendGridRepository";
-import { DbType, DbQuery } from "../db/database";
+import Database, { DbType, DbQuery } from "../db/database";
 
 type Repos = {
     cartRepository: CartRepository;
@@ -32,8 +34,9 @@ type Repos = {
     emailRepository: EmailRepository;
 };
 
-const getRepositories = (env: any): Repos => {
+const getRepositories = (env: any, db: any): Repos => {
     const useORMQueries = env.DB_QUERIES === DbQuery.ORM.toString();
+
     if (useORMQueries) {
         return  env.DB_TYPE === DbType.SQL.toString()
             ? {
@@ -53,13 +56,15 @@ const getRepositories = (env: any): Repos => {
             };
     }
 
+    const sequelize = db as unknown as Sequelize;
+
     return  env.DB_TYPE === DbType.SQL.toString()
         ? {
-            cartRepository: new SqlCartRepositoryRaw(),
-            productRepository: new SqlProductRepositoryRaw(),
-            shippingInfoRepository: new SqlShippingInfoRepositoryRaw(),
-            reviewRepository: new SqlReviewRepositoryRaw(),
-            userRepository: new SqlUserRepositoryRaw(),
+            cartRepository: new SqlCartRepositoryRaw(sequelize),
+            productRepository: new SqlProductRepositoryRaw(sequelize),
+            shippingInfoRepository: new SqlShippingInfoRepositoryRaw(sequelize),
+            reviewRepository: new SqlReviewRepositoryRaw(sequelize),
+            userRepository: new SqlUserRepositoryRaw(sequelize),
             emailRepository: new SendGridRepository(),
         }
         : {

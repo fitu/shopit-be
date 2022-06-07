@@ -13,9 +13,10 @@ class NoSqlDb implements Database {
         this.env = env;
     }
 
-    public init = async (options?: DatabaseOptions): Promise<void> => {
+    public init = async (options?: DatabaseOptions): Promise<any> => {
         const db = await this.createDbConnection();
         this.instance = db;
+        return this.instance;
     };
 
     private createDbConnection = async (): Promise<Mongoose> =>

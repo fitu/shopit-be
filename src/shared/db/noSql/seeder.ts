@@ -29,15 +29,16 @@ const seedDb = async () => {
 
         // Initialize the DB
         const db = new Db(env);
-        await db.init();
+        const initializedDb = await db.init();
 
         await db.clearDB();
 
         // Create Repositories
-        const { productRepository, userRepository, reviewRepository } = getRepositories({
+        const envsWithType = {
             ...env,
             DB_TYPE: DbType.NO_SQL.toString(),
-        });
+        };
+        const { productRepository, userRepository, reviewRepository } = getRepositories(envsWithType, initializedDb);
 
         // Create socket
         const io = new Server()
@@ -47,6 +48,7 @@ const seedDb = async () => {
         const productService = new ProductService(productRepository);
         const reviewService = new ReviewService(reviewRepository);
 
+        // FIXME: this is not working
         await createUsers(userService);
         await createProducts(productService);
         await createReviews(reviewService);

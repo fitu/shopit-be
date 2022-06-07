@@ -1,3 +1,5 @@
+import { Sequelize } from "sequelize";
+
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import ShippingInfo from "../../domain/ShippingInfo";
 import { Repository } from "../Repository";
@@ -5,6 +7,8 @@ import { Repository } from "../Repository";
 import ShippingInfoDao from "./ShippingInfoDao";
 
 class ShippingInfoRepositoryRaw implements Repository {
+    constructor(public instance: Sequelize) {}
+
     public async create(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
         return new Promise(() => {});
     }

@@ -1,5 +1,5 @@
 import { zip } from "lodash";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 import Review from "../../domain/Review";
 import { Repository } from "../Repository";

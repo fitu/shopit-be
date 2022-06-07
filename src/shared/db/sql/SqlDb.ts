@@ -22,7 +22,7 @@ class SqlDb implements Database {
         this.env = env;
     }
 
-    public init = async (options?: DatabaseOptions): Promise<void> => {
+    public init = async (options?: DatabaseOptions): Promise<any> => {
         const db = this.createDbConnection();
         this.instance = db;
 
@@ -31,6 +31,7 @@ class SqlDb implements Database {
 
         const forceSync = options?.force ?? false;
         await this.instance.sync({ force: forceSync });
+        return this.instance;
     };
 
     private createDbConnection = (): Sequelize => {

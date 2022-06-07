@@ -1,11 +1,15 @@
+import { Sequelize } from "sequelize";
+
 import Page from "../../../shared/Page";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDao from "./ProductDao";
+import ProductDao, { PRODUCT_TABLE} from "./ProductDao";
 
 class ProductRepositoryRaw implements Repository {
+    constructor(public instance: Sequelize) {}
+
     public async create(product: Product, userId: string): Promise<Product> {
         return new Promise(() => {});
     }
@@ -18,12 +22,29 @@ class ProductRepositoryRaw implements Repository {
         return new Promise(() => {});
     }
 
+    // TODO: complete this
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        return new Promise(() => {});
+        const products = await this.instance.query(
+            `SELECT * FROM ${PRODUCT_TABLE}`,
+            {
+                model: ProductDao,
+                mapToModel: true,
+            }
+        );
+        
+        const productModels = products.map((product) => product.toModel());
+        const totalDocuments = products.length;
+
+        return new Page<Array<Product>>({
+            data: productModels,
+            currentPage: page,
+            totalNumberOfDocuments: totalDocuments,
+            itemsPerPage: itemsPerPage,
+        });
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        return new Promise(() => {});
+        return ProductDao.findByPk(productId);
     }
 
     public async deleteProductById(productId: string): Promise<void> {

@@ -20,10 +20,10 @@ import App from "./app";
 
         // Initialize and connect to DB
         const db = getDb(env);
-        await db.init();
+        const intializedDb = await db.init();
 
         // Create Repositories
-        const { productRepository, userRepository, emailRepository } = getRepositories(env);
+        const { productRepository, userRepository, emailRepository } = getRepositories(env, intializedDb);
 
         // Create Socket
         const io = new Server();

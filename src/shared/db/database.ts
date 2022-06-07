@@ -16,7 +16,7 @@ interface DatabaseOptions {
 }
 
 interface Database {
-    init: (options?: DatabaseOptions) => Promise<void>;
+    init: (options?: DatabaseOptions) => Promise<any>;
     clearDB: () => void;
 }
 
