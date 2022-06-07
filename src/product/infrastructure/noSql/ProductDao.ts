@@ -46,20 +46,20 @@ const productSchema = new mongoose.Schema({
         enum: {
             // TODO: remove hardcoded
             values: [
-                "Electronics",
-                "Cameras",
-                "Laptops",
-                "Accessories",
-                "Headphones",
-                "Food",
-                "Books",
-                "Clothes/Shoes",
-                "Beauty/Health",
-                "Sports",
-                "Outdoor",
-                "Home",
+                'Electronics',
+                'Cameras',
+                'Laptops',
+                'Accessories',
+                'Headphones',
+                'Food',
+                'Books',
+                'Clothes/Shoes',
+                'Beauty/Health',
+                'Sports',
+                'Outdoor',
+                'Home',
             ],
-            message: "Please select correct category",
+            message: 'Please select correct category',
         },
     },
     stock: {
@@ -68,7 +68,7 @@ const productSchema = new mongoose.Schema({
     },
     userId: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
         required: true,
     },
 });
@@ -88,7 +88,7 @@ productSchema.methods.toModel = function (): Product {
     };
 };
 
-const model = mongoose.model<ProductFullDocument>("Product", productSchema);
+const model = mongoose.model<ProductFullDocument>('Product', productSchema);
 
 export type { ProductDao };
 export default model;

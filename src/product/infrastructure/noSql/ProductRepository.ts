@@ -47,14 +47,14 @@ class ProductRepository implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        return new Promise(() => {});
+        return ProductDocument.findById(productId).exec();
     }
 
     public async deleteProductById(productId: string): Promise<void> {
         return new Promise(() => {});
     }
 
-    public async updateProductById(productId: string, product: Product): Promise<Product> {
+    public async updateProductById(productId: string, product: Product): Promise<Product | null> {
         return new Promise(() => {});
     }
 }

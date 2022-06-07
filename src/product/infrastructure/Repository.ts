@@ -8,7 +8,7 @@ interface Repository {
     getAllProducts: (page: number, itemsPerPage: number) => Promise<Page<Array<Product>>>;
     getProductById: (productId: string) => Promise<Product | null>;
     deleteProductById: (productId: string) => Promise<void>;
-    updateProductById: (productId: string, product: Product) => Promise<Product>;
+    updateProductById: (productId: string, product: Product) => Promise<Product | null>;
 }
 
 export type { Repository };

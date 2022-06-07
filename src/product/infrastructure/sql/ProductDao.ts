@@ -121,18 +121,18 @@ const init = (sequelize: Sequelize): void => {
                     // TODO: get from model
                     isIn: [
                         [
-                            "Electronics",
-                            "Cameras",
-                            "Laptops",
-                            "Accessories",
-                            "Headphones",
-                            "Food",
-                            "Books",
-                            "Clothes/Shoes",
-                            "Beauty/Health",
-                            "Sports",
-                            "Outdoor",
-                            "Home",
+                            'Electronics',
+                            'Cameras',
+                            'Laptops',
+                            'Accessories',
+                            'Headphones',
+                            'Food',
+                            'Books',
+                            'Clothes/Shoes',
+                            'Beauty/Health',
+                            'Sports',
+                            'Outdoor',
+                            'Home',
                         ],
                     ],
                 },
@@ -147,7 +147,7 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "product",
+            tableName: 'product',
             sequelize,
         }
     );
