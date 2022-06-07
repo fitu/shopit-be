@@ -38,7 +38,7 @@ class ProductService {
 
         if (isNil(product) || isEmpty(product)) {
             // TODO: do not hardcode strings
-            throw new NotFoundError("Product not found");
+            throw new NotFoundError('Product not found');
         }
 
         return product;

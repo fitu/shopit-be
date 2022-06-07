@@ -20,14 +20,13 @@ describe("GetAllProductsInteractor", function () {
         // Given
         const products = [];
         const page = 1;
-        const itemsPerPage = 5;
 
         service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
             return getMockPage(products);
         };
 
         // When
-        const result = await interactor.execute(page, itemsPerPage);
+        const result = await interactor.execute(page, -1);
 
         // Then
         const { data, total, currentPage } = result;
@@ -41,14 +40,13 @@ describe("GetAllProductsInteractor", function () {
         // Given
         const products = [getRandomProduct(), getRandomProduct()];
         const page = 1;
-        const itemsPerPage = 5;
 
         service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
             return getMockPage(products);
         };
 
         // When
-        const result = await interactor.execute(page, itemsPerPage);
+        const result = await interactor.execute(page, -1);
 
         // Then
         const { data, total, currentPage } = result;

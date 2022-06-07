@@ -4,8 +4,9 @@ import { Repository as ProductRepository } from "../../../src/product/infrastruc
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { getRandomProductWithId } from "../../shared/utils/ProductFactory";
+import { getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import Page from "../../../src/shared/Page";
+import { getMockPage } from "../../shared/utils/PageFactory";
 
 describe("ProductService", function () {
     let repository: ProductRepository;
@@ -16,40 +17,45 @@ describe("ProductService", function () {
         service = new ProductService(repository);
     });
 
-    it("getAllProducts should return an empty list if there are no product", async function () {
+    it("getAllProducts should return an empty list if there were no product", async function () {
         // Given
-        repository.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> => {
-            return new Page({
-                data: [],
-                currentPage: page,
-                totalNumberOfDocuments: 0,
-                itemsPerPage: itemsPerPage,
-            });
+        const products = [];
+        const page = 1;
+
+        repository.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
+            return getMockPage(products)
         };
 
         // When
-        const products = await service.getAllProducts(-1, -1);
-
+        const result = await service.getAllProducts(page, -1);
+        
         // Then
-        expect(products.data).to.be.empty;
+        const { data, total, currentPage } = result;
+
+        expect(data).to.be.instanceOf(Array).that.is.empty;
+        expect(total).to.be.eq(products.length);
+        expect(currentPage).to.be.eq(page);
+
     });
 
-    it("getAllProducts should return an all products if there are products", async function () {
+    it("getAllProducts should return an all products if were products", async function () {
         // Given
-        repository.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>> => {
-            return new Page({
-                data: [getRandomProductWithId("foo"), getRandomProductWithId("bar")],
-                currentPage: page,
-                totalNumberOfDocuments: 2,
-                itemsPerPage: itemsPerPage,
-            });
+        const products = [getRandomProduct(), getRandomProduct()];
+        const page = 1;
+
+        repository.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
+            return getMockPage(products)
         };
 
         // When
-        const products = await service.getAllProducts(-1, -1);
+        const result = await service.getAllProducts(page, -1);
 
         // Then
-        expect(products.data).to.not.be.empty;
+        const { data, total, currentPage } = result;
+
+        expect(data).to.be.instanceOf(Array).with.lengthOf(products.length);
+        expect(total).to.be.eq(products.length);
+        expect(currentPage).to.be.eq(page);
     });
 
     it("getProductById should throw NotFoundError if product not found", async function () {

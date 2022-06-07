@@ -36,7 +36,7 @@ describe("ProductController", function () {
 
     beforeEach(() => {
         sandbox = sinon.createSandbox();
-        sandbox.stub(fileUploadMiddleware, "fileUpload").callsFake(
+        sandbox.stub(fileUploadMiddleware, 'fileUpload').callsFake(
             (): any => {
               return {
                 any() {
@@ -120,7 +120,7 @@ describe("ProductController", function () {
         // Given
         const products = [];
 
-        service.getAllProducts = async (page?: number, itemsPerPage?: number): Promise<Page<Array<Product>>>  => {
+        service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>>  => {
             return getMockPage(products);
         };
 
