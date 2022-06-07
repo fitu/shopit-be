@@ -1,8 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import { body, param, query, ValidationError, validationResult } from "express-validator";
+import { body, param, query } from "express-validator";
 
 import Controller from "../../shared/Controller";
+import isValid from "../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import fileUploadMiddleware from "../../shared/middlewares/fileUploaderMiddleware";
 import Page, { getPageAndItemsPerPage } from "../../shared/Page";
@@ -16,7 +17,6 @@ import UpdateProductByIdInteractor from "../application/UpdateProductByIdInterac
 import ProductService from "../domain/ProductService";
 import { ProductCategory } from "../domain/Product";
 import ProductViewModel from "./ProductViewModel";
-import isValid from "../../shared/middlewares/validationMiddleware";
 
 class ProductController implements Controller {
     public path = "/products";
