@@ -25,7 +25,10 @@ class ProductRepositoryRaw implements Repository {
     // TODO: complete this
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const products = await this.instance.query(
-            `SELECT * FROM ${PRODUCT_TABLE}`,
+            `
+                SELECT * FROM ${PRODUCT_TABLE}
+                LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage}
+            `,
             {
                 model: ProductDao,
                 mapToModel: true,

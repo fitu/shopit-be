@@ -3,13 +3,15 @@ import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssocia
 import Avatar from "../../domain/Avatar";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 
+const AVATAR_TABLE = 'avatars';
+
 interface AvatarAttributes {
     id: string;
     publicId: string;
     url: string;
 }
 
-interface AvatarCreationAttributes extends Optional<AvatarAttributes, "id"> {}
+interface AvatarCreationAttributes extends Optional<AvatarAttributes, 'id'> {}
 
 class AvatarDao extends Model<AvatarAttributes, AvatarCreationAttributes> implements AvatarAttributes {
     public id!: string;
@@ -53,11 +55,11 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "avatar",
+            tableName: AVATAR_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, AVATAR_TABLE };
 export default AvatarDao;

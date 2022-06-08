@@ -1,6 +1,10 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
+import { PRODUCT_SCHEMA } from "../../../product/infrastructure/noSql/ProductDao";
+import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
 import Review from "../../domain/Review";
+
+const REVIEW_SCHEMA = 'Review';
 
 interface ReviewDao {
     _id: string;
@@ -28,17 +32,17 @@ const reviewSchema = new mongoose.Schema({
     },
     comment: {
         type: String,
-        required: true,
+        required: true
     },
     productId: {
         type: Schema.Types.ObjectId,
-        ref: "Product",
+        ref: PRODUCT_SCHEMA,
         required: true,
     },
 
     userId: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: USER_SCHEMA,
         required: true,
     },
 });
@@ -54,7 +58,8 @@ reviewSchema.methods.toModel = function (): Review {
     };
 };
 
-const model = mongoose.model<ReviewFullDocument>("Review", reviewSchema);
+const model = mongoose.model<ReviewFullDocument>(REVIEW_SCHEMA, reviewSchema);
 
 export type { ReviewDao };
+export { REVIEW_SCHEMA };
 export default model;

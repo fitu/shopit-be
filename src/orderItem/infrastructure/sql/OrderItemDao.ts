@@ -11,12 +11,14 @@ import {
 import OrderDao from "../../../order/infrastructure/sql/OrderDao";
 import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 
+const ORDER_ITEM_TABLE = 'orderItems';
+
 interface OrderItemAttributes {
     id: string;
     quantity: number;
 }
 
-interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, "id"> {}
+interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, 'id'> {}
 
 class OrderItemDao extends Model<OrderItemAttributes, OrderItemCreationAttributes> implements OrderItemAttributes {
     public id!: string;
@@ -55,11 +57,11 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "orderItem",
+            tableName: ORDER_ITEM_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, ORDER_ITEM_TABLE };
 export default OrderItemDao;

@@ -16,6 +16,8 @@ import CartItemDao from "../../../cartItem/infrastructure/sql/CartItemDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Cart from "../../domain/Cart";
 
+const CART_TABLE = 'carts';
+
 interface CartAttributes {
     id: string;
     itemsPrice: number;
@@ -23,7 +25,7 @@ interface CartAttributes {
     totalPrice: number;
 }
 
-interface CartCreationAttributes extends Optional<CartAttributes, "id"> {}
+interface CartCreationAttributes extends Optional<CartAttributes, 'id'> {}
 
 class CartDao extends Model<CartAttributes, CartCreationAttributes> implements CartAttributes {
     public id!: string;
@@ -81,11 +83,11 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "cart",
+            tableName: CART_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, CART_TABLE };
 export default CartDao;

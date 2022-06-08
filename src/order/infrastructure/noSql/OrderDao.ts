@@ -2,6 +2,8 @@ import mongoose, { Document } from "mongoose";
 
 import Order, { OrderStatus } from "../../domain/Order";
 
+const ORDER_SCHEMA = 'Order';
+
 interface OrderDocument extends Document {
     itemsPrice: number;
     taxPrice: number;
@@ -35,8 +37,8 @@ const orderSchema = new mongoose.Schema({
         required: true,
         enum: {
             // TODO: remove hardcoded
-            values: ["processing", "shipped", "delivered"],
-            message: "Please select correct category for product",
+            values: ['processing', 'shipped', 'delivered'],
+            message: 'Please select correct category for product',
         },
     },
     deliveredAt: {
@@ -64,7 +66,8 @@ orderSchema.methods.toModel = function (): Order {
 };
 
 
-const model = mongoose.model<OrderDocument>("Order", orderSchema);
+const model = mongoose.model<OrderDocument>(ORDER_SCHEMA, orderSchema);
 
 export type { OrderDocument };
+export { ORDER_SCHEMA };
 export default model;

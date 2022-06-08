@@ -20,6 +20,8 @@ import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 
+const ORDER_TABLE = 'orders';
+
 interface OrderAttributes {
     id: string;
     itemsPrice: number;
@@ -31,7 +33,7 @@ interface OrderAttributes {
     paidAt?: Date | null;
 }
 
-interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {}
+interface OrderCreationAttributes extends Optional<OrderAttributes, 'id'> {}
 
 class OrderDao extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
     public id!: string;
@@ -113,7 +115,7 @@ const init = (sequelize: Sequelize): void => {
                 allowNull: false,
                 validate: {
                     // TODO: get from model
-                    isIn: [["processing", "shipped", "delivered"]],
+                    isIn: [['processing', 'shipped', 'delivered']],
                 },
             },
             deliveredAt: {
@@ -124,11 +126,11 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "order",
+            tableName: ORDER_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, ORDER_TABLE };
 export default OrderDao;

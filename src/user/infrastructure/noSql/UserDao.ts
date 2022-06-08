@@ -3,6 +3,8 @@ import mongoose, { Document } from "mongoose";
 import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hashUtils";
 import User, { UserRole } from "../../domain/User";
 
+const USER_SCHEMA = 'User';
+
 interface UserDao {
     _id?: string;
     firstName: string;
@@ -74,8 +76,8 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: {
             // TODO: remove hardcoded
-            values: ["user", "admin"],
-            message: "Please select correct role",
+            values: ['user', 'admin'],
+            message: 'Please select correct role',
         },
     },
     password: {
@@ -116,11 +118,11 @@ userSchema.methods.validatePassword = async function (password: string) {
     return doPasswordsMatch(password, this.user.password);
 };
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
     const user = this as UserFullDocument;
 
     // Only hash the password if it has been modified (or is new)
-    if (!user.isModified("password")) {
+    if (!user.isModified('password')) {
         return next();
     }
 
@@ -130,7 +132,7 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-userSchema.pre("insertMany", async function (next, docs) {
+userSchema.pre('insertMany', async function (next, docs) {
     const usersPromises = docs.map(async function (user) {
         const hashedPassword = await hashPassword(user.password);
         user.password = hashedPassword;
@@ -142,7 +144,8 @@ userSchema.pre("insertMany", async function (next, docs) {
     next();
 });
 
-const model = mongoose.model<UserFullDocument>("User", userSchema);
+const model = mongoose.model<UserFullDocument>(USER_SCHEMA, userSchema);
 
 export type { UserDao, ShippingInfoDao };
+export { USER_SCHEMA };
 export default model;

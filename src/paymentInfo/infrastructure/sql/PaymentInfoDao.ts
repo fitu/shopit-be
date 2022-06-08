@@ -16,12 +16,14 @@ import OrderDao from "../../../order/infrastructure/sql/OrderDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import PaymentInfo, { PaymentStatus } from "../../domain/PaymentInfo";
 
+const PAYMENT_INFO_TABLE = 'paymentInfos';
+
 interface PaymentInfoAttributes {
     id: string;
     status: PaymentStatus;
 }
 
-interface PaymentInfoCreationAttributes extends Optional<PaymentInfoAttributes, "id"> {}
+interface PaymentInfoCreationAttributes extends Optional<PaymentInfoAttributes, 'id'> {}
 
 class PaymentInfoDao
     extends Model<PaymentInfoAttributes, PaymentInfoCreationAttributes>
@@ -68,16 +70,16 @@ const init = (sequelize: Sequelize): void => {
                 allowNull: false,
                 validate: {
                     // TODO: get from model
-                    isIn: [["not-paid", "paid"]],
+                    isIn: [['not-paid', 'paid']],
                 },
             },
         },
         {
-            tableName: "paymentInfo",
+            tableName: PAYMENT_INFO_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, PAYMENT_INFO_TABLE };
 export default PaymentInfoDao;

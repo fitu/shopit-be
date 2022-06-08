@@ -11,12 +11,14 @@ import {
 import CartDao from "../../../cart/infrastructure/sql/CartDao";
 import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 
+const CART_ITEM_TABLE = 'cartItems';
+
 interface CartItemAttributes {
     id: string;
     quantity: number;
 }
 
-interface CartItemCreationAttributes extends Optional<CartItemAttributes, "id"> {}
+interface CartItemCreationAttributes extends Optional<CartItemAttributes, 'id'> {}
 
 class CartItemDao extends Model<CartItemAttributes, CartItemCreationAttributes> implements CartItemAttributes {
     public id!: string;
@@ -55,11 +57,11 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "cartItem",
+            tableName: CART_ITEM_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, CART_ITEM_TABLE };
 export default CartItemDao;

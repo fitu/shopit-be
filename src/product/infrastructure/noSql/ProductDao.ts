@@ -1,6 +1,9 @@
 import mongoose, { Document, Types, Schema } from "mongoose";
 
+import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
 import Product, { ProductCategory } from "../../domain/Product";
+
+const PRODUCT_SCHEMA = 'Product';
 
 interface ProductDao {
     _id?: string;
@@ -68,7 +71,7 @@ const productSchema = new mongoose.Schema({
     },
     userId: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: USER_SCHEMA,
         required: true,
     },
 });
@@ -88,7 +91,8 @@ productSchema.methods.toModel = function (): Product {
     };
 };
 
-const model = mongoose.model<ProductFullDocument>('Product', productSchema);
+const model = mongoose.model<ProductFullDocument>(PRODUCT_SCHEMA, productSchema);
 
 export type { ProductDao };
+export { PRODUCT_SCHEMA };
 export default model;

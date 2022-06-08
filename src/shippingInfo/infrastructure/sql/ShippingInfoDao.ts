@@ -16,6 +16,8 @@ import OrderDao from "../../../order/infrastructure/sql/OrderDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import ShippingInfo from "../../domain/ShippingInfo";
 
+const SHIPPING_INFO_TABLE = 'shippingInfos';
+
 interface ShippingInfoAttributes {
     id: string;
     address: string;
@@ -25,7 +27,7 @@ interface ShippingInfoAttributes {
     country: string;
 }
 
-interface ShippingInfoCreationAttributes extends Optional<ShippingInfoAttributes, "id"> {}
+interface ShippingInfoCreationAttributes extends Optional<ShippingInfoAttributes, 'id'> {}
 
 class ShippingInfoDao
     extends Model<ShippingInfoAttributes, ShippingInfoCreationAttributes>
@@ -97,11 +99,12 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "shippingInfo",
+            tableName: SHIPPING_INFO_TABLE,
             sequelize,
         }
     );
 };
 
 export { init };
+export { SHIPPING_INFO_TABLE };
 export default ShippingInfoDao;

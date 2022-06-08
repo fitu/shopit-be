@@ -11,12 +11,14 @@ import {
 import OrderDao from "../../../order/infrastructure/sql/OrderDao";
 import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 
+const PAYMENT_ORDER_TABLE = 'paymentOrders';
+
 interface PaymentOrderAttributes {
     id: string;
     amount: number;
 }
 
-interface OrderItemCreationAttributes extends Optional<PaymentOrderAttributes, "id"> {}
+interface OrderItemCreationAttributes extends Optional<PaymentOrderAttributes, 'id'> {}
 
 class PaymentOrderDao
     extends Model<PaymentOrderAttributes, OrderItemCreationAttributes>
@@ -58,11 +60,11 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "paymentOrder",
+            tableName: PAYMENT_ORDER_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, PAYMENT_ORDER_TABLE };
 export default PaymentOrderDao;
