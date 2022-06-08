@@ -11,7 +11,7 @@ import UserService from "../../../user/domain/UserService";
 import validateEnv from "../../env/envUtils";
 import getRepositories from "../../../shared/repository/Repository";
 import { readFromCsv } from "../../../shared/data/csvUtils";
-import { DbType } from "../database";
+import { DbQuery, DbType } from "../database";
 
 import Db from "./SqlDb";
 
@@ -35,6 +35,7 @@ const seedDb = async () => {
         const envsWithType = {
             ...env,
             DB_TYPE: DbType.SQL.toString(),
+            DB_QUERIES: DbQuery.ORM.toString(),
         };
         const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories(envsWithType, initializedDb);
 

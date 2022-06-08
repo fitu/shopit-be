@@ -12,7 +12,7 @@ import UserService from "../../../user/domain/UserService";
 import { readFromCsv } from "../../../shared/data/csvUtils";
 import getRepositories from "../../../shared/repository/Repository";
 import validateEnv from "../../env/envUtils";
-import { DbType } from "../database";
+import { DbQuery, DbType } from "../database";
 
 import Db from "./NoSqlDb";
 import { convertUUIDToId } from "./csvUtils";
@@ -37,6 +37,7 @@ const seedDb = async () => {
         const envsWithType = {
             ...env,
             DB_TYPE: DbType.NO_SQL.toString(),
+            DB_QUERIES: DbQuery.ORM.toString(),
         };
         const { productRepository, userRepository, reviewRepository } = getRepositories(envsWithType, initializedDb);
 
@@ -48,7 +49,6 @@ const seedDb = async () => {
         const productService = new ProductService(productRepository);
         const reviewService = new ReviewService(reviewRepository);
 
-        // FIXME: this is not working
         await createUsers(userService);
         await createProducts(productService);
         await createReviews(reviewService);
