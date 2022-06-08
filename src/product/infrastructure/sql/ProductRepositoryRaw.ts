@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
 
 import Page from "../../../shared/Page";
@@ -7,6 +8,7 @@ import { Repository } from "../Repository";
 
 import ProductDao, { PRODUCT_TABLE} from "./ProductDao";
 
+// TODO: complete this
 class ProductRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
@@ -22,12 +24,12 @@ class ProductRepositoryRaw implements Repository {
         return new Promise(() => {});
     }
 
-    // TODO: complete this
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const products = await this.instance.query(
             `
-                SELECT * FROM ${PRODUCT_TABLE}
-                LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage}
+                SELECT *
+                FROM ${PRODUCT_TABLE}
+                LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage};
             `,
             {
                 model: ProductDao,
@@ -47,11 +49,28 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        return ProductDao.findByPk(productId);
+        const products = await this.instance.query(
+            `
+                SELECT *
+                FROM ${PRODUCT_TABLE}
+                WHERE id = '${productId}';
+            `,
+            {
+                model: ProductDao,
+                mapToModel: true,
+            }
+        );
+
+        return !isEmpty(products) ? products.map((product) => product.toModel())[0] : null;
     }
 
     public async deleteProductById(productId: string): Promise<void> {
-        return new Promise(() => {});
+        this.instance.query(
+            `
+                DELETE FROM ${PRODUCT_TABLE}
+                WHERE id = '${productId}';
+            `
+        );
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {

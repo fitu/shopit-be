@@ -17,6 +17,7 @@ describe("ProductService", function () {
         service = new ProductService(repository);
     });
 
+    // TODO: test pagination here, because it's not gonna be tested in repository
     it("getAllProducts should return an empty list if there were no product", async function () {
         // Given
         const products = [];

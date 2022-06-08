@@ -16,7 +16,7 @@ import ResetPasswordInteractor from "../application/ResetPasswordInteractor";
 import SignInUserInteractor from "../application/SignInUserInteractor";
 
 class UserController implements Controller {
-    public path = "/users";
+    public path = '/users';
     public router = Router();
 
     private userService: UserService;
@@ -32,37 +32,37 @@ class UserController implements Controller {
     private initializeRoutes = (): void => {
         this.router.post(
             `${this.path}/sign-in`,
-            [body("email").notEmpty().isEmail(), body("password").notEmpty().isLength({ min: 6 })],
+            [body('email').notEmpty().isEmail(), body('password').notEmpty().isLength({ min: 6 })],
             this.signInUser
         );
         this.router.post(
             `${this.path}/sign-up`,
             [
-                body("firstName").notEmpty().isString().trim(),
-                body("lastName").notEmpty().isString().trim(),
-                body("email").notEmpty().isEmail(),
-                body("role")
+                body('firstName').notEmpty().isString().trim(),
+                body('lastName').notEmpty().isString().trim(),
+                body('email').notEmpty().isEmail(),
+                body('role')
                     .notEmpty()
                     .custom((value) => {
                         // TODO: remove hardcoded
-                        if (value !== "admin" && value !== "user") {
+                        if (value !== 'admin' && value !== 'user') {
                             // TODO: remove hardcoded
-                            throw new Error("Invalid role input");
+                            throw new Error('Invalid role input');
                         }
                         return true;
                     })
                     .trim(),
-                body("password").notEmpty().isLength({ min: 6 }),
+                body('password').notEmpty().isLength({ min: 6 }),
             ],
             this.signUpUser
         );
-        this.router.post(`${this.path}/forgot-password`, body("email").notEmpty().isEmail(), this.forgotPassword);
+        this.router.post(`${this.path}/forgot-password`, body('email').notEmpty().isEmail(), this.forgotPassword);
         this.router.post(
             `${this.path}/reset-password`,
             [
-                body("email").notEmpty().isEmail(),
-                body("newPassword").notEmpty().isLength({ min: 6 }),
-                body("resetPasswordToken").notEmpty().isString().trim(),
+                body('email').notEmpty().isEmail(),
+                body('newPassword').notEmpty().isLength({ min: 6 }),
+                body('resetPasswordToken').notEmpty().isString().trim(),
             ],
             this.resetPassword
         );
