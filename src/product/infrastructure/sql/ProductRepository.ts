@@ -74,10 +74,15 @@ class ProductRepository implements Repository {
         return ProductDao.findByPk(productId);
     }
 
-    // TODO: should return an error?
-    public async deleteProductById(productId: string): Promise<void> {
+    public async deleteProductById(productId: string): Promise<boolean> {
         const productToDelete = await ProductDao.findByPk(productId);
+        
+        if (!productToDelete) {
+            return false;
+        }
+        
         await productToDelete.destroy();
+        return true;
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {

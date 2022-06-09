@@ -1,6 +1,7 @@
 import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
 
+import { wasDeletionSuccessful } from "../../../shared/utils/sqlUtils";
 import Page from "../../../shared/Page";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product from "../../domain/Product";
@@ -64,13 +65,15 @@ class ProductRepositoryRaw implements Repository {
         return !isEmpty(products) ? products.map((product) => product.toModel())[0] : null;
     }
 
-    public async deleteProductById(productId: string): Promise<void> {
-        this.instance.query(
+    public async deleteProductById(productId: string): Promise<boolean> {
+        const [_, metadata]  = await this.instance.query(
             `
                 DELETE FROM ${PRODUCT_TABLE}
                 WHERE id = '${productId}';
             `
         );
+
+        return wasDeletionSuccessful(metadata);
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {

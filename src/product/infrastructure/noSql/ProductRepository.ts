@@ -50,7 +50,7 @@ class ProductRepository implements Repository {
         return ProductDocument.findById(productId).exec();
     }
 
-    public async deleteProductById(productId: string): Promise<void> {
+    public async deleteProductById(productId: string): Promise<boolean> {
         return new Promise(() => {});
     }
 

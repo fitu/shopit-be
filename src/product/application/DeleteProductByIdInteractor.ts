@@ -12,7 +12,7 @@ class DeleteProductByIdInteractor {
     }
 
     public async execute(data: DeleteProductByIdData): Promise<void> {
-        // TODO: Validate
+        // TODO: Validate id and user
         await this.productService.deleteProductById(data.productId);
     }
 }

@@ -86,7 +86,7 @@ class ProductController implements Controller {
             isAuthMiddleware,
             param('id').notEmpty().isUUID(),
             isValid,
-            this.removeProductById
+            this.deleteProductById
         );
         this.router.put(
             `${this.path}/:id`,
@@ -194,7 +194,7 @@ class ProductController implements Controller {
         res.status(httpStatus.CREATED).json({ success: true, data: newProduct });
     };
 
-    private removeProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private deleteProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
         const data = { productId: id };
 

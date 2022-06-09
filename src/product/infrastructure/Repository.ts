@@ -7,7 +7,7 @@ interface Repository {
     update: (product: Product, userId: string) => Promise<Product>;
     getAllProducts: (page: number, itemsPerPage: number) => Promise<Page<Array<Product>>>;
     getProductById: (productId: string) => Promise<Product | null>;
-    deleteProductById: (productId: string) => Promise<void>;
+    deleteProductById: (productId: string) => Promise<boolean>;
     updateProductById: (productId: string, product: Product) => Promise<Product | null>;
 }
 

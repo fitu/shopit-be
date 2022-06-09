@@ -45,7 +45,12 @@ class ProductService {
     }
 
     public async deleteProductById(productId: string): Promise<void> {
-        return this.productRepository.deleteProductById(productId);
+        const success = await this.productRepository.deleteProductById(productId);
+
+        if (!success) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError('Product not found');
+        }
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product> {
