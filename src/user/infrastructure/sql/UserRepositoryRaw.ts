@@ -1,11 +1,11 @@
 import { Sequelize } from "sequelize";
-import { doPasswordsMatch } from "../../../shared/utils/hashUtils";
 import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
 import CartDao from "../../../cart/infrastructure/sql/CartDao";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDao from "./UserDao";
+import UserDao, { USER_TABLE } from "./UserDao";
+import { isEmpty } from "lodash";
 
 class UserRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
@@ -27,15 +27,35 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User> {
-        return new Promise(() => {});
+        const users = await this.instance.query(
+            `
+                SELECT *
+                FROM ${USER_TABLE}
+                WHERE id = '${userId}';
+            `,
+            {
+                model: UserDao,
+                mapToModel: true,
+            }
+        );
+
+        return !isEmpty(users) ? users.map((user) => user.toModel())[0] : null;
     }
 
-    public async signIn(email: string, password: string): Promise<User> {
-        return new Promise(() => {});
-    }
+    public async getUserByEmail(email: string): Promise<User | null> {
+        const users = await this.instance.query(
+            `
+                SELECT *
+                FROM ${USER_TABLE}
+                WHERE email = '${email}';
+            `,
+            {
+                model: UserDao,
+                mapToModel: true,
+            }
+        );
 
-    public async getUserByEmail(email: string): Promise<User> {
-        return new Promise(() => {});
+        return !isEmpty(users) ? users.map((user) => user.toModel())[0] : null;
     }
 }
 

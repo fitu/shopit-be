@@ -70,7 +70,6 @@ class UserController implements Controller {
 
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { email, password }: { email: string; password: string } = req.body;
-
         const data = { email, password };
 
         const interactor = new SignInUserInteractor(this.userService);
@@ -80,7 +79,8 @@ class UserController implements Controller {
 
             res.status(httpStatus.OK).json({ success: true, data: token });
         } catch (err) {
-            next(new Error(err));
+            // TODO: check other errors
+            res.status(httpStatus.NOT_FOUND).json({ success: false });
         }
     };
 

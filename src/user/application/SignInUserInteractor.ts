@@ -1,3 +1,5 @@
+import { NotFoundError } from "../../shared/error/NotFoundError";
+import { SignInError } from "../../shared/error/SignInError";
 import UserService from "../domain/UserService";
 
 import UserData from "./UserData";
@@ -16,9 +18,20 @@ class SignInUserInteractor {
 
     public async execute(data: SignInUserData): Promise<UserData> {
         const { email, password } = data;
-        const loggedInUser = await this.userService.signIn(email, password);
+        
+        const user = await this.userService.getUserByEmail(email);
+        if (!user) {
+            // TODO: do not hardcode this
+            throw new NotFoundError('User not found');
+        }
 
-        return UserData.fromModel(loggedInUser);
+        const doPasswordMatch = await this.userService.checkPassword(user, password);
+        if (!doPasswordMatch) {
+            // TODO: do not hardcode this
+            throw new SignInError('User or password invalid');
+        }
+
+        return UserData.fromModel(user);
     }
 }
 

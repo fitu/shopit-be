@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-import { doPasswordsMatch } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
@@ -24,10 +23,6 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User> {
-        return new Promise(() => {});
-    }
-
-    public async signIn(email: string, password: string): Promise<User> {
         return new Promise(() => {});
     }
 
