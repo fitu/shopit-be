@@ -48,7 +48,7 @@ import App from "./app";
         const app = new App(controllers);
         await app.init();
         await app.listen();
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error while connecting to the database", error);
     }
 })();

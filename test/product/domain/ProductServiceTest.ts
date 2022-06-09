@@ -68,7 +68,7 @@ describe("ProductService", function () {
         try {
             // When
             await service.getProductById("foo");
-        } catch (error) {
+        } catch (error: any) {
             // Then
             expect(error).instanceOf(NotFoundError);
         }

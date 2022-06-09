@@ -52,7 +52,7 @@ const seedDb = async () => {
         await createUsers(userService);
         await createProducts(productService);
         await createReviews(reviewService);
-    } catch (error) {
+    } catch (error: any) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
         console.log("DB fulfilled!");

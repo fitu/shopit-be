@@ -16,7 +16,7 @@ class SignInUserInteractor {
         this.userService = userService;
     }
 
-    public async execute(data: SignInUserData): Promise<UserData> {
+        public async execute(data: SignInUserData): Promise<UserData> {
         const { email, password } = data;
         
         const user = await this.userService.getUserByEmail(email);

@@ -1,8 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body } from "express-validator";
-import jwt from "jsonwebtoken";
 
+import { NotFoundError } from "../../shared/error/NotFoundError";
+import { SignInError } from "../../shared/error/SignInError";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
 import { generateJWTToken } from "../../shared/utils/hashUtils";
@@ -78,9 +79,16 @@ class UserController implements Controller {
             const token = await generateJWTToken(result.email, result.id);
 
             res.status(httpStatus.OK).json({ success: true, data: token });
-        } catch (err) {
-            // TODO: check other errors
-            res.status(httpStatus.NOT_FOUND).json({ success: false });
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false });
+                return;
+            }
+            if (error instanceof SignInError) {
+                res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
+                return;
+            }
+            next(new Error(error));
         }
     };
 
@@ -127,8 +135,8 @@ class UserController implements Controller {
         try {
             await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: true });
-        } catch (err) {
-            next(new Error(err));
+        } catch (error: any) {
+            next(new Error(error));
         }
     };
 
@@ -146,8 +154,8 @@ class UserController implements Controller {
         try {
             const result = await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: result });
-        } catch (err) {
-            next(new Error(err));
+        } catch (error: any) {
+            next(new Error(error));
         }
     };
 }

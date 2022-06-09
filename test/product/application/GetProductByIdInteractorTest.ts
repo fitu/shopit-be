@@ -28,7 +28,7 @@ describe("GetProductByIdInteractor", function () {
         try {
             // When
             await interactor.execute(data);
-        } catch (error) {
+        } catch (error: any) {
             // Then
             expect(error).instanceOf(NotFoundError);
             expect(error.message).to.be.equal(errorMessage);
