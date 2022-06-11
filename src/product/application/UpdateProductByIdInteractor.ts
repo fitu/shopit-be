@@ -15,21 +15,21 @@ class UpdateProductByIdInteractor {
         this.productService = productService;
     }
 
-    public async execute(data: UpdateProductByIdData): Promise<ProductData> {
+    public async execute({ productId, productData }: UpdateProductByIdData): Promise<ProductData> {
         // TODO: Validate
         const productToUpdate = new Product({
-            id: data.productData.id,
-            title: data.productData.title,
-            description: data.productData.description,
-            price: data.productData.price,
-            ratings: data.productData.ratings,
-            imageUrl: data.productData.imageUrl,
-            category: data.productData.category,
-            stock: data.productData.stock,
+            id: productData.id,
+            title: productData.title,
+            description: productData.description,
+            price: productData.price,
+            ratings: productData.ratings,
+            imageUrl: productData.imageUrl,
+            category: productData.category,
+            stock: productData.stock,
         });
 
-        const product = await this.productService.updateProductById(data.productId, productToUpdate);
-        
+        const product = await this.productService.updateProductById(productId, productToUpdate);
+
         // TODO: throw exception if fails
 
         return ProductData.fromModel(product);

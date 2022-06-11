@@ -15,17 +15,17 @@ class CreateProductInteractor {
         this.productService = productService;
     }
 
-    public async execute(data: CreateProductData): Promise<ProductData> {
+    public async execute({ productData, userId }: CreateProductData): Promise<ProductData> {
         const newProduct = new Product({
-            title: data.productData.title,
-            description: data.productData.description,
-            price: data.productData.price,
-            ratings: data.productData.ratings,
-            imageUrl: data.productData.imageUrl,
-            category: data.productData.category,
-            stock: data.productData.stock,
+            title: productData.title,
+            description: productData.description,
+            price: productData.price,
+            ratings: productData.ratings,
+            imageUrl: productData.imageUrl,
+            category: productData.category,
+            stock: productData.stock,
         });
-        const createdProduct = await this.productService.create(newProduct, data.userId);
+        const createdProduct = await this.productService.create(newProduct, userId);
 
         return ProductData.fromModel(createdProduct);
     }

@@ -4,7 +4,7 @@ import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
 import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
 
-type UserRole = "user" | "admin";
+type UserRole = 'user' | 'admin';
 
 class User {
     id?: string;

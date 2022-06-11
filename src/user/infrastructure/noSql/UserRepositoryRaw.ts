@@ -22,11 +22,11 @@ class UserRepositoryRaw implements Repository {
         return new Promise(() => {});
     }
 
-    public async getUserById(userId: string): Promise<User> {
+    public async getUserById(userId: string): Promise<User | null> {
         return new Promise(() => {});
     }
 
-    public async getUserByEmail(email: string): Promise<User> {
+    public async getUserByEmail(email: string): Promise<User | null> {
         return new Promise(() => {});
     }
 }

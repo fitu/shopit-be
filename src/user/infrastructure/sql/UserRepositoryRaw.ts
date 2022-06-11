@@ -26,7 +26,7 @@ class UserRepositoryRaw implements Repository {
         return new Promise(() => {});
     }
 
-    public async getUserById(userId: string): Promise<User> {
+    public async getUserById(userId: string): Promise<User | null> {
         const users = await this.instance.query(
             `
                 SELECT *

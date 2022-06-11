@@ -1,17 +1,19 @@
 import { faker } from '@faker-js/faker';
 
 import Product, { ProductCategory } from "../../../src/product/domain/Product";
+import User from '../../../src/user/domain/User';
+import { getRandomUser } from './UserFactory';
 
 const getRandomProduct = (): Product => {
     return new Product({
-        title: faker.random.alpha(10),
-        description: faker.random.alpha(10),
-        price: +faker.random.numeric,
-        ratings: +faker.random.numeric,
+        title: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        price: +faker.commerce.price(),
+        ratings: +faker.random.numeric(),
         imageUrl: faker.system.directoryPath(),
         // TODO: do not hardcode this
         category: "Electronics",
-        stock: +faker.random.numeric,
+        stock: +faker.random.numeric(),
     });
 };
 
@@ -22,6 +24,13 @@ const getRandomProductWithId = (productId: string): Product => {
     });
 };
 
+const getRandomProductWithUser = () : Product => {
+    return new Product({
+        ...getRandomProduct(),
+        user: getRandomUser()
+    });
+}
+
 const getProductWithData = ({
         id,
         title,
@@ -30,6 +39,7 @@ const getProductWithData = ({
         imageUrl,
         category,
         stock,
+        user
     }: {
         id?: string;
         title?: string;
@@ -38,18 +48,20 @@ const getProductWithData = ({
         imageUrl?: string;
         category?: ProductCategory;
         stock?: number;
+        user?: User
     }): Product => {
     return new Product({
         id,
-        title: title ?? faker.random.alpha(10),
-        description: description ?? faker.random.alpha(10),
-        price: price ?? +faker.random.numeric,
+        title: title ?? faker.commerce.productName(),
+        description: description ?? faker.commerce.productDescription(),
+        price: price ?? +faker.commerce.price(),
         ratings: 0,
         imageUrl: imageUrl ?? faker.system.directoryPath(),
         // TODO: do not hardcode this
         category: category ?? "Electronics",
-        stock: stock ?? +faker.random.numeric,
+        stock: stock ?? +faker.random.numeric(),
+        user: user ?? getRandomUser()
     });
 };
 
-export { getRandomProduct, getRandomProductWithId, getProductWithData };
+export { getRandomProduct, getRandomProductWithId, getProductWithData, getRandomProductWithUser };

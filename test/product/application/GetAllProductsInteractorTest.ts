@@ -3,7 +3,9 @@ import { expect } from "chai";
 import { getRandomProduct } from "../../shared/utils/ProductFactory";
 import { getMockPage } from "../../shared/utils/PageFactory";
 import Page from "../../../src/shared/Page";
-import GetAllProductsInteractor from "../../../src/product/application/GetAllProductsInteractor";
+import GetAllProductsInteractor, {
+    GetAllProductsData,
+} from "../../../src/product/application/GetAllProductsInteractor";
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 
@@ -20,13 +22,14 @@ describe("GetAllProductsInteractor", function () {
         // Given
         const products = [];
         const page = 1;
+        const inputData: GetAllProductsData = { page, itemsPerPage: -1 };
 
         service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
             return getMockPage(products);
         };
 
         // When
-        const result = await interactor.execute(page, -1);
+        const result = await interactor.execute(inputData);
 
         // Then
         const { data, total, currentPage } = result;
@@ -40,13 +43,14 @@ describe("GetAllProductsInteractor", function () {
         // Given
         const products = [getRandomProduct(), getRandomProduct()];
         const page = 1;
+        const inputData: GetAllProductsData = { page, itemsPerPage: -1 };
 
         service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
             return getMockPage(products);
         };
 
         // When
-        const result = await interactor.execute(page, -1);
+        const result = await interactor.execute(inputData);
 
         // Then
         const { data, total, currentPage } = result;

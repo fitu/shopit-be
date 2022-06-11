@@ -1,3 +1,5 @@
+import User from "../../user/domain/User";
+
 type ProductCategory =
     | "Electronics"
     | "Cameras"
@@ -21,6 +23,7 @@ class Product {
     readonly imageUrl: string;
     readonly category: ProductCategory;
     readonly stock: number;
+    readonly user?: User;
 
     constructor({
         id,
@@ -31,6 +34,7 @@ class Product {
         imageUrl,
         category,
         stock,
+        user
     }: {
         id?: string;
         title: string;
@@ -40,6 +44,7 @@ class Product {
         imageUrl: string;
         category: ProductCategory;
         stock: number;
+        user?: User;
     }) {
         this.id = id;
         this.title = title;
@@ -49,6 +54,7 @@ class Product {
         this.imageUrl = imageUrl;
         this.category = category;
         this.stock = stock;
+        this.user = user;
     }
 }
 

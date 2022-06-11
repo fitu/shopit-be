@@ -58,11 +58,11 @@ class UserRepository implements Repository {
         return new Promise(() => {});
     }
 
-    public async getUserById(userId: string): Promise<User> {
+    public async getUserById(userId: string): Promise<User | null> {
         return UserDocument.findById(userId).exec();
     }
 
-    public async getUserByEmail(email: string): Promise<User> {
+    public async getUserByEmail(email: string): Promise<User | null> {
         return UserDocument.findOne({ email }).exec();
     }
 }

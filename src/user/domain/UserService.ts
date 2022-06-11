@@ -55,6 +55,16 @@ class UserService {
 
         await this.userRepository.update(user);
     }
+
+    public async isAdmin(userId: string): Promise<boolean> {
+        const user = await this.userRepository.getUserById(userId);
+        if (!user) {
+            return false;
+        }
+        
+        // TODO: do not hardcode this
+        return user.role === 'admin';
+    }
 }
 
 export default UserService;

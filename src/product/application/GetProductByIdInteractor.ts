@@ -13,8 +13,8 @@ class GetProductByIdInteractor {
         this.productService = productService;
     }
 
-    public async execute(data: GetProductByIdData): Promise<ProductData> {
-        const product = await this.productService.getProductById(data.productId);
+    public async execute({ productId } : GetProductByIdData): Promise<ProductData> {
+        const product = await this.productService.getProductById(productId);
         return ProductData.fromModel(product);
     }
 }

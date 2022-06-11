@@ -1,8 +1,11 @@
 import { SuperTest, Test } from "supertest";
 import { BASE_VERSION } from "../../../src/app";
 
-const FAKE_JWT_SECRET = 'computadorar';
-const FAKE_TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmb28iLCJlbWFpbCI6ImZvb0BiYXIuY29tIn0.tW25xY9DtLTNXV5dq6dQEo9j2WIM26n9mrKxZ2qSSPM';
+const FAKE_JWT_SECRET = "computadorar";
+const FAKE_JWT_USER_ID = "a19a4a35-c507-4755-a20b-08737ea0e94d";
+const FAKE_JWT_USER_EMAIL = "foo@bar.com";
+const FAKE_JWT_TOKEN =
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMTlhNGEzNS1jNTA3LTQ3NTUtYTIwYi0wODczN2VhMGU5NGQiLCJlbWFpbCI6ImZvb0BiYXIuY29tIn0.g5NGl_iTSQ3mBKyWizBT9_WDPzUioiuOvSagjKCBx0c";
 
 class TestRequest {
     private api: SuperTest<Test>;
@@ -14,17 +17,17 @@ class TestRequest {
     }
 
     private call(method: string) {
-        return (path: string) => this.api[method](`${BASE_VERSION}${path}`)
-            .set({ Authorization: FAKE_TOKEN });
+        return (path: string) => this.api[method](`${BASE_VERSION}${path}`).set({ Authorization: FAKE_JWT_TOKEN });
     }
 
-    public get = this.call('get');
+    public get = this.call("get");
 
-    public post = this.call('post');
+    public post = this.call("post");
 
-    public put = this.call('put');
+    public put = this.call("put");
 
-    public delete = this.call('delete');
+    public delete = this.call("delete");
 }
 
+export { FAKE_JWT_USER_ID, FAKE_JWT_USER_EMAIL };
 export default TestRequest;

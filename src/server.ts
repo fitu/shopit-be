@@ -40,7 +40,7 @@ import App from "./app";
         const controllers = [
             new CartController(),
             new OrderController(),
-            new ProductController(productService),
+            new ProductController(productService, userService),
             new UserController(userService, emailService),
         ];
 

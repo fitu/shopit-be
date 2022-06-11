@@ -3,6 +3,12 @@ import ProductService from "../domain/ProductService";
 
 import ProductData from "./ProductData";
 
+
+interface GetAllProductsData {
+    page: number;
+    itemsPerPage: number;
+}
+
 class GetAllProductsInteractor {
     private productService: ProductService;
 
@@ -10,7 +16,7 @@ class GetAllProductsInteractor {
         this.productService = productService;
     }
 
-    public async execute(page: number, itemsPerPage: number): Promise<Page<Array<ProductData>>> {
+    public async execute({ page, itemsPerPage }: GetAllProductsData): Promise<Page<Array<ProductData>>> {
         const allProducts = await this.productService.getAllProducts(page, itemsPerPage);
 
         return {
@@ -20,4 +26,5 @@ class GetAllProductsInteractor {
     }
 }
 
+export type { GetAllProductsData };
 export default GetAllProductsInteractor;

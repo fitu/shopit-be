@@ -71,7 +71,14 @@ class ProductRepository implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        return ProductDao.findByPk(productId);
+        const product = await ProductDao.findByPk(productId);
+        if (!product) {
+            return null;
+        }
+
+        const productOwner = await product.getUser();
+
+        return { ...product.toModel(), user: productOwner.toModel() };
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {

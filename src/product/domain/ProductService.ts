@@ -1,4 +1,3 @@
-import { isEmpty, isNil } from "lodash";
 import { Server } from "socket.io";
 
 import Page from "../../shared/Page";
@@ -33,10 +32,10 @@ class ProductService {
         return this.productRepository.getAllProducts(page, itemsPerPage);
     }
 
-    public async getProductById(productId: string): Promise<Product | null> {
+    public async getProductById(productId: string): Promise<Product> {
         const product = await this.productRepository.getProductById(productId);
 
-        if (isNil(product) || isEmpty(product)) {
+        if (!product) {
             // TODO: do not hardcode strings
             throw new NotFoundError('Product not found');
         }

@@ -7,27 +7,31 @@ import { Response, NextFunction } from "express";
 
 import ProductController from "../../../src/product/infrastructure/ProductController";
 import ProductService from "../../../src/product/domain/ProductService";
+import UserService from "../../../src/user/domain/UserService";
 import ProductViewModel from "../../../src/product/infrastructure/ProductViewModel";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
 import fileUploadMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
 import { getProductWithData, getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import { getMockPage } from "../../shared/utils/PageFactory";
-import TestRequest from "../../shared/utils/requests";
+import TestRequest, { FAKE_JWT_USER_ID } from "../../shared/utils/requests";
 import Page from "../../../src/shared/Page";
 import App from "../../../src/app";
+import { getRandomUserWithId } from "../../shared/utils/UserFactory";
 
 describe("ProductController", function () {
-    let service: ProductService;
+    let productService: ProductService;
+    let userService: UserService;
     let server: Server;
     let api: TestRequest;
     let sandbox: SinonSandbox;
 
     before(async () => {
-        service = <ProductService>{};
-        const controller = new ProductController(service);
+        productService = <ProductService>{};
+        userService = <UserService>{};
+        const controller = new ProductController(productService, userService);
         const app = new App([controller]);
-    
+
         await app.init();
         server = await app.listen();
         const testApi = await supertest(server);
@@ -36,18 +40,16 @@ describe("ProductController", function () {
 
     beforeEach(() => {
         sandbox = sinon.createSandbox();
-        sandbox.stub(fileUploadMiddleware, 'fileUpload').callsFake(
-            (): any => {
-              return {
+        sandbox.stub(fileUploadMiddleware, "fileUpload").callsFake((): any => {
+            return {
                 any() {
-                  return (req: MulterRequest, res: Response, next: NextFunction) => {
-                    req.files = [{ location: 'images', key: 'foo-' }];
-                    next();
-                  };
+                    return (req: MulterRequest, res: Response, next: NextFunction) => {
+                        req.files = [{ location: "images", key: "foo-" }];
+                        next();
+                    };
                 },
-              };
-            },
-        );
+            };
+        });
     });
 
     afterEach(() => {
@@ -60,7 +62,7 @@ describe("ProductController", function () {
 
     it("getProductById should return false and 422 if product id not uuid", async function () {
         // Given
-        const productId = 'foo';
+        const productId = "foo";
 
         // When
         const response = await api.get(`/products/${productId}`);
@@ -76,9 +78,9 @@ describe("ProductController", function () {
 
     it("getProductById should return false and 404 if product was not found", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
-        service.getProductById = async (productId: string): Promise<Product> => {
+        productService.getProductById = async (productId: string): Promise<Product> => {
             throw new NotFoundError(productId);
         };
 
@@ -96,9 +98,9 @@ describe("ProductController", function () {
 
     it("getProductById should return success and 200 if product was found", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
-        service.getProductById = async (productId: string): Promise<Product> => {
+        productService.getProductById = async (productId: string): Promise<Product> => {
             return getRandomProductWithId(productId);
         };
 
@@ -120,12 +122,12 @@ describe("ProductController", function () {
         // Given
         const products = [];
 
-        service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>>  => {
+        productService.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
             return getMockPage(products);
         };
 
         // When
-        const response = await api.get('/products');
+        const response = await api.get("/products");
 
         // Then
         const { body, statusCode } = response;
@@ -143,12 +145,12 @@ describe("ProductController", function () {
         // Given
         const products = [getRandomProduct(), getRandomProduct()];
 
-        service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>>  => {
+        productService.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
             return getMockPage(products);
         };
 
         // When
-        const response = await api.get('/products');
+        const response = await api.get("/products");
 
         // Then
         const { body, statusCode } = response;
@@ -167,12 +169,12 @@ describe("ProductController", function () {
         // Given
         const products = [getRandomProduct(), getRandomProduct()];
 
-        service.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>>  => {
+        productService.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
             return getMockPage(products);
         };
 
         // When
-        const response = await api.get('/products');
+        const response = await api.get("/products");
 
         // Then
         const { body, statusCode } = response;
@@ -190,12 +192,12 @@ describe("ProductController", function () {
     // TODO: does this apply to any?
     it("createProduct should return false and 501 if something went wrong", async function () {
         // Given
-        service.create = async (product: Product, userId: string): Promise<Product> => {
+        productService.create = async (product: Product, userId: string): Promise<Product> => {
             throw new Error();
         };
 
         // When
-        const response = await api.post('/products');
+        const response = await api.post("/products");
 
         // Then
         const { body, statusCode } = response;
@@ -208,21 +210,20 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if image is missing", async function () {
         // Given
-        const title = 'title';
-        const description = 'description';
+        const title = "title";
+        const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
 
         // When
-        const response = await api.post('/products')
-            .field({
-                title,
-                description,
-                price,
-                category,
-                stock
-            });
+        const response = await api.post("/products").field({
+            title,
+            description,
+            price,
+            category,
+            stock,
+        });
 
         // Then
         const { body, statusCode } = response;
@@ -235,22 +236,23 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if title is not set", async function () {
         // Given
-        const description = 'description';
+        const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -262,24 +264,25 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if description is too short", async function () {
         // Given
-        const title = 'title';
-        const description = 'foo';
+        const title = "title";
+        const description = "foo";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -291,27 +294,29 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if description is too long", async function () {
         // Given
-        const title = 'title';
-        const description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. \
+        const title = "title";
+        const description =
+            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. \
             Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. \
             Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. \
             Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -323,22 +328,23 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if price is not set", async function () {
         // Given
-        const title = 'title';
+        const title = "title";
         const description = "description";
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -350,24 +356,25 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if price is not numeric", async function () {
         // Given
-        const title = 'title';
+        const title = "title";
         const description = "description";
-        const price = 'foo';
-        const category = 'Electronics';
+        const price = "foo";
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -379,22 +386,23 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if category is not set", async function () {
         // Given
-        const title = 'title';
+        const title = "title";
         const description = "description";
         const price = 11.11;
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -406,24 +414,25 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if category is not a predefined one", async function () {
         // Given
-        const title = 'title';
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'foo';
+        const category = "foo";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -435,24 +444,25 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if category is not a predefined one", async function () {
         // Given
-        const title = 'title';
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'foo';
+        const category = "foo";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -464,22 +474,23 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if stock is not set", async function () {
         // Given
-        const title = 'title';
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const category = "Electronics";
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -491,24 +502,25 @@ describe("ProductController", function () {
 
     it("createProduct should return false and 422 if stock is not numeric", async function () {
         // Given
-        const title = 'title';
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
-        const stock = 'foo';
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const category = "Electronics";
+        const stock = "foo";
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -520,28 +532,29 @@ describe("ProductController", function () {
 
     it("createProduct should return success and 201 if image is set", async function () {
         // Given
-        const title = 'title';
-        const description = 'description';
+        const title = "title";
+        const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
-        service.create = async (product: Product, userId: string): Promise<Product> => {
+        productService.create = async (product: Product, userId: string): Promise<Product> => {
             return product;
         };
-        
+
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, data, errors } = body;
@@ -551,42 +564,41 @@ describe("ProductController", function () {
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.CREATED);
         expect(errors).to.be.undefined;
-        expect(productViewModel).to.contain(
-            {
-                title,
-                description,
-                price: price.toString(),
-                category,
-                stock: stock.toString(),
-                ratings: 0
-            }
-        );
+        expect(productViewModel).to.contain({
+            title,
+            description,
+            price: price.toString(),
+            category,
+            stock: stock.toString(),
+            ratings: 0,
+        });
     });
 
     it("createProduct should return success and 201 and trim title and description", async function () {
         // Given
-        const title = '   title   ';
-        const description = '   description   ';
+        const title = "   title   ";
+        const description = "   description   ";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
-        service.create = async (product: Product, userId: string): Promise<Product> => {
+        productService.create = async (product: Product, userId: string): Promise<Product> => {
             return product;
         };
-        
+
         // When
-        const response = await api.post('/products')
+        const response = await api
+            .post("/products")
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, data, errors } = body;
@@ -596,21 +608,23 @@ describe("ProductController", function () {
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.CREATED);
         expect(errors).to.be.undefined;
-        expect(productViewModel).to.contain(
-            {
-                title: title.trim(),
-                description: description.trim(),
-                price: price.toString(),
-                category,
-                stock: stock.toString(),
-                ratings: 0
-            }
-        );
+        expect(productViewModel).to.contain({
+            title: title.trim(),
+            description: description.trim(),
+            price: price.toString(),
+            category,
+            stock: stock.toString(),
+            ratings: 0,
+        });
     });
 
     it("removeProductId should return false and 422 if id is not uuid", async function () {
         // Given
-        const productId = 'foo';
+        const productId = "foo";
+
+        productService.deleteProductById = async (productId: string): Promise<void> => {
+            throw new NotFoundError(productId);
+        };
 
         // When
         const response = await api.delete(`/products/${productId}`);
@@ -626,9 +640,9 @@ describe("ProductController", function () {
 
     it("removeProductId should return false and 404 if product was not found", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
-        service.deleteProductById = async (productId: string): Promise<void> => {
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
             throw new NotFoundError(productId);
         };
 
@@ -644,11 +658,73 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("removeProductId should return true and 200 if product was found", async function () {
+    it("removeProductId should return false and 422 if product was found but user is not admin nor the owner", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
-        service.deleteProductById = async (productId: string): Promise<void> => {
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return getRandomProduct();
+        };
+
+        userService.isAdmin = async (userid: string): Promise<boolean> => {
+            return false;
+        };
+
+        // When
+        const response = await api.delete(`/products/${productId}`);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, errors } = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNAUTHORIZED);
+        expect(errors).to.be.not.undefined;
+    });
+
+    it("removeProductId should return false and 200 if product was found and user is admin", async function () {
+        // Given
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return getRandomProduct();
+        };
+
+        userService.isAdmin = async (userid: string): Promise<boolean> => {
+            return true;
+        };
+
+        productService.deleteProductById = async (productId: string): Promise<void> => {
+            return;
+        };
+
+        // When
+        const response = await api.delete(`/products/${productId}`);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, errors } = body;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(errors).to.be.undefined;
+    });
+
+    it("removeProductId should return true and 200 if product was found and user is the owner", async function () {
+        // Given
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const userId = FAKE_JWT_USER_ID;
+        const user = getRandomUserWithId(userId);
+
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return getProductWithData({ user });
+        };
+
+        userService.isAdmin = async (userid: string): Promise<boolean> => {
+            return false;
+        };
+
+        productService.deleteProductById = async (productId: string): Promise<void> => {
             return;
         };
 
@@ -666,23 +742,24 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if title is not set", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const description = 'description';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -694,25 +771,26 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if description is too short", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
-        const description = 'foo';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
+        const description = "foo";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -724,28 +802,30 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if description is too long", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
-        const description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. \
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
+        const description =
+            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. \
             Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. \
             Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. \
             Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a,";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -757,23 +837,24 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if price is not set", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -785,25 +866,26 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if price is not numeric", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
-        const price = 'foo';
-        const category = 'Electronics';
+        const price = "foo";
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -815,23 +897,24 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if category is not set", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -843,25 +926,26 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if category is not a predefined one", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'foo';
+        const category = "foo";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -873,25 +957,26 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if category is not a predefined one", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'foo';
+        const category = "foo";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -903,23 +988,24 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if stock is not set", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const category = "Electronics";
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -931,25 +1017,26 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if stock is not numeric", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
-        const stock = 'foo';
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const category = "Electronics";
+        const stock = "foo";
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
-                stock
+                stock,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -961,25 +1048,24 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 422 if image is missing", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
-        
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
         // When
-        const response = await api.put(`/products/${productId}`)
-            .field({
-                title,
-                description,
-                price,
-                category,
-                stock,
-                imageUrl
-            });
-                
+        const response = await api.put(`/products/${productId}`).field({
+            title,
+            description,
+            price,
+            category,
+            stock,
+            imageUrl,
+        });
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -991,30 +1077,31 @@ describe("ProductController", function () {
 
     it("updateProductById should return false and 404 if product was not found", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
-        service.updateProductById = async (productId: string, product: Product): Promise<Product> => {
+        productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
             throw new NotFoundError(productId);
         };
-        
+
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
                 stock,
-                imageUrl
+                imageUrl,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, errors } = body;
@@ -1026,30 +1113,31 @@ describe("ProductController", function () {
 
     it("updateProductById should return success and 200 if product was not found", async function () {
         // Given
-        const productId = 'd487e446-9da0-4754-8f89-d22e278e1541';
-        const title = 'title';
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = 'Electronics';
+        const category = "Electronics";
         const stock = 1;
-        const imageUrl = 'test/shared/fixtures/random.jpg';
+        const imageUrl = "test/shared/fixtures/random.jpg";
 
-        service.updateProductById = async (productId: string, product: Product): Promise<Product> => {
-            return getProductWithData({id: productId, title, description, price, category, stock, imageUrl});
+        productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
+            return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
         };
-        
+
         // When
-        const response = await api.put(`/products/${productId}`)
+        const response = await api
+            .put(`/products/${productId}`)
             .field({
                 title,
                 description,
                 price,
                 category,
                 stock,
-                imageUrl
+                imageUrl,
             })
-            .attach('image', imageUrl);
-        
+            .attach("image", imageUrl);
+
         // Then
         const { body, statusCode } = response;
         const { success, data, errors } = body;
@@ -1059,17 +1147,15 @@ describe("ProductController", function () {
         expect(success).to.be.true;
         expect(statusCode).to.be.equal(httpStatus.OK);
         expect(errors).to.be.undefined;
-        expect(productViewModel).to.contain(
-            {
-                id: productId,
-                title,
-                description,
-                price,
-                category,
-                stock,
-                imageUrl,
-                ratings: 0
-            }
-        );
+        expect(productViewModel).to.contain({
+            id: productId,
+            title,
+            description,
+            price,
+            category,
+            stock,
+            imageUrl,
+            ratings: 0,
+        });
     });
 });
