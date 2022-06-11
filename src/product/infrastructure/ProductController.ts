@@ -2,6 +2,8 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
+import { NotFoundError } from "../../shared/error/NotFoundError";
+import { NotAllowError } from "../../shared/error/NotAllowError";
 import Controller from "../../shared/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
@@ -18,8 +20,6 @@ import UpdateProductByIdInteractor, { UpdateProductByIdData } from "../applicati
 import ProductService from "../domain/ProductService";
 import { ProductCategory } from "../domain/Product";
 import ProductViewModel from "./ProductViewModel";
-import { NotFoundError } from "../../shared/error/NotFoundError";
-import { NotAllowError } from "../../shared/error/NotAllowError";
 
 class ProductController implements Controller {
     public path = "/products";
@@ -233,6 +233,7 @@ class ProductController implements Controller {
         }
 
         const { id } = req.params;
+        const { userId } = req;
         const {
             title,
             description,
@@ -249,15 +250,23 @@ class ProductController implements Controller {
             stock: number;
         } = req.body;
         const productData = new ProductData({ title, description, price, imageUrl, category, stock });
-        const data: UpdateProductByIdData = { productId: id, productData };
+        const data: UpdateProductByIdData = { productId: id, productData, userId };
 
         try {
-            const interactor = new UpdateProductByIdInteractor(this.productService);
+            const interactor = new UpdateProductByIdInteractor(this.productService, this.userService);
             const result = await interactor.execute(data);
             const updatedProduct = ProductViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
         } catch (error: any) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                return;
+            }
+            if (error instanceof NotAllowError) {
+                res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
+                return;
+            }
+            next(new Error(error));
         }
     };
 }

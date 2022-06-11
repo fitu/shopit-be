@@ -20,10 +20,6 @@ class SignInUserInteractor {
         const { email, password } = data;
         
         const user = await this.userService.getUserByEmail(email);
-        if (!user) {
-            // TODO: do not hardcode this
-            throw new NotFoundError('User not found');
-        }
 
         const doPasswordMatch = await this.userService.checkPassword(user, password);
         if (!doPasswordMatch) {

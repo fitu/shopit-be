@@ -1,5 +1,7 @@
 import moment from "moment";
 
+import { NotAllowError } from "../../shared/error/NotAllowError";
+import { NotFoundError } from "../../shared/error/NotFoundError";
 import { doPasswordsMatch, hashPassword } from "../../shared/utils/hashUtils";
 import { Repository as UserRepository } from "../infrastructure/Repository";
 
@@ -21,15 +23,39 @@ class UserService {
     }
 
     public async getUserById(userId: string): Promise<User> {
-        return this.userRepository.getUserById(userId);
+        const user = this.userRepository.getUserById(userId);
+
+        if (!user) {
+            // TODO: do not hardcode this
+            throw new NotFoundError("User not found");
+        }
+
+        return user;
     }
 
-    public async getUserByEmail(email: string): Promise<User | null> {
-        return this.userRepository.getUserByEmail(email);
+    public async getUserByEmail(email: string): Promise<User> {
+        const user = this.userRepository.getUserByEmail(email);
+
+        if (!user) {
+            // TODO: do not hardcode this
+            throw new NotFoundError("User not found");
+        }
+
+        return user;
     }
 
     public async checkPassword(user: User, password: string): Promise<boolean> {
         return doPasswordsMatch(password, user.password);
+    }
+
+    public async checkUserPermissions(userId: string, userIdToCheck?: string): Promise<void> {
+        const isAdmin = await this.isAdmin(userId);
+        if (isAdmin || userId === userIdToCheck) {
+            return;
+        }
+
+        // TODO: do not hardcode this
+        throw new NotAllowError("You are not allow to do this action");
     }
 
     public async addTokenToUser(email: string, token: string): Promise<void> {

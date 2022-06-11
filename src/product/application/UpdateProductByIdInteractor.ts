@@ -1,3 +1,4 @@
+import UserService from "../../user/domain/UserService";
 import ProductService from "../domain/ProductService";
 import Product from "../domain/Product";
 
@@ -6,17 +7,24 @@ import ProductData from "./ProductData";
 interface UpdateProductByIdData {
     productId: string;
     productData: ProductData;
+    userId: string;
 }
 
 class UpdateProductByIdInteractor {
     private productService: ProductService;
+    private userService: UserService;
 
-    constructor(productService: ProductService) {
+    constructor(productService: ProductService, userService: UserService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
-    public async execute({ productId, productData }: UpdateProductByIdData): Promise<ProductData> {
-        // TODO: Validate
+    public async execute({ productId, productData, userId }: UpdateProductByIdData): Promise<ProductData> {
+        const product = await this.productService.getProductById(productId);
+
+        const productOwnerId = product?.user?.id;
+        await this.userService.checkUserPermissions(userId, productOwnerId);
+     
         const productToUpdate = new Product({
             id: productData.id,
             title: productData.title,
@@ -28,11 +36,8 @@ class UpdateProductByIdInteractor {
             stock: productData.stock,
         });
 
-        const product = await this.productService.updateProductById(productId, productToUpdate);
-
-        // TODO: throw exception if fails
-
-        return ProductData.fromModel(product);
+        const updatedProduct = await this.productService.updateProductById(productId, productToUpdate);
+        return ProductData.fromModel(updatedProduct);
     }
 }
 

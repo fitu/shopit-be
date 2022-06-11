@@ -53,7 +53,14 @@ class ProductService {
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product> {
-        return this.productRepository.updateProductById(productId, product);
+        const updatedProduct = this.productRepository.updateProductById(productId, product);
+        
+        if (!product) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError('Product not found');
+        }
+
+        return updatedProduct;
     }
 }
 

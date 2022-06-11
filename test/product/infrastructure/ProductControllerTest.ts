@@ -11,13 +11,14 @@ import UserService from "../../../src/user/domain/UserService";
 import ProductViewModel from "../../../src/product/infrastructure/ProductViewModel";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
+import { NotAllowError } from "../../../src/shared/error/NotAllowError";
+import { getRandomUserWithId } from "../../shared/utils/UserFactory";
 import fileUploadMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
-import { getProductWithData, getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
+import { getProductWithData, getRandomProduct, getRandomProductWithId, getRandomProductWithUser } from "../../shared/utils/ProductFactory";
 import { getMockPage } from "../../shared/utils/PageFactory";
 import TestRequest, { FAKE_JWT_USER_ID } from "../../shared/utils/requests";
 import Page from "../../../src/shared/Page";
 import App from "../../../src/app";
-import { getRandomUserWithId } from "../../shared/utils/UserFactory";
 
 describe("ProductController", function () {
     let productService: ProductService;
@@ -26,10 +27,13 @@ describe("ProductController", function () {
     let api: TestRequest;
     let sandbox: SinonSandbox;
 
+    let path: string;
+
     before(async () => {
         productService = <ProductService>{};
         userService = <UserService>{};
         const controller = new ProductController(productService, userService);
+        path = controller.path;
         const app = new App([controller]);
 
         await app.init();
@@ -65,7 +69,7 @@ describe("ProductController", function () {
         const productId = "foo";
 
         // When
-        const response = await api.get(`/products/${productId}`);
+        const response = await api.get(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -85,7 +89,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.get(`/products/${productId}`);
+        const response = await api.get(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -105,7 +109,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.get(`/products/${productId}`);
+        const response = await api.get(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -127,7 +131,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.get("/products");
+        const response = await api.get(`${path}`);
 
         // Then
         const { body, statusCode } = response;
@@ -150,7 +154,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.get("/products");
+        const response = await api.get(`${path}`);
 
         // Then
         const { body, statusCode } = response;
@@ -174,7 +178,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.get("/products");
+        const response = await api.get(`${path}`);
 
         // Then
         const { body, statusCode } = response;
@@ -197,7 +201,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.post("/products");
+        const response = await api.post(`${path}`);
 
         // Then
         const { body, statusCode } = response;
@@ -217,7 +221,7 @@ describe("ProductController", function () {
         const stock = 1;
 
         // When
-        const response = await api.post("/products").field({
+        const response = await api.post(`${path}`).field({
             title,
             description,
             price,
@@ -244,7 +248,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 description,
                 price,
@@ -273,7 +277,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -307,7 +311,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -336,7 +340,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -365,7 +369,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -394,7 +398,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -423,7 +427,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -453,7 +457,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -482,7 +486,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -511,7 +515,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -545,7 +549,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -589,7 +593,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .post("/products")
+            .post(`${path}`)
             .field({
                 title,
                 description,
@@ -618,7 +622,7 @@ describe("ProductController", function () {
         });
     });
 
-    it("removeProductId should return false and 422 if id is not uuid", async function () {
+    it("deleteProductId should return false and 422 if id is not uuid", async function () {
         // Given
         const productId = "foo";
 
@@ -627,7 +631,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.delete(`/products/${productId}`);
+        const response = await api.delete(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -638,7 +642,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("removeProductId should return false and 404 if product was not found", async function () {
+    it("deleteProductId should return false and 404 if product was not found", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -647,7 +651,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.delete(`/products/${productId}`);
+        const response = await api.delete(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -658,7 +662,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("removeProductId should return false and 422 if product was found but user is not admin nor the owner", async function () {
+    it("deleteProductId should return false and 422 if product was found but user is not admin nor the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -666,12 +670,13 @@ describe("ProductController", function () {
             return getRandomProduct();
         };
 
-        userService.isAdmin = async (userid: string): Promise<boolean> => {
-            return false;
+        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string) : Promise<void> => {
+            // TODO: do not hardcode this
+            throw new NotAllowError("You are not allow to do this action");
         };
 
         // When
-        const response = await api.delete(`/products/${productId}`);
+        const response = await api.delete(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -682,7 +687,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("removeProductId should return false and 200 if product was found and user is admin", async function () {
+    it("deleteProductId should return true and 200 if product was found and user is admin", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -690,8 +695,8 @@ describe("ProductController", function () {
             return getRandomProduct();
         };
 
-        userService.isAdmin = async (userid: string): Promise<boolean> => {
-            return true;
+        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string) : Promise<void> => {
+            return;
         };
 
         productService.deleteProductById = async (productId: string): Promise<void> => {
@@ -699,7 +704,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.delete(`/products/${productId}`);
+        const response = await api.delete(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -710,7 +715,7 @@ describe("ProductController", function () {
         expect(errors).to.be.undefined;
     });
 
-    it("removeProductId should return true and 200 if product was found and user is the owner", async function () {
+    it("deleteProductId should return true and 200 if product was found and user is the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const userId = FAKE_JWT_USER_ID;
@@ -729,7 +734,7 @@ describe("ProductController", function () {
         };
 
         // When
-        const response = await api.delete(`/products/${productId}`);
+        const response = await api.delete(`${path}/${productId}`);
 
         // Then
         const { body, statusCode } = response;
@@ -751,7 +756,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 description,
                 price,
@@ -781,7 +786,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -816,7 +821,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -846,7 +851,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -876,7 +881,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -906,7 +911,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -936,7 +941,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -967,7 +972,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -997,7 +1002,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -1027,7 +1032,7 @@ describe("ProductController", function () {
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -1057,7 +1062,7 @@ describe("ProductController", function () {
         const imageUrl = "test/shared/fixtures/random.jpg";
 
         // When
-        const response = await api.put(`/products/${productId}`).field({
+        const response = await api.put(`${path}/${productId}`).field({
             title,
             description,
             price,
@@ -1085,13 +1090,13 @@ describe("ProductController", function () {
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
-        productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
             throw new NotFoundError(productId);
         };
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,
@@ -1111,7 +1116,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("updateProductById should return success and 200 if product was not found", async function () {
+    it("updateProductById should return false and 404 if product was not found", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const title = "title";
@@ -1121,13 +1126,165 @@ describe("ProductController", function () {
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
+        };
+
+        userService.isAdmin = async (userid: string): Promise<boolean> => {
+            return true;
+        };
+
+        productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
+            throw new NotFoundError(productId);
+        };
+
+        // When
+        const response = await api
+            .put(`${path}/${productId}`)
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock,
+                imageUrl,
+            })
+            .attach("image", imageUrl);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, errors } = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
+        expect(errors).to.be.not.undefined;
+    });
+
+    it("updateProductById should return false and 422 if product was found but user is not admin nor the owner", async function () {
+        // Given
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
+        const description = "description";
+        const price = 11.11;
+        const category = "Electronics";
+        const stock = 1;
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return getRandomProduct();
+        };
+
+        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string) : Promise<void> => {
+            // TODO: do not hardcode this
+            throw new NotAllowError("You are not allow to do this action");
+        };
+
+        // When
+        const response = await api
+            .put(`${path}/${productId}`)
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock,
+                imageUrl,
+            })
+            .attach("image", imageUrl);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, errors } = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.UNAUTHORIZED);
+        expect(errors).to.be.not.undefined;
+    });
+
+    it("updateProductById should return true and 200 if product was found and user is admin", async function () {
+        // Given
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
+        const description = "description";
+        const price = 11.11;
+        const category = "Electronics";
+        const stock = 1;
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return getRandomProduct();
+        };
+
+        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string) : Promise<void> => {
+            return;
+        };
+
         productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
             return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
         };
 
         // When
         const response = await api
-            .put(`/products/${productId}`)
+            .put(`${path}/${productId}`)
+            .field({
+                title,
+                description,
+                price,
+                category,
+                stock,
+                imageUrl,
+            })
+            .attach("image", imageUrl);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, data, errors } = body;
+
+        const productViewModel = data as ProductViewModel;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(errors).to.be.undefined;
+        expect(productViewModel).to.contain({
+            id: productId,
+            title,
+            description,
+            price,
+            category,
+            stock,
+            imageUrl,
+            ratings: 0,
+        });
+    });
+
+    it("updateProductById should return true and 200 if product was found and user is the owner", async function () {
+        // Given
+        const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
+        const title = "title";
+        const description = "description";
+        const price = 11.11;
+        const category = "Electronics";
+        const stock = 1;
+        const imageUrl = "test/shared/fixtures/random.jpg";
+
+        const userId = FAKE_JWT_USER_ID;
+        const user = getRandomUserWithId(userId);
+
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return getProductWithData({ user });
+        };
+
+        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string) : Promise<void> => {
+            return;
+        };
+
+        productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
+            return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
+        };
+
+        // When
+        const response = await api
+            .put(`${path}/${productId}`)
             .field({
                 title,
                 description,

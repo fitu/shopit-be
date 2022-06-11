@@ -1,6 +1,3 @@
-import Product from "../../product/domain/Product";
-import { NotFoundError } from "../../shared/error/NotFoundError";
-import { NotAllowError } from "../../shared/error/NotAllowError";
 import UserService from "../../user/domain/UserService";
 import ProductService from "../domain/ProductService";
 
@@ -20,27 +17,11 @@ class DeleteProductByIdInteractor {
 
     public async execute({ productId, userId }: DeleteProductByIdData): Promise<void> {
         const product = await this.productService.getProductById(productId);
-        if (!product) {
-            // TODO: do not hardcode this
-            throw new NotFoundError('Product not found');
-        }
 
-        const isAllowToDelete = await this.hasPermissions(product, userId);
-        if (!isAllowToDelete) {
-            // TODO: do not hardcode this
-            throw new NotAllowError('You are not allow to do this action');
-        }
+        const productOwnerId = product?.user?.id;
+        await this.userService.checkUserPermissions(userId, productOwnerId);
 
         await this.productService.deleteProductById(productId);
-    }
-
-    private async hasPermissions(product: Product, userId: string): Promise<boolean> {
-        if (product?.user?.id === userId) {
-            return true;
-        }
-
-        const isAdmin = await this.userService.isAdmin(userId);
-        return isAdmin;
     }
 }
 
