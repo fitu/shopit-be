@@ -29,7 +29,7 @@ describe("ProductController", function () {
 
     let path: string;
 
-    before(async () => {
+    beforeEach(async () => {
         productService = <ProductService>{};
         userService = <UserService>{};
         const controller = new ProductController(productService, userService);
@@ -37,12 +37,10 @@ describe("ProductController", function () {
         const app = new App([controller]);
 
         await app.init();
-        server = await app.listen();
+        server = await app.listen(false);
         const testApi = await supertest(server);
         api = new TestRequest(testApi);
-    });
 
-    beforeEach(() => {
         sandbox = sinon.createSandbox();
         sandbox.stub(fileUploadMiddleware, "fileUpload").callsFake((): any => {
             return {
@@ -58,10 +56,8 @@ describe("ProductController", function () {
 
     afterEach(() => {
         sandbox.restore();
-    });
-
-    after(() => {
         server.close();
+
     });
 
     it("getProductById should return false and 422 if product id not uuid", async function () {
@@ -725,8 +721,8 @@ describe("ProductController", function () {
             return getProductWithData({ user });
         };
 
-        userService.isAdmin = async (userid: string): Promise<boolean> => {
-            return false;
+        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string) : Promise<void> => {
+            return;
         };
 
         productService.deleteProductById = async (productId: string): Promise<void> => {
@@ -1080,7 +1076,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("updateProductById should return false and 404 if product was not found", async function () {
+    it("updateProductById should return false and 404 if product was not found before checking permissions", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const title = "title";
@@ -1130,8 +1126,8 @@ describe("ProductController", function () {
             return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
         };
 
-        userService.isAdmin = async (userid: string): Promise<boolean> => {
-            return true;
+        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string) : Promise<void> => {
+            return;
         };
 
         productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {

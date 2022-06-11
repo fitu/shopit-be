@@ -38,7 +38,7 @@ class App {
         this.initializeErrorHandling();
     }
 
-    public async listen(): Promise<Server> {
+    public async listen(isVerbose = true): Promise<Server> {
         const PRIVATE_KEY_FILE_NAME = "server.key";
         const privateKey = await fs.readFile(PRIVATE_KEY_FILE_NAME);
 
@@ -52,7 +52,7 @@ class App {
         //     });
 
         const server = this.app.listen(process.env.PORT, () => {
-            console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
+            isVerbose && console.log(`Server started on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`);
         });
 
         // this.io.attach(server);
