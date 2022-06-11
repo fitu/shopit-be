@@ -36,7 +36,7 @@ class UserService {
         const user = await this.userRepository.getUserByEmail(email);
 
         user.resetPasswordToken = token;
-        user.resetPasswordExpirationDate = moment().add(1, 'day').toDate();
+        user.resetPasswordExpirationDate = moment().add(1, "day").toDate();
 
         await this.userRepository.update(user);
     }
@@ -61,9 +61,9 @@ class UserService {
         if (!user) {
             return false;
         }
-        
+
         // TODO: do not hardcode this
-        return user.role === 'admin';
+        return user.role === "admin";
     }
 }
 

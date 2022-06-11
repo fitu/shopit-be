@@ -90,12 +90,13 @@ class UserRepository implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        return UserDao.findByPk(userId);
+        const user = await UserDao.findByPk(userId);
+        return user?.toModel();
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
         const user = await UserDao.findOne({ where: { email } });
-        return user.toModel();
+        return user?.toModel();
     }
 }
 
