@@ -6,7 +6,7 @@ import { Repository } from "../Repository";
 import ReviewDao from "./ReviewDao";
 
 class ReviewRepository implements Repository {
-    public async create(review: Review, productId: string, userId: string): Promise<Review> {
+    public async insert(review: Review, productId: string, userId: string): Promise<Review> {
         const newReview = await ReviewDao.create({
             ...(review.id && { id: review.id }),
             name: review.name,
@@ -23,7 +23,7 @@ class ReviewRepository implements Repository {
         return newReview.toModel();
     }
 
-    public async createBulk(
+    public async insertBatch(
         reviews: Array<Review>,
         productIds: Array<string>,
         userIds: Array<string>

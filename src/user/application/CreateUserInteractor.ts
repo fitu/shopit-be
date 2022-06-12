@@ -25,7 +25,7 @@ class CreateUserInteractor {
             role: data.userData.role,
             password: data.userData.password,
         });
-        const createdUser = await this.userService.create(newUser);
+        const createdUser = await this.userService.insert(newUser);
 
         this.emailService.sendWelcomeEmail(data.userData.email);
 

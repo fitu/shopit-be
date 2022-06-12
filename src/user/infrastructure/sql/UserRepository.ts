@@ -6,7 +6,7 @@ import { Repository } from "../Repository";
 import UserDao from "./UserDao";
 
 class UserRepository implements Repository {
-    public async create(user: User): Promise<User> {
+    public async insert(user: User): Promise<User> {
         const userToSave = {
             ...(user.id && { id: user.id }),
             firstName: user.firstName,
@@ -24,7 +24,7 @@ class UserRepository implements Repository {
         return newUser.toModel();
     }
 
-    public async createBulk(users: Array<User>): Promise<Array<User>> {
+    public async insertBatch(users: Array<User>): Promise<Array<User>> {
         const usersToSave = users.map((user) => {
             const cart = {
                 id: user.cart.id,

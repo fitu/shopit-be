@@ -10,11 +10,11 @@ import { isEmpty } from "lodash";
 class UserRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
-    public async create(user: User): Promise<User> {
+    public async insert(user: User): Promise<User> {
         return new Promise(() => {});
     }
 
-    public async createBulk(users: Array<User>): Promise<Array<User>> {
+    public async insertBatch(users: Array<User>): Promise<Array<User>> {
         return new Promise(() => {});
     }
 

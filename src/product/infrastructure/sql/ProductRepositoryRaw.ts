@@ -9,21 +9,8 @@ import { Repository } from "../Repository";
 
 import ProductDao, { PRODUCT_TABLE} from "./ProductDao";
 
-// TODO: complete this
 class ProductRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
-
-    public async create(product: Product, userId: string): Promise<Product> {
-        return new Promise(() => {});
-    }
-
-    public async createBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        return new Promise(() => {});
-    }
-
-    public async update(product: Product, userId: string): Promise<Product> {
-        return new Promise(() => {});
-    }
 
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const products = await this.instance.query(
@@ -63,6 +50,14 @@ class ProductRepositoryRaw implements Repository {
         );
 
         return !isEmpty(products) ? products.map((product) => product.toModel())[0] : null;
+    }
+
+    public async insert(product: Product, userId: string): Promise<Product> {
+        return new Promise(() => {});
+    }
+
+    public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
+        return new Promise(() => {});
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {

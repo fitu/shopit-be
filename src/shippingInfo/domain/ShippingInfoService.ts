@@ -9,12 +9,12 @@ class ShippingInfoService {
         this.shippingInfoRepository = shippingInfoRepository;
     }
 
-    public async create(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
-        return this.shippingInfoRepository.create(shippingInfo, userId);
+    public async insert(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
+        return this.shippingInfoRepository.insert(shippingInfo, userId);
     }
 
-    public async createBulk(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
-        return this.shippingInfoRepository.createBulk(shippingsInfo, userIds);
+    public async insertBatch(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
+        return this.shippingInfoRepository.insertBatch(shippingsInfo, userIds);
     }
 }
 

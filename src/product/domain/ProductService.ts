@@ -18,14 +18,14 @@ class ProductService {
         this.productRepository = productRepository;
     }
 
-    public async create(product: Product, userId: string): Promise<Product> {
-        const newProduct = this.productRepository.create(product, userId);
+    public async insert(product: Product, userId: string): Promise<Product> {
+        const newProduct = this.productRepository.insert(product, userId);
         // this.io.emit("products", { type: "create", data: newProduct });
         return newProduct;
     }
 
-    public async createBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        return this.productRepository.createBulk(products, userIds);
+    public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
+        return this.productRepository.insertBatch(products, userIds);
     }
 
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {

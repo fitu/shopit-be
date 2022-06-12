@@ -63,21 +63,21 @@ const seedDb = async () => {
 const createUsers = async (userService: UserService): Promise<void> => {
     const usersCSV = await readFromCsv<UserCSV>(USERS_CSV_PATH);
     const users = usersCSV.map((userCSV) => UserCSV.toModel(userCSV));
-    await userService.createBulk(users);
+    await userService.insertBatch(users);
 };
 
 const createShippingsInfo = async (shippingInfoService: ShippingInfoService): Promise<void> => {
     const shippingsInfoCSV = await readFromCsv<ShippingInfoCSV>(SHIPPINGS_INFO_CSV_PATH);
     const shippingsInfo = shippingsInfoCSV.map((shippingInfoCSV) => ShippingInfoCSV.toModel(shippingInfoCSV));
     const userIds = shippingsInfoCSV.map((shippingInfoCSV) => shippingInfoCSV.userId);
-    await shippingInfoService.createBulk(shippingsInfo, userIds);
+    await shippingInfoService.insertBatch(shippingsInfo, userIds);
 };
 
 const createProducts = async (productService: ProductService): Promise<void> => {
     const productsCSV = await readFromCsv<ProductCSV>(PRODUCTS_CSV_PATH);
     const products = productsCSV.map((productCSV) => ProductCSV.toModel(productCSV));
     const userIds = productsCSV.map((productCSV) => productCSV.userId);
-    await productService.createBulk(products, userIds);
+    await productService.insertBatch(products, userIds);
 };
 
 const createReviews = async (reviewService: ReviewService): Promise<void> => {
@@ -85,7 +85,7 @@ const createReviews = async (reviewService: ReviewService): Promise<void> => {
     const reviews = reviewsCSV.map((reviewCSV) => ReviewCSV.toModel(reviewCSV));
     const productIds = reviewsCSV.map((reviewCSV) => reviewCSV.productId);
     const userIds = reviewsCSV.map((reviewCSV) => reviewCSV.userId);
-    await reviewService.createBulk(reviews, productIds, userIds);
+    await reviewService.insertBatch(reviews, productIds, userIds);
 };
 
 seedDb();

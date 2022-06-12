@@ -7,7 +7,7 @@ import { Repository } from "../Repository";
 import ReviewDocument, { ReviewDao } from "./ReviewDao";
 
 class ReviewRepository implements Repository {
-    public async create(review: Review, productId: string, userId: string): Promise<Review> {
+    public async insert(review: Review, productId: string, userId: string): Promise<Review> {
         const reviewToSave: ReviewDao = {
             ...review,
             _id: review.id,
@@ -18,7 +18,7 @@ class ReviewRepository implements Repository {
         return newReview.toModel();
     }
 
-    public async createBulk(
+    public async insertBatch(
         reviews: Array<Review>,
         productIds: Array<string>,
         userIds: Array<string>

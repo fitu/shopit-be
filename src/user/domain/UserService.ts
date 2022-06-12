@@ -14,12 +14,12 @@ class UserService {
         this.userRepository = userRepository;
     }
 
-    public async create(user: User): Promise<User> {
-        return this.userRepository.create(user);
+    public async insert(user: User): Promise<User> {
+        return this.userRepository.insert(user);
     }
 
-    public async createBulk(users: Array<User>): Promise<Array<User>> {
-        return this.userRepository.createBulk(users);
+    public async insertBatch(users: Array<User>): Promise<Array<User>> {
+        return this.userRepository.insertBatch(users);
     }
 
     public async getUserById(userId: string): Promise<User> {

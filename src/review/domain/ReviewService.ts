@@ -9,16 +9,16 @@ class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public async create(review: Review, productId: string, userId: string): Promise<Review> {
-        return this.reviewRepository.create(review, productId, userId);
+    public async insert(review: Review, productId: string, userId: string): Promise<Review> {
+        return this.reviewRepository.insert(review, productId, userId);
     }
 
-    public async createBulk(
+    public async insertBatch(
         reviews: Array<Review>,
         productIds: Array<string>,
         userIds: Array<string>
     ): Promise<Array<Review>> {
-        return this.reviewRepository.createBulk(reviews, productIds, userIds);
+        return this.reviewRepository.insertBatch(reviews, productIds, userIds);
     }
 }
 

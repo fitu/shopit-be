@@ -8,13 +8,13 @@ import { Repository } from "../Repository";
 import ProductDocument, { ProductDao } from "./ProductDao";
 
 class ProductRepository implements Repository {
-    public async create(product: Product, userId: string): Promise<Product> {
+    public async insert(product: Product, userId: string): Promise<Product> {
         const productToSave: ProductDao = { ...product, userId: new Types.ObjectId(userId) };
         const newProduct = await ProductDocument.create(productToSave);
         return newProduct.toModel();
     }
 
-    public async createBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
+    public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         const productsUsers: Array<[Product, string]> = zip(products, userIds);
         const productsToSave: Array<ProductDao> = productsUsers.map(([product, userId]) => ({
             ...product,
@@ -22,10 +22,6 @@ class ProductRepository implements Repository {
         }));
         const newProducts = await ProductDocument.insertMany(productsToSave);
         return newProducts.map((newProduct) => newProduct.toModel());
-    }
-
-    public async update(product: Product, userId: string): Promise<Product> {
-        return new Promise(() => {});
     }
 
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {

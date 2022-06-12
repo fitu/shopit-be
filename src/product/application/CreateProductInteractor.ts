@@ -25,7 +25,7 @@ class CreateProductInteractor {
             category: productData.category,
             stock: productData.stock,
         });
-        const createdProduct = await this.productService.create(newProduct, userId);
+        const createdProduct = await this.productService.insert(newProduct, userId);
 
         return ProductData.fromModel(createdProduct);
     }

@@ -5,7 +5,7 @@ import { Repository } from "../Repository";
 import PaymentInfoDao from "./PaymentInfoDao";
 
 class PaymentInfoRepository implements Repository {
-    public async create(paymentInfo: PaymentInfo, userId: string): Promise<PaymentInfo> {
+    public async insert(paymentInfo: PaymentInfo, userId: string): Promise<PaymentInfo> {
         const newPaymentInfo = await PaymentInfoDao.create({
             status: paymentInfo.status,
         });
@@ -16,7 +16,7 @@ class PaymentInfoRepository implements Repository {
         return newPaymentInfo.toModel();
     }
 
-    public async createBulk(paymentsInfo: Array<PaymentInfo>, userIds: Array<string>): Promise<Array<PaymentInfo>> {
+    public async insertBatch(paymentsInfo: Array<PaymentInfo>, userIds: Array<string>): Promise<Array<PaymentInfo>> {
         const paymentsInfoToSave = paymentsInfo.map((paymentInfo) => {
             return {
                 status: paymentInfo.status,

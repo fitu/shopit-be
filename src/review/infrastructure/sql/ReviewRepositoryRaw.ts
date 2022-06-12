@@ -10,11 +10,11 @@ import ReviewDao from "./ReviewDao";
 class ReviewRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
-    public async create(review: Review, productId: string, userId: string): Promise<Review> {
+    public async insert(review: Review, productId: string, userId: string): Promise<Review> {
         return new Promise(() => {});
     }
 
-    public async createBulk(
+    public async insertBatch(
         reviews: Array<Review>,
         productIds: Array<string>,
         userIds: Array<string>

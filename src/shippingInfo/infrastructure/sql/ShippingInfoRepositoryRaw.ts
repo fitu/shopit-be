@@ -9,11 +9,11 @@ import ShippingInfoDao from "./ShippingInfoDao";
 class ShippingInfoRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
-    public async create(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
+    public async insert(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
         return new Promise(() => {});
     }
 
-    public async createBulk(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
+    public async insertBatch(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
         return new Promise(() => {});
     }
 }

@@ -80,14 +80,14 @@ const createUsers = async (userService: UserService): Promise<void> => {
         return { ...user, shippingsInfo: userShippingsInfo };
     });
 
-    await userService.createBulk(usersWithShippingInfo);
+    await userService.insertBatch(usersWithShippingInfo);
 };
 
 const createProducts = async (productService: ProductService): Promise<void> => {
     const productsCSV = await readFromCsv<ProductCSV>(PRODUCTS_CSV_PATH);
     const products = productsCSV.map((productCSV) => ProductCSV.toModel(productCSV));
     const userIds = productsCSV.map((productCSV) => convertUUIDToId(productCSV.userId));
-    await productService.createBulk(products, userIds);
+    await productService.insertBatch(products, userIds);
 };
 
 const createReviews = async (reviewService: ReviewService): Promise<void> => {
@@ -95,7 +95,7 @@ const createReviews = async (reviewService: ReviewService): Promise<void> => {
     const reviews = reviewsCSV.map((reviewCSV) => ReviewCSV.toModel(reviewCSV));
     const productIds = reviewsCSV.map((reviewCSV) => convertUUIDToId(reviewCSV.productId));
     const userIds = reviewsCSV.map((reviewCSV) => convertUUIDToId(reviewCSV.userId));
-    await reviewService.createBulk(reviews, productIds, userIds);
+    await reviewService.insertBatch(reviews, productIds, userIds);
 };
 
 seedDb();

@@ -8,15 +8,11 @@ import { Repository } from "../Repository";
 import ProductDocument, { ProductDao } from "./ProductDao";
 
 class ProductRepositoryRaw implements Repository {
-    public async create(product: Product, userId: string): Promise<Product> {
+    public async insert(product: Product, userId: string): Promise<Product> {
         return new Promise(() => {});
     }
 
-    public async createBulk(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        return new Promise(() => {});
-    }
-
-    public async update(product: Product, userId: string): Promise<Product> {
+    public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         return new Promise(() => {});
     }
 

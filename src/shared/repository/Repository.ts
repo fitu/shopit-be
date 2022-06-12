@@ -23,7 +23,7 @@ import NoSqlProductRepositoryRaw from "../../product/infrastructure/noSql/Produc
 import NoSqlUserRepositoryRaw from "../../user/infrastructure/noSql/UserRepositoryRaw";
 import NoSqlReviewRepositoryRaw from "../../review/infrastructure/noSql/ReviewRepositoryRaw";
 import SendGridRepository from "../integrations/emails/SendGridRepository";
-import Database, { DbType, DbQuery } from "../db/database";
+import { DbType, DbQuery } from "../db/database";
 
 type Repos = {
     cartRepository: CartRepository;
