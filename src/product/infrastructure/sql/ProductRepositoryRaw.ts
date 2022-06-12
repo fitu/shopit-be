@@ -105,7 +105,15 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        return new Promise(() => {});
+        const productsWithUserIdsPromises = products
+            .map((product, index) => [product, userIds[index]])
+            .map(async (productWithUserId) => {
+                const product = productWithUserId[0] as Product;
+                const userId = productWithUserId[1] as string;
+                return this.insert(product, userId);
+            });
+
+        return await Promise.all(productsWithUserIdsPromises);
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {
@@ -120,7 +128,39 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
-        return new Promise(() => {});
+        await this.instance.query(
+            `
+                UPDATE ${PRODUCT_TABLE}
+                SET 
+                    title = :title,
+                    description = :description,
+                    price = :price,
+                    ratings = :ratings,
+                    "imageUrl" = :imageUrl,
+                    category = :category,
+                    stock = :stock,
+                    "createdAt" = :createdAt,
+                    "updatedAt" = :updatedAt,
+                    "userId" = :userId
+                WHERE id = '${productId}';
+            `,
+            {
+                replacements: {
+                    title: product.title,
+                    description: product.description,
+                    price: +product.price,
+                    ratings: +product.ratings,
+                    imageUrl: product.imageUrl,
+                    category: product.category,
+                    stock: +product.stock,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    userId: product.user.id,
+                },
+            }
+        );
+
+        return product;
     }
 }
 

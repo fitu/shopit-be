@@ -4,6 +4,8 @@ import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Review from "../../domain/Review";
 
+const REVIEW_TABLE = "reviews";
+
 interface ReviewAttributes {
     id: string;
     name: string;
@@ -64,11 +66,11 @@ const init = (sequelize: Sequelize): void => {
             },
         },
         {
-            tableName: "review",
+            tableName: REVIEW_TABLE,
             sequelize,
         }
     );
 };
 
-export { init };
+export { init, REVIEW_TABLE };
 export default ReviewDao;

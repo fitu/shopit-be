@@ -2,8 +2,7 @@ import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
-import CartDao from "../../../cart/infrastructure/sql/CartDao";
+import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 import UserDao, { USER_TABLE } from "./UserDao";
@@ -48,7 +47,7 @@ class UserRepositoryRaw implements Repository {
                     lastName: user.lastName,
                     email: user.email,
                     role: user.role,
-                    password: user.password,
+                    password: hashPasswordSync(user.password),
                     resetPasswordToken: user.resetPasswordToken,
                     resetPasswordExpirationDate: user.resetPasswordExpirationDate,
                     createdAt: new Date().toISOString(),
@@ -62,7 +61,7 @@ class UserRepositoryRaw implements Repository {
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
         const userPromises = users.map(async (user) => {
-            return this.insert(user)
+            return this.insert(user);
         });
 
         return await Promise.all(userPromises);

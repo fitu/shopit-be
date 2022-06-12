@@ -14,7 +14,7 @@ class ShippingInfoRepositoryRaw implements Repository {
 
         await this.instance.query(
             `
-                INSERT INTO ${SHIPPING_INFO_TABLE} (
+                INSERT INTO "${SHIPPING_INFO_TABLE}" (
                     id,
                     address,
                     city,

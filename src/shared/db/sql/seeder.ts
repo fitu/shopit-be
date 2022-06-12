@@ -11,7 +11,7 @@ import UserService from "../../../user/domain/UserService";
 import validateEnv from "../../env/envUtils";
 import getRepositories from "../../../shared/repository/Repository";
 import { readFromCsv } from "../../../shared/data/csvUtils";
-import { DbQuery, DbType } from "../database";
+import { DbType } from "../database";
 
 import Db from "./SqlDb";
 
@@ -35,9 +35,11 @@ const seedDb = async () => {
         const envsWithType = {
             ...env,
             DB_TYPE: DbType.SQL.toString(),
-            DB_QUERIES: DbQuery.ORM.toString(),
         };
-        const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories(envsWithType, initializedDb);
+        const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories(
+            envsWithType,
+            initializedDb
+        );
 
         // Create socket
         const io = new Server();
@@ -55,7 +57,7 @@ const seedDb = async () => {
     } catch (error: any) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
-        console.log('DB fulfilled!');
+        console.log("DB fulfilled!");
         process.exit();
     }
 };
