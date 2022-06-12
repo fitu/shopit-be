@@ -89,13 +89,13 @@ class ProductRepository implements Repository {
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
-        const updatedProduct = await ProductDao.findByPk(productId);
+        const productToUpdate = await ProductDao.findByPk(productId);
 
-        if (!updatedProduct) {
+        if (!productToUpdate) {
             return null;
         }
 
-        updatedProduct.update({
+        const updatedProduct = await productToUpdate.update({
             title: product.title,
             description: product.description,
             price: product.price,
@@ -104,7 +104,7 @@ class ProductRepository implements Repository {
             stock: product.stock,
         });
 
-        return updatedProduct;
+        return updatedProduct.toModel();
     }
 }
 

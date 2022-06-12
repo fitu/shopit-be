@@ -16,7 +16,7 @@ import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product, { ProductCategory } from "../../domain/Product";
 
-const PRODUCT_TABLE = 'products';
+const PRODUCT_TABLE = "products";
 
 interface ProductAttributes {
     id: string;
@@ -29,7 +29,7 @@ interface ProductAttributes {
     stock: number;
 }
 
-interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> {}
+interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
 
 class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
     public id!: string;
@@ -123,18 +123,18 @@ const init = (sequelize: Sequelize): void => {
                     // TODO: get from model
                     isIn: [
                         [
-                            'Electronics',
-                            'Cameras',
-                            'Laptops',
-                            'Accessories',
-                            'Headphones',
-                            'Food',
-                            'Books',
-                            'Clothes/Shoes',
-                            'Beauty/Health',
-                            'Sports',
-                            'Outdoor',
-                            'Home',
+                            "Electronics",
+                            "Cameras",
+                            "Laptops",
+                            "Accessories",
+                            "Headphones",
+                            "Food",
+                            "Books",
+                            "Clothes/Shoes",
+                            "Beauty/Health",
+                            "Sports",
+                            "Outdoor",
+                            "Home",
                         ],
                     ],
                 },

@@ -1,13 +1,13 @@
 import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
 
 import { wasDeletionSuccessful } from "../../../shared/utils/sqlUtils";
 import Page from "../../../shared/Page";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDao, { PRODUCT_TABLE} from "./ProductDao";
+import ProductDao, { PRODUCT_TABLE } from "./ProductDao";
 
 class ProductRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
@@ -24,7 +24,7 @@ class ProductRepositoryRaw implements Repository {
                 mapToModel: true,
             }
         );
-        
+
         const productModels = products.map((product) => product.toModel());
         const totalDocuments = products.length;
 
@@ -53,7 +53,53 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async insert(product: Product, userId: string): Promise<Product> {
-        return new Promise(() => {});
+        await this.instance.query(
+            `
+                INSERT INTO ${PRODUCT_TABLE} (
+                    id,
+                    title,
+                    description,
+                    price,
+                    ratings,
+                    "imageUrl",
+                    category,
+                    stock,
+                    "createdAt",
+                    "updatedAt",
+                    "userId"
+                )
+                VALUES (
+                    :id,
+                    :title,
+                    :description,
+                    :price,
+                    :ratings,
+                    :imageUrl,
+                    :category,
+                    :stock,
+                    :createdAt,
+                    :updatedAt,
+                    :userId
+                );
+            `,
+            {
+                replacements: {
+                    id: product.id || uuidv4(),
+                    title: product.title,
+                    description: product.description,
+                    price: +product.price,
+                    ratings: +product.ratings,
+                    imageUrl: product.imageUrl,
+                    category: product.category,
+                    stock: +product.stock,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    userId
+                },
+            }
+        );
+
+        return product;
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
@@ -61,7 +107,7 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {
-        const [_, metadata]  = await this.instance.query(
+        const [_, metadata] = await this.instance.query(
             `
                 DELETE FROM ${PRODUCT_TABLE}
                 WHERE id = '${productId}';
