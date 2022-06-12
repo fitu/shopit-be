@@ -1,21 +1,71 @@
+import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
+
 import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
 import CartDao from "../../../cart/infrastructure/sql/CartDao";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
-
 import UserDao, { USER_TABLE } from "./UserDao";
-import { isEmpty } from "lodash";
 
 class UserRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
     public async insert(user: User): Promise<User> {
-        return new Promise(() => {});
+        const userId = user.id || uuidv4();
+
+        await this.instance.query(
+            `
+                INSERT INTO ${USER_TABLE} (
+                    id,
+                    "firstName",
+                    "lastName",
+                    email,
+                    role,
+                    password,
+                    "resetPasswordToken",
+                    "resetPasswordExpirationDate",
+                    "createdAt",
+                    "updatedAt"
+                )
+                VALUES (
+                    :id,
+                    :firstName,
+                    :lastName,
+                    :email,
+                    :role,
+                    :password,
+                    :resetPasswordToken,
+                    :resetPasswordExpirationDate,
+                    :createdAt,
+                    :updatedAt
+                );
+            `,
+            {
+                replacements: {
+                    id: userId,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    role: user.role,
+                    password: user.password,
+                    resetPasswordToken: user.resetPasswordToken,
+                    resetPasswordExpirationDate: user.resetPasswordExpirationDate,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                },
+            }
+        );
+
+        return { ...user, id: userId };
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        return new Promise(() => {});
+        const userPromises = users.map(async (user) => {
+            return this.insert(user)
+        });
+
+        return await Promise.all(userPromises);
     }
 
     public async update(user: User): Promise<User> {

@@ -53,6 +53,8 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async insert(product: Product, userId: string): Promise<Product> {
+        const productId = product.id || uuidv4();
+
         await this.instance.query(
             `
                 INSERT INTO ${PRODUCT_TABLE} (
@@ -84,7 +86,7 @@ class ProductRepositoryRaw implements Repository {
             `,
             {
                 replacements: {
-                    id: product.id || uuidv4(),
+                    id: productId,
                     title: product.title,
                     description: product.description,
                     price: +product.price,
@@ -94,12 +96,12 @@ class ProductRepositoryRaw implements Repository {
                     stock: +product.stock,
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
-                    userId
+                    userId,
                 },
             }
         );
 
-        return product;
+        return { ...product, id: productId };
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
