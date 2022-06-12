@@ -23,7 +23,7 @@ class UserService {
     }
 
     public async getUserById(userId: string): Promise<User> {
-        const user = this.userRepository.getUserById(userId);
+        const user = await this.userRepository.getUserById(userId);
 
         if (!user) {
             // TODO: do not hardcode this
@@ -34,7 +34,7 @@ class UserService {
     }
 
     public async getUserByEmail(email: string): Promise<User> {
-        const user = this.userRepository.getUserByEmail(email);
+        const user = await this.userRepository.getUserByEmail(email);
 
         if (!user) {
             // TODO: do not hardcode this

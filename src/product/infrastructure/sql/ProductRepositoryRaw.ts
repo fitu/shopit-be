@@ -12,6 +12,7 @@ import ProductDao, { PRODUCT_TABLE } from "./ProductDao";
 class ProductRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
+    // TODO: should I retrieve also the users?
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const products = await this.instance.query(
             `
@@ -132,6 +133,7 @@ class ProductRepositoryRaw implements Repository {
             `
                 UPDATE ${PRODUCT_TABLE}
                 SET 
+                    id = :id,
                     title = :title,
                     description = :description,
                     price = :price,
@@ -146,6 +148,7 @@ class ProductRepositoryRaw implements Repository {
             `,
             {
                 replacements: {
+                    id: productId,
                     title: product.title,
                     description: product.description,
                     price: +product.price,
@@ -155,7 +158,7 @@ class ProductRepositoryRaw implements Repository {
                     stock: +product.stock,
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
-                    userId: product.user.id,
+                    userId: product?.user?.id,
                 },
             }
         );

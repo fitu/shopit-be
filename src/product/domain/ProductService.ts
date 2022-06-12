@@ -19,7 +19,7 @@ class ProductService {
     }
 
     public async insert(product: Product, userId: string): Promise<Product> {
-        const newProduct = this.productRepository.insert(product, userId);
+        const newProduct = await this.productRepository.insert(product, userId);
         // this.io.emit("products", { type: "create", data: newProduct });
         return newProduct;
     }
@@ -53,7 +53,7 @@ class ProductService {
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product> {
-        const updatedProduct = this.productRepository.updateProductById(productId, product);
+        const updatedProduct = await this.productRepository.updateProductById(productId, product);
         
         if (!product) {
             // TODO: do not hardcode strings

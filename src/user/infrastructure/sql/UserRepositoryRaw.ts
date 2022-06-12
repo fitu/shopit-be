@@ -1,4 +1,3 @@
-import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
@@ -60,11 +59,11 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        const userPromises = users.map(async (user) => {
+        const usersPromises = users.map(async (user) => {
             return this.insert(user);
         });
 
-        return await Promise.all(userPromises);
+        return await Promise.all(usersPromises);
     }
 
     public async update(user: User): Promise<User> {
@@ -88,7 +87,7 @@ class UserRepositoryRaw implements Repository {
             }
         );
 
-        return !isEmpty(users) ? users.map((user) => user.toModel())[0] : null;
+        return users?.map((user) => user.toModel())[0];
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
@@ -104,7 +103,7 @@ class UserRepositoryRaw implements Repository {
             }
         );
 
-        return !isEmpty(users) ? users.map((user) => user.toModel())[0] : null;
+        return users?.map((user) => user.toModel())[0];
     }
 }
 

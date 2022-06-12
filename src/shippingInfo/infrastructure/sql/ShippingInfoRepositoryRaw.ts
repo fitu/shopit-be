@@ -56,7 +56,7 @@ class ShippingInfoRepositoryRaw implements Repository {
     }
 
     public async insertBatch(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
-        const shippingsInfoWithUserIdsPromises = shippingsInfo
+        const shippingInfosWithUserIdsPromises = shippingsInfo
             .map((shippingInfo, index) => [shippingInfo, userIds[index]])
             .map(async (shippingInfoWithUserId) => {
                 const shippingInfo = shippingInfoWithUserId[0] as ShippingInfo;
@@ -64,7 +64,7 @@ class ShippingInfoRepositoryRaw implements Repository {
                 return this.insert(shippingInfo, userId);
             });
 
-        return await Promise.all(shippingsInfoWithUserIdsPromises);
+        return await Promise.all(shippingInfosWithUserIdsPromises);
     }
 }
 

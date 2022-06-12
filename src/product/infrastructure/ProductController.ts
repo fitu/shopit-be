@@ -222,6 +222,7 @@ class ProductController implements Controller {
         }
     };
 
+    // FIXME: not image url, use always an image
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const imageUri = req.file?.filename;
         if (!imageUri) {
