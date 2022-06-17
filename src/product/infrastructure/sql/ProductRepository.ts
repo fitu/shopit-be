@@ -24,6 +24,10 @@ class ProductRepository implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
+        return ProductDao.findByPk(productId);
+    }
+
+    public async getProductWithUserById(productId: string): Promise<Product | null> {
         const product = await ProductDao.findByPk(productId);
         if (!product) {
             return null;
@@ -32,7 +36,7 @@ class ProductRepository implements Repository {
         const productOwner = await product.getUser();
 
         return { ...product.toModel(), user: productOwner.toModel() };
-    }
+    };
 
     public async insert(product: Product, userId: string): Promise<Product> {
         const newProduct = await ProductDao.create({

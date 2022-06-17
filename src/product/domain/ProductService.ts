@@ -43,6 +43,17 @@ class ProductService {
         return product;
     }
 
+    public async getProductWithUserById(productId: string): Promise<Product> {
+        const product = await this.productRepository.getProductWithUserById(productId);
+
+        if (!product) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError('Product not found');
+        }
+
+        return product;
+    }
+
     public async deleteProductById(productId: string): Promise<void> {
         const success = await this.productRepository.deleteProductById(productId);
 
@@ -54,7 +65,7 @@ class ProductService {
 
     public async updateProductById(productId: string, product: Product): Promise<Product> {
         const updatedProduct = await this.productRepository.updateProductById(productId, product);
-        
+
         if (!product) {
             // TODO: do not hardcode strings
             throw new NotFoundError('Product not found');

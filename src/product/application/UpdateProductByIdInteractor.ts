@@ -20,11 +20,11 @@ class UpdateProductByIdInteractor {
     }
 
     public async execute({ productId, productData, userId }: UpdateProductByIdData): Promise<ProductData> {
-        const product = await this.productService.getProductById(productId);
+        const product = await this.productService.getProductWithUserById(productId);
 
         const productOwnerId = product?.user?.id;
         await this.userService.checkUserPermissions(userId, productOwnerId);
-     
+
         const productToUpdate = new Product({
             id: productId,
             title: productData.title,
@@ -34,6 +34,7 @@ class UpdateProductByIdInteractor {
             imageUrl: productData.imageUrl,
             category: productData.category,
             stock: productData.stock,
+            user: product.user,
         });
 
         const updatedProduct = await this.productService.updateProductById(productId, productToUpdate);

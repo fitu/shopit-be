@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import { wasDeletionSuccessful } from "../../../shared/utils/sqlUtils";
 import Page from "../../../shared/Page";
 import Product from "../../domain/Product";
+import User from "../../../user/domain/User";
+import { USER_TABLE } from "../../../user/infrastructure/sql/UserDao";
 import { Repository } from "../Repository";
 
 import ProductDao, { PRODUCT_TABLE } from "./ProductDao";
@@ -38,7 +40,7 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        const products = await this.instance.query(
+        const [products] = await this.instance.query(
             `
                 SELECT *
                 FROM ${PRODUCT_TABLE}
@@ -50,7 +52,33 @@ class ProductRepositoryRaw implements Repository {
             }
         );
 
-        return !isEmpty(products) ? products.map((product) => product.toModel())[0] : null;
+        if (isEmpty(products)) {
+            return null;
+        }
+
+        return products[0].toModel();
+    }
+
+    public async getProductWithUserById(productId: string): Promise<Product | null> {
+        const [productsWithUsers] = await this.instance.query(
+            `
+                SELECT *
+                FROM ${PRODUCT_TABLE} AS p
+                JOIN ${USER_TABLE} AS u
+                ON p."userId" = u.id
+                WHERE p.id = '${productId}';
+            `
+        );
+
+        if (isEmpty(productsWithUsers)) {
+            return null;
+        }
+
+        const productWithUser = productsWithUsers[0] as any;
+        const user = new User({ ...productWithUser, id: productWithUser.userId });
+        const product = new Product({ ...productWithUser, user });
+
+        return product;
     }
 
     public async insert(product: Product, userId: string): Promise<Product> {
