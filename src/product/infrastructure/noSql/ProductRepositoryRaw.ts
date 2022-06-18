@@ -20,6 +20,10 @@ class ProductRepositoryRaw implements Repository {
         return new Promise(() => {});
     }
 
+    public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
+        return new Promise(() => {});
+    }
+
     public async getProductById(productId: string): Promise<Product | null> {
         return new Promise(() => {});
     }

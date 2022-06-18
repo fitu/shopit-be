@@ -29,10 +29,36 @@ class ProductRepositoryRaw implements Repository {
         );
 
         const productModels = products.map((product) => product.toModel());
-        const totalDocuments = products.length;
 
         return new Page<Array<Product>>({
             data: productModels,
+            currentPage: page,
+            totalNumberOfDocuments: products.length,
+            itemsPerPage: itemsPerPage,
+        });
+    }
+
+    public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
+        const [products] = await this.instance.query(
+            `
+                SELECT *
+                FROM ${PRODUCT_TABLE} AS p
+                JOIN ${USER_TABLE} AS u
+                ON p."userId" = u.id
+                LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage};
+            `
+        );
+
+        const productsWithUser = products.map((productWithUser: any) => {
+            const user = new User({ ...productWithUser, id: productWithUser.userId });
+            const product = new Product({ ...productWithUser, user });
+            return product;
+        });
+
+        const totalDocuments = products.length;
+
+        return new Page<Array<Product>>({
+            data: productsWithUser,
             currentPage: page,
             totalNumberOfDocuments: totalDocuments,
             itemsPerPage: itemsPerPage,

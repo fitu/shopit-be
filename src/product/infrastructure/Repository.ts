@@ -3,6 +3,7 @@ import Product from "../domain/Product";
 
 interface Repository {
     getAllProducts: (page: number, itemsPerPage: number) => Promise<Page<Array<Product>>>;
+    getAllProductsWithUsers: (page: number, itemsPerPage: number) => Promise<Page<Array<Product>>>;
     getProductById: (productId: string) => Promise<Product | null>;
     getProductWithUserById: (productId: string) => Promise<Product | null>;
     insert: (product: Product, userId: string) => Promise<Product>;

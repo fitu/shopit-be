@@ -23,6 +23,27 @@ class ProductRepository implements Repository {
         });
     }
 
+    public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
+        const allProductsWithCount = await ProductDao.findAndCountAll({
+            limit: itemsPerPage,
+            offset: (page - 1) * itemsPerPage,
+        });
+
+        const productModelsPromises = allProductsWithCount.rows.map(async (product) => {
+            const productOwner = await product.getUser();
+            return { ...product.toModel(), user: productOwner.toModel() };
+        });
+        const productModels = await Promise.all(productModelsPromises);
+        const totalDocuments = allProductsWithCount.count;
+
+        return new Page<Array<Product>>({
+            data: productModels,
+            currentPage: page,
+            totalNumberOfDocuments: totalDocuments,
+            itemsPerPage: itemsPerPage,
+        });
+    }
+
     public async getProductById(productId: string): Promise<Product | null> {
         return ProductDao.findByPk(productId);
     }
@@ -36,7 +57,7 @@ class ProductRepository implements Repository {
         const productOwner = await product.getUser();
 
         return { ...product.toModel(), user: productOwner.toModel() };
-    };
+    }
 
     public async insert(product: Product, userId: string): Promise<Product> {
         const newProduct = await ProductDao.create({
