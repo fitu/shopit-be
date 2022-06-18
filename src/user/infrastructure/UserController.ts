@@ -1,12 +1,14 @@
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import { body } from "express-validator";
+import { body, param, query } from "express-validator";
 
 import { NotFoundError } from "../../shared/error/NotFoundError";
 import { SignInError } from "../../shared/error/SignInError";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
+import isValid from "../../shared/middlewares/validationMiddleware";
 import { generateJWTToken } from "../../shared/utils/hashUtils";
+import Page, { getPageAndItemsPerPage } from "../../shared/Page";
 import UserData from "../application/UserData";
 import { UserRole } from "../domain/User";
 import UserService from "../domain/UserService";
@@ -15,9 +17,11 @@ import CreateUserInteractor from "../application/CreateUserInteractor";
 import ForgotPasswordInteractor from "../application/ForgotPasswordInteractor";
 import ResetPasswordInteractor from "../application/ResetPasswordInteractor";
 import SignInUserInteractor from "../application/SignInUserInteractor";
+import GetAllUsersInteractor, { GetAllUsersData } from "../application/GetAllUsersInteractor";
+import GetUserByIdInteractor, { GetUserByIdData } from "../application/GetUserByIdInteractor";
 
 class UserController implements Controller {
-    public path = '/users';
+    public path = "/users";
     public router = Router();
 
     private userService: UserService;
@@ -33,40 +37,51 @@ class UserController implements Controller {
     private initializeRoutes = (): void => {
         this.router.post(
             `${this.path}/sign-in`,
-            [body('email').notEmpty().isEmail(), body('password').notEmpty().isLength({ min: 6 })],
+            [body("email").notEmpty().isEmail(), body("password").notEmpty().isLength({ min: 6 })],
             this.signInUser
         );
         this.router.post(
             `${this.path}/sign-up`,
             [
-                body('firstName').notEmpty().isString().trim(),
-                body('lastName').notEmpty().isString().trim(),
-                body('email').notEmpty().isEmail(),
-                body('role')
+                body("firstName").notEmpty().isString().trim(),
+                body("lastName").notEmpty().isString().trim(),
+                body("email").notEmpty().isEmail(),
+                body("role")
                     .notEmpty()
                     .custom((value) => {
                         // TODO: remove hardcoded
-                        if (value !== 'admin' && value !== 'user') {
+                        if (value !== "admin" && value !== "user") {
                             // TODO: remove hardcoded
-                            throw new Error('Invalid role input');
+                            throw new Error("Invalid role input");
                         }
                         return true;
                     })
                     .trim(),
-                body('password').notEmpty().isLength({ min: 6 }),
+                body("password").notEmpty().isLength({ min: 6 }),
             ],
             this.signUpUser
         );
-        this.router.post(`${this.path}/forgot-password`, body('email').notEmpty().isEmail(), this.forgotPassword);
+        this.router.post(`${this.path}/forgot-password`, body("email").notEmpty().isEmail(), this.forgotPassword);
         this.router.post(
             `${this.path}/reset-password`,
             [
-                body('email').notEmpty().isEmail(),
-                body('newPassword').notEmpty().isLength({ min: 6 }),
-                body('resetPasswordToken').notEmpty().isString().trim(),
+                body("email").notEmpty().isEmail(),
+                body("newPassword").notEmpty().isLength({ min: 6 }),
+                body("resetPasswordToken").notEmpty().isString().trim(),
             ],
             this.resetPassword
         );
+        this.router.get(
+            this.path,
+            [
+                query("page").isNumeric().optional({ nullable: true }),
+                query("itemsPerPage").isNumeric().optional({ nullable: true }),
+            ],
+            isValid,
+            this.getUsers
+        );
+        // FIXME: [param("id").notEmpty().isUUID()]
+        this.router.get(`${this.path}/:id`, [param("id").notEmpty()], isValid, this.getUserById);
     };
 
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -156,6 +171,36 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: result });
         } catch (error: any) {
             next(new Error(error));
+        }
+    };
+
+    private getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const [page, itemsPerPage] = getPageAndItemsPerPage(req);
+        const data: GetAllUsersData = { page, itemsPerPage };
+
+        const interactor = new GetAllUsersInteractor(this.userService);
+        const result = await interactor.execute(data);
+
+        const usersWithMetadata = result as Page<Array<UserData>>;
+        const allUsers = {
+            ...usersWithMetadata,
+            data: usersWithMetadata.data.map((user) => UserViewModel.fromData(user)),
+        };
+
+        res.status(httpStatus.OK).json({ success: true, ...allUsers });
+    };
+
+    private getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const data: GetUserByIdData = { userId: id };
+
+        try {
+            const interactor = new GetUserByIdInteractor(this.userService);
+            const result = await interactor.execute(data);
+            const user = UserViewModel.fromData(result);
+            res.status(httpStatus.OK).json({ success: true, data: user });
+        } catch (error: any) {
+            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
         }
     };
 }

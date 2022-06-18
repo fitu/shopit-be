@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+import Page from '../../../shared/Page';
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
@@ -19,6 +20,10 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async addProduct(userId: string, productId: string): Promise<void> {
+        return new Promise(() => {});
+    }
+
+    public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
         return new Promise(() => {});
     }
 

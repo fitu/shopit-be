@@ -1,3 +1,4 @@
+import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
@@ -56,6 +57,22 @@ class UserRepository implements Repository {
 
     public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
+    }
+
+    public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
+        const users = await UserDocument.find()
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage);
+        const userModels = users.map((user) => user.toModel());
+
+        const totalDocuments = await UserDocument.countDocuments();
+
+        return new Page<Array<User>>({
+            data: userModels,
+            currentPage: page,
+            totalNumberOfDocuments: totalDocuments,
+            itemsPerPage: itemsPerPage,
+        });
     }
 
     public async getUserById(userId: string): Promise<User | null> {

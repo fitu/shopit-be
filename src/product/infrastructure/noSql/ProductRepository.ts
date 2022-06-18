@@ -1,6 +1,7 @@
 import { zip } from "lodash";
 import { Types } from "mongoose";
 
+import UserDocument from "../../../user/infrastructure/noSql/UserDao";
 import Page from "../../../shared/Page";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
@@ -21,18 +22,24 @@ class ProductRepository implements Repository {
             userId: new Types.ObjectId(userId),
         }));
         const newProducts = await ProductDocument.insertMany(productsToSave);
+
         return newProducts.map((newProduct) => newProduct.toModel());
     }
 
+    // FIXME: swap
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const products = page
-            ? await ProductDocument.find()
-                  .skip((page - 1) * itemsPerPage)
-                  .limit(itemsPerPage)
-            : await ProductDocument.find();
-        const productModels = products.map((product) => product.toModel());
+        const products = await ProductDocument.find()
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage);
+        const productsWithUsersPromises = products.map(async (product) => {
+            const user = await UserDocument.findById(product.userId).exec();
+            return { ...product.toModel(), user };
+        });
 
-        const totalDocuments = page ? await ProductDocument.countDocuments() : products.length;
+        const productModels = await Promise.all(productsWithUsersPromises);
+        const totalDocuments = await ProductDocument.countDocuments();
+
+        console.log(productModels);
 
         return new Page<Array<Product>>({
             data: productModels,
@@ -43,7 +50,19 @@ class ProductRepository implements Repository {
     }
 
     public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        return new Promise(() => {});
+        const products = await ProductDocument.find()
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage);
+        const productModels = products.map((product) => product.toModel());
+
+        const totalDocuments = await ProductDocument.countDocuments();
+
+        return new Page<Array<Product>>({
+            data: productModels,
+            currentPage: page,
+            totalNumberOfDocuments: totalDocuments,
+            itemsPerPage: itemsPerPage,
+        });
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
@@ -52,7 +71,7 @@ class ProductRepository implements Repository {
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
         return new Promise(() => {});
-    };
+    }
 
     public async deleteProductById(productId: string): Promise<boolean> {
         return new Promise(() => {});

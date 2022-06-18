@@ -1,5 +1,6 @@
 import moment from "moment";
 
+import Page from "../../shared/Page";
 import { NotAllowError } from "../../shared/error/NotAllowError";
 import { NotFoundError } from "../../shared/error/NotFoundError";
 import { doPasswordsMatch, hashPassword } from "../../shared/utils/hashUtils";
@@ -20,6 +21,10 @@ class UserService {
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
         return this.userRepository.insertBatch(users);
+    }
+
+    public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
+        return this.userRepository.getAllUsers(page, itemsPerPage);
     }
 
     public async getUserById(userId: string): Promise<User> {

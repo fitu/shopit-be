@@ -29,7 +29,7 @@ class ProductService {
     }
 
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        return this.productRepository.getAllProductsWithUsers(page, itemsPerPage);
+        return this.productRepository.getAllProducts(page, itemsPerPage);
     }
 
     public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {

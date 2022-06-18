@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
+import Page from "../../../shared/Page";
 import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
@@ -71,6 +72,10 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async addProduct(userId: string, productId: string): Promise<void> {
+        return new Promise(() => {});
+    }
+
+    public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
         return new Promise(() => {});
     }
 

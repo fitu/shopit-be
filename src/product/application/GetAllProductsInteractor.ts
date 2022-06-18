@@ -3,7 +3,6 @@ import ProductService from "../domain/ProductService";
 
 import ProductData from "./ProductData";
 
-
 interface GetAllProductsData {
     page: number;
     itemsPerPage: number;
@@ -17,11 +16,11 @@ class GetAllProductsInteractor {
     }
 
     public async execute({ page, itemsPerPage }: GetAllProductsData): Promise<Page<Array<ProductData>>> {
-        const allProducts = await this.productService.getAllProducts(page, itemsPerPage);
+        const allProductsWithMetadata = await this.productService.getAllProducts(page, itemsPerPage);
 
         return {
-            ...allProducts,
-            data: allProducts.data.map((product) => ProductData.fromModel(product)),
+            ...allProductsWithMetadata,
+            data: allProductsWithMetadata.data.map((product) => ProductData.fromModel(product)),
         };
     }
 }

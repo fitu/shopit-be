@@ -1,3 +1,4 @@
+import Page from "../../shared/Page";
 import User from "../domain/User";
 
 interface Repository {
@@ -5,6 +6,7 @@ interface Repository {
     insertBatch: (users: Array<User>) => Promise<Array<User>>;
     update: (user: User) => Promise<User>;
     addProduct: (userId: string, productId: string) => Promise<void>;
+    getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>>;
     getUserById: (userId: string) => Promise<User | null>;
     getUserByEmail: (email: string) => Promise<User | null>;
 }
