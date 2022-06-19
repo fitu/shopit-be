@@ -10,7 +10,9 @@ import ProductDocument, { fromProductToDao, ProductDao } from "./ProductDao";
 class ProductRepository implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {
         const productToSave: ProductDao = fromProductToDao(product, userId);
+
         const newProduct = await ProductDocument.create(productToSave);
+
         return newProduct.toModel();
     }
 
@@ -20,21 +22,22 @@ class ProductRepository implements Repository {
             fromProductToDao(product, userId)
         );
 
-        const newProducts = await ProductDocument.insertMany(productsToSave);
+        const insertedProducts = await ProductDocument.insertMany(productsToSave);
+        const newProducts: Array<Product> = insertedProducts.map((insertedProduct) => insertedProduct.toModel());
 
-        return newProducts.map((newProduct) => newProduct.toModel());
+        return newProducts;
     }
 
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const products = await ProductDocument.find()
+        const storedProducts = await ProductDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
-        const productModels = products.map((product) => product.toModel());
 
-        const totalDocuments = await ProductDocument.countDocuments();
+        const products: Array<Product> = storedProducts.map((storedProduct) => storedProduct.toModel());
+        const totalDocuments: number = await ProductDocument.countDocuments();
 
         return new Page<Array<Product>>({
-            data: productModels,
+            data: products,
             currentPage: page,
             totalNumberOfDocuments: totalDocuments,
             itemsPerPage: itemsPerPage,
@@ -42,19 +45,22 @@ class ProductRepository implements Repository {
     }
 
     public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const products = await ProductDocument.find()
+        const storedProducts = await ProductDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
-        const productsWithUsersPromises = products.map(async (product) => {
-            const user = await UserDocument.findById(product.userId).exec();
-            return { ...product.toModel(), user };
+
+        const productsWithUsersPromises = storedProducts.map(async (storedProduct) => {
+            const user = await UserDocument.findById(storedProduct.userId).exec();
+
+            const productWithUser: Product = { ...storedProduct.toModel(), user: user.toModel() };
+            return productWithUser;
         });
 
-        const productModels = await Promise.all(productsWithUsersPromises);
-        const totalDocuments = await ProductDocument.countDocuments();
+        const products = await Promise.all(productsWithUsersPromises);
+        const totalDocuments: number = await ProductDocument.countDocuments();
 
         return new Page<Array<Product>>({
-            data: productModels,
+            data: products,
             currentPage: page,
             totalNumberOfDocuments: totalDocuments,
             itemsPerPage: itemsPerPage,
@@ -66,15 +72,28 @@ class ProductRepository implements Repository {
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
-        return new Promise(() => {});
+        const product = await ProductDocument.findById(productId).exec();
+        const user = await UserDocument.findById(product.userId).exec();
+
+        const productWithUser = { ...product.toModel(), user: user.toModel() };
+        return productWithUser;
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {
-        return new Promise(() => {});
+        const deletedProduct = await ProductDocument.findByIdAndRemove(productId).exec();
+
+        const success = !!deletedProduct;
+        return success;
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
-        return new Promise(() => {});
+        const oldProduct = await ProductDocument.findByIdAndUpdate(productId, product).exec();
+
+        if (!oldProduct) {
+            return null;
+        }
+
+        return product;
     }
 }
 
