@@ -1,5 +1,5 @@
 import { omit } from "lodash";
-import mongoose, { Document, Types, Schema } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
 import Product, { ProductCategory } from "../../domain/Product";
@@ -15,7 +15,7 @@ interface ProductDao {
     imageUrl: string;
     category: ProductCategory;
     stock: number;
-    userId: Types.ObjectId;
+    userId: string;
 }
 
 interface ProductDocument extends Document {
@@ -25,6 +25,10 @@ interface ProductDocument extends Document {
 type ProductFullDocument = ProductDao & ProductDocument;
 
 const productSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+    },
     title: {
         type: String,
         required: true,
@@ -71,7 +75,7 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     userId: {
-        type: Schema.Types.ObjectId,
+        type: String,
         ref: USER_SCHEMA,
         required: true,
     },
@@ -98,7 +102,7 @@ const fromProductToDao = (product: Product, userId: string): ProductDao => {
 
     return {
         _id,
-        userId: new Types.ObjectId(userId),
+        userId: userId,
         ...productWithoutId,
     };
 };

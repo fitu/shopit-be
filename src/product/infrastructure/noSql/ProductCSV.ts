@@ -1,4 +1,3 @@
-import { convertUUIDToId } from "../../../shared/db/noSql/csvUtils";
 import Product, { ProductCategory } from "../../domain/Product";
 
 class ProductCSV {
@@ -16,7 +15,7 @@ class ProductCSV {
 
     static toModel(productCSV: ProductCSV): Product {
         return new Product({
-            id: convertUUIDToId(productCSV.id),
+            id: productCSV.id,
             title: productCSV.title,
             description: productCSV.description,
             price: productCSV.price,

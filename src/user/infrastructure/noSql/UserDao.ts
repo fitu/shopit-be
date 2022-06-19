@@ -38,6 +38,10 @@ interface ShippingInfoDao {
 // TODO: Do i need document for shipping info?
 
 const shippingInfoSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+    },
     address: {
         type: String,
         required: true,
@@ -61,6 +65,10 @@ const shippingInfoSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+    },
     firstName: {
         type: String,
         required: true,

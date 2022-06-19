@@ -22,6 +22,10 @@ interface OrderDocument extends Document {
 type OrderFullDocument = OrderDao & OrderDocument;
 
 const orderSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+    },
     itemsPrice: {
         type: Number,
         required: true,

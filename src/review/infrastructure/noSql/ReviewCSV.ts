@@ -1,4 +1,3 @@
-import { convertUUIDToId } from "../../../shared/db/noSql/csvUtils";
 import Review from "../../domain/Review";
 
 class ReviewCSV {
@@ -13,7 +12,7 @@ class ReviewCSV {
 
     static toModel(reviewCSV: ReviewCSV): Review {
         return new Review({
-            id: convertUUIDToId(reviewCSV.id),
+            id: reviewCSV.id,
             name: reviewCSV.name,
             rating: reviewCSV.rating,
             comment: reviewCSV.comment,

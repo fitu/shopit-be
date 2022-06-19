@@ -25,20 +25,13 @@ class ProductRepository implements Repository {
         return newProducts.map((newProduct) => newProduct.toModel());
     }
 
-    // FIXME: swap
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const products = await ProductDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
-        const productsWithUsersPromises = products.map(async (product) => {
-            const user = await UserDocument.findById(product.userId).exec();
-            return { ...product.toModel(), user };
-        });
+        const productModels = products.map((product) => product.toModel());
 
-        const productModels = await Promise.all(productsWithUsersPromises);
         const totalDocuments = await ProductDocument.countDocuments();
-
-        console.log(productModels);
 
         return new Page<Array<Product>>({
             data: productModels,
@@ -52,8 +45,12 @@ class ProductRepository implements Repository {
         const products = await ProductDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
-        const productModels = products.map((product) => product.toModel());
+        const productsWithUsersPromises = products.map(async (product) => {
+            const user = await UserDocument.findById(product.userId).exec();
+            return { ...product.toModel(), user };
+        });
 
+        const productModels = await Promise.all(productsWithUsersPromises);
         const totalDocuments = await ProductDocument.countDocuments();
 
         return new Page<Array<Product>>({

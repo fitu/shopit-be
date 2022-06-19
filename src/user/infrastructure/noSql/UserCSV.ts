@@ -1,4 +1,3 @@
-import { convertUUIDToId } from "../../../shared/db/noSql/csvUtils";
 import AvatarCSV from "../../../avatar/infrastructure/noSql/AvatarCSV";
 import CartCSV from "../../../cart/infrastructure/noSql/CartCSV";
 import User, { UserRole } from "../../domain/User";
@@ -32,7 +31,7 @@ class UserCSV {
             : null;
 
         return new User({
-            id: convertUUIDToId(userCSV.id),
+            id: userCSV.id,
             firstName: userCSV.firstName,
             lastName: userCSV.lastName,
             email: userCSV.email,

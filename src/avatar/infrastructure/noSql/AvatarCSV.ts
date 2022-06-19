@@ -1,4 +1,3 @@
-import { convertUUIDToId } from "../../../shared/db/noSql/csvUtils";
 import Avatar from "../../domain/Avatar";
 
 class AvatarCSV {
@@ -6,7 +5,7 @@ class AvatarCSV {
 
     static toModel(avatarCSV: AvatarCSV): Avatar {
         return new Avatar({
-            id: convertUUIDToId(avatarCSV.id),
+            id: avatarCSV.id,
             publicId: avatarCSV.publicId,
             url: avatarCSV.url,
         });

@@ -1,5 +1,5 @@
 import { omit } from "lodash";
-import mongoose, { Document, Schema, Types } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 import { PRODUCT_SCHEMA } from "../../../product/infrastructure/noSql/ProductDao";
 import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
@@ -12,8 +12,8 @@ interface ReviewDao {
     name: string;
     rating: number;
     comment: string;
-    productId: Types.ObjectId;
-    userId: Types.ObjectId;
+    productId: string;
+    userId: string;
 }
 
 interface ReviewDocument extends Document {
@@ -23,6 +23,10 @@ interface ReviewDocument extends Document {
 type ReviewFullDocument = ReviewDao & ReviewDocument;
 
 const reviewSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
@@ -36,13 +40,12 @@ const reviewSchema = new mongoose.Schema({
         required: true,
     },
     productId: {
-        type: Schema.Types.ObjectId,
+        type: String,
         ref: PRODUCT_SCHEMA,
         required: true,
     },
-
     userId: {
-        type: Schema.Types.ObjectId,
+        type: String,
         ref: USER_SCHEMA,
         required: true,
     },
@@ -65,8 +68,8 @@ const fromReviewToDao = (review: Review, productId: string, userId: string): Rev
 
     return {
         _id,
-        productId: new Types.ObjectId(productId),
-        userId: new Types.ObjectId(userId),
+        productId: productId,
+        userId: userId,
         ...reviewWithoutId,
     };
 };
