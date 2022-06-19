@@ -1,19 +1,25 @@
+import { omit } from "lodash";
 import mongoose, { Document } from "mongoose";
 
 import Order, { OrderStatus } from "../../domain/Order";
 
-const ORDER_SCHEMA = 'Order';
+const ORDER_SCHEMA = "Order";
 
-interface OrderDocument extends Document {
+interface OrderDao {
+    _id?: string;
     itemsPrice: number;
     taxPrice: number;
     shippingPrice: number;
     totalPrice: number;
     orderStatus: OrderStatus;
-    deliveredAt: Date;
-    paidAt: Date;
+    deliveredAt?: Date;
+    paidAt?: Date;
+}
+interface OrderDocument extends Document {
     toModel: () => Order;
 }
+
+type OrderFullDocument = OrderDao & OrderDocument;
 
 const orderSchema = new mongoose.Schema({
     itemsPrice: {
@@ -37,8 +43,8 @@ const orderSchema = new mongoose.Schema({
         required: true,
         enum: {
             // TODO: remove hardcoded
-            values: ['processing', 'shipped', 'delivered'],
-            message: 'Please select correct category for product',
+            values: ["processing", "shipped", "delivered"],
+            message: "Please select correct category for product",
         },
     },
     deliveredAt: {
@@ -51,7 +57,7 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.methods.toModel = function (): Order {
-    const review = this as OrderDocument;
+    const review = this as OrderFullDocument;
 
     return {
         id: review.id,
@@ -65,9 +71,18 @@ orderSchema.methods.toModel = function (): Order {
     };
 };
 
+const fromOrderToDao = (order: Order): OrderDao => {
+    const _id = order.id;
+    const orderWithoutId = omit(order, "id");
+
+    return {
+        _id,
+        ...orderWithoutId,
+    };
+};
 
 const model = mongoose.model<OrderDocument>(ORDER_SCHEMA, orderSchema);
 
 export type { OrderDocument };
-export { ORDER_SCHEMA };
+export { ORDER_SCHEMA, fromOrderToDao };
 export default model;

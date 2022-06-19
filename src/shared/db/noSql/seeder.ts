@@ -14,8 +14,8 @@ import getRepositories from "../../../shared/repository/Repository";
 import validateEnv from "../../env/envUtils";
 import { DbQuery, DbType } from "../database";
 
-import Db from "./NoSqlDb";
 import { convertUUIDToId } from "./csvUtils";
+import Db from "./NoSqlDb";
 
 const PRODUCTS_CSV_PATH = "./src/product/infrastructure/data/products.csv";
 const REVIEWS_CSV_PATH = "./src/review/infrastructure/data/reviews.csv";
@@ -42,7 +42,7 @@ const seedDb = async () => {
         const { productRepository, userRepository, reviewRepository } = getRepositories(envsWithType, initializedDb);
 
         // Create socket
-        const io = new Server()
+        const io = new Server();
 
         // Create services
         const userService = new UserService(userRepository);
@@ -52,10 +52,10 @@ const seedDb = async () => {
         await createUsers(userService);
         await createProducts(productService);
         await createReviews(reviewService);
+        console.log("DB fulfilled!");
     } catch (error: any) {
         console.error(`There was an error populating the db: ${error}`);
     } finally {
-        console.log("DB fulfilled!");
         process.exit();
     }
 };

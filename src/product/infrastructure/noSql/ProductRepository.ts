@@ -1,26 +1,25 @@
 import { zip } from "lodash";
-import { Types } from "mongoose";
 
 import UserDocument from "../../../user/infrastructure/noSql/UserDao";
 import Page from "../../../shared/Page";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDocument, { ProductDao } from "./ProductDao";
+import ProductDocument, { fromProductToDao, ProductDao } from "./ProductDao";
 
 class ProductRepository implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {
-        const productToSave: ProductDao = { ...product, userId: new Types.ObjectId(userId) };
+        const productToSave: ProductDao = fromProductToDao(product, userId);
         const newProduct = await ProductDocument.create(productToSave);
         return newProduct.toModel();
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
         const productsUsers: Array<[Product, string]> = zip(products, userIds);
-        const productsToSave: Array<ProductDao> = productsUsers.map(([product, userId]) => ({
-            ...product,
-            userId: new Types.ObjectId(userId),
-        }));
+        const productsToSave: Array<ProductDao> = productsUsers.map(([product, userId]) =>
+            fromProductToDao(product, userId)
+        );
+
         const newProducts = await ProductDocument.insertMany(productsToSave);
 
         return newProducts.map((newProduct) => newProduct.toModel());

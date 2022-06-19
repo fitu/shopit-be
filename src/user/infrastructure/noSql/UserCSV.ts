@@ -1,6 +1,6 @@
 import { convertUUIDToId } from "../../../shared/db/noSql/csvUtils";
-import AvatarCSV from "../../../avatar/infrastructure/sql/AvatarCSV";
-import CartCSV from "../../../cart/infrastructure/sql/CartCSV";
+import AvatarCSV from "../../../avatar/infrastructure/noSql/AvatarCSV";
+import CartCSV from "../../../cart/infrastructure/noSql/CartCSV";
 import User, { UserRole } from "../../domain/User";
 
 class UserCSV {

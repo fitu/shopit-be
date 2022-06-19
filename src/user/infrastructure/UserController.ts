@@ -80,8 +80,7 @@ class UserController implements Controller {
             isValid,
             this.getUsers
         );
-        // FIXME: [param("id").notEmpty().isUUID()]
-        this.router.get(`${this.path}/:id`, [param("id").notEmpty()], isValid, this.getUserById);
+        this.router.get(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.getUserById);
     };
 
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

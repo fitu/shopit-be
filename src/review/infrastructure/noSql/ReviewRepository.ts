@@ -1,19 +1,13 @@
 import { zip } from "lodash";
-import { Types } from "mongoose";
 
 import Review from "../../domain/Review";
 import { Repository } from "../Repository";
 
-import ReviewDocument, { ReviewDao } from "./ReviewDao";
+import ReviewDocument, { fromReviewToDao, ReviewDao } from "./ReviewDao";
 
 class ReviewRepository implements Repository {
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {
-        const reviewToSave: ReviewDao = {
-            ...review,
-            _id: review.id,
-            productId: new Types.ObjectId(productId),
-            userId: new Types.ObjectId(userId),
-        };
+        const reviewToSave: ReviewDao = fromReviewToDao(review, productId, userId);
         const newReview = await ReviewDocument.create(reviewToSave);
         return newReview.toModel();
     }
@@ -24,12 +18,9 @@ class ReviewRepository implements Repository {
         userIds: Array<string>
     ): Promise<Array<Review>> {
         const reviewProductsUsers: Array<[Review, string, string]> = zip(reviews, productIds, userIds);
-        const reviewsToSave: Array<ReviewDao> = reviewProductsUsers.map(([review, productId, userId]) => ({
-            ...review,
-            _id: review.id,
-            productId: new Types.ObjectId(productId),
-            userId: new Types.ObjectId(userId),
-        }));
+        const reviewsToSave: Array<ReviewDao> = reviewProductsUsers.map(([review, productId, userId]) =>
+            fromReviewToDao(review, productId, userId)
+        );
         const newReviews = await ReviewDocument.insertMany(reviewsToSave);
         return newReviews.map((newReview) => newReview.toModel());
     }

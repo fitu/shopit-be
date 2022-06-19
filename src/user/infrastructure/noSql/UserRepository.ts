@@ -2,18 +2,11 @@ import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDocument, { UserDao, ShippingInfoDao } from "./UserDao";
+import UserDocument, { UserDao, fromUserToDao } from "./UserDao";
 
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {
-        const shippingsInfoToSave: Array<ShippingInfoDao> =
-            user.shippingsInfo?.map((shippingInfo) => ({
-                ...shippingInfo,
-            })) ?? [];
-        const userToSave: UserDao = {
-            ...user,
-            shippingsInfo: shippingsInfoToSave,
-        };
+        const userToSave: UserDao = fromUserToDao(user);
 
         const newUser = await UserDocument.create(userToSave);
 
@@ -21,16 +14,7 @@ class UserRepository implements Repository {
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        const usersToSave: Array<UserDao> = users.map((user) => {
-            const shippingsInfoToSave: Array<ShippingInfoDao> =
-                user.shippingsInfo?.map((shippingInfo) => ({
-                    ...shippingInfo,
-                })) ?? [];
-            return {
-                ...user,
-                shippingsInfo: shippingsInfoToSave,
-            };
-        });
+        const usersToSave: Array<UserDao> = users.map((user) => fromUserToDao(user));
 
         const newUsers = await UserDocument.insertMany(usersToSave);
 

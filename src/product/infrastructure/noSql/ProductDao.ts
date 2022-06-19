@@ -1,9 +1,10 @@
+import { omit } from "lodash";
 import mongoose, { Document, Types, Schema } from "mongoose";
 
 import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
 import Product, { ProductCategory } from "../../domain/Product";
 
-const PRODUCT_SCHEMA = 'Product';
+const PRODUCT_SCHEMA = "Product";
 
 interface ProductDao {
     _id?: string;
@@ -49,20 +50,20 @@ const productSchema = new mongoose.Schema({
         enum: {
             // TODO: remove hardcoded
             values: [
-                'Electronics',
-                'Cameras',
-                'Laptops',
-                'Accessories',
-                'Headphones',
-                'Food',
-                'Books',
-                'Clothes/Shoes',
-                'Beauty/Health',
-                'Sports',
-                'Outdoor',
-                'Home',
+                "Electronics",
+                "Cameras",
+                "Laptops",
+                "Accessories",
+                "Headphones",
+                "Food",
+                "Books",
+                "Clothes/Shoes",
+                "Beauty/Health",
+                "Sports",
+                "Outdoor",
+                "Home",
             ],
-            message: 'Please select correct category',
+            message: "Please select correct category",
         },
     },
     stock: {
@@ -80,7 +81,7 @@ productSchema.methods.toModel = function (): Product {
     const product = this as ProductFullDocument;
 
     return {
-        id: product._id.toString(),
+        id: product.id.toString(),
         title: product.title,
         description: product.description,
         price: product.price,
@@ -91,8 +92,19 @@ productSchema.methods.toModel = function (): Product {
     };
 };
 
+const fromProductToDao = (product: Product, userId: string): ProductDao => {
+    const _id = product.id;
+    const productWithoutId = omit(product, "id");
+
+    return {
+        _id,
+        userId: new Types.ObjectId(userId),
+        ...productWithoutId,
+    };
+};
+
 const model = mongoose.model<ProductFullDocument>(PRODUCT_SCHEMA, productSchema);
 
 export type { ProductDao };
-export { PRODUCT_SCHEMA };
+export { PRODUCT_SCHEMA, fromProductToDao };
 export default model;
