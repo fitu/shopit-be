@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import Page from '../../../shared/Page';
+import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
@@ -15,11 +15,11 @@ class UserRepositoryRaw implements Repository {
         return new Promise(() => {});
     }
 
-    public async update(user: User): Promise<User> {
+    public async updateUserById(userIs: string, user: User): Promise<User | null> {
         return new Promise(() => {});
     }
 
-    public async addProduct(userId: string, productId: string): Promise<void> {
+    public async deleteUserById(userId: string): Promise<boolean> {
         return new Promise(() => {});
     }
 
@@ -32,6 +32,10 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
+        return new Promise(() => {});
+    }
+
+    public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
     }
 }

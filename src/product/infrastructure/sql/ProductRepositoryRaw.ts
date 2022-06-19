@@ -14,7 +14,120 @@ import ProductDao, { PRODUCT_TABLE } from "./ProductDao";
 class ProductRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
-    // TODO: should I retrieve also the users?
+    // FIXME: scale this
+    public async insert(product: Product, userId: string): Promise<Product> {
+        const productId = product.id || uuidv4();
+
+        await this.instance.query(
+            `
+                INSERT INTO ${PRODUCT_TABLE} (
+                    id,
+                    title,
+                    description,
+                    price,
+                    ratings,
+                    "imageUrl",
+                    category,
+                    stock,
+                    "createdAt",
+                    "updatedAt",
+                    "userId"
+                )
+                VALUES (
+                    :id,
+                    :title,
+                    :description,
+                    :price,
+                    :ratings,
+                    :imageUrl,
+                    :category,
+                    :stock,
+                    :createdAt,
+                    :updatedAt,
+                    :userId
+                );
+            `,
+            {
+                replacements: {
+                    id: productId,
+                    title: product.title,
+                    description: product.description,
+                    price: +product.price,
+                    ratings: +product.ratings,
+                    imageUrl: product.imageUrl,
+                    category: product.category,
+                    stock: +product.stock,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    userId,
+                },
+            }
+        );
+
+        return { ...product, id: productId };
+    }
+
+    public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
+        const productsWithUserIdsPromises = products
+            .map((product, index) => [product, userIds[index]])
+            .map(async (productWithUserId) => {
+                const product = productWithUserId[0] as Product;
+                const userId = productWithUserId[1] as string;
+                return this.insert(product, userId);
+            });
+
+        return await Promise.all(productsWithUserIdsPromises);
+    }
+
+    public async updateProductById(productId: string, product: Product): Promise<Product | null> {
+        await this.instance.query(
+            `
+                UPDATE ${PRODUCT_TABLE}
+                SET 
+                    id = :id,
+                    title = :title,
+                    description = :description,
+                    price = :price,
+                    ratings = :ratings,
+                    "imageUrl" = :imageUrl,
+                    category = :category,
+                    stock = :stock,
+                    "createdAt" = :createdAt,
+                    "updatedAt" = :updatedAt,
+                    "userId" = :userId
+                WHERE id = '${productId}';
+            `,
+            {
+                replacements: {
+                    id: productId,
+                    title: product.title,
+                    description: product.description,
+                    price: +product.price,
+                    ratings: +product.ratings,
+                    imageUrl: product.imageUrl,
+                    category: product.category,
+                    stock: +product.stock,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    userId: product?.user?.id,
+                },
+            }
+        );
+
+        return product;
+    }
+
+    public async deleteProductById(productId: string): Promise<boolean> {
+        const [_, metadata] = await this.instance.query(
+            `
+                DELETE FROM ${PRODUCT_TABLE}
+                WHERE id = '${productId}';
+            `
+        );
+
+        return wasDeletionSuccessful(metadata);
+    }
+
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const products = await this.instance.query(
             `
@@ -103,119 +216,6 @@ class ProductRepositoryRaw implements Repository {
         const productWithUser = productsWithUsers[0] as any;
         const user = new User({ ...productWithUser, id: productWithUser.userId });
         const product = new Product({ ...productWithUser, user });
-
-        return product;
-    }
-
-    public async insert(product: Product, userId: string): Promise<Product> {
-        const productId = product.id || uuidv4();
-
-        await this.instance.query(
-            `
-                INSERT INTO ${PRODUCT_TABLE} (
-                    id,
-                    title,
-                    description,
-                    price,
-                    ratings,
-                    "imageUrl",
-                    category,
-                    stock,
-                    "createdAt",
-                    "updatedAt",
-                    "userId"
-                )
-                VALUES (
-                    :id,
-                    :title,
-                    :description,
-                    :price,
-                    :ratings,
-                    :imageUrl,
-                    :category,
-                    :stock,
-                    :createdAt,
-                    :updatedAt,
-                    :userId
-                );
-            `,
-            {
-                replacements: {
-                    id: productId,
-                    title: product.title,
-                    description: product.description,
-                    price: +product.price,
-                    ratings: +product.ratings,
-                    imageUrl: product.imageUrl,
-                    category: product.category,
-                    stock: +product.stock,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    userId,
-                },
-            }
-        );
-
-        return { ...product, id: productId };
-    }
-
-    public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        const productsWithUserIdsPromises = products
-            .map((product, index) => [product, userIds[index]])
-            .map(async (productWithUserId) => {
-                const product = productWithUserId[0] as Product;
-                const userId = productWithUserId[1] as string;
-                return this.insert(product, userId);
-            });
-
-        return await Promise.all(productsWithUserIdsPromises);
-    }
-
-    public async deleteProductById(productId: string): Promise<boolean> {
-        const [_, metadata] = await this.instance.query(
-            `
-                DELETE FROM ${PRODUCT_TABLE}
-                WHERE id = '${productId}';
-            `
-        );
-
-        return wasDeletionSuccessful(metadata);
-    }
-
-    public async updateProductById(productId: string, product: Product): Promise<Product | null> {
-        await this.instance.query(
-            `
-                UPDATE ${PRODUCT_TABLE}
-                SET 
-                    id = :id,
-                    title = :title,
-                    description = :description,
-                    price = :price,
-                    ratings = :ratings,
-                    "imageUrl" = :imageUrl,
-                    category = :category,
-                    stock = :stock,
-                    "createdAt" = :createdAt,
-                    "updatedAt" = :updatedAt,
-                    "userId" = :userId
-                WHERE id = '${productId}';
-            `,
-            {
-                replacements: {
-                    id: productId,
-                    title: product.title,
-                    description: product.description,
-                    price: +product.price,
-                    ratings: +product.ratings,
-                    imageUrl: product.imageUrl,
-                    category: product.category,
-                    stock: +product.stock,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    userId: product?.user?.id,
-                },
-            }
-        );
 
         return product;
     }

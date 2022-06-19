@@ -21,8 +21,8 @@ class UserRepository implements Repository {
         return newUsers.map((newUser) => newUser.toModel());
     }
 
-    public async update(user: User): Promise<User> {
-        const userDao = await UserDocument.findById(user.id).exec();
+    public async updateUserById(userId: string, user: User): Promise<User | null> {
+        const userDao = await UserDocument.findById(userId).exec();
 
         // TODO: this does not scale
         userDao.id = user.id;
@@ -39,7 +39,7 @@ class UserRepository implements Repository {
         return updatedUser.toModel();
     }
 
-    public async addProduct(userId: string, productId: string): Promise<void> {
+    public async deleteUserById(userId: string): Promise<boolean> {
         return new Promise(() => {});
     }
 
@@ -65,6 +65,10 @@ class UserRepository implements Repository {
 
     public async getUserByEmail(email: string): Promise<User | null> {
         return UserDocument.findOne({ email }).exec();
+    }
+
+    public async addProduct(userId: string, productId: string): Promise<void> {
+        return new Promise(() => {});
     }
 }
 

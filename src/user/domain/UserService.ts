@@ -69,7 +69,7 @@ class UserService {
         user.resetPasswordToken = token;
         user.resetPasswordExpirationDate = moment().add(1, "day").toDate();
 
-        await this.userRepository.update(user);
+        await this.userRepository.updateUserById(user.id, user);
     }
 
     public async updatePassword(email: string, newPassword: string, resetPasswordToken: string): Promise<void> {
@@ -84,7 +84,7 @@ class UserService {
         user.resetPasswordToken = null;
         user.resetPasswordExpirationDate = null;
 
-        await this.userRepository.update(user);
+        await this.userRepository.updateUserById(user.id, user);
     }
 
     public async isAdmin(userId: string): Promise<boolean> {

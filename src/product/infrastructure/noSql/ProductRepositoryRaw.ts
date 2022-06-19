@@ -8,11 +8,20 @@ import { Repository } from "../Repository";
 import ProductDocument, { ProductDao } from "./ProductDao";
 
 class ProductRepositoryRaw implements Repository {
+    // FIXME: do this
     public async insert(product: Product, userId: string): Promise<Product> {
         return new Promise(() => {});
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
+        return new Promise(() => {});
+    }
+
+    public async updateProductById(productId: string, product: Product): Promise<Product | null> {
+        return new Promise(() => {});
+    }
+
+    public async deleteProductById(productId: string): Promise<boolean> {
         return new Promise(() => {});
     }
 
@@ -29,14 +38,6 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
-        return new Promise(() => {});
-    };
-
-    public async deleteProductById(productId: string): Promise<boolean> {
-        return new Promise(() => {});
-    }
-
-    public async updateProductById(productId: string, product: Product): Promise<Product | null> {
         return new Promise(() => {});
     }
 }

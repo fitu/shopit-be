@@ -28,6 +28,23 @@ class ProductRepository implements Repository {
         return newProducts;
     }
 
+    public async updateProductById(productId: string, product: Product): Promise<Product | null> {
+        const oldProduct = await ProductDocument.findByIdAndUpdate(productId, product).exec();
+
+        if (!oldProduct) {
+            return null;
+        }
+
+        return product;
+    }
+
+    public async deleteProductById(productId: string): Promise<boolean> {
+        const deletedProduct = await ProductDocument.findByIdAndRemove(productId).exec();
+
+        const success = !!deletedProduct;
+        return success;
+    }
+
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
         const storedProducts = await ProductDocument.find()
             .skip((page - 1) * itemsPerPage)
@@ -77,23 +94,6 @@ class ProductRepository implements Repository {
 
         const productWithUser = { ...product.toModel(), user: user.toModel() };
         return productWithUser;
-    }
-
-    public async deleteProductById(productId: string): Promise<boolean> {
-        const deletedProduct = await ProductDocument.findByIdAndRemove(productId).exec();
-
-        const success = !!deletedProduct;
-        return success;
-    }
-
-    public async updateProductById(productId: string, product: Product): Promise<Product | null> {
-        const oldProduct = await ProductDocument.findByIdAndUpdate(productId, product).exec();
-
-        if (!oldProduct) {
-            return null;
-        }
-
-        return product;
     }
 }
 

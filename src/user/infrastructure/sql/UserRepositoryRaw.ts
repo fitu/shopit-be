@@ -67,11 +67,11 @@ class UserRepositoryRaw implements Repository {
         return await Promise.all(usersPromises);
     }
 
-    public async update(user: User): Promise<User> {
+    public async updateUserById(userId: string, user: User): Promise<User | null> {
         return new Promise(() => {});
     }
 
-    public async addProduct(userId: string, productId: string): Promise<void> {
+    public async deleteUserById(userId: string): Promise<boolean> {
         return new Promise(() => {});
     }
 
@@ -109,6 +109,10 @@ class UserRepositoryRaw implements Repository {
         );
 
         return users?.map((user) => user.toModel())[0];
+    }
+
+    public async addProduct(userId: string, productId: string): Promise<void> {
+        return new Promise(() => {});
     }
 }
 
