@@ -21,7 +21,8 @@ import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingIn
 import User, { UserRole } from "../../domain/User";
 import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 
-const USER_TABLE = 'users';
+const USER_TABLE = "users";
+const USER_ID = "id";
 
 interface UserAttributes {
     id: string;
@@ -34,7 +35,7 @@ interface UserAttributes {
     resetPasswordExpirationDate: Date | null;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
 class UserDao extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
     public id!: string;
@@ -149,7 +150,7 @@ const init = (sequelize: Sequelize): void => {
                 allowNull: false,
                 validate: {
                     // TODO: get from model
-                    isIn: [['user', 'admin']],
+                    isIn: [["user", "admin"]],
                 },
             },
             password: {
@@ -158,9 +159,9 @@ const init = (sequelize: Sequelize): void => {
                 validate: {
                     min: 8,
                 },
-                set(value: string) {                    
+                set(value: string) {
                     const hash = hashPasswordSync(value);
-                    this.setDataValue('password', hash);
+                    this.setDataValue("password", hash);
                 },
             },
             resetPasswordToken: {
@@ -177,5 +178,5 @@ const init = (sequelize: Sequelize): void => {
     );
 };
 
-export { init, USER_TABLE };
+export { init, USER_TABLE, USER_ID };
 export default UserDao;

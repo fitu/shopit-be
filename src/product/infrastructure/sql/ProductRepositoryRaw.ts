@@ -6,60 +6,72 @@ import { wasDeletionSuccessful } from "../../../shared/utils/sqlUtils";
 import Page from "../../../shared/Page";
 import Product from "../../domain/Product";
 import User from "../../../user/domain/User";
-import { USER_TABLE } from "../../../user/infrastructure/sql/UserDao";
+import { USER_ID, USER_TABLE } from "../../../user/infrastructure/sql/UserDao";
 import { Repository } from "../Repository";
 
-import ProductDao, { PRODUCT_TABLE } from "./ProductDao";
+import ProductDao, {
+    PRODUCT_TABLE,
+    PRODUCT_ID,
+    PRODUCT_TITLE,
+    PRODUCT_DESCRIPTION,
+    PRODUCT_PRICE,
+    PRODUCT_RATINGS,
+    PRODUCT_IMAGE_URL,
+    PRODUCT_CATEGORY,
+    PRODUCT_STOCK,
+    PRODUCT_CREATED_AT,
+    PRODUCT_UPDATED_AT,
+    PRODUCT_USER_ID,
+} from "./ProductDao";
 
 class ProductRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
-    // FIXME: scale this
     public async insert(product: Product, userId: string): Promise<Product> {
         const productId = product.id || uuidv4();
 
         await this.instance.query(
             `
-                INSERT INTO ${PRODUCT_TABLE} (
-                    id,
-                    title,
-                    description,
-                    price,
-                    ratings,
-                    "imageUrl",
-                    category,
-                    stock,
-                    "createdAt",
-                    "updatedAt",
-                    "userId"
+                INSERT INTO "${PRODUCT_TABLE}" (
+                    "${PRODUCT_ID}",
+                    "${PRODUCT_TITLE}",
+                    "${PRODUCT_DESCRIPTION}",
+                    "${PRODUCT_PRICE}",
+                    "${PRODUCT_RATINGS}",
+                    "${PRODUCT_IMAGE_URL}",
+                    "${PRODUCT_CATEGORY}",
+                    "${PRODUCT_STOCK}",
+                    "${PRODUCT_CREATED_AT}",
+                    "${PRODUCT_UPDATED_AT}",
+                    "${PRODUCT_USER_ID}"
                 )
                 VALUES (
-                    :id,
-                    :title,
-                    :description,
-                    :price,
-                    :ratings,
-                    :imageUrl,
-                    :category,
-                    :stock,
-                    :createdAt,
-                    :updatedAt,
-                    :userId
+                    :${PRODUCT_ID},
+                    :${PRODUCT_TITLE},
+                    :${PRODUCT_DESCRIPTION},
+                    :${PRODUCT_PRICE},
+                    :${PRODUCT_RATINGS},
+                    :${PRODUCT_IMAGE_URL},
+                    :${PRODUCT_CATEGORY},
+                    :${PRODUCT_STOCK},
+                    :${PRODUCT_CREATED_AT},
+                    :${PRODUCT_UPDATED_AT},
+                    :${PRODUCT_USER_ID}
                 );
             `,
             {
                 replacements: {
-                    id: productId,
-                    title: product.title,
-                    description: product.description,
-                    price: +product.price,
-                    ratings: +product.ratings,
-                    imageUrl: product.imageUrl,
-                    category: product.category,
-                    stock: +product.stock,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    userId,
+                    [PRODUCT_ID]: productId,
+                    [PRODUCT_TITLE]: product.title,
+                    [PRODUCT_DESCRIPTION]: product.description,
+                    [PRODUCT_PRICE]: +product.price,
+                    [PRODUCT_RATINGS]: +product.ratings,
+                    [PRODUCT_IMAGE_URL]: product.imageUrl,
+                    [PRODUCT_CATEGORY]: product.category,
+                    [PRODUCT_STOCK]: +product.stock,
+                    [PRODUCT_CREATED_AT]: new Date().toISOString(),
+                    [PRODUCT_UPDATED_AT]: new Date().toISOString(),
+                    [PRODUCT_USER_ID]: userId,
                 },
             }
         );
@@ -82,34 +94,34 @@ class ProductRepositoryRaw implements Repository {
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
         await this.instance.query(
             `
-                UPDATE ${PRODUCT_TABLE}
+                UPDATE "${PRODUCT_TABLE}"
                 SET 
-                    id = :id,
-                    title = :title,
-                    description = :description,
-                    price = :price,
-                    ratings = :ratings,
-                    "imageUrl" = :imageUrl,
-                    category = :category,
-                    stock = :stock,
-                    "createdAt" = :createdAt,
-                    "updatedAt" = :updatedAt,
-                    "userId" = :userId
-                WHERE id = '${productId}';
+                    "${PRODUCT_ID}" = :${PRODUCT_ID},
+                    "${PRODUCT_TITLE}" = :${PRODUCT_TITLE},
+                    "${PRODUCT_DESCRIPTION}" = :${PRODUCT_DESCRIPTION},
+                    "${PRODUCT_PRICE}" = :${PRODUCT_PRICE},
+                    "${PRODUCT_RATINGS}" = :${PRODUCT_RATINGS},
+                    "${PRODUCT_IMAGE_URL}" = :${PRODUCT_IMAGE_URL},
+                    "${PRODUCT_CATEGORY}" = :${PRODUCT_CATEGORY},
+                    "${PRODUCT_STOCK}" = :${PRODUCT_STOCK},
+                    "${PRODUCT_CREATED_AT}" = :${PRODUCT_CREATED_AT},
+                    "${PRODUCT_UPDATED_AT}" = :${PRODUCT_UPDATED_AT},
+                    "${PRODUCT_USER_ID}" = :${PRODUCT_USER_ID}
+                WHERE "${PRODUCT_ID}" = '${productId}';
             `,
             {
                 replacements: {
-                    id: productId,
-                    title: product.title,
-                    description: product.description,
-                    price: +product.price,
-                    ratings: +product.ratings,
-                    imageUrl: product.imageUrl,
-                    category: product.category,
-                    stock: +product.stock,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    userId: product?.user?.id,
+                    [PRODUCT_ID]: productId,
+                    [PRODUCT_TITLE]: product.title,
+                    [PRODUCT_DESCRIPTION]: product.description,
+                    [PRODUCT_PRICE]: +product.price,
+                    [PRODUCT_RATINGS]: +product.ratings,
+                    [PRODUCT_IMAGE_URL]: product.imageUrl,
+                    [PRODUCT_CATEGORY]: product.category,
+                    [PRODUCT_STOCK]: +product.stock,
+                    [PRODUCT_CREATED_AT]: new Date().toISOString(),
+                    [PRODUCT_UPDATED_AT]: new Date().toISOString(),
+                    [PRODUCT_USER_ID]: product?.user?.id,
                 },
             }
         );
@@ -120,8 +132,8 @@ class ProductRepositoryRaw implements Repository {
     public async deleteProductById(productId: string): Promise<boolean> {
         const [_, metadata] = await this.instance.query(
             `
-                DELETE FROM ${PRODUCT_TABLE}
-                WHERE id = '${productId}';
+                DELETE FROM "${PRODUCT_TABLE}"
+                WHERE "${PRODUCT_ID}" = '${productId}';
             `
         );
 
@@ -132,7 +144,7 @@ class ProductRepositoryRaw implements Repository {
         const products = await this.instance.query(
             `
                 SELECT *
-                FROM ${PRODUCT_TABLE}
+                FROM "${PRODUCT_TABLE}"
                 LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage};
             `,
             {
@@ -155,9 +167,9 @@ class ProductRepositoryRaw implements Repository {
         const [products] = await this.instance.query(
             `
                 SELECT *
-                FROM ${PRODUCT_TABLE} AS p
-                JOIN ${USER_TABLE} AS u
-                ON p."userId" = u.id
+                FROM "${PRODUCT_TABLE}" AS p
+                JOIN "${USER_TABLE}" AS u
+                ON p."${PRODUCT_USER_ID}" = u."${USER_ID}"
                 LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage};
             `
         );
@@ -179,11 +191,11 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        const [products] = await this.instance.query(
+        const [product] = await this.instance.query(
             `
                 SELECT *
-                FROM ${PRODUCT_TABLE}
-                WHERE id = '${productId}';
+                FROM "${PRODUCT_TABLE}"
+                WHERE "${PRODUCT_ID}" = '${productId}';
             `,
             {
                 model: ProductDao,
@@ -191,21 +203,21 @@ class ProductRepositoryRaw implements Repository {
             }
         );
 
-        if (isEmpty(products)) {
+        if (isEmpty(product)) {
             return null;
         }
 
-        return products[0].toModel();
+        return product.toModel();
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
         const [productsWithUsers] = await this.instance.query(
             `
                 SELECT *
-                FROM ${PRODUCT_TABLE} AS p
-                JOIN ${USER_TABLE} AS u
-                ON p."userId" = u.id
-                WHERE p.id = '${productId}';
+                FROM "${PRODUCT_TABLE}" AS p
+                JOIN "${USER_TABLE}" AS u
+                ON p."${PRODUCT_USER_ID}" = u."${USER_ID}"
+                WHERE p."${PRODUCT_ID}" = '${productId}';
             `
         );
 

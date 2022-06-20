@@ -5,6 +5,7 @@ import Page from "../../../shared/Page";
 import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
+
 import UserDao, { USER_TABLE } from "./UserDao";
 
 class UserRepositoryRaw implements Repository {
