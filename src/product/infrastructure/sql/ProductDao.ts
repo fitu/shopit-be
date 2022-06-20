@@ -155,5 +155,16 @@ const init = (sequelize: Sequelize): void => {
     );
 };
 
-export { init, PRODUCT_TABLE };
+const validateProductToInsert = (product: Product): Product => ({
+    ...(product.id && { id: product.id }),
+    title: product.title,
+    description: product.description,
+    price: +product.price,
+    ratings: +product.ratings,
+    imageUrl: product.imageUrl,
+    category: product.category,
+    stock: +product.stock,
+});
+
+export { init, PRODUCT_TABLE, validateProductToInsert };
 export default ProductDao;

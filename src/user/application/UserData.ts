@@ -1,3 +1,5 @@
+import { isNil } from "lodash";
+
 import User, { UserRole } from "../domain/User";
 import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
@@ -80,6 +82,16 @@ class UserData {
             reviews: user.reviews,
             shippingsInfo: user.shippingsInfo,
         });
+    }
+
+    public static filterNulls(userData: UserData): UserData {
+        Object.keys(userData).forEach((key) => {
+            if (isNil(userData[key])) {
+                delete userData[key];
+            }
+        });
+
+        return userData;
     }
 }
 

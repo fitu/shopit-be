@@ -25,16 +25,10 @@ class UpdateProductByIdInteractor {
         const productOwnerId = product?.user?.id;
         await this.userService.checkUserPermissions(userId, productOwnerId);
 
+        const productDataWithoutNulls = ProductData.filterNulls(productData);
         const productToUpdate = new Product({
-            id: productId,
-            title: productData.title,
-            description: productData.description,
-            price: productData.price,
-            ratings: productData.ratings,
-            imageUrl: productData.imageUrl,
-            category: productData.category,
-            stock: productData.stock,
-            user: product.user,
+            ...product,
+            ...productDataWithoutNulls,
         });
 
         const updatedProduct = await this.productService.updateProductById(productId, productToUpdate);

@@ -17,17 +17,11 @@ class CreateUserInteractor {
         this.emailService = emailService;
     }
 
-    public async execute(data: CreateUserData): Promise<UserData> {
-        const newUser = new User({
-            firstName: data.userData.firstName,
-            lastName: data.userData.lastName,
-            email: data.userData.email,
-            role: data.userData.role,
-            password: data.userData.password,
-        });
+    public async execute({ userData }: CreateUserData): Promise<UserData> {
+        const newUser = new User({ ...userData });
         const createdUser = await this.userService.insert(newUser);
 
-        this.emailService.sendWelcomeEmail(data.userData.email);
+        this.emailService.sendWelcomeEmail(userData.email);
 
         return UserData.fromModel(createdUser);
     }

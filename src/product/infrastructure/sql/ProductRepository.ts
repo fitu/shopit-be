@@ -3,47 +3,28 @@ import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDao from "./ProductDao";
+import ProductDao, { validateProductToInsert } from "./ProductDao";
 
 class ProductRepository implements Repository {
-    // FIXME: scale this
     public async insert(product: Product, userId: string): Promise<Product> {
-        const newProduct = await ProductDao.create({
-            ...(product.id && { id: product.id }),
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            ratings: product.ratings,
-            imageUrl: product.imageUrl,
-            category: product.category,
-            stock: product.stock,
-        });
+        const productToInsert = validateProductToInsert(product);
+        const newProduct = await ProductDao.create(productToInsert);
 
         const user = await UserDao.findByPk(userId);
-        await user.setProducts([newProduct]);
+        const userProduct = [newProduct];
+        await user.setProducts(userProduct);
 
         return newProduct.toModel();
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        const productsToSave = products.map((product) => {
-            return {
-                ...(product.id && { id: product.id }),
-                title: product.title,
-                description: product.description,
-                price: +product.price,
-                ratings: +product.ratings,
-                imageUrl: product.imageUrl,
-                category: product.category,
-                stock: +product.stock,
-            };
-        });
-
+        const productsToSave = products.map((product) => validateProductToInsert(product));
         const newProducts = await ProductDao.bulkCreate(productsToSave);
 
         const usersWithProductsPromises = userIds.map(async (userId, index) => {
             const user = await UserDao.findByPk(userId);
-            await user.setProducts([newProducts[index]]);
+            const userProduct = [newProducts[index]];
+            await user.setProducts(userProduct);
         });
         await Promise.all(usersWithProductsPromises);
 
@@ -57,14 +38,8 @@ class ProductRepository implements Repository {
             return null;
         }
 
-        const updatedProduct = await productToUpdate.update({
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            imageUrl: product.imageUrl,
-            category: product.category,
-            stock: product.stock,
-        });
+        const productToSave = validateProductToInsert(product);
+        const updatedProduct = await productToUpdate.update(productToSave);
 
         return updatedProduct.toModel();
     }
@@ -124,13 +99,15 @@ class ProductRepository implements Repository {
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
         const product = await ProductDao.findByPk(productId);
+
         if (!product) {
             return null;
         }
 
         const productOwner = await product.getUser();
+        const productWithUser = { ...product.toModel(), user: productOwner.toModel() };
 
-        return { ...product.toModel(), user: productOwner.toModel() };
+        return productWithUser;
     }
 }
 

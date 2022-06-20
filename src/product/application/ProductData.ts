@@ -1,3 +1,5 @@
+import { isNil } from "lodash";
+
 import Product, { ProductCategory } from "../domain/Product";
 
 class ProductData {
@@ -50,6 +52,16 @@ class ProductData {
             stock: product.stock,
             ratings: product.ratings,
         });
+    }
+
+    public static filterNulls(productData: ProductData): ProductData {
+        Object.keys(productData).forEach((key) => {
+            if (isNil(productData[key])) {
+                delete productData[key];
+            }
+        });
+
+        return productData;
     }
 }
 
