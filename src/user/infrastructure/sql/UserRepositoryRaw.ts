@@ -6,7 +6,26 @@ import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDao, { USER_TABLE } from "./UserDao";
+import UserDao, {
+    USER_TABLE,
+    USER_ID,
+    USER_FIRST_NAME,
+    USER_LAST_NAME,
+    USER_EMAIL,
+    USER_ROLE,
+    USER_PASSWORD,
+    USER_RESET_PASSWORD_TOKEN,
+    USER_RESET_PASSWORD_EXPIRATION_DATE,
+    USER_CREATED_AT,
+    USER_UPDATED_AT,
+    USER_CART,
+    USER_AVATAR,
+    USER_PAYMENTS_INFO,
+    USER_SHIPPINGS_INFO,
+    USER_PRODUCTS,
+    USER_REVIEWS,
+    USER_ORDERS,
+} from "./UserDao";
 
 class UserRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
@@ -17,42 +36,42 @@ class UserRepositoryRaw implements Repository {
         await this.instance.query(
             `
                 INSERT INTO ${USER_TABLE} (
-                    id,
-                    "firstName",
-                    "lastName",
-                    email,
-                    role,
-                    password,
-                    "resetPasswordToken",
-                    "resetPasswordExpirationDate",
-                    "createdAt",
-                    "updatedAt"
+                    "${USER_ID}",
+                    "${USER_FIRST_NAME}",
+                    "${USER_LAST_NAME}",
+                    "${USER_EMAIL}",
+                    "${USER_ROLE}",
+                    "${USER_PASSWORD}",
+                    "${USER_RESET_PASSWORD_TOKEN}",
+                    "${USER_RESET_PASSWORD_EXPIRATION_DATE}",
+                    "${USER_CREATED_AT}",
+                    "${USER_UPDATED_AT}"
                 )
                 VALUES (
-                    :id,
-                    :firstName,
-                    :lastName,
-                    :email,
-                    :role,
-                    :password,
-                    :resetPasswordToken,
-                    :resetPasswordExpirationDate,
-                    :createdAt,
-                    :updatedAt
+                    :${USER_ID},
+                    :${USER_FIRST_NAME},
+                    :${USER_LAST_NAME},
+                    :${USER_EMAIL},
+                    :${USER_ROLE},
+                    :${USER_PASSWORD},
+                    :${USER_RESET_PASSWORD_TOKEN},
+                    :${USER_RESET_PASSWORD_EXPIRATION_DATE},
+                    :${USER_CREATED_AT},
+                    :${USER_UPDATED_AT}
                 );
             `,
             {
                 replacements: {
-                    id: userId,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    role: user.role,
-                    password: hashPasswordSync(user.password),
-                    resetPasswordToken: user.resetPasswordToken,
-                    resetPasswordExpirationDate: user.resetPasswordExpirationDate,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
+                    [USER_ID]: userId,
+                    [USER_FIRST_NAME]: user.firstName,
+                    [USER_LAST_NAME]: user.lastName,
+                    [USER_EMAIL]: user.email,
+                    [USER_ROLE]: user.role,
+                    [USER_PASSWORD]: hashPasswordSync(user.password),
+                    [USER_RESET_PASSWORD_TOKEN]: user.resetPasswordToken,
+                    [USER_RESET_PASSWORD_EXPIRATION_DATE]: user.resetPasswordExpirationDate,
+                    [USER_CREATED_AT]: new Date().toISOString(),
+                    [USER_UPDATED_AT]: new Date().toISOString(),
                 },
             }
         );
@@ -84,8 +103,8 @@ class UserRepositoryRaw implements Repository {
         const users = await this.instance.query(
             `
                 SELECT *
-                FROM ${USER_TABLE}
-                WHERE id = '${userId}';
+                FROM "${USER_TABLE}"
+                WHERE "${USER_ID}" = '${userId}';
             `,
             {
                 model: UserDao,
@@ -100,8 +119,8 @@ class UserRepositoryRaw implements Repository {
         const users = await this.instance.query(
             `
                 SELECT *
-                FROM ${USER_TABLE}
-                WHERE email = '${email}';
+                FROM "${USER_TABLE}"
+                WHERE "${USER_EMAIL}" = '${email}';
             `,
             {
                 model: UserDao,

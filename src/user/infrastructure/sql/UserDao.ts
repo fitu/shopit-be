@@ -23,40 +23,56 @@ import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 
 const USER_TABLE = "users";
 const USER_ID = "id";
+const USER_FIRST_NAME = "firstName";
+const USER_LAST_NAME = "lastName";
+const USER_EMAIL = "email";
+const USER_ROLE = "role";
+const USER_PASSWORD = "password";
+const USER_RESET_PASSWORD_TOKEN = "resetPasswordToken";
+const USER_RESET_PASSWORD_EXPIRATION_DATE = "resetPasswordExpirationDate";
+const USER_CREATED_AT = "createdAt";
+const USER_UPDATED_AT = "updatedAt";
+const USER_CART = "cart";
+const USER_AVATAR = "avatar";
+const USER_PAYMENTS_INFO = "paymentsInfo";
+const USER_SHIPPINGS_INFO = "shippingsInfo";
+const USER_PRODUCTS = "products";
+const USER_REVIEWS = "reviews";
+const USER_ORDERS = "orders";
 
 interface UserAttributes {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: UserRole;
-    password: string;
-    resetPasswordToken: string | null;
-    resetPasswordExpirationDate: Date | null;
+    [USER_ID]: string;
+    [USER_FIRST_NAME]: string;
+    [USER_LAST_NAME]: string;
+    [USER_EMAIL]: string;
+    [USER_ROLE]: UserRole;
+    [USER_PASSWORD]: string;
+    [USER_RESET_PASSWORD_TOKEN]: string | null;
+    [USER_RESET_PASSWORD_EXPIRATION_DATE]: Date | null;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
 class UserDao extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-    public id!: string;
-    public firstName!: string;
-    public lastName!: string;
-    public email!: string;
-    public role!: UserRole;
-    public password!: string;
-    public resetPasswordToken!: string | null;
-    public resetPasswordExpirationDate!: Date | null;
+    public [USER_ID]!: string;
+    public [USER_FIRST_NAME]!: string;
+    public [USER_LAST_NAME]!: string;
+    public [USER_EMAIL]!: string;
+    public [USER_ROLE]!: UserRole;
+    public [USER_PASSWORD]!: string;
+    public [USER_RESET_PASSWORD_TOKEN]!: string | null;
+    public [USER_RESET_PASSWORD_EXPIRATION_DATE]!: Date | null;
 
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
+    public readonly [USER_CREATED_AT]!: Date;
+    public readonly [USER_UPDATED_AT]!: Date;
 
-    public readonly cart?: CartDao;
-    public readonly avatar?: AvatarDao;
-    public readonly paymentsInfo?: Array<PaymentInfoDao>;
-    public readonly shippingsInfo?: Array<ShippingInfoDao>;
-    public readonly products?: Array<ProductDao>;
-    public readonly reviews?: Array<ReviewDao>;
-    // public readonly orders?: Array<OrderDao>;
+    public readonly [USER_CART]?: CartDao;
+    public readonly [USER_AVATAR]?: AvatarDao;
+    public readonly [USER_PAYMENTS_INFO]?: Array<PaymentInfoDao>;
+    public readonly [USER_SHIPPINGS_INFO]?: Array<ShippingInfoDao>;
+    public readonly [USER_PRODUCTS]?: Array<ProductDao>;
+    public readonly [USER_REVIEWS]?: Array<ReviewDao>;
+    // public readonly [USER_ORDERS]?: Array<OrderDao>;
 
     public getProducts!: HasManyGetAssociationsMixin<ProductDao>;
     public addProducts!: HasManyAddAssociationMixin<ProductDao, number>;
@@ -117,27 +133,27 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
 const init = (sequelize: Sequelize): void => {
     UserDao.init(
         {
-            id: {
+            [USER_ID]: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },
-            firstName: {
+            [USER_FIRST_NAME]: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
                     len: [2, 30],
                 },
             },
-            lastName: {
+            [USER_LAST_NAME]: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
                     len: [2, 30],
                 },
             },
-            email: {
+            [USER_EMAIL]: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -145,7 +161,7 @@ const init = (sequelize: Sequelize): void => {
                 },
                 unique: true,
             },
-            role: {
+            [USER_ROLE]: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -153,7 +169,7 @@ const init = (sequelize: Sequelize): void => {
                     isIn: [["user", "admin"]],
                 },
             },
-            password: {
+            [USER_PASSWORD]: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -161,13 +177,13 @@ const init = (sequelize: Sequelize): void => {
                 },
                 set(value: string) {
                     const hash = hashPasswordSync(value);
-                    this.setDataValue("password", hash);
+                    this.setDataValue(USER_PASSWORD, hash);
                 },
             },
-            resetPasswordToken: {
+            [USER_RESET_PASSWORD_TOKEN]: {
                 type: DataTypes.STRING,
             },
-            resetPasswordExpirationDate: {
+            [USER_RESET_PASSWORD_EXPIRATION_DATE]: {
                 type: DataTypes.DATE,
             },
         },
@@ -178,5 +194,25 @@ const init = (sequelize: Sequelize): void => {
     );
 };
 
-export { init, USER_TABLE, USER_ID };
+export {
+    init,
+    USER_TABLE,
+    USER_ID,
+    USER_FIRST_NAME,
+    USER_LAST_NAME,
+    USER_EMAIL,
+    USER_ROLE,
+    USER_PASSWORD,
+    USER_RESET_PASSWORD_TOKEN,
+    USER_RESET_PASSWORD_EXPIRATION_DATE,
+    USER_CREATED_AT,
+    USER_UPDATED_AT,
+    USER_CART,
+    USER_AVATAR,
+    USER_PAYMENTS_INFO,
+    USER_SHIPPINGS_INFO,
+    USER_PRODUCTS,
+    USER_REVIEWS,
+    USER_ORDERS,
+};
 export default UserDao;
