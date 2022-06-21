@@ -36,7 +36,6 @@ const seedDb = async () => {
         const envsWithType = {
             ...env,
             DB_TYPE: DbType.NO_SQL.toString(),
-            DB_QUERIES: DbQuery.ORM.toString(),
         };
         const { productRepository, userRepository, reviewRepository } = getRepositories(envsWithType, initializedDb);
 

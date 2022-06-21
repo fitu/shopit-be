@@ -107,6 +107,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.toModel = function (): User {
     const user = this as UserFullDocument;
 
+    // FIXME: check this
     return {
         id: user.id.toString(),
         firstName: user.firstName,
@@ -182,6 +183,6 @@ const fromUserToDao = (user: User): UserDao => {
 
 const model = mongoose.model<UserFullDocument>(USER_SCHEMA, userSchema);
 
-export type { UserDao, ShippingInfoDao };
+export type { UserFullDocument, UserDao, ShippingInfoDao };
 export { USER_SCHEMA, fromUserToDao };
 export default model;

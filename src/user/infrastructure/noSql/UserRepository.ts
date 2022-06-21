@@ -2,13 +2,13 @@ import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDocument, { UserDao, fromUserToDao } from "./UserDao";
+import UserDocument, { UserDao, UserFullDocument, fromUserToDao } from "./UserDao";
 
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {
         const userToSave: UserDao = fromUserToDao(user);
 
-        const newUser = await UserDocument.create(userToSave);
+        const newUser: UserFullDocument = await UserDocument.create(userToSave);
 
         return newUser.toModel();
     }
@@ -16,43 +16,44 @@ class UserRepository implements Repository {
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
         const usersToSave: Array<UserDao> = users.map((user) => fromUserToDao(user));
 
-        const newUsers = await UserDocument.insertMany(usersToSave);
+        const newUsers: Array<UserFullDocument> = await UserDocument.insertMany(usersToSave);
 
         return newUsers.map((newUser) => newUser.toModel());
     }
 
     public async updateUserById(userId: string, user: User): Promise<User | null> {
-        const userDao = await UserDocument.findById(userId).exec();
+        const userDocument: UserFullDocument = await UserDocument.findById(userId).exec();
 
         // TODO: this does not scale
-        userDao.id = user.id;
-        userDao.firstName = user.firstName;
-        userDao.lastName = user.lastName;
-        userDao.email = user.email;
-        userDao.role = user.role;
-        userDao.password = user.password;
-        userDao.resetPasswordToken = user.resetPasswordToken;
-        userDao.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
+        userDocument.id = user.id;
+        userDocument.firstName = user.firstName;
+        userDocument.lastName = user.lastName;
+        userDocument.email = user.email;
+        userDocument.role = user.role;
+        userDocument.password = user.password;
+        userDocument.resetPasswordToken = user.resetPasswordToken;
+        userDocument.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
 
-        const updatedUser = await userDao.save();
+        const updatedUser: UserFullDocument = await userDocument.save();
 
         return updatedUser.toModel();
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        return new Promise(() => {});
+        await UserDocument.deleteOne({ id: userId }).exec();
+        return true;
     }
 
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
-        const users = await UserDocument.find()
+        const userDocuments: Array<UserFullDocument> = await UserDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
-        const userModels = users.map((user) => user.toModel());
+        const users: Array<User> = userDocuments.map((userDocument) => userDocument.toModel());
 
-        const totalDocuments = await UserDocument.countDocuments();
+        const totalDocuments: number = users.length;
 
         return new Page<Array<User>>({
-            data: userModels,
+            data: users,
             currentPage: page,
             totalNumberOfDocuments: totalDocuments,
             itemsPerPage: itemsPerPage,
@@ -60,11 +61,13 @@ class UserRepository implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        return UserDocument.findById(userId).exec();
+        const userDocument: UserFullDocument = await UserDocument.findById(userId).exec();
+        return userDocument.toModel();
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
-        return UserDocument.findOne({ email }).exec();
+        const userDocument: UserFullDocument = await UserDocument.findOne({ email }).exec();
+        return userDocument.toModel();
     }
 
     public async addProduct(userId: string, productId: string): Promise<void> {
