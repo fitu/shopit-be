@@ -2,7 +2,8 @@ import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDocument, { UserDao, UserFullDocument, fromUserToDao, updateUserDocument } from "./UserDao";
+import UserDocument, { UserDao, UserFullDocument } from "./UserDao";
+import { fromUserToDao, updateUserDocument } from "./userParsers";
 
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {

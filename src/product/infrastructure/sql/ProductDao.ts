@@ -16,6 +16,8 @@ import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product, { ProductCategory } from "../../domain/Product";
 
+import { fromProductDaoToModel } from "./productParsers";
+
 const PRODUCT_TABLE = "products";
 const PRODUCT_ID = "id";
 const PRODUCT_TITLE = "title";
@@ -84,16 +86,7 @@ class ProductDao extends Model<ProductAttributes, ProductCreationAttributes> imp
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
     public toModel(): Product {
-        return {
-            id: this.id,
-            title: this.title,
-            description: this.description,
-            price: this.price,
-            ratings: this.ratings,
-            imageUrl: this.imageUrl,
-            category: this.category,
-            stock: this.stock,
-        };
+        return fromProductDaoToModel(this);
     }
 }
 

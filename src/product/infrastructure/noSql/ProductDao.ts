@@ -1,10 +1,12 @@
-import { omit } from "lodash";
 import mongoose, { Document, Types } from "mongoose";
 
 import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
 import Product, { ProductCategory } from "../../domain/Product";
+import { fromProductDocumentToModel } from "./productParsers";
 
 const PRODUCT_SCHEMA = "Product";
+const PRODUCT_DOCUMENT = "products";
+// TODO: add "columns"
 
 interface ProductDao {
     _id?: Types.ObjectId;
@@ -83,33 +85,11 @@ const productSchema = new mongoose.Schema({
 });
 
 productSchema.methods.toModel = function (): Product {
-    const product = this as ProductFullDocument;
-
-    return {
-        id: product.remoteId,
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        ratings: product.ratings,
-        imageUrl: product.imageUrl,
-        category: product.category,
-        stock: product.stock,
-    };
-};
-
-const fromProductToDao = (product: Product, userId: string): ProductDao => {
-    const remoteId = product.id;
-    const productWithoutId = omit(product, "id");
-
-    return {
-        userId: userId,
-        remoteId,
-        ...productWithoutId,
-    };
+    return fromProductDocumentToModel(this);
 };
 
 const model = mongoose.model<ProductFullDocument>(PRODUCT_SCHEMA, productSchema);
 
 export type { ProductDao, ProductFullDocument };
-export { PRODUCT_SCHEMA, fromProductToDao };
+export { PRODUCT_SCHEMA, PRODUCT_DOCUMENT };
 export default model;

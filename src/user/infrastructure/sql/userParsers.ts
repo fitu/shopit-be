@@ -1,0 +1,23 @@
+import User from "../../domain/User";
+
+import UserDao from "./UserDao";
+
+const fromUserDaoToModel = (userDao: UserDao): User => {
+    return new User({
+        id: userDao.id,
+        firstName: userDao.firstName,
+        lastName: userDao.lastName,
+        email: userDao.email,
+        role: userDao.role,
+        password: userDao.password,
+        resetPasswordToken: userDao.resetPasswordToken,
+        resetPasswordExpirationDate: userDao.resetPasswordExpirationDate,
+        cart: userDao.cart?.toModel(),
+        avatar: userDao.avatar?.toModel(),
+        products: userDao.products?.map((product) => product.toModel()),
+        reviews: userDao.reviews?.map((review) => review.toModel()),
+        shippingsInfo: userDao.shippingsInfo?.map((shippingsInfo) => shippingsInfo.toModel()),
+    });
+};
+
+export { fromUserDaoToModel };

@@ -1,41 +1,40 @@
-import mongoose from "mongoose";
+import mongoose, { Collection } from "mongoose";
 
 import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDocument, { UserFullDocument, UserDao, ShippingInfoDao, fromUserToDao } from "./UserDao";
+import { USER_DOCUMENT } from "./UserDao";
+import { fromUserToDao } from "./userParsers";
 
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {
         const userDao = fromUserToDao(user);
 
-        const foo = await mongoose.connection.db.collection("users").insertOne(userDao);
+        await mongoose.connection.db.collection(USER_DOCUMENT).insertOne(userDao);
 
-        console.log(foo);
         return user;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
         const usersDao = users.map((user) => fromUserToDao(user));
 
-        const foo = await mongoose.connection.db.collection("users").insertMany(usersDao);
+        await mongoose.connection.db.collection(USER_DOCUMENT).insertMany(usersDao);
 
-        console.log(foo);
         return users;
     }
 
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userDao = fromUserToDao(user);
 
-        const foo = await mongoose.connection.db.collection("users").updateOne({ remoteId: userId }, userDao);
+        const foo = await mongoose.connection.db.collection(USER_DOCUMENT).updateOne({ remoteId: userId }, userDao);
         console.log(foo);
 
         return user;
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        const foo = await mongoose.connection.db.collection("users").findOneAndDelete({ remoteId: userId });
+        const foo = await mongoose.connection.db.collection(USER_DOCUMENT).findOneAndDelete({ remoteId: userId });
 
         console.log(foo);
 
@@ -43,7 +42,7 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
-        const usersDao: Array<any> = await mongoose.connection.db.collection("users").find().toArray();
+        const usersDao: Array<any> = await mongoose.connection.db.collection(USER_DOCUMENT).find().toArray();
 
         const users = usersDao.map((userDao) => userDao.toModel());
         const totalDocuments = users.length;
@@ -57,13 +56,13 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        const userDao: any = await mongoose.connection.db.collection("users").findOne({ remoteId: userId });
+        const userDao: any = await mongoose.connection.db.collection(USER_DOCUMENT).findOne({ remoteId: userId });
 
         return userDao;
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
-        const userDao: any = await mongoose.connection.db.collection("users").findOne({ email });
+        const userDao: any = await mongoose.connection.db.collection(USER_DOCUMENT).findOne({ email });
 
         return userDao;
     }

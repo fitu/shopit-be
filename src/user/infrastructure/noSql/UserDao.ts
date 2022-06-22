@@ -1,11 +1,13 @@
-import { omit } from "lodash";
 import mongoose, { Document, Types } from "mongoose";
-import ShippingInfo from "shippingInfo/domain/ShippingInfo";
 
 import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hashUtils";
 import User, { UserRole } from "../../domain/User";
 
+import { fromUserDocumentToModel } from "./userParsers";
+
 const USER_SCHEMA = "User";
+const USER_DOCUMENT = "users";
+// TODO: add "columns"
 
 interface UserDao {
     _id?: Types.ObjectId;
@@ -18,6 +20,8 @@ interface UserDao {
     resetPasswordToken?: string | null;
     resetPasswordExpirationDate?: Date | null;
     shippingsInfo?: Array<ShippingInfoDao> | null;
+    avatar?: AvatarDao | null;
+    cart?: CartDao | null;
 }
 
 interface UserDocument extends Document {
@@ -28,7 +32,6 @@ interface UserDocument extends Document {
 type UserFullDocument = UserDao & UserDocument;
 
 interface ShippingInfoDao {
-    _id?: Types.ObjectId;
     remoteId?: string;
     address: string;
     city: string;
@@ -37,7 +40,18 @@ interface ShippingInfoDao {
     country: string;
 }
 
-// TODO: Do i need document for shipping info?
+interface CartDao {
+    remoteId?: string;
+    itemsPrice: number;
+    taxPrice: number;
+    totalPrice: number;
+}
+
+interface AvatarDao {
+    remoteId?: string;
+    publicId: string;
+    url: string;
+}
 
 const shippingInfoSchema = new mongoose.Schema({
     remoteId: {
@@ -61,6 +75,40 @@ const shippingInfoSchema = new mongoose.Schema({
         required: true,
     },
     country: {
+        type: String,
+        required: true,
+    },
+});
+
+const cartSchema = new mongoose.Schema({
+    remoteId: {
+        type: String,
+        required: true,
+    },
+    itemsPrice: {
+        type: Number,
+        required: true,
+    },
+    taxPrice: {
+        type: Number,
+        required: true,
+    },
+    totalPrice: {
+        type: Number,
+        required: true,
+    },
+});
+
+const avatarSchema = new mongoose.Schema({
+    remoteId: {
+        type: String,
+        required: true,
+    },
+    publicId: {
+        type: String,
+        required: true,
+    },
+    url: {
         type: String,
         required: true,
     },
@@ -103,27 +151,13 @@ const userSchema = new mongoose.Schema({
         type: Date,
     },
     shippingsInfo: [shippingInfoSchema],
-    // TODO: add avatar, paymentInfo, cart
+    cart: cartSchema,
+    avatar: avatarSchema,
+    // TODO: add paymentInfo, reviews and products
 });
 
 userSchema.methods.toModel = function (): User {
-    const userDocument = this as UserFullDocument;
-
-    return {
-        id: userDocument.remoteId,
-        firstName: userDocument.firstName,
-        lastName: userDocument.lastName,
-        email: userDocument.email,
-        role: userDocument.role,
-        password: userDocument.password,
-        resetPasswordToken: userDocument.resetPasswordToken,
-        resetPasswordExpirationDate: userDocument.resetPasswordExpirationDate,
-        cart: null,
-        avatar: null,
-        products: [],
-        reviews: [],
-        shippingsInfo: null,
-    };
+    return fromUserDocumentToModel(this);
 };
 
 userSchema.methods.validatePassword = async function (password: string) {
@@ -156,47 +190,8 @@ userSchema.pre("insertMany", async function (next, docs) {
     next();
 });
 
-const fromShippingInfoToDao = (shippingInfo: ShippingInfo): ShippingInfoDao => {
-    const remoteId = shippingInfo.id;
-    const shippingInfoWithoutId = omit(shippingInfo, "id");
-
-    return {
-        ...shippingInfoWithoutId,
-        remoteId,
-    };
-};
-
-const fromUserToDao = (user: User): UserDao => {
-    const remoteId = user.id;
-    const userWithoutId = omit(user, "id");
-
-    const shippingsInfosDao: Array<ShippingInfoDao> =
-        user.shippingsInfo?.map((shippingInfo) => ({
-            ...fromShippingInfoToDao(shippingInfo),
-        })) ?? [];
-
-    return {
-        ...userWithoutId,
-        remoteId,
-        shippingsInfo: shippingsInfosDao,
-    };
-};
-
-const updateUserDocument = (userDocument: UserFullDocument, user: User): UserFullDocument => {
-    userDocument.remoteId = user.id;
-    userDocument.firstName = user.firstName;
-    userDocument.lastName = user.lastName;
-    userDocument.email = user.email;
-    userDocument.role = user.role;
-    userDocument.password = user.password;
-    userDocument.resetPasswordToken = user.resetPasswordToken;
-    userDocument.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
-
-    return userDocument;
-};
-
 const model = mongoose.model<UserFullDocument>(USER_SCHEMA, userSchema);
 
-export type { UserFullDocument, UserDao, ShippingInfoDao };
-export { USER_SCHEMA, fromUserToDao, updateUserDocument };
+export type { UserFullDocument, UserDao, AvatarDao, CartDao, ShippingInfoDao };
+export { USER_SCHEMA, USER_DOCUMENT };
 export default model;

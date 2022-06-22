@@ -5,7 +5,8 @@ import Page from "../../../shared/Page";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDocument, { ProductFullDocument, fromProductToDao, ProductDao } from "./ProductDao";
+import ProductDocument, { ProductFullDocument, ProductDao } from "./ProductDao";
+import { fromProductToDao } from "./productParsers";
 
 class ProductRepository implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {

@@ -21,6 +21,8 @@ import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingIn
 import User, { UserRole } from "../../domain/User";
 import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 
+import { fromUserDaoToModel } from "./userParsers";
+
 const USER_TABLE = "users";
 const USER_ID = "id";
 const USER_FIRST_NAME = "firstName";
@@ -112,21 +114,7 @@ class UserDao extends Model<UserAttributes, UserCreationAttributes> implements U
     public countShippingsInfo!: HasManyCountAssociationsMixin;
 
     public toModel(): User {
-        return {
-            id: this.id,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            role: this.role,
-            password: this.password,
-            resetPasswordToken: this.resetPasswordToken,
-            resetPasswordExpirationDate: this.resetPasswordExpirationDate,
-            cart: this.cart?.toModel(),
-            avatar: this.avatar?.toModel(),
-            products: this.products?.map((product) => product.toModel()),
-            reviews: this.reviews?.map((review) => review.toModel()),
-            shippingsInfo: this.shippingsInfo?.map((shippingsInfo) => shippingsInfo.toModel()),
-        };
+        return fromUserDaoToModel(this);
     }
 }
 
