@@ -1,5 +1,5 @@
 import { omit } from "lodash";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 import ShippingInfo from "shippingInfo/domain/ShippingInfo";
 
 import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hashUtils";
@@ -8,7 +8,8 @@ import User, { UserRole } from "../../domain/User";
 const USER_SCHEMA = "User";
 
 interface UserDao {
-    _id?: string;
+    _id?: Types.ObjectId;
+    remoteId?: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -27,7 +28,8 @@ interface UserDocument extends Document {
 type UserFullDocument = UserDao & UserDocument;
 
 interface ShippingInfoDao {
-    _id?: string;
+    _id?: Types.ObjectId;
+    remoteId?: string;
     address: string;
     city: string;
     phone: string;
@@ -38,7 +40,7 @@ interface ShippingInfoDao {
 // TODO: Do i need document for shipping info?
 
 const shippingInfoSchema = new mongoose.Schema({
-    _id: {
+    remoteId: {
         type: String,
         required: true,
     },
@@ -65,7 +67,7 @@ const shippingInfoSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-    _id: {
+    remoteId: {
         type: String,
         required: true,
     },
@@ -105,18 +107,17 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.toModel = function (): User {
-    const user = this as UserFullDocument;
+    const userDocument = this as UserFullDocument;
 
-    // FIXME: check this
     return {
-        id: user.id.toString(),
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        password: user.password,
-        resetPasswordToken: user.resetPasswordToken,
-        resetPasswordExpirationDate: user.resetPasswordExpirationDate,
+        id: userDocument.remoteId,
+        firstName: userDocument.firstName,
+        lastName: userDocument.lastName,
+        email: userDocument.email,
+        role: userDocument.role,
+        password: userDocument.password,
+        resetPasswordToken: userDocument.resetPasswordToken,
+        resetPasswordExpirationDate: userDocument.resetPasswordExpirationDate,
         cart: null,
         avatar: null,
         products: [],
@@ -156,17 +157,17 @@ userSchema.pre("insertMany", async function (next, docs) {
 });
 
 const fromShippingInfoToDao = (shippingInfo: ShippingInfo): ShippingInfoDao => {
-    const _id = shippingInfo.id;
+    const remoteId = shippingInfo.id;
     const shippingInfoWithoutId = omit(shippingInfo, "id");
 
     return {
-        _id,
         ...shippingInfoWithoutId,
+        remoteId,
     };
 };
 
 const fromUserToDao = (user: User): UserDao => {
-    const _id = user.id;
+    const remoteId = user.id;
     const userWithoutId = omit(user, "id");
 
     const shippingsInfosDao: Array<ShippingInfoDao> =
@@ -175,14 +176,27 @@ const fromUserToDao = (user: User): UserDao => {
         })) ?? [];
 
     return {
-        _id,
         ...userWithoutId,
+        remoteId,
         shippingsInfo: shippingsInfosDao,
     };
+};
+
+const updateUserDocument = (userDocument: UserFullDocument, user: User): UserFullDocument => {
+    userDocument.remoteId = user.id;
+    userDocument.firstName = user.firstName;
+    userDocument.lastName = user.lastName;
+    userDocument.email = user.email;
+    userDocument.role = user.role;
+    userDocument.password = user.password;
+    userDocument.resetPasswordToken = user.resetPasswordToken;
+    userDocument.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
+
+    return userDocument;
 };
 
 const model = mongoose.model<UserFullDocument>(USER_SCHEMA, userSchema);
 
 export type { UserFullDocument, UserDao, ShippingInfoDao };
-export { USER_SCHEMA, fromUserToDao };
+export { USER_SCHEMA, fromUserToDao, updateUserDocument };
 export default model;

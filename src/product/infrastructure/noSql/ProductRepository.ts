@@ -1,37 +1,42 @@
 import { zip } from "lodash";
 
-import UserDocument from "../../../user/infrastructure/noSql/UserDao";
+import UserDocument, { UserFullDocument } from "../../../user/infrastructure/noSql/UserDao";
 import Page from "../../../shared/Page";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDocument, { fromProductToDao, ProductDao } from "./ProductDao";
+import ProductDocument, { ProductFullDocument, fromProductToDao, ProductDao } from "./ProductDao";
 
 class ProductRepository implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {
         const productToSave: ProductDao = fromProductToDao(product, userId);
 
-        const newProduct = await ProductDocument.create(productToSave);
+        const newProductDocument: ProductFullDocument = await ProductDocument.create(productToSave);
 
-        return newProduct.toModel();
+        return newProductDocument.toModel();
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        const productsUsers: Array<[Product, string]> = zip(products, userIds);
-        const productsToSave: Array<ProductDao> = productsUsers.map(([product, userId]) =>
+        const productsAndUserIds: Array<[Product, string]> = zip(products, userIds);
+        const productsToSave: Array<ProductDao> = productsAndUserIds.map(([product, userId]) =>
             fromProductToDao(product, userId)
         );
 
-        const insertedProducts = await ProductDocument.insertMany(productsToSave);
-        const newProducts: Array<Product> = insertedProducts.map((insertedProduct) => insertedProduct.toModel());
+        const insertedProductDocuments: Array<ProductFullDocument> = await ProductDocument.insertMany(productsToSave);
+        const insertedProducts: Array<Product> = insertedProductDocuments.map((insertedProductDocument) =>
+            insertedProductDocument.toModel()
+        );
 
-        return newProducts;
+        return insertedProducts;
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
-        const oldProduct = await ProductDocument.findByIdAndUpdate(productId, product).exec();
+        const oldProductDocument: ProductFullDocument = await ProductDocument.findOneAndUpdate(
+            { remoteId: productId },
+            product
+        ).exec();
 
-        if (!oldProduct) {
+        if (!oldProductDocument) {
             return null;
         }
 
@@ -39,18 +44,20 @@ class ProductRepository implements Repository {
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {
-        const deletedProduct = await ProductDocument.findByIdAndRemove(productId).exec();
+        const deletedProductDocument: ProductFullDocument = await ProductDocument.findOneAndDelete({
+            remoteId: productId,
+        }).exec();
 
-        const success = !!deletedProduct;
+        const success = !!deletedProductDocument;
         return success;
     }
 
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const storedProducts = await ProductDocument.find()
+        const productDocuments: Array<ProductFullDocument> = await ProductDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
 
-        const products: Array<Product> = storedProducts.map((storedProduct) => storedProduct.toModel());
+        const products: Array<Product> = productDocuments.map((productDocument) => productDocument.toModel());
         const totalDocuments: number = await ProductDocument.countDocuments();
 
         return new Page<Array<Product>>({
@@ -62,18 +69,20 @@ class ProductRepository implements Repository {
     }
 
     public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const storedProducts = await ProductDocument.find()
+        const productDocuments: Array<ProductFullDocument> = await ProductDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
 
-        const productsWithUsersPromises = storedProducts.map(async (storedProduct) => {
-            const user = await UserDocument.findById(storedProduct.userId).exec();
+        const productsWithUsersPromises = productDocuments.map(async (productDocument) => {
+            const userDocument: UserFullDocument = await UserDocument.findOne({
+                remoteId: productDocument.userId,
+            }).exec();
 
-            const productWithUser: Product = { ...storedProduct.toModel(), user: user.toModel() };
+            const productWithUser: Product = { ...productDocument.toModel(), user: userDocument.toModel() };
             return productWithUser;
         });
 
-        const products = await Promise.all(productsWithUsersPromises);
+        const products: Array<Product> = await Promise.all(productsWithUsersPromises);
         const totalDocuments: number = await ProductDocument.countDocuments();
 
         return new Page<Array<Product>>({
@@ -85,14 +94,26 @@ class ProductRepository implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        return ProductDocument.findById(productId).exec();
+        const productDocument: ProductFullDocument | null = await ProductDocument.findOne({
+            remoteId: productId,
+        }).exec();
+
+        return productDocument?.toModel();
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
-        const product = await ProductDocument.findById(productId).exec();
-        const user = await UserDocument.findById(product.userId).exec();
+        const productDocument: ProductFullDocument | null = await ProductDocument.findOne({
+            remoteId: productId,
+        }).exec();
+        const userDocument: UserFullDocument | null = await UserDocument.findOne({
+            remoteId: productDocument.userId,
+        }).exec();
 
-        const productWithUser = { ...product.toModel(), user: user.toModel() };
+        if (!productDocument || !userDocument) {
+            return null;
+        }
+
+        const productWithUser: Product = { ...productDocument.toModel(), user: userDocument.toModel() };
         return productWithUser;
     }
 }

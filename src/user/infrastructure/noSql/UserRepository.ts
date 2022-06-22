@@ -2,45 +2,42 @@ import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDocument, { UserDao, UserFullDocument, fromUserToDao } from "./UserDao";
+import UserDocument, { UserDao, UserFullDocument, fromUserToDao, updateUserDocument } from "./UserDao";
 
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {
         const userToSave: UserDao = fromUserToDao(user);
 
-        const newUser: UserFullDocument = await UserDocument.create(userToSave);
+        const newUserDocument: UserFullDocument = await UserDocument.create(userToSave);
 
-        return newUser.toModel();
+        return newUserDocument.toModel();
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
         const usersToSave: Array<UserDao> = users.map((user) => fromUserToDao(user));
 
-        const newUsers: Array<UserFullDocument> = await UserDocument.insertMany(usersToSave);
+        const newUserDocuments: Array<UserFullDocument> = await UserDocument.insertMany(usersToSave);
+        const insertedUsers: Array<User> = newUserDocuments.map((newUserDocument) => newUserDocument.toModel());
 
-        return newUsers.map((newUser) => newUser.toModel());
+        return insertedUsers;
     }
 
     public async updateUserById(userId: string, user: User): Promise<User | null> {
-        const userDocument: UserFullDocument = await UserDocument.findById(userId).exec();
+        const userDocument: UserFullDocument | null = await UserDocument.findOne({ remoteId: userId }).exec();
 
-        // TODO: this does not scale
-        userDocument.id = user.id;
-        userDocument.firstName = user.firstName;
-        userDocument.lastName = user.lastName;
-        userDocument.email = user.email;
-        userDocument.role = user.role;
-        userDocument.password = user.password;
-        userDocument.resetPasswordToken = user.resetPasswordToken;
-        userDocument.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
+        if (!userDocument) {
+            return null;
+        }
 
-        const updatedUser: UserFullDocument = await userDocument.save();
+        const userDocumentUpdated: UserFullDocument = updateUserDocument(userDocument, user);
+        const updatedUserDocument: UserFullDocument = await userDocumentUpdated.save();
+        const updatedUser: User = updatedUserDocument.toModel();
 
-        return updatedUser.toModel();
+        return updatedUser;
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        await UserDocument.deleteOne({ id: userId }).exec();
+        await UserDocument.deleteOne({ remoteId: userId }).exec();
         return true;
     }
 
@@ -48,8 +45,8 @@ class UserRepository implements Repository {
         const userDocuments: Array<UserFullDocument> = await UserDocument.find()
             .skip((page - 1) * itemsPerPage)
             .limit(itemsPerPage);
-        const users: Array<User> = userDocuments.map((userDocument) => userDocument.toModel());
 
+        const users: Array<User> = userDocuments.map((userDocument) => userDocument.toModel());
         const totalDocuments: number = users.length;
 
         return new Page<Array<User>>({
@@ -61,13 +58,13 @@ class UserRepository implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        const userDocument: UserFullDocument = await UserDocument.findById(userId).exec();
-        return userDocument.toModel();
+        const userDocument: UserFullDocument | null = await UserDocument.findOne({ remoteId: userId }).exec();
+        return userDocument?.toModel();
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
-        const userDocument: UserFullDocument = await UserDocument.findOne({ email }).exec();
-        return userDocument.toModel();
+        const userDocument: UserFullDocument | null = await UserDocument.findOne({ email }).exec();
+        return userDocument?.toModel();
     }
 
     public async addProduct(userId: string, productId: string): Promise<void> {

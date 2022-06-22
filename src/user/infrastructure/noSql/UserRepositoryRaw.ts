@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 
 import Page from "../../../shared/Page";
@@ -10,26 +9,15 @@ import UserDocument, { UserFullDocument, UserDao, ShippingInfoDao, fromUserToDao
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {
         const userDao = fromUserToDao(user);
-        const userWithId = {
-            ...userDao,
-            _id: new ObjectId(userDao._id),
-        };
 
-        const foo = await mongoose.connection.db.collection("users").insertOne(userWithId);
+        const foo = await mongoose.connection.db.collection("users").insertOne(userDao);
 
         console.log(foo);
         return user;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        const usersDao = users.map((user) => {
-            const userDao = fromUserToDao(user);
-            const userWithId = {
-                ...userDao,
-                _id: new ObjectId(userDao._id),
-            };
-            return userWithId;
-        });
+        const usersDao = users.map((user) => fromUserToDao(user));
 
         const foo = await mongoose.connection.db.collection("users").insertMany(usersDao);
 
@@ -40,14 +28,14 @@ class UserRepositoryRaw implements Repository {
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userDao = fromUserToDao(user);
 
-        const foo = await mongoose.connection.db.collection("users").updateOne({ _id: new ObjectId(userId) }, userDao);
+        const foo = await mongoose.connection.db.collection("users").updateOne({ remoteId: userId }, userDao);
         console.log(foo);
 
         return user;
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        const foo = await mongoose.connection.db.collection("users").findOneAndDelete({ _id: new ObjectId(userId) });
+        const foo = await mongoose.connection.db.collection("users").findOneAndDelete({ remoteId: userId });
 
         console.log(foo);
 
@@ -69,7 +57,7 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        const userDao: any = await mongoose.connection.db.collection("users").findOne({ _id: new ObjectId(userId) });
+        const userDao: any = await mongoose.connection.db.collection("users").findOne({ remoteId: userId });
 
         return userDao;
     }
