@@ -62,7 +62,7 @@ class UserViewModel {
     }
 
     public static fromData(userData: UserData): UserViewModel {
-        return new UserViewModel({
+        const userViewModel = new UserViewModel({
             id: userData.id,
             firstName: userData.firstName,
             lastName: userData.lastName,
@@ -76,6 +76,8 @@ class UserViewModel {
             reviews: userData.reviews,
             shippingsInfo: userData.shippingsInfo,
         });
+
+        return userViewModel;
     }
 }
 

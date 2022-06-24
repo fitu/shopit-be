@@ -3,7 +3,7 @@ import User from "../../domain/User";
 import UserDao from "./UserDao";
 
 const fromUserDaoToModel = (userDao: UserDao): User => {
-    return new User({
+    const user = new User({
         id: userDao.id,
         firstName: userDao.firstName,
         lastName: userDao.lastName,
@@ -18,6 +18,8 @@ const fromUserDaoToModel = (userDao: UserDao): User => {
         reviews: userDao.reviews?.map((review) => review.toModel()),
         shippingsInfo: userDao.shippingsInfo?.map((shippingsInfo) => shippingsInfo.toModel()),
     });
+
+    return user;
 };
 
 export { fromUserDaoToModel };

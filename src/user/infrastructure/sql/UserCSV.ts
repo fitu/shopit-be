@@ -30,7 +30,7 @@ class UserCSV {
               })
             : null;
 
-        return new User({
+        const user = new User({
             id: userCSV.id,
             firstName: userCSV.firstName,
             lastName: userCSV.lastName,
@@ -42,6 +42,8 @@ class UserCSV {
             cart,
             avatar,
         });
+
+        return user;
     }
 }
 

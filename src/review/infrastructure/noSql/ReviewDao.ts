@@ -52,14 +52,15 @@ const reviewSchema = new mongoose.Schema({
 });
 
 reviewSchema.methods.toModel = function (): Review {
-    const review = this as ReviewFullDocument;
+    const reviewDocument = this as ReviewFullDocument;
+    const review = new Review({
+        id: reviewDocument.id.toString(),
+        name: reviewDocument.name,
+        rating: reviewDocument.rating,
+        comment: reviewDocument.comment,
+    });
 
-    return {
-        id: review.id.toString(),
-        name: review.name,
-        rating: review.rating,
-        comment: review.comment,
-    };
+    return review;
 };
 
 const fromReviewToDao = (review: Review, productId: string, userId: string): ReviewDao => {

@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import User from "../../../src/user/domain/User";
 
 const getRandomUser = (): User => {
-    return new User({
+    const user = new User({
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         email: faker.internet.email(),
@@ -18,13 +18,17 @@ const getRandomUser = (): User => {
         reviews: null,
         shippingsInfo: null,
     });
+
+    return user;
 };
 
 const getRandomUserWithId = (userId: string): User => {
-    return new User({
+    const user = new User({
         ...getRandomUser(),
         id: userId,
     });
+
+    return user;
 };
 
 export { getRandomUser, getRandomUserWithId };

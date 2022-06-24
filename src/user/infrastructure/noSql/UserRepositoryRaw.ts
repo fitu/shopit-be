@@ -1,23 +1,33 @@
-import mongoose, { Collection } from "mongoose";
+import mongoose from "mongoose";
 
+import { hashPassword, hashPasswordSync } from "../../../shared/utils/hashUtils";
 import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import { USER_DOCUMENT } from "./UserDao";
-import { fromUserToDao } from "./userParsers";
+import { UserDao, USER_DOCUMENT } from "./UserDao";
+import { fromUserDaoToModel, fromUserToDao } from "./userParsers";
 
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {
-        const userDao = fromUserToDao(user);
+        const hashedPassword: string = await hashPassword(user.password);
+        user.password = hashedPassword;
 
+        const userDao: UserDao = fromUserToDao(user);
         await mongoose.connection.db.collection(USER_DOCUMENT).insertOne(userDao);
 
         return user;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        const usersDao = users.map((user) => fromUserToDao(user));
+        const usersDao = users.map((user) => {
+            const hashedPassword: string = hashPasswordSync(user.password);
+            user.password = hashedPassword;
+
+            const userDao: UserDao = fromUserToDao(user);
+
+            return userDao;
+        });
 
         await mongoose.connection.db.collection(USER_DOCUMENT).insertMany(usersDao);
 
@@ -62,9 +72,11 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
-        const userDao: any = await mongoose.connection.db.collection(USER_DOCUMENT).findOne({ email });
+        const queryResult = await mongoose.connection.db.collection(USER_DOCUMENT).findOne({ email });
+        const userDao = queryResult as UserDao;
+        const user: User = fromUserDaoToModel(userDao);
 
-        return userDao;
+        return user;
     }
 
     public async addProduct(userId: string, productId: string): Promise<void> {

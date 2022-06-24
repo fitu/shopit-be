@@ -53,7 +53,6 @@ const fromUserToDao = (user: User): UserDao => {
         })) ?? [];
 
     const avatarDao: AvatarDao | null = user.avatar ? fromAvatarToDao(user.avatar) : null;
-
     const cartDao: CartDao | null = user.cart ? fromCartToDao(user.cart) : null;
     const userDao: UserDao = {
         ...userWithoutId,
@@ -80,7 +79,7 @@ const updateUserDocument = (userDocument: UserFullDocument, user: User): UserFul
 };
 
 const fromUserDocumentToModel = (userDocument: UserFullDocument): User => {
-    const avatar: Avatar | null = userDocument.avatar
+    const avatar = userDocument.avatar
         ? new Avatar({
               id: userDocument.avatar.remoteId,
               publicId: userDocument.avatar.publicId,
@@ -88,7 +87,7 @@ const fromUserDocumentToModel = (userDocument: UserFullDocument): User => {
           })
         : null;
 
-    const cart: Cart | null = userDocument.cart
+    const cart = userDocument.cart
         ? new Cart({
               id: userDocument.cart.remoteId,
               itemsPrice: userDocument.cart.itemsPrice,
@@ -97,7 +96,7 @@ const fromUserDocumentToModel = (userDocument: UserFullDocument): User => {
           })
         : null;
 
-    const user: User = new User({
+    const user = new User({
         id: userDocument.remoteId,
         firstName: userDocument.firstName,
         lastName: userDocument.lastName,
@@ -116,4 +115,41 @@ const fromUserDocumentToModel = (userDocument: UserFullDocument): User => {
     return user;
 };
 
-export { fromUserToDao, updateUserDocument, fromUserDocumentToModel };
+const fromUserDaoToModel = (userDao: UserDao): User => {
+    const avatar = userDao.avatar
+        ? new Avatar({
+              id: userDao.avatar.remoteId,
+              publicId: userDao.avatar.publicId,
+              url: userDao.avatar.url,
+          })
+        : null;
+
+    const cart = userDao.cart
+        ? new Cart({
+              id: userDao.cart.remoteId,
+              itemsPrice: userDao.cart.itemsPrice,
+              taxPrice: userDao.cart.taxPrice,
+              totalPrice: userDao.cart.totalPrice,
+          })
+        : null;
+
+    const user = new User({
+        id: userDao.remoteId,
+        firstName: userDao.firstName,
+        lastName: userDao.lastName,
+        email: userDao.email,
+        role: userDao.role,
+        password: userDao.password,
+        resetPasswordToken: userDao.resetPasswordToken,
+        resetPasswordExpirationDate: userDao.resetPasswordExpirationDate,
+        cart,
+        avatar,
+        products: [],
+        reviews: [],
+        shippingsInfo: null,
+    });
+
+    return user;
+};
+
+export { fromUserToDao, updateUserDocument, fromUserDocumentToModel, fromUserDaoToModel };

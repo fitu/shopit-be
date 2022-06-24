@@ -61,18 +61,19 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.methods.toModel = function (): Order {
-    const review = this as OrderFullDocument;
+    const orderDocument = this as OrderFullDocument;
+    const order = new Order({
+        id: orderDocument.id,
+        itemsPrice: orderDocument.itemsPrice,
+        taxPrice: orderDocument.taxPrice,
+        shippingPrice: orderDocument.shippingPrice,
+        totalPrice: orderDocument.totalPrice,
+        orderStatus: orderDocument.orderStatus,
+        deliveredAt: orderDocument.deliveredAt,
+        paidAt: orderDocument.paidAt,
+    });
 
-    return {
-        id: review.id,
-        itemsPrice: review.itemsPrice,
-        taxPrice: review.taxPrice,
-        shippingPrice: review.shippingPrice,
-        totalPrice: review.totalPrice,
-        orderStatus: review.orderStatus,
-        deliveredAt: review.deliveredAt,
-        paidAt: review.paidAt,
-    };
+    return order;
 };
 
 const fromOrderToDao = (order: Order): OrderDao => {
