@@ -89,6 +89,7 @@ class UserService {
 
     public async isAdmin(userId: string): Promise<boolean> {
         const user = await this.userRepository.getUserById(userId);
+
         if (!user) {
             return false;
         }

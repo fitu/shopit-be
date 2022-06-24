@@ -41,7 +41,7 @@ class ProductService {
 
         if (!product) {
             // TODO: do not hardcode strings
-            throw new NotFoundError('Product not found');
+            throw new NotFoundError("Product not found");
         }
 
         return product;
@@ -52,7 +52,7 @@ class ProductService {
 
         if (!product) {
             // TODO: do not hardcode strings
-            throw new NotFoundError('Product not found');
+            throw new NotFoundError("Product not found");
         }
 
         return product;
@@ -63,7 +63,7 @@ class ProductService {
 
         if (!success) {
             // TODO: do not hardcode strings
-            throw new NotFoundError('Product not found');
+            throw new NotFoundError("Product not found");
         }
     }
 
@@ -72,7 +72,7 @@ class ProductService {
 
         if (!product) {
             // TODO: do not hardcode strings
-            throw new NotFoundError('Product not found');
+            throw new NotFoundError("Product not found");
         }
 
         return updatedProduct;

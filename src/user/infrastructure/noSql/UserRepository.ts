@@ -38,8 +38,12 @@ class UserRepository implements Repository {
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        await UserDocument.deleteOne({ remoteId: userId }).exec();
-        return true;
+        const deletedUserDocument: UserFullDocument = await UserDocument.findOneAndDelete({
+            remoteId: userId,
+        }).exec();
+
+        const success = !!deletedUserDocument;
+        return success;
     }
 
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {

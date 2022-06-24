@@ -10,17 +10,19 @@ import { fromUserDaoToModel, fromUserToDao } from "./userParsers";
 
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {
+        // FIXME: check id
         const hashedPassword: string = await hashPassword(user.password);
         user.password = hashedPassword;
 
-        const userDao: UserDao = fromUserToDao(user);
-        await mongoose.connection.db.collection(USER_DOCUMENT).insertOne(userDao);
+        const userToSave: UserDao = fromUserToDao(user);
+        await mongoose.connection.db.collection(USER_DOCUMENT).insertOne(userToSave);
 
         return user;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        const usersDao = users.map((user) => {
+        // FIXME: check id
+        const usersToSave: Array<UserDao> = users.map((user) => {
             const hashedPassword: string = hashPasswordSync(user.password);
             user.password = hashedPassword;
 
@@ -29,32 +31,41 @@ class UserRepositoryRaw implements Repository {
             return userDao;
         });
 
-        await mongoose.connection.db.collection(USER_DOCUMENT).insertMany(usersDao);
+        await mongoose.connection.db.collection(USER_DOCUMENT).insertMany(usersToSave);
 
         return users;
     }
 
+    // FIXME: fix this
     public async updateUserById(userId: string, user: User): Promise<User | null> {
-        const userDao = fromUserToDao(user);
+        const userToUpdate: UserDao = fromUserToDao(user);
 
-        const foo = await mongoose.connection.db.collection(USER_DOCUMENT).updateOne({ remoteId: userId }, userDao);
+        const foo = await mongoose.connection.db
+            .collection(USER_DOCUMENT)
+            .updateOne({ remoteId: userId }, userToUpdate);
         console.log(foo);
 
         return user;
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        const foo = await mongoose.connection.db.collection(USER_DOCUMENT).findOneAndDelete({ remoteId: userId });
+        const { value } = await mongoose.connection.db.collection(USER_DOCUMENT).findOneAndDelete({ remoteId: userId });
 
-        console.log(foo);
+        const success = !!value;
 
-        return true;
+        return success;
     }
 
+    // TODO: paginate this & check if there are no entries
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
-        const usersDao: Array<any> = await mongoose.connection.db.collection(USER_DOCUMENT).find().toArray();
+        const queryResults = await mongoose.connection.db.collection(USER_DOCUMENT).find().toArray();
 
-        const users = usersDao.map((userDao) => userDao.toModel());
+        const users: Array<User> = queryResults.map((queryResult) => {
+            const userDao = queryResult as UserDao;
+            const user: User = fromUserDaoToModel(userDao);
+
+            return user;
+        });
         const totalDocuments = users.length;
 
         return new Page<Array<User>>({
@@ -66,13 +77,25 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        const userDao: any = await mongoose.connection.db.collection(USER_DOCUMENT).findOne({ remoteId: userId });
+        const queryResult = await mongoose.connection.db.collection(USER_DOCUMENT).findOne({ remoteId: userId });
 
-        return userDao;
+        if (!queryResult) {
+            return null;
+        }
+
+        const userDao = queryResult as UserDao;
+        const user: User = fromUserDaoToModel(userDao);
+
+        return user;
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
         const queryResult = await mongoose.connection.db.collection(USER_DOCUMENT).findOne({ email });
+
+        if (!queryResult) {
+            return null;
+        }
+
         const userDao = queryResult as UserDao;
         const user: User = fromUserDaoToModel(userDao);
 
