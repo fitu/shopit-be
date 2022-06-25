@@ -35,14 +35,17 @@ class UserRepositoryRaw implements Repository {
         return users;
     }
 
-    // FIXME: fix this
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userToUpdate: UserDao = fromUserToDao(user);
 
-        const foo = await mongoose.connection.db
+        const { modifiedCount } = await mongoose.connection.db
             .collection(USER_DOCUMENT)
-            .updateOne({ remoteId: userId }, userToUpdate);
-        console.log(foo);
+            .replaceOne({ remoteId: userId }, userToUpdate);
+
+        const success = modifiedCount > 0;
+        if (!success) {
+            return null;
+        }
 
         return user;
     }

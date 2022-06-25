@@ -31,15 +31,17 @@ class ProductRepositoryRaw implements Repository {
         return products;
     }
 
-    // FIXME: fix this
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
         const productDao: ProductDao = fromProductToDao(product, product.user.id);
 
-        console.log(productDao, " foo");
-        const foo = await mongoose.connection.db
+        const { modifiedCount } = await mongoose.connection.db
             .collection(PRODUCT_DOCUMENT)
-            .updateOne({ remoteId: productId }, productDao);
-        console.log(foo);
+            .replaceOne({ remoteId: productId }, productDao);
+
+        const success = modifiedCount > 0;
+        if (!success) {
+            return null;
+        }
 
         return product;
     }
@@ -48,8 +50,6 @@ class ProductRepositoryRaw implements Repository {
         const { value: deletedProduct } = await mongoose.connection.db
             .collection(PRODUCT_DOCUMENT)
             .findOneAndDelete({ remoteId: productId });
-
-            console.log(deletedProduct)
 
         const success = !isNil(deletedProduct);
 
