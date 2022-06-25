@@ -22,11 +22,12 @@ const fromProductDocumentToModel = (productDocument: ProductFullDocument): Produ
 const fromProductToDao = (product: Product, userId: string): ProductDao => {
     const remoteId = product.id;
     const productWithoutId = omit(product, "id");
+    const productWithoutIdAndUser = omit(productWithoutId, "user");
 
     const productDao: ProductDao = {
-        userId: userId,
+        userId,
         remoteId,
-        ...productWithoutId,
+        ...productWithoutIdAndUser,
     };
 
     return productDao;

@@ -9,6 +9,7 @@ import { fromReviewDocumentToModel } from "./reviewParsers";
 
 const REVIEW_SCHEMA = "Review";
 const REVIEW_DOCUMENT = "reviews";
+// TODO: add "columns
 
 interface ReviewDao {
     _id?: Types.ObjectId;
