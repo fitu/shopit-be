@@ -1,4 +1,4 @@
-import { zip } from "lodash";
+import { isNil, zip } from "lodash";
 import mongoose from "mongoose";
 
 import User from "../../../user/domain/User";
@@ -45,11 +45,13 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {
-        const { value } = await mongoose.connection.db
+        const { value: deletedProduct } = await mongoose.connection.db
             .collection(PRODUCT_DOCUMENT)
             .findOneAndDelete({ remoteId: productId });
 
-        const success = !!value;
+            console.log(deletedProduct)
+
+        const success = !isNil(deletedProduct);
 
         return success;
     }

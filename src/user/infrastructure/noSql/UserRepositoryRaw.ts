@@ -1,3 +1,4 @@
+import { isNil } from "lodash";
 import mongoose from "mongoose";
 
 import { hashPassword, hashPasswordSync } from "../../../shared/utils/hashUtils";
@@ -47,9 +48,11 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        const { value } = await mongoose.connection.db.collection(USER_DOCUMENT).findOneAndDelete({ remoteId: userId });
+        const { value: deletedProduct } = await mongoose.connection.db
+            .collection(USER_DOCUMENT)
+            .findOneAndDelete({ remoteId: userId });
 
-        const success = !!value;
+        const success = !isNil(deletedProduct);
 
         return success;
     }
