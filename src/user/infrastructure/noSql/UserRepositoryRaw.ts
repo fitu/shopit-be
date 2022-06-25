@@ -60,9 +60,13 @@ class UserRepositoryRaw implements Repository {
         return success;
     }
 
-    // TODO: paginate this & check if there are no entries
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
-        const queryResults = await mongoose.connection.db.collection(USER_DOCUMENT).find().toArray();
+        const queryResults = await mongoose.connection.db
+            .collection(USER_DOCUMENT)
+            .find()
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage)
+            .toArray();
 
         const users: Array<User> = queryResults.map((queryResult) => {
             const userDao = queryResult as UserDao;

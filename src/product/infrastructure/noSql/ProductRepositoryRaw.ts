@@ -56,9 +56,13 @@ class ProductRepositoryRaw implements Repository {
         return success;
     }
 
-    // TODO: paginate this & check if there are no entries
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const queryResults = await mongoose.connection.db.collection(PRODUCT_DOCUMENT).find().toArray();
+        const queryResults = await mongoose.connection.db
+            .collection(PRODUCT_DOCUMENT)
+            .find()
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage)
+            .toArray();
 
         const products: Array<Product> = queryResults.map((queryResult) => {
             const productDao = queryResult as ProductDao;
@@ -76,9 +80,13 @@ class ProductRepositoryRaw implements Repository {
         });
     }
 
-    // TODO: paginate this & check if there are no entries
     public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const productQueryResults = await mongoose.connection.db.collection(PRODUCT_DOCUMENT).find().toArray();
+        const productQueryResults = await mongoose.connection.db
+            .collection(PRODUCT_DOCUMENT)
+            .find()
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage)
+            .toArray();
 
         const productsDao: Array<ProductDao> = productQueryResults.map((productQueryResult) => {
             return productQueryResult as ProductDao;
