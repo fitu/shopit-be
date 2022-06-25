@@ -13,7 +13,6 @@ import { fromProductDaoToModel, fromProductToDao } from "./productParsers";
 
 class ProductRepositoryRaw implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {
-        // FIXME: check id
         const productToSave: ProductDao = fromProductToDao(product, userId);
 
         await mongoose.connection.db.collection(PRODUCT_DOCUMENT).insertOne(productToSave);
@@ -22,7 +21,6 @@ class ProductRepositoryRaw implements Repository {
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        // FIXME: check id
         const productsAndUserIds: Array<[Product, string]> = zip(products, userIds);
         const productsToSave: Array<ProductDao> = productsAndUserIds.map(([product, userId]) =>
             fromProductToDao(product, userId)

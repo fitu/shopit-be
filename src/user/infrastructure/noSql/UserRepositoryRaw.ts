@@ -10,7 +10,6 @@ import { fromUserDaoToModel, fromUserToDao } from "./userParsers";
 
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {
-        // FIXME: check id
         const hashedPassword: string = await hashPassword(user.password);
         user.password = hashedPassword;
 
@@ -21,7 +20,6 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        // FIXME: check id
         const usersToSave: Array<UserDao> = users.map((user) => {
             const hashedPassword: string = hashPasswordSync(user.password);
             user.password = hashedPassword;

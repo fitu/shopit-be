@@ -133,6 +133,19 @@ const fromUserDaoToModel = (userDao: UserDao): User => {
           })
         : null;
 
+    const shippingsInfo: Array<ShippingInfo> =
+        userDao.shippingsInfo?.map(
+            (shippingInfoDao) =>
+                new ShippingInfo({
+                    id: shippingInfoDao.remoteId,
+                    address: shippingInfoDao.address,
+                    city: shippingInfoDao.city,
+                    phone: shippingInfoDao.phone,
+                    postalCode: shippingInfoDao.postalCode,
+                    country: shippingInfoDao.country,
+                })
+        ) ?? [];
+
     const user = new User({
         id: userDao.remoteId,
         firstName: userDao.firstName,
@@ -144,9 +157,9 @@ const fromUserDaoToModel = (userDao: UserDao): User => {
         resetPasswordExpirationDate: userDao.resetPasswordExpirationDate,
         cart,
         avatar,
+        shippingsInfo,
         products: [],
         reviews: [],
-        shippingsInfo: null,
     });
 
     return user;
