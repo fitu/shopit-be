@@ -3,7 +3,8 @@ import { zip } from "lodash";
 import Review from "../../domain/Review";
 import { Repository } from "../Repository";
 
-import ReviewDocument, { fromReviewToDao, ReviewDao } from "./ReviewDao";
+import ReviewDocument, { ReviewDao } from "./ReviewDao";
+import { fromReviewToDao } from "./reviewParsers";
 
 class ReviewRepository implements Repository {
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {

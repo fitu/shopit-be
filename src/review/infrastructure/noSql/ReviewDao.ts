@@ -1,14 +1,18 @@
 import { omit } from "lodash";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 
 import { PRODUCT_SCHEMA } from "../../../product/infrastructure/noSql/ProductDao";
 import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
 import Review from "../../domain/Review";
 
+import { fromReviewDocumentToModel } from "./reviewParsers";
+
 const REVIEW_SCHEMA = "Review";
+const REVIEW_DOCUMENT = "reviews";
 
 interface ReviewDao {
-    _id: string;
+    _id?: Types.ObjectId;
+    remoteId?: string;
     name: string;
     rating: number;
     comment: string;
@@ -23,7 +27,7 @@ interface ReviewDocument extends Document {
 type ReviewFullDocument = ReviewDao & ReviewDocument;
 
 const reviewSchema = new mongoose.Schema({
-    _id: {
+    remoteId: {
         type: String,
         required: true,
     },
@@ -51,32 +55,13 @@ const reviewSchema = new mongoose.Schema({
     },
 });
 
+// TODO: move to parser
 reviewSchema.methods.toModel = function (): Review {
-    const reviewDocument = this as ReviewFullDocument;
-    const review = new Review({
-        id: reviewDocument.id.toString(),
-        name: reviewDocument.name,
-        rating: reviewDocument.rating,
-        comment: reviewDocument.comment,
-    });
-
-    return review;
-};
-
-const fromReviewToDao = (review: Review, productId: string, userId: string): ReviewDao => {
-    const _id = review.id;
-    const reviewWithoutId = omit(review, "id");
-
-    return {
-        _id,
-        productId: productId,
-        userId: userId,
-        ...reviewWithoutId,
-    };
+    return fromReviewDocumentToModel(this);
 };
 
 const model = mongoose.model<ReviewFullDocument>(REVIEW_SCHEMA, reviewSchema);
 
-export type { ReviewDao };
-export { REVIEW_SCHEMA, fromReviewToDao };
+export type { ReviewDao, ReviewFullDocument };
+export { REVIEW_SCHEMA, REVIEW_DOCUMENT };
 export default model;
