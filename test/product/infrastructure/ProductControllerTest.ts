@@ -1081,7 +1081,7 @@ describe("ProductController", function () {
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
-        productService.getProductById = async (productId: string): Promise<Product | null> => {
+        productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             throw new NotFoundError(productId);
         };
 
@@ -1117,7 +1117,7 @@ describe("ProductController", function () {
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
-        productService.getProductById = async (productId: string): Promise<Product | null> => {
+        productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
         };
 
@@ -1161,7 +1161,7 @@ describe("ProductController", function () {
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
-        productService.getProductById = async (productId: string): Promise<Product | null> => {
+        productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return getRandomProduct();
         };
 
@@ -1202,7 +1202,7 @@ describe("ProductController", function () {
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
-        productService.getProductById = async (productId: string): Promise<Product | null> => {
+        productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return getRandomProduct();
         };
 
@@ -1261,7 +1261,7 @@ describe("ProductController", function () {
         const userId = FAKE_JWT_USER_ID;
         const user = getRandomUserWithId(userId);
 
-        productService.getProductById = async (productId: string): Promise<Product | null> => {
+        productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return getProductWithData({ user });
         };
 
