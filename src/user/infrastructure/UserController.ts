@@ -12,13 +12,16 @@ import Page, { getPageAndItemsPerPage } from "../../shared/Page";
 import UserData from "../application/UserData";
 import { UserRole } from "../domain/User";
 import UserService from "../domain/UserService";
-import UserViewModel from "./UserViewModel";
 import CreateUserInteractor from "../application/CreateUserInteractor";
 import ForgotPasswordInteractor from "../application/ForgotPasswordInteractor";
 import ResetPasswordInteractor from "../application/ResetPasswordInteractor";
 import SignInUserInteractor from "../application/SignInUserInteractor";
 import GetAllUsersInteractor, { GetAllUsersData } from "../application/GetAllUsersInteractor";
 import GetUserByIdInteractor, { GetUserByIdData } from "../application/GetUserByIdInteractor";
+import { NotAllowError } from "../../shared/error/NotAllowError";
+import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../application/DeleteUserByIdInteractor";
+
+import UserViewModel from "./UserViewModel";
 
 class UserController implements Controller {
     public path = "/users";
@@ -59,7 +62,7 @@ class UserController implements Controller {
                     .trim(),
                 body("password").notEmpty().isLength({ min: 6 }),
             ],
-            this.signUpUser
+            this.createUser
         );
         this.router.post(`${this.path}/forgot-password`, body("email").notEmpty().isEmail(), this.forgotPassword);
         this.router.post(
@@ -81,9 +84,10 @@ class UserController implements Controller {
             this.getUsers
         );
         this.router.get(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.getUserById);
+        this.router.delete(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.deleteUserById);
     };
 
-    // FIXME: add create, update, delete
+    // FIXME: add create, update
 
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { email, password }: { email: string; password: string } = req.body;
@@ -108,7 +112,7 @@ class UserController implements Controller {
         }
     };
 
-    private signUpUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    private createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         // TODO: add validations
         const {
             firstName,
@@ -202,6 +206,29 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: user });
         } catch (error: any) {
             res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+        }
+    };
+
+    private deleteUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const { userId } = req;
+
+        const data: DeleteUserByIdData = { userId, userToDelete: id };
+
+        try {
+            const interactor = new DeleteUserByIdInteractor(this.userService);
+            await interactor.execute(data);
+            res.status(httpStatus.OK).json({ success: true });
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                return;
+            }
+            if (error instanceof NotAllowError) {
+                res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
+                return;
+            }
+            next(new Error(error));
         }
     };
 }

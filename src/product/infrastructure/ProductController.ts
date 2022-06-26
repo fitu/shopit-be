@@ -19,6 +19,7 @@ import DeleteProductByIdInteractor, { DeleteProductByIdData } from "../applicati
 import UpdateProductByIdInteractor, { UpdateProductByIdData } from "../application/UpdateProductByIdInteractor";
 import ProductService from "../domain/ProductService";
 import { ProductCategory } from "../domain/Product";
+
 import ProductViewModel from "./ProductViewModel";
 
 class ProductController implements Controller {

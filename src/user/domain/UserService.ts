@@ -97,6 +97,10 @@ class UserService {
         // TODO: do not hardcode this
         return user.role === "admin";
     }
+
+    public async deleteUserById(userId: string): Promise<boolean> {
+        throw new NotFoundError("User not found");
+    }
 }
 
 export default UserService;

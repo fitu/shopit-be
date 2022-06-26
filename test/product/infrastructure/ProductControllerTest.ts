@@ -14,12 +14,7 @@ import { NotFoundError } from "../../../src/shared/error/NotFoundError";
 import { NotAllowError } from "../../../src/shared/error/NotAllowError";
 import { getRandomUserWithId } from "../../shared/utils/UserFactory";
 import fileUploadMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
-import {
-    getProductWithData,
-    getRandomProduct,
-    getRandomProductWithId,
-    getRandomProductWithUser,
-} from "../../shared/utils/ProductFactory";
+import { getProductWithData, getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import { getMockPage } from "../../shared/utils/PageFactory";
 import TestRequest, { FAKE_JWT_USER_ID } from "../../shared/utils/requests";
 import Page from "../../../src/shared/Page";
@@ -64,7 +59,7 @@ describe("ProductController", function () {
         server.close();
     });
 
-    it("getProductById should return false and 422 if product id not uuid", async function () {
+    it("getProductById should return false and 422 if product id is not uuid", async function () {
         // Given
         const productId = "foo";
 
@@ -622,13 +617,9 @@ describe("ProductController", function () {
         });
     });
 
-    it("deleteProductId should return false and 422 if id is not uuid", async function () {
+    it("deleteProductById should return false and 422 if id is not uuid", async function () {
         // Given
         const productId = "foo";
-
-        productService.deleteProductById = async (productId: string): Promise<void> => {
-            throw new NotFoundError(productId);
-        };
 
         // When
         const response = await api.delete(`${path}/${productId}`);
@@ -642,7 +633,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("deleteProductId should return false and 404 if product was not found", async function () {
+    it("deleteProductById should return false and 404 if product was not found", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -662,7 +653,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("deleteProductId should return false and 422 if product was found but user is not admin nor the owner", async function () {
+    it("deleteProductById should return false and 422 if product was found but user is not admin nor the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -687,7 +678,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("deleteProductId should return true and 200 if product was found and user is admin", async function () {
+    it("deleteProductById should return true and 200 if product was found and user is admin", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -715,7 +706,7 @@ describe("ProductController", function () {
         expect(errors).to.be.undefined;
     });
 
-    it("deleteProductId should return true and 200 if product was found and user is the owner", async function () {
+    it("deleteProductById should return true and 200 if product was found and user is the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const userId = FAKE_JWT_USER_ID;
