@@ -86,4 +86,52 @@ describe("UserController", function () {
         expect(statusCode).to.be.equal(httpStatus.UNAUTHORIZED);
         expect(errors).to.be.not.undefined;
     });
+
+    it("deleteUserId should return false and 404 if user is admin but user to delete is not found", async function () {
+        // Given
+        const userId = "7e20b2c1-e95d-4e12-9125-cdd6c8cbd356";
+
+        userService.isAdmin = async (userId: string): Promise<boolean> => {
+            return true;
+        };
+
+        userService.deleteUserById = async (userId: string): Promise<void> => {
+            throw new NotFoundError(userId);
+        };
+
+        // When
+        const response = await api.delete(`${path}/${userId}`);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, errors } = body;
+
+        expect(success).to.be.false;
+        expect(statusCode).to.be.equal(httpStatus.NOT_FOUND);
+        expect(errors).to.be.not.undefined;
+    });
+
+    it("deleteUserId should return true and 200 if user is admin and user to delete is found", async function () {
+        // Given
+        const userId = "7e20b2c1-e95d-4e12-9125-cdd6c8cbd356";
+
+        userService.isAdmin = async (userId: string): Promise<boolean> => {
+            return true;
+        };
+
+        userService.deleteUserById = async (userId: string): Promise<void> => {
+            return;
+        };
+
+        // When
+        const response = await api.delete(`${path}/${userId}`);
+
+        // Then
+        const { body, statusCode } = response;
+        const { success, errors } = body;
+
+        expect(success).to.be.true;
+        expect(statusCode).to.be.equal(httpStatus.OK);
+        expect(errors).to.be.undefined;
+    });
 });

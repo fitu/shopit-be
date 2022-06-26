@@ -1,6 +1,8 @@
 import { expect } from "chai";
 
-import GetProductByIdInteractor from "../../../src/product/application/GetProductByIdInteractor";
+import GetProductByIdInteractor, {
+    GetProductByIdData,
+} from "../../../src/product/application/GetProductByIdInteractor";
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
 import { NotFoundError } from "../../../src/shared/error/NotFoundError";
@@ -23,11 +25,11 @@ describe("GetProductByIdInteractor", function () {
             throw new NotFoundError(errorMessage);
         };
 
-        const data = { productId: "foo" };
+        const inputData: GetProductByIdData = { productId: "foo" };
 
         try {
             // When
-            await interactor.execute(data);
+            await interactor.execute(inputData);
         } catch (error: any) {
             // Then
             expect(error).instanceOf(NotFoundError);
@@ -42,10 +44,10 @@ describe("GetProductByIdInteractor", function () {
         };
 
         const productId = "foo";
-        const data = { productId };
+        const inputData: GetProductByIdData = { productId: "foo" };
 
         // When
-        const product = await interactor.execute(data);
+        const product = await interactor.execute(inputData);
 
         // Then
         expect(product).to.be.instanceOf(ProductData);

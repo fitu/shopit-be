@@ -75,7 +75,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("getProductById should return false and 404 if product was not found", async function () {
+    it("getProductById should return false and 404 if product is not found", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -95,7 +95,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("getProductById should return success and 200 if product was found", async function () {
+    it("getProductById should return success and 200 if product is found", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -633,7 +633,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("deleteProductById should return false and 404 if product was not found", async function () {
+    it("deleteProductById should return false and 404 if product is not found", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -653,7 +653,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("deleteProductById should return false and 422 if product was found but user is not admin nor the owner", async function () {
+    it("deleteProductById should return false and 422 if product is found but user is not admin nor the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -678,7 +678,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("deleteProductById should return true and 200 if product was found and user is admin", async function () {
+    it("deleteProductById should return true and 200 if product is found and user is admin", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
@@ -706,7 +706,7 @@ describe("ProductController", function () {
         expect(errors).to.be.undefined;
     });
 
-    it("deleteProductById should return true and 200 if product was found and user is the owner", async function () {
+    it("deleteProductById should return true and 200 if product is found and user is the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const userId = FAKE_JWT_USER_ID;
@@ -1071,7 +1071,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("updateProductById should return false and 404 if product was not found before checking permissions", async function () {
+    it("updateProductById should return false and 404 if product is not found before checking permissions", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const title = "title";
@@ -1107,7 +1107,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("updateProductById should return false and 404 if product was not found", async function () {
+    it("updateProductById should return false and 404 if product is not found", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const title = "title";
@@ -1151,7 +1151,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("updateProductById should return false and 422 if product was found but user is not admin nor the owner", async function () {
+    it("updateProductById should return false and 422 if product is found but user is not admin nor the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const title = "title";
@@ -1192,7 +1192,7 @@ describe("ProductController", function () {
         expect(errors).to.be.not.undefined;
     });
 
-    it("updateProductById should return true and 200 if product was found and user is admin", async function () {
+    it("updateProductById should return true and 200 if product is found and user is admin", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const title = "title";
@@ -1248,7 +1248,7 @@ describe("ProductController", function () {
         });
     });
 
-    it("updateProductById should return true and 200 if product was found and user is the owner", async function () {
+    it("updateProductById should return true and 200 if product is found and user is the owner", async function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
         const title = "title";

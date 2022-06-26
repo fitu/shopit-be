@@ -98,8 +98,13 @@ class UserService {
         return user.role === "admin";
     }
 
-    public async deleteUserById(userId: string): Promise<boolean> {
-        throw new NotFoundError("User not found");
+    public async deleteUserById(userId: string): Promise<void> {
+        const success = await this.userRepository.deleteUserById(userId);
+
+        if (!success) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError("User not found");
+        }
     }
 }
 
