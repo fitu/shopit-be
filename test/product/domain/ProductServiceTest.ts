@@ -24,19 +24,18 @@ describe("ProductService", function () {
         const page = 1;
 
         repository.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
-            return getMockPage(products)
+            return getMockPage(products);
         };
 
         // When
         const result = await service.getAllProducts(page, -1);
-        
+
         // Then
         const { data, total, currentPage } = result;
 
         expect(data).to.be.instanceOf(Array).that.is.empty;
         expect(total).to.be.eq(products.length);
         expect(currentPage).to.be.eq(page);
-
     });
 
     it("getAllProducts should return an all products if were products", async function () {
@@ -45,7 +44,7 @@ describe("ProductService", function () {
         const page = 1;
 
         repository.getAllProducts = async (page: number, itemsPerPage: number): Promise<Page<Array<Product>>> => {
-            return getMockPage(products)
+            return getMockPage(products);
         };
 
         // When

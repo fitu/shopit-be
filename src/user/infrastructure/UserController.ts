@@ -83,6 +83,8 @@ class UserController implements Controller {
         this.router.get(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.getUserById);
     };
 
+    // FIXME: add create, update, delete
+
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { email, password }: { email: string; password: string } = req.body;
         const data = { email, password };
