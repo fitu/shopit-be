@@ -26,6 +26,7 @@ class UserRepository implements Repository {
         return newUsers.map((newUser) => newUser.toModel());
     }
 
+    // TODO: password shouldn't be updated this way
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userToUpdate: UserDao = await UserDao.findByPk(userId);
 

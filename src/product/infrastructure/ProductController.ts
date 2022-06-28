@@ -36,6 +36,7 @@ class ProductController implements Controller {
         this.userService = userService;
     }
 
+    // TODO: move validations to other place
     private initializeRoutes = (): void => {
         this.router.get(
             this.path,

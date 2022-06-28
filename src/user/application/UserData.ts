@@ -13,7 +13,7 @@ class UserData {
     readonly lastName: string;
     readonly email: string;
     readonly role: UserRole;
-    readonly password: string;
+    readonly password?: string;
     readonly resetPasswordToken?: string;
     readonly resetPasswordExpirationDate?: Date;
     readonly cart?: Cart;
@@ -42,7 +42,7 @@ class UserData {
         lastName: string;
         email: string;
         role: UserRole;
-        password: string;
+        password?: string;
         resetPasswordToken?: string;
         resetPasswordExpirationDate?: Date;
         cart?: Cart;

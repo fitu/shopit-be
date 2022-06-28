@@ -106,6 +106,17 @@ class UserService {
             throw new NotFoundError("User not found");
         }
     }
+
+    public async updateUserById(userId: string, user: User): Promise<User> {
+        const updatedUser = await this.userRepository.updateUserById(userId, user);
+
+        if (!user) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError("User not found");
+        }
+
+        return updatedUser;
+    }
 }
 
 export default UserService;

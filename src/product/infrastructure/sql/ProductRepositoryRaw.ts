@@ -106,7 +106,6 @@ class ProductRepositoryRaw implements Repository {
                     "${PRODUCT_IMAGE_URL}" = :${PRODUCT_IMAGE_URL},
                     "${PRODUCT_CATEGORY}" = :${PRODUCT_CATEGORY},
                     "${PRODUCT_STOCK}" = :${PRODUCT_STOCK},
-                    "${PRODUCT_CREATED_AT}" = :${PRODUCT_CREATED_AT},
                     "${PRODUCT_UPDATED_AT}" = :${PRODUCT_UPDATED_AT},
                     "${PRODUCT_USER_ID}" = :${PRODUCT_USER_ID}
                 WHERE "${PRODUCT_ID}" = '${productId}';
@@ -121,7 +120,6 @@ class ProductRepositoryRaw implements Repository {
                     [PRODUCT_IMAGE_URL]: product.imageUrl,
                     [PRODUCT_CATEGORY]: product.category,
                     [PRODUCT_STOCK]: +product.stock,
-                    [PRODUCT_CREATED_AT]: new Date().toISOString(),
                     [PRODUCT_UPDATED_AT]: new Date().toISOString(),
                     [PRODUCT_USER_ID]: product?.user?.id,
                 },

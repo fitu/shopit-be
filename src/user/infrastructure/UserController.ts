@@ -21,6 +21,7 @@ import GetAllUsersInteractor, { GetAllUsersData } from "../application/GetAllUse
 import GetUserByIdInteractor, { GetUserByIdData } from "../application/GetUserByIdInteractor";
 import { NotAllowError } from "../../shared/error/NotAllowError";
 import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../application/DeleteUserByIdInteractor";
+import UpdateUserByIdInteractor, { UpdateUserByIdData } from "../application/UpdateUserByIdInteractor";
 
 import UserViewModel from "./UserViewModel";
 
@@ -38,6 +39,7 @@ class UserController implements Controller {
         this.initializeRoutes();
     }
 
+    // TODO: move validations to other place
     private initializeRoutes = (): void => {
         this.router.post(
             `${this.path}/sign-in`,
@@ -92,9 +94,29 @@ class UserController implements Controller {
             isValid,
             this.deleteUserById
         );
+        this.router.put(
+            `${this.path}/:id`,
+            isAuthMiddleware,
+            [
+                body("firstName").notEmpty().isString().trim(),
+                body("lastName").notEmpty().isString().trim(),
+                body("email").notEmpty().isEmail(),
+                body("role")
+                    .notEmpty()
+                    .custom((value) => {
+                        // TODO: remove hardcoded
+                        if (value !== "admin" && value !== "user") {
+                            // TODO: remove hardcoded
+                            throw new Error("Invalid role input");
+                        }
+                        return true;
+                    })
+                    .trim(),
+            ],
+            isValid,
+            this.updateUserById
+        );
     };
-
-    // FIXME: add update
 
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { email, password }: { email: string; password: string } = req.body;
@@ -227,6 +249,42 @@ class UserController implements Controller {
             const interactor = new DeleteUserByIdInteractor(this.userService);
             await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: true });
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                return;
+            }
+            if (error instanceof NotAllowError) {
+                res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
+                return;
+            }
+            next(new Error(error));
+        }
+    };
+
+    private updateUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const { userId } = req;
+        // TODO: add validations and check avatar
+        const {
+            firstName,
+            lastName,
+            email,
+            role,
+        }: {
+            firstName: string;
+            lastName: string;
+            email: string;
+            role: UserRole;
+        } = req.body;
+        const userData = new UserData({ id, firstName, lastName, email, role });
+        const data: UpdateUserByIdData = { userId, userData };
+
+        try {
+            const interactor = new UpdateUserByIdInteractor(this.userService);
+            const result = await interactor.execute(data);
+            const updatedUser = UserViewModel.fromData(result);
+            res.status(httpStatus.OK).json({ success: true, data: updatedUser });
         } catch (error: any) {
             if (error instanceof NotFoundError) {
                 res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });

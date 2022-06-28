@@ -23,6 +23,7 @@ class UserRepository implements Repository {
         return insertedUsers;
     }
 
+    // TODO: password shouldn't be updated this way
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userDocument: UserFullDocument | null = await UserDocument.findOne({ remoteId: userId }).exec();
 

@@ -101,8 +101,6 @@ class UserRepositoryRaw implements Repository {
                     "${USER_LAST_NAME}" = :${USER_LAST_NAME},
                     "${USER_EMAIL}" = :${USER_EMAIL},
                     "${USER_ROLE}" = :${USER_ROLE},
-                    "${USER_PASSWORD}" = :${USER_PASSWORD},
-                    "${USER_CREATED_AT}" = :${USER_CREATED_AT},
                     "${USER_UPDATED_AT}" = :${USER_UPDATED_AT},
                 WHERE "${USER_ID}" = '${userId}';
             `,
@@ -113,8 +111,6 @@ class UserRepositoryRaw implements Repository {
                     [USER_LAST_NAME]: user.lastName,
                     [USER_EMAIL]: user.email,
                     [USER_ROLE]: user.role,
-                    [USER_PASSWORD]: user.password,
-                    [USER_CREATED_AT]: new Date().toISOString(),
                     [USER_UPDATED_AT]: new Date().toISOString(),
                 },
             }
