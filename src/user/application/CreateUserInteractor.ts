@@ -1,3 +1,4 @@
+import { NotAllowError } from "../../shared/error/NotAllowError";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import User from "../domain/User";
 import UserService from "../domain/UserService";
@@ -18,7 +19,15 @@ class CreateUserInteractor {
     }
 
     public async execute({ userData }: CreateUserData): Promise<UserData> {
+        const user: User = await this.userService.getUserByEmail(userData.email);
+
+        if (user) {
+            // TODO: do not hardcode strings
+            throw new NotAllowError("Email already in use");
+        }
+
         const newUser = new User({ ...userData, password: userData.password });
+
         const createdUser = await this.userService.insert(newUser);
 
         this.emailService.sendWelcomeEmail(userData.email);

@@ -98,11 +98,10 @@ class UserController implements Controller {
             `${this.path}/:id`,
             isAuthMiddleware,
             [
-                body("firstName").notEmpty().isString().trim(),
-                body("lastName").notEmpty().isString().trim(),
-                body("email").notEmpty().isEmail(),
+                body("firstName").isString().trim(),
+                body("lastName").isString().trim(),
+                body("email").isEmail(),
                 body("role")
-                    .notEmpty()
                     .custom((value) => {
                         // TODO: remove hardcoded
                         if (value !== "admin" && value !== "user") {
@@ -166,13 +165,14 @@ class UserController implements Controller {
         });
         const data = { userData };
 
-        // FIXME: should not crash when email is repeated
         const interactor = new CreateUserInteractor(this.userService, this.emailService);
-        const result = await interactor.execute(data);
-
-        const newUser = UserViewModel.fromData(result);
-
-        res.status(httpStatus.OK).json({ success: true, data: newUser });
+        try {
+            const result = await interactor.execute(data);
+            const newUser = UserViewModel.fromData(result);
+            res.status(httpStatus.OK).json({ success: true, data: newUser });
+        } catch (error: any) {
+            res.status(httpStatus.OK).json({ success: false, errors: error.message });
+        }
     };
 
     private forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
