@@ -1,6 +1,8 @@
+import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
+import { wasDeletionSuccessful } from "../../../shared/utils/sqlUtils";
 import Page from "../../../shared/Page";
 import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
@@ -31,7 +33,7 @@ class UserRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}
 
     public async insert(user: User): Promise<User> {
-        const userId = user.id || uuidv4();
+        const userId: string = user.id || uuidv4();
 
         await this.instance.query(
             `
@@ -76,7 +78,9 @@ class UserRepositoryRaw implements Repository {
             }
         );
 
-        return { ...user, id: userId };
+        const newUser = new User({ ...user, id: userId });
+
+        return newUser;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
@@ -88,20 +92,73 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async updateUserById(userId: string, user: User): Promise<User | null> {
-        return new Promise(() => {});
+        await this.instance.query(
+            `
+                UPDATE "${USER_TABLE}"
+                SET 
+                    "${USER_ID}" = :${USER_ID},
+                    "${USER_FIRST_NAME}" = :${USER_FIRST_NAME},
+                    "${USER_LAST_NAME}" = :${USER_LAST_NAME},
+                    "${USER_EMAIL}" = :${USER_EMAIL},
+                    "${USER_ROLE}" = :${USER_ROLE},
+                    "${USER_PASSWORD}" = :${USER_PASSWORD},
+                    "${USER_CREATED_AT}" = :${USER_CREATED_AT},
+                    "${USER_UPDATED_AT}" = :${USER_UPDATED_AT},
+                WHERE "${USER_ID}" = '${userId}';
+            `,
+            {
+                replacements: {
+                    [USER_ID]: userId,
+                    [USER_FIRST_NAME]: user.firstName,
+                    [USER_LAST_NAME]: user.lastName,
+                    [USER_EMAIL]: user.email,
+                    [USER_ROLE]: user.role,
+                    [USER_PASSWORD]: user.password,
+                    [USER_CREATED_AT]: new Date().toISOString(),
+                    [USER_UPDATED_AT]: new Date().toISOString(),
+                },
+            }
+        );
+
+        return user;
     }
 
-    // FIXME: complete this
     public async deleteUserById(userId: string): Promise<boolean> {
-        return new Promise(() => {});
+        const [_, metadata] = await this.instance.query(
+            `
+                DELETE FROM "${USER_TABLE}"
+                WHERE "${USER_ID}" = '${userId}';
+            `
+        );
+
+        return wasDeletionSuccessful(metadata);
     }
 
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
-        return new Promise(() => {});
+        const users = await this.instance.query(
+            `
+                SELECT *
+                FROM "${USER_TABLE}"
+                LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage};
+            `,
+            {
+                model: UserDao,
+                mapToModel: true,
+            }
+        );
+
+        const userModels: Array<User> = users.map((user) => user.toModel());
+
+        return new Page<Array<User>>({
+            data: userModels,
+            currentPage: page,
+            totalNumberOfDocuments: users.length,
+            itemsPerPage: itemsPerPage,
+        });
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        const users = await this.instance.query(
+        const [user] = await this.instance.query(
             `
                 SELECT *
                 FROM "${USER_TABLE}"
@@ -113,11 +170,15 @@ class UserRepositoryRaw implements Repository {
             }
         );
 
-        return users?.map((user) => user.toModel())[0];
+        if (isEmpty(user)) {
+            return null;
+        }
+
+        return user.toModel();
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
-        const users = await this.instance.query(
+        const [user] = await this.instance.query(
             `
                 SELECT *
                 FROM "${USER_TABLE}"
@@ -129,9 +190,14 @@ class UserRepositoryRaw implements Repository {
             }
         );
 
-        return users?.map((user) => user.toModel())[0];
+        if (isEmpty(user)) {
+            return null;
+        }
+
+        return user.toModel();
     }
 
+    // TODO: complete this
     public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
     }

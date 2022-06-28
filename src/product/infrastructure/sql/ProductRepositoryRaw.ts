@@ -76,7 +76,9 @@ class ProductRepositoryRaw implements Repository {
             }
         );
 
-        return { ...product, id: productId };
+        const newProduct = new Product({ ...product, id: productId });
+
+        return newProduct;
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
@@ -153,7 +155,7 @@ class ProductRepositoryRaw implements Repository {
             }
         );
 
-        const productModels = products.map((product) => product.toModel());
+        const productModels: Array<Product> = products.map((product) => product.toModel());
 
         return new Page<Array<Product>>({
             data: productModels,
