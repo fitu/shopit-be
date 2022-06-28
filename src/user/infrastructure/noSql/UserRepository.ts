@@ -72,6 +72,7 @@ class UserRepository implements Repository {
         return userDocument?.toModel();
     }
 
+    // TODO: complete this
     public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
     }

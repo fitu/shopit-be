@@ -3,27 +3,27 @@ import UserDao from "../../../user/infrastructure/sql/UserDao";
 import Product from "../../domain/Product";
 import { Repository } from "../Repository";
 
-import ProductDao, { validateProductToInsert } from "./ProductDao";
+import ProductDao, { validateProductFieldsToInsert } from "./ProductDao";
 
 class ProductRepository implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {
-        const productToInsert = validateProductToInsert(product);
-        const newProduct = await ProductDao.create(productToInsert);
+        const productToInsert: Product = validateProductFieldsToInsert(product);
+        const newProduct: ProductDao = await ProductDao.create(productToInsert);
 
-        const user = await UserDao.findByPk(userId);
-        const userProduct = [newProduct];
+        const user: UserDao = await UserDao.findByPk(userId);
+        const userProduct: Array<ProductDao> = [newProduct];
         await user.setProducts(userProduct);
 
         return newProduct.toModel();
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
-        const productsToSave = products.map((product) => validateProductToInsert(product));
-        const newProducts = await ProductDao.bulkCreate(productsToSave);
+        const productsToSave: Array<Product> = products.map((product) => validateProductFieldsToInsert(product));
+        const newProducts: Array<ProductDao> = await ProductDao.bulkCreate(productsToSave);
 
         const usersWithProductsPromises = userIds.map(async (userId, index) => {
-            const user = await UserDao.findByPk(userId);
-            const userProduct = [newProducts[index]];
+            const user: UserDao = await UserDao.findByPk(userId);
+            const userProduct: Array<ProductDao> = [newProducts[index]];
             await user.setProducts(userProduct);
         });
         await Promise.all(usersWithProductsPromises);
@@ -32,37 +32,38 @@ class ProductRepository implements Repository {
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
-        const productToUpdate = await ProductDao.findByPk(productId);
+        const productToUpdate: ProductDao = await ProductDao.findByPk(productId);
 
         if (!productToUpdate) {
             return null;
         }
 
-        const productToSave = validateProductToInsert(product);
-        const updatedProduct = await productToUpdate.update(productToSave);
+        const productToSave: Product = validateProductFieldsToInsert(product);
+        const updatedProduct: ProductDao = await productToUpdate.update(productToSave);
 
         return updatedProduct.toModel();
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {
-        const productToDelete = await ProductDao.findByPk(productId);
+        const productToDelete: ProductDao = await ProductDao.findByPk(productId);
 
         if (!productToDelete) {
             return false;
         }
 
         await productToDelete.destroy();
+
         return true;
     }
 
     public async getAllProducts(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const allProductsWithCount = await ProductDao.findAndCountAll({
+        const allProductsWithMetadata = await ProductDao.findAndCountAll({
             limit: itemsPerPage,
             offset: (page - 1) * itemsPerPage,
         });
 
-        const productModels = allProductsWithCount.rows.map((product) => product.toModel());
-        const totalDocuments = allProductsWithCount.count;
+        const productModels: Array<Product> = allProductsWithMetadata.rows.map((product) => product.toModel());
+        const totalDocuments: number = allProductsWithMetadata.count;
 
         return new Page<Array<Product>>({
             data: productModels,
@@ -73,17 +74,17 @@ class ProductRepository implements Repository {
     }
 
     public async getAllProductsWithUsers(page: number, itemsPerPage: number): Promise<Page<Array<Product>>> {
-        const allProductsWithCount = await ProductDao.findAndCountAll({
+        const allProductsWithMetadata = await ProductDao.findAndCountAll({
             limit: itemsPerPage,
             offset: (page - 1) * itemsPerPage,
         });
 
-        const productModelsPromises = allProductsWithCount.rows.map(async (product) => {
+        const productModelsPromises = allProductsWithMetadata.rows.map(async (product) => {
             const productOwner = await product.getUser();
             return { ...product.toModel(), user: productOwner.toModel() };
         });
-        const productModels = await Promise.all(productModelsPromises);
-        const totalDocuments = allProductsWithCount.count;
+        const productModels: Array<Product> = await Promise.all(productModelsPromises);
+        const totalDocuments: number = allProductsWithMetadata.count;
 
         return new Page<Array<Product>>({
             data: productModels,
@@ -94,18 +95,19 @@ class ProductRepository implements Repository {
     }
 
     public async getProductById(productId: string): Promise<Product | null> {
-        return ProductDao.findByPk(productId);
+        const productDao: ProductDao = await ProductDao.findByPk(productId);
+        return productDao?.toModel();
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
-        const product = await ProductDao.findByPk(productId);
+        const product: ProductDao = await ProductDao.findByPk(productId);
 
         if (!product) {
             return null;
         }
 
-        const productOwner = await product.getUser();
-        const productWithUser = { ...product.toModel(), user: productOwner.toModel() };
+        const productOwner: UserDao = await product.getUser();
+        const productWithUser: Product = { ...product.toModel(), user: productOwner.toModel() };
 
         return productWithUser;
     }

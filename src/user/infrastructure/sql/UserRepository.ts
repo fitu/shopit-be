@@ -4,64 +4,22 @@ import CartDao from "../../../cart/infrastructure/sql/CartDao";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
-import UserDao from "./UserDao";
+import UserDao, { USER_AVATAR, USER_CART, validateUserFieldsToInsert } from "./UserDao";
 
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {
-        const userToSave = {
-            ...(user.id && { id: user.id }),
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            role: user.role,
-            password: user.password,
-            resetPasswordToken: user.resetPasswordToken ?? null,
-            resetPasswordExpirationDate: user.resetPasswordExpirationDate
-                ? new Date(user.resetPasswordExpirationDate)
-                : null,
-        };
-        const newUser = await UserDao.create(userToSave);
+        const userToInsert: User = validateUserFieldsToInsert(user);
+        const newUser: UserDao = await UserDao.create(userToInsert);
 
         return newUser.toModel();
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        const usersToSave = users.map((user) => {
-            const cart = {
-                id: user.cart.id,
-                itemsPrice: user.cart.itemsPrice,
-                taxPrice: user.cart.taxPrice,
-                totalPrice: user.cart.totalPrice,
-            };
-
-            const avatar = user.avatar
-                ? {
-                      id: user.avatar.id,
-                      publicId: user.avatar.publicId,
-                      url: user.avatar.url,
-                  }
-                : null;
-
-            return {
-                ...(user.id && { id: user.id }),
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                role: user.role,
-                password: user.password,
-                resetPasswordToken: user.resetPasswordToken ?? null,
-                resetPasswordExpirationDate: user.resetPasswordExpirationDate
-                    ? new Date(user.resetPasswordExpirationDate)
-                    : null,
-                cart,
-                ...(avatar && { avatar }),
-            };
-        });
-
+        const usersToSave: Array<User> = users.map((user) => validateUserFieldsToInsert(user));
         const newUsers = await UserDao.bulkCreate(usersToSave, {
             include: [
-                { model: CartDao, as: "cart" },
-                { model: AvatarDao, as: "avatar" },
+                { model: CartDao, as: USER_CART },
+                { model: AvatarDao, as: USER_AVATAR },
             ],
         });
 
@@ -69,41 +27,58 @@ class UserRepository implements Repository {
     }
 
     public async updateUserById(userId: string, user: User): Promise<User | null> {
-        const userDao = await UserDao.findByPk(userId);
+        const userToUpdate: UserDao = await UserDao.findByPk(userId);
 
-        // TODO: this does not scale
-        userDao.id = user.id;
-        userDao.firstName = user.firstName;
-        userDao.lastName = user.lastName;
-        userDao.email = user.email;
-        userDao.role = user.role;
-        userDao.password = user.password;
-        userDao.resetPasswordToken = user.resetPasswordToken;
-        userDao.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
+        if (!userToUpdate) {
+            return null;
+        }
 
-        const updatedUser = await userDao.save();
+        const userToSave: User = validateUserFieldsToInsert(user);
+        const updatedUser: UserDao = await userToUpdate.update(userToSave);
 
         return updatedUser.toModel();
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        return new Promise(() => {});
+        const userToDelete: UserDao = await UserDao.findByPk(userId);
+
+        if (!userToDelete) {
+            return false;
+        }
+
+        await userToDelete.destroy();
+
+        return true;
     }
 
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
-        return new Promise(() => {});
+        const allUsersWithMetadata = await UserDao.findAndCountAll({
+            limit: itemsPerPage,
+            offset: (page - 1) * itemsPerPage,
+        });
+
+        const userModels: Array<User> = allUsersWithMetadata.rows.map((user) => user.toModel());
+        const totalDocuments: number = allUsersWithMetadata.count;
+
+        return new Page<Array<User>>({
+            data: userModels,
+            currentPage: page,
+            totalNumberOfDocuments: totalDocuments,
+            itemsPerPage: itemsPerPage,
+        });
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        const user = await UserDao.findByPk(userId);
+        const user: UserDao = await UserDao.findByPk(userId);
         return user?.toModel();
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
-        const user = await UserDao.findOne({ where: { email } });
+        const user: UserDao = await UserDao.findOne({ where: { email } });
         return user?.toModel();
     }
 
+    // TODO: complete this
     public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
     }

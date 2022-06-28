@@ -20,6 +20,8 @@ import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoD
 import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
 import User, { UserRole } from "../../domain/User";
 import { hashPasswordSync } from "../../../shared/utils/hashUtils";
+import Cart from "../../../cart/domain/Cart";
+import Avatar from "../../../avatar/domain/Avatar";
 
 import { fromUserDaoToModel } from "./userParsers";
 
@@ -49,8 +51,8 @@ interface UserAttributes {
     [USER_EMAIL]: string;
     [USER_ROLE]: UserRole;
     [USER_PASSWORD]: string;
-    [USER_RESET_PASSWORD_TOKEN]: string | null;
-    [USER_RESET_PASSWORD_EXPIRATION_DATE]: Date | null;
+    [USER_RESET_PASSWORD_TOKEN]?: string | null;
+    [USER_RESET_PASSWORD_EXPIRATION_DATE]?: Date | null;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
@@ -182,8 +184,44 @@ const init = (sequelize: Sequelize): void => {
     );
 };
 
+const validateUserFieldsToInsert = (user: User): User => {
+    const cart = new Cart({
+        id: user.cart.id,
+        itemsPrice: user.cart.itemsPrice,
+        taxPrice: user.cart.taxPrice,
+        totalPrice: user.cart.totalPrice,
+    });
+
+    const avatar = user.avatar
+        ? new Avatar({
+              id: user.avatar.id,
+              publicId: user.avatar.publicId,
+              url: user.avatar.url,
+          })
+        : null;
+
+    // TODO: check this ...()
+    const validatedUser = new User({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+        password: user.password,
+        resetPasswordToken: user?.resetPasswordToken,
+        resetPasswordExpirationDate: user.resetPasswordExpirationDate
+            ? new Date(user.resetPasswordExpirationDate)
+            : null,
+        cart,
+        avatar,
+    });
+
+    return validatedUser;
+};
+
 export {
     init,
+    validateUserFieldsToInsert,
     USER_TABLE,
     USER_ID,
     USER_FIRST_NAME,

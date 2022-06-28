@@ -91,6 +91,7 @@ class UserRepositoryRaw implements Repository {
         return new Promise(() => {});
     }
 
+    // FIXME: complete this
     public async deleteUserById(userId: string): Promise<boolean> {
         return new Promise(() => {});
     }

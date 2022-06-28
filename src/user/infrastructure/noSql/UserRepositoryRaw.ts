@@ -110,6 +110,7 @@ class UserRepositoryRaw implements Repository {
         return user;
     }
 
+    // TODO: complete this
     public async addProduct(userId: string, productId: string): Promise<void> {
         return new Promise(() => {});
     }

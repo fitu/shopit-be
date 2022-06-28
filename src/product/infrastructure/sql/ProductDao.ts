@@ -160,7 +160,7 @@ const init = (sequelize: Sequelize): void => {
     );
 };
 
-const validateProductToInsert = (product: Product): Product => ({
+const validateProductFieldsToInsert = (product: Product): Product => ({
     ...(product.id && { id: product.id }),
     title: product.title,
     description: product.description,
@@ -173,7 +173,7 @@ const validateProductToInsert = (product: Product): Product => ({
 
 export {
     init,
-    validateProductToInsert,
+    validateProductFieldsToInsert,
     PRODUCT_TABLE,
     PRODUCT_ID,
     PRODUCT_TITLE,
