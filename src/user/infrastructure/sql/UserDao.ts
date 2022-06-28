@@ -185,12 +185,14 @@ const init = (sequelize: Sequelize): void => {
 };
 
 const validateUserFieldsToInsert = (user: User): User => {
-    const cart = new Cart({
-        id: user.cart.id,
-        itemsPrice: user.cart.itemsPrice,
-        taxPrice: user.cart.taxPrice,
-        totalPrice: user.cart.totalPrice,
-    });
+    const cart = user.cart
+        ? new Cart({
+              id: user.cart.id,
+              itemsPrice: user.cart.itemsPrice,
+              taxPrice: user.cart.taxPrice,
+              totalPrice: user.cart.totalPrice,
+          })
+        : null;
 
     const avatar = user.avatar
         ? new Avatar({
@@ -200,7 +202,6 @@ const validateUserFieldsToInsert = (user: User): User => {
           })
         : null;
 
-    // TODO: check this ...()
     const validatedUser = new User({
         id: user.id,
         firstName: user.firstName,

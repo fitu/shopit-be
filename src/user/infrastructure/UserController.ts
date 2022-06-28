@@ -7,6 +7,7 @@ import { SignInError } from "../../shared/error/SignInError";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
+import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import { generateJWTToken } from "../../shared/utils/hashUtils";
 import Page, { getPageAndItemsPerPage } from "../../shared/Page";
 import UserData from "../application/UserData";
@@ -84,10 +85,16 @@ class UserController implements Controller {
             this.getUsers
         );
         this.router.get(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.getUserById);
-        this.router.delete(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.deleteUserById);
+        this.router.delete(
+            `${this.path}/:id`,
+            isAuthMiddleware,
+            [param("id").notEmpty().isUUID()],
+            isValid,
+            this.deleteUserById
+        );
     };
 
-    // FIXME: add create, update
+    // FIXME: add update
 
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { email, password }: { email: string; password: string } = req.body;
@@ -113,7 +120,7 @@ class UserController implements Controller {
     };
 
     private createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // TODO: add validations
+        // TODO: add validations and check avatar
         const {
             firstName,
             lastName,
@@ -137,6 +144,7 @@ class UserController implements Controller {
         });
         const data = { userData };
 
+        // FIXME: should not crash when email is repeated
         const interactor = new CreateUserInteractor(this.userService, this.emailService);
         const result = await interactor.execute(data);
 
