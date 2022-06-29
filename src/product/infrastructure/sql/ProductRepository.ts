@@ -14,7 +14,8 @@ class ProductRepository implements Repository {
         const userProduct: Array<ProductDao> = [newProduct];
         await user.setProducts(userProduct);
 
-        return newProduct.toModel();
+        const newProductModel = newProduct.toModel();
+        return newProductModel;
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
@@ -28,7 +29,8 @@ class ProductRepository implements Repository {
         });
         await Promise.all(usersWithProductsPromises);
 
-        return newProducts.map((newProduct) => newProduct.toModel());
+        const newProductModels = newProducts.map((newProduct) => newProduct.toModel());
+        return newProductModels;
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
@@ -41,7 +43,8 @@ class ProductRepository implements Repository {
         const productToSave: Product = validateProductFieldsToInsert(product);
         const updatedProduct: ProductDao = await productToUpdate.update(productToSave);
 
-        return updatedProduct.toModel();
+        const updatedProductModel = updatedProduct.toModel();
+        return updatedProductModel;
     }
 
     public async deleteProductById(productId: string): Promise<boolean> {
@@ -83,11 +86,11 @@ class ProductRepository implements Repository {
             const productOwner = await product.getUser();
             return { ...product.toModel(), user: productOwner.toModel() };
         });
-        const productModels: Array<Product> = await Promise.all(productModelsPromises);
+        const products: Array<Product> = await Promise.all(productModelsPromises);
         const totalDocuments: number = allProductsWithMetadata.count;
 
         return new Page<Array<Product>>({
-            data: productModels,
+            data: products,
             currentPage: page,
             totalNumberOfDocuments: totalDocuments,
             itemsPerPage: itemsPerPage,
@@ -96,7 +99,9 @@ class ProductRepository implements Repository {
 
     public async getProductById(productId: string): Promise<Product | null> {
         const productDao: ProductDao = await ProductDao.findByPk(productId);
-        return productDao?.toModel();
+        
+        const product = productDao?.toModel();
+        return product;
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
@@ -107,8 +112,8 @@ class ProductRepository implements Repository {
         }
 
         const productOwner: UserDao = await product.getUser();
+        
         const productWithUser: Product = { ...product.toModel(), user: productOwner.toModel() };
-
         return productWithUser;
     }
 }

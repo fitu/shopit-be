@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { Repository as ProductRepository } from "../../../src/product/infrastructure/Repository";
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
-import { NotFoundError } from "../../../src/shared/error/NotFoundError";
+import NotFoundError from "../../../src/shared/error/NotFoundError";
 import { getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import Page from "../../../src/shared/Page";
 import { getMockPage } from "../../shared/utils/PageFactory";

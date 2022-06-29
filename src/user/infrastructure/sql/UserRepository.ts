@@ -1,3 +1,5 @@
+import { omit } from "lodash";
+
 import Page from "../../../shared/Page";
 import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
 import CartDao from "../../../cart/infrastructure/sql/CartDao";
@@ -5,13 +7,13 @@ import User from "../../domain/User";
 import { Repository } from "../Repository";
 
 import UserDao, { USER_AVATAR, USER_CART, validateUserFieldsToInsert } from "./UserDao";
-
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {
         const userToInsert: User = validateUserFieldsToInsert(user);
         const newUser: UserDao = await UserDao.create(userToInsert);
 
-        return newUser.toModel();
+        const newUserModel = newUser.toModel();
+        return newUserModel;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
@@ -23,10 +25,10 @@ class UserRepository implements Repository {
             ],
         });
 
-        return newUsers.map((newUser) => newUser.toModel());
+        const newUserModels = newUsers.map((newUser) => newUser.toModel());
+        return newUserModels;
     }
 
-    // TODO: password shouldn't be updated this way
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userToUpdate: UserDao = await UserDao.findByPk(userId);
 
@@ -35,9 +37,24 @@ class UserRepository implements Repository {
         }
 
         const userToSave: User = validateUserFieldsToInsert(user);
-        const updatedUser: UserDao = await userToUpdate.update(userToSave);
+        const userWithoutPassword = omit(userToSave, "password");
+        const updatedUser: UserDao = await userToUpdate.update(userWithoutPassword);
 
-        return updatedUser.toModel();
+        const updateUserModel = updatedUser.toModel();
+        return updateUserModel;
+    }
+
+    public async updatePassword(user: User, newPassword: string): Promise<void> {
+        const userToUpdate: UserDao = await UserDao.findByPk(user.id);
+
+        if (!userToUpdate) {
+            return null;
+        }
+
+        const userToSave: User = validateUserFieldsToInsert(user);
+        userToSave.password = newPassword;
+
+        await userToUpdate.update(userToSave);
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
@@ -71,12 +88,16 @@ class UserRepository implements Repository {
 
     public async getUserById(userId: string): Promise<User | null> {
         const user: UserDao = await UserDao.findByPk(userId);
-        return user?.toModel();
+
+        const userModel = user?.toModel();
+        return userModel;
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
         const user: UserDao = await UserDao.findOne({ where: { email } });
-        return user?.toModel();
+
+        const userModel = user?.toModel();
+        return userModel;
     }
 
     // TODO: complete this

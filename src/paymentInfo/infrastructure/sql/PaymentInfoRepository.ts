@@ -13,7 +13,8 @@ class PaymentInfoRepository implements Repository {
         const user = await UserDao.findByPk(userId);
         await user.setPaymentsInfo([newPaymentInfo]);
 
-        return newPaymentInfo.toModel();
+        const newPaymentInfoModel = newPaymentInfo.toModel();
+        return newPaymentInfoModel;
     }
 
     public async insertBatch(paymentsInfo: Array<PaymentInfo>, userIds: Array<string>): Promise<Array<PaymentInfo>> {
@@ -31,7 +32,8 @@ class PaymentInfoRepository implements Repository {
 
         await Promise.all(usersWithPaymentsInfoPromises);
 
-        return newPaymentsInfo.map((newPaymentInfo) => newPaymentInfo.toModel());
+        const newPaymentInfoModels = newPaymentsInfo.map((newPaymentInfo) => newPaymentInfo.toModel());
+        return newPaymentInfoModels;
     }
 }
 

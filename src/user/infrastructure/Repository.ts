@@ -5,6 +5,7 @@ interface Repository {
     insert: (user: User) => Promise<User>;
     insertBatch: (users: Array<User>) => Promise<Array<User>>;
     updateUserById: (userId: string, user: User) => Promise<User | null>;
+    updatePassword: (user: User, password: string) => Promise<void>;
     deleteUserById: (userId: string) => Promise<boolean>;
     getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>>;
     getUserById: (userId: string) => Promise<User | null>;

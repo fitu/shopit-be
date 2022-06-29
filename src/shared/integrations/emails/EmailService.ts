@@ -30,6 +30,8 @@ class EmailService {
 
     public async sendForgotPassword(email: string, token: string): Promise<void> {
         // TODO: remove hardcoded
+        console.log(`http://localhost:3000/users/reset-password?token=${token}&email=${email}`);
+
         const emailData = new Email({
             to: email,
             from: "victorio.matteucci.shopit@gmail.com",

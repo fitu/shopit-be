@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { wasDeletionSuccessful } from "../../../shared/utils/sqlUtils";
 import Page from "../../../shared/Page";
-import { hashPasswordSync } from "../../../shared/utils/hashUtils";
+import { hashPassword } from "../../../shared/utils/hashUtils";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
 
@@ -34,6 +34,7 @@ class UserRepositoryRaw implements Repository {
 
     public async insert(user: User): Promise<User> {
         const userId: string = user.id || uuidv4();
+        const hashedPassword = await hashPassword(user.password);
 
         await this.instance.query(
             `
@@ -69,7 +70,7 @@ class UserRepositoryRaw implements Repository {
                     [USER_LAST_NAME]: user.lastName,
                     [USER_EMAIL]: user.email,
                     [USER_ROLE]: user.role,
-                    [USER_PASSWORD]: hashPasswordSync(user.password),
+                    [USER_PASSWORD]: hashedPassword,
                     [USER_RESET_PASSWORD_TOKEN]: user.resetPasswordToken,
                     [USER_RESET_PASSWORD_EXPIRATION_DATE]: user.resetPasswordExpirationDate,
                     [USER_CREATED_AT]: new Date().toISOString(),
@@ -101,7 +102,9 @@ class UserRepositoryRaw implements Repository {
                     "${USER_LAST_NAME}" = :${USER_LAST_NAME},
                     "${USER_EMAIL}" = :${USER_EMAIL},
                     "${USER_ROLE}" = :${USER_ROLE},
-                    "${USER_UPDATED_AT}" = :${USER_UPDATED_AT},
+                    "${USER_RESET_PASSWORD_TOKEN}" = :${USER_RESET_PASSWORD_TOKEN},
+                    "${USER_RESET_PASSWORD_EXPIRATION_DATE}" = :${USER_RESET_PASSWORD_EXPIRATION_DATE},
+                    "${USER_UPDATED_AT}" = :${USER_UPDATED_AT}
                 WHERE "${USER_ID}" = '${userId}';
             `,
             {
@@ -111,12 +114,38 @@ class UserRepositoryRaw implements Repository {
                     [USER_LAST_NAME]: user.lastName,
                     [USER_EMAIL]: user.email,
                     [USER_ROLE]: user.role,
+                    [USER_RESET_PASSWORD_TOKEN]: user.resetPasswordToken,
+                    [USER_RESET_PASSWORD_EXPIRATION_DATE]: user.resetPasswordExpirationDate,
                     [USER_UPDATED_AT]: new Date().toISOString(),
                 },
             }
         );
 
         return user;
+    }
+
+    public async updatePassword(user: User, newPassword: string): Promise<void> {
+        const hashedPassword = await hashPassword(newPassword);
+
+        await this.instance.query(
+            `
+                UPDATE "${USER_TABLE}"
+                SET 
+                    "${USER_PASSWORD}" = :${USER_PASSWORD},
+                    "${USER_RESET_PASSWORD_TOKEN}" = :${USER_RESET_PASSWORD_TOKEN},
+                    "${USER_RESET_PASSWORD_EXPIRATION_DATE}" = :${USER_RESET_PASSWORD_EXPIRATION_DATE},
+                    "${USER_UPDATED_AT}" = :${USER_UPDATED_AT}
+                WHERE "${USER_ID}" = '${user.id}';
+            `,
+            {
+                replacements: {
+                    [USER_PASSWORD]: hashedPassword,
+                    [USER_RESET_PASSWORD_TOKEN]: null,
+                    [USER_RESET_PASSWORD_EXPIRATION_DATE]: null,
+                    [USER_UPDATED_AT]: new Date().toISOString(),
+                },
+            }
+        );
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
@@ -170,7 +199,8 @@ class UserRepositoryRaw implements Repository {
             return null;
         }
 
-        return user.toModel();
+        const userModel = user.toModel();
+        return userModel;
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
@@ -190,7 +220,8 @@ class UserRepositoryRaw implements Repository {
             return null;
         }
 
-        return user.toModel();
+        const userModel = user.toModel();
+        return userModel;
     }
 
     // TODO: complete this

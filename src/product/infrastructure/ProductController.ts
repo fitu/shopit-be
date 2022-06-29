@@ -2,8 +2,8 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
-import { NotFoundError } from "../../shared/error/NotFoundError";
-import { NotAllowError } from "../../shared/error/NotAllowError";
+import NotFoundError from "../../shared/error/NotFoundError";
+import NotAllowError from "../../shared/error/NotAllowError";
 import Controller from "../../shared/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";

@@ -20,7 +20,8 @@ class ReviewRepository implements Repository {
         const user = await UserDao.findByPk(userId);
         await user.setReviews([newReview]);
 
-        return newReview.toModel();
+        const newReviewModel = newReview.toModel();
+        return newReviewModel;
     }
 
     public async insertBatch(
@@ -51,7 +52,8 @@ class ReviewRepository implements Repository {
         });
         await Promise.all(usersWithReviewsPromises);
 
-        return newReviews.map((newReview) => newReview.toModel());
+        const newReviewModels = newReviews.map((newReview) => newReview.toModel());
+        return newReviewModels;
     }
 }
 

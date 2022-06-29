@@ -13,8 +13,9 @@ class ResetPasswordInteractor {
         this.userService = userService;
     }
 
-    public async execute(data: ResetPasswordData): Promise<void> {
-        this.userService.updatePassword(data.email, data.newPassword, data.resetPasswordToken);
+    public async execute({ email, newPassword, resetPasswordToken }: ResetPasswordData): Promise<void> {
+        const user = await this.userService.getUserByEmail(email);
+        await this.userService.updatePassword(user, newPassword, resetPasswordToken);
     }
 }
 

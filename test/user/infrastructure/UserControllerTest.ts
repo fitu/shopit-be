@@ -11,7 +11,7 @@ import TestRequest from "../../shared/utils/requests";
 import UserController from "../../../src/user/infrastructure/UserController";
 import EmailService from "../../../src/shared/integrations/emails/EmailService";
 import fileUploaderMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
-import { NotFoundError } from "../../../src/shared/error/NotFoundError";
+import NotFoundError from "../../../src/shared/error/NotFoundError";
 
 describe("UserController", function () {
     let userService: UserService;

@@ -1,4 +1,4 @@
-class NotAllowError extends Error {
+class InvalidDataError extends Error {
     constructor(public message: string) {
         super(message);
 
@@ -6,4 +6,4 @@ class NotAllowError extends Error {
     }
 }
 
-export default NotAllowError;
+export default InvalidDataError;

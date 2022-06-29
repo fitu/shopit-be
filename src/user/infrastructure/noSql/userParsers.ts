@@ -71,7 +71,7 @@ const updateUserDocument = (userDocument: UserFullDocument, user: User): UserFul
     userDocument.lastName = user.lastName;
     userDocument.email = user.email;
     userDocument.role = user.role;
-    userDocument.password = user.password;
+    userDocument.password = null;
     userDocument.resetPasswordToken = user.resetPasswordToken;
     userDocument.resetPasswordExpirationDate = user.resetPasswordExpirationDate;
 

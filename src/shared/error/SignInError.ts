@@ -6,4 +6,4 @@ class SignInError extends Error {
     }
 }
 
-export { SignInError };
+export default SignInError;

@@ -2,8 +2,8 @@ import { expect } from "chai";
 
 import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../../../src/user/application/DeleteUserByIdInteractor";
 import UserService from "../../../src/user/domain/UserService";
-import { NotFoundError } from "../../../src/shared/error/NotFoundError";
-import { NotAllowError } from "../../../src/shared/error/NotAllowError";
+import NotFoundError from "../../../src/shared/error/NotFoundError";
+import NotAllowError from "../../../src/shared/error/NotAllowError";
 
 describe("DeleteUserByIdInteractor", function () {
     let service: UserService;

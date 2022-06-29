@@ -1,9 +1,10 @@
 import moment from "moment";
 
 import Page from "../../shared/Page";
-import { NotAllowError } from "../../shared/error/NotAllowError";
-import { NotFoundError } from "../../shared/error/NotFoundError";
-import { doPasswordsMatch, hashPassword } from "../../shared/utils/hashUtils";
+import NotAllowError from "../../shared/error/NotAllowError";
+import NotFoundError from "../../shared/error/NotFoundError";
+import InvalidDataError from "../../shared/error/InvalidDataError";
+import { doPasswordsMatch } from "../../shared/utils/hashUtils";
 import { Repository as UserRepository } from "../infrastructure/Repository";
 
 import User from "./User";
@@ -72,19 +73,13 @@ class UserService {
         await this.userRepository.updateUserById(user.id, user);
     }
 
-    public async updatePassword(email: string, newPassword: string, resetPasswordToken: string): Promise<void> {
-        const user = await this.userRepository.getUserByEmail(email);
-
+    public async updatePassword(user: User, newPassword: string, resetPasswordToken: string): Promise<void> {
         if (resetPasswordToken != user.resetPasswordToken) {
-            // TODO: handle error
+            // TODO: do not hardcode this
+            throw new InvalidDataError("Data submited is invalid");
         }
 
-        const hashedPassword = await hashPassword(newPassword);
-        user.password = hashedPassword;
-        user.resetPasswordToken = null;
-        user.resetPasswordExpirationDate = null;
-
-        await this.userRepository.updateUserById(user.id, user);
+        await this.userRepository.updatePassword(user, newPassword);
     }
 
     public async isAdmin(userId: string): Promise<boolean> {

@@ -1,3 +1,4 @@
+import { hashPassword } from "../../../shared/utils/hashUtils";
 import Page from "../../../shared/Page";
 import User from "../../domain/User";
 import { Repository } from "../Repository";
@@ -11,19 +12,19 @@ class UserRepository implements Repository {
 
         const newUserDocument: UserFullDocument = await UserDocument.create(userToSave);
 
-        return newUserDocument.toModel();
+        const newUserModel = newUserDocument.toModel();
+        return newUserModel;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
         const usersToSave: Array<UserDao> = users.map((user) => fromUserToDao(user));
 
         const newUserDocuments: Array<UserFullDocument> = await UserDocument.insertMany(usersToSave);
-        const insertedUsers: Array<User> = newUserDocuments.map((newUserDocument) => newUserDocument.toModel());
 
+        const insertedUsers: Array<User> = newUserDocuments.map((newUserDocument) => newUserDocument.toModel());
         return insertedUsers;
     }
 
-    // TODO: password shouldn't be updated this way
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userDocument: UserFullDocument | null = await UserDocument.findOne({ remoteId: userId }).exec();
 
@@ -33,9 +34,23 @@ class UserRepository implements Repository {
 
         const userDocumentUpdated: UserFullDocument = updateUserDocument(userDocument, user);
         const updatedUserDocument: UserFullDocument = await userDocumentUpdated.save();
-        const updatedUser: User = updatedUserDocument.toModel();
 
+        const updatedUser: User = updatedUserDocument.toModel();
         return updatedUser;
+    }
+
+    public async updatePassword(user: User, newPassword: string): Promise<void> {
+        const userDocument: UserFullDocument | null = await UserDocument.findOne({ remoteId: user.id }).exec();
+
+        if (!userDocument) {
+            return null;
+        }
+
+        userDocument.password = await hashPassword(newPassword);
+        userDocument.resetPasswordToken = null;
+        userDocument.resetPasswordExpirationDate = null;
+
+        await userDocument.save();
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
@@ -65,12 +80,16 @@ class UserRepository implements Repository {
 
     public async getUserById(userId: string): Promise<User | null> {
         const userDocument: UserFullDocument | null = await UserDocument.findOne({ remoteId: userId }).exec();
-        return userDocument?.toModel();
+
+        const userModel = userDocument?.toModel();
+        return userModel;
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
         const userDocument: UserFullDocument | null = await UserDocument.findOne({ email }).exec();
-        return userDocument?.toModel();
+
+        const userModel = userDocument?.toModel();
+        return userModel;
     }
 
     // TODO: complete this

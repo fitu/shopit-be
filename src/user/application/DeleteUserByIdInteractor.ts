@@ -1,4 +1,4 @@
-import { NotAllowError } from "../../shared/error/NotAllowError";
+import NotAllowError from "../../shared/error/NotAllowError";
 import UserService from "../../user/domain/UserService";
 
 interface DeleteUserByIdData {

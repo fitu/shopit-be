@@ -1,4 +1,4 @@
-import { SignInError } from "../../shared/error/SignInError";
+import SignInError from "../../shared/error/SignInError";
 import UserService from "../domain/UserService";
 import User from "../domain/User";
 

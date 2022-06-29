@@ -13,7 +13,8 @@ class CartRepository implements Repository {
             totalPrice: cart.totalPrice,
         });
 
-        return newCart.toModel();
+        const newCartModel = newCart.toModel();
+        return newCartModel;
     }
 }
 

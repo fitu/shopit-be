@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { Repository as UserRepository } from "../../../src/user/infrastructure/Repository";
 import UserService from "../../../src/user/domain/UserService";
-import { NotFoundError } from "../../../src/shared/error/NotFoundError";
+import NotFoundError from "../../../src/shared/error/NotFoundError";
 
 describe("ProductService", function () {
     let repository: UserRepository;

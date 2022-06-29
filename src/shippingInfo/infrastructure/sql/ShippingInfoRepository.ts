@@ -18,7 +18,8 @@ class ShippingInfoRepository implements Repository {
         const user = await UserDao.findByPk(userId);
         await user.setShippingsInfo([newShippingInfo]);
 
-        return newShippingInfo.toModel();
+        const newShippingInfoModel = newShippingInfo.toModel();
+        return newShippingInfoModel;
     }
 
     public async insertBatch(shippingsInfo: Array<ShippingInfo>, userIds: Array<string>): Promise<Array<ShippingInfo>> {
@@ -41,7 +42,8 @@ class ShippingInfoRepository implements Repository {
 
         await Promise.all(usersWithShippingsInfoPromises);
 
-        return newShippingsInfo.map((newShippingInfo) => newShippingInfo.toModel());
+        const newShippingInfoModels = newShippingsInfo.map((newShippingInfo) => newShippingInfo.toModel());
+        return newShippingInfoModels;
     }
 }
 

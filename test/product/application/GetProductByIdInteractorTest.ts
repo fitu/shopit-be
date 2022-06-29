@@ -5,7 +5,7 @@ import GetProductByIdInteractor, {
 } from "../../../src/product/application/GetProductByIdInteractor";
 import ProductService from "../../../src/product/domain/ProductService";
 import Product from "../../../src/product/domain/Product";
-import { NotFoundError } from "../../../src/shared/error/NotFoundError";
+import NotFoundError from "../../../src/shared/error/NotFoundError";
 import { getRandomProductWithId } from "../../shared/utils/ProductFactory";
 import ProductData from "../../../src/product/application/ProductData";
 

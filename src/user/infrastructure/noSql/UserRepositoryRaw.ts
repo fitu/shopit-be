@@ -51,6 +51,15 @@ class UserRepositoryRaw implements Repository {
         return user;
     }
 
+    public async updatePassword(user: User, newPassword: string): Promise<void> {
+        user.password = await hashPassword(newPassword);
+        user.resetPasswordToken = null;
+        user.resetPasswordExpirationDate = null;
+
+        const userToSave: UserDao = fromUserToDao(user);
+        await mongoose.connection.db.collection(USER_DOCUMENT).replaceOne({ remoteId: user.id }, userToSave);
+    }
+
     public async deleteUserById(userId: string): Promise<boolean> {
         const { value: deletedProduct } = await mongoose.connection.db
             .collection(USER_DOCUMENT)

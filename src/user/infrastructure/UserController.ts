@@ -2,8 +2,10 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
-import { NotFoundError } from "../../shared/error/NotFoundError";
-import { SignInError } from "../../shared/error/SignInError";
+import NotFoundError from "../../shared/error/NotFoundError";
+import SignInError from "../../shared/error/SignInError";
+import NotAllowError from "../../shared/error/NotAllowError";
+import InvalidDataError from "../../shared/error/InvalidDataError";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
@@ -14,12 +16,11 @@ import UserData from "../application/UserData";
 import { UserRole } from "../domain/User";
 import UserService from "../domain/UserService";
 import CreateUserInteractor from "../application/CreateUserInteractor";
-import ForgotPasswordInteractor from "../application/ForgotPasswordInteractor";
-import ResetPasswordInteractor from "../application/ResetPasswordInteractor";
+import ForgotPasswordInteractor, { ForgotPasswordData } from "../application/ForgotPasswordInteractor";
+import ResetPasswordInteractor, { ResetPasswordData } from "../application/ResetPasswordInteractor";
 import SignInUserInteractor from "../application/SignInUserInteractor";
 import GetAllUsersInteractor, { GetAllUsersData } from "../application/GetAllUsersInteractor";
 import GetUserByIdInteractor, { GetUserByIdData } from "../application/GetUserByIdInteractor";
-import { NotAllowError } from "../../shared/error/NotAllowError";
 import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../application/DeleteUserByIdInteractor";
 import UpdateUserByIdInteractor, { UpdateUserByIdData } from "../application/UpdateUserByIdInteractor";
 
@@ -100,12 +101,10 @@ class UserController implements Controller {
      */
 
     private initializeRoutes = (): void => {
-        this.router.post(`${this.path}/sign-in`, this.validations.signInPost, this.signInUser);
-        this.router.post(`${this.path}/sign-up`, this.validations.signUpPost, this.createUser);
-        this.router.post(`${this.path}/forgot-password`, this.validations.forgotPasswordPost, this.forgotPassword);
-        this.router.post(`${this.path}/reset-password`, this.validations.resetPasswordPost, this.resetPassword);
         this.router.get(this.path, this.validations.getAll, isValid, this.getUsers);
         this.router.get(`${this.path}/:id`, this.validations.getOne, isValid, this.getUserById);
+        this.router.post(`${this.path}/sign-up`, this.validations.signUpPost, this.createUser);
+        this.router.put(`${this.path}/:id`, isAuthMiddleware, this.validations.putOne, isValid, this.updateUserById);
         this.router.delete(
             `${this.path}/:id`,
             isAuthMiddleware,
@@ -113,30 +112,39 @@ class UserController implements Controller {
             isValid,
             this.deleteUserById
         );
-        this.router.put(`${this.path}/:id`, isAuthMiddleware, this.validations.putOne, isValid, this.updateUserById);
+        this.router.post(`${this.path}/sign-in`, this.validations.signInPost, this.signInUser);
+        this.router.post(`${this.path}/forgot-password`, this.validations.forgotPasswordPost, this.forgotPassword);
+        this.router.post(`${this.path}/reset-password`, this.validations.resetPasswordPost, this.resetPassword);
     };
 
-    private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { email, password }: { email: string; password: string } = req.body;
-        const data = { email, password };
+    private getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const data: GetUserByIdData = { userId: id };
 
-        const interactor = new SignInUserInteractor(this.userService);
         try {
+            const interactor = new GetUserByIdInteractor(this.userService);
             const result = await interactor.execute(data);
-            const token = await generateJWTToken(result.email, result.id);
-
-            res.status(httpStatus.OK).json({ success: true, data: token });
+            const user = UserViewModel.fromData(result);
+            res.status(httpStatus.OK).json({ success: true, data: user });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
-                res.status(httpStatus.NOT_FOUND).json({ success: false });
-                return;
-            }
-            if (error instanceof SignInError) {
-                res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
-                return;
-            }
-            next(new Error(error));
+            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
         }
+    };
+
+    private getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const [page, itemsPerPage] = getPageAndItemsPerPage(req);
+        const data: GetAllUsersData = { page, itemsPerPage };
+
+        const interactor = new GetAllUsersInteractor(this.userService);
+        const result = await interactor.execute(data);
+
+        const usersWithMetadata = result as Page<Array<UserData>>;
+        const allUsers = {
+            ...usersWithMetadata,
+            data: usersWithMetadata.data.map((user) => UserViewModel.fromData(user)),
+        };
+
+        res.status(httpStatus.OK).json({ success: true, ...allUsers });
     };
 
     private createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -174,99 +182,9 @@ class UserController implements Controller {
         }
     };
 
-    // FIXME: fix this
-    private forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // TODO: add validations
-        const { email }: { email: string } = req.body;
-
-        const data = { email };
-
-        const interactor = new ForgotPasswordInteractor(this.userService, this.emailService);
-        try {
-            await interactor.execute(data);
-            res.status(httpStatus.OK).json({ success: true });
-        } catch (error: any) {
-            next(new Error(error));
-        }
-    };
-
-    // FIXME: fix this
-    private resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        // TODO: add validations
-        const {
-            email,
-            newPassword,
-            resetPasswordToken,
-        }: { email: string; newPassword: string; resetPasswordToken: string } = req.body;
-
-        const data = { email, newPassword, resetPasswordToken };
-
-        const interactor = new ResetPasswordInteractor(this.userService);
-        try {
-            const result = await interactor.execute(data);
-            res.status(httpStatus.OK).json({ success: result });
-        } catch (error: any) {
-            next(new Error(error));
-        }
-    };
-
-    private getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const [page, itemsPerPage] = getPageAndItemsPerPage(req);
-        const data: GetAllUsersData = { page, itemsPerPage };
-
-        const interactor = new GetAllUsersInteractor(this.userService);
-        const result = await interactor.execute(data);
-
-        const usersWithMetadata = result as Page<Array<UserData>>;
-        const allUsers = {
-            ...usersWithMetadata,
-            data: usersWithMetadata.data.map((user) => UserViewModel.fromData(user)),
-        };
-
-        res.status(httpStatus.OK).json({ success: true, ...allUsers });
-    };
-
-    private getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { id } = req.params;
-        const data: GetUserByIdData = { userId: id };
-
-        try {
-            const interactor = new GetUserByIdInteractor(this.userService);
-            const result = await interactor.execute(data);
-            const user = UserViewModel.fromData(result);
-            res.status(httpStatus.OK).json({ success: true, data: user });
-        } catch (error: any) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
-        }
-    };
-
-    private deleteUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { id } = req.params;
-        const { userId } = req;
-
-        const data: DeleteUserByIdData = { userId, userToDelete: id };
-
-        try {
-            const interactor = new DeleteUserByIdInteractor(this.userService);
-            await interactor.execute(data);
-            res.status(httpStatus.OK).json({ success: true });
-        } catch (error: any) {
-            if (error instanceof NotFoundError) {
-                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
-                return;
-            }
-            if (error instanceof NotAllowError) {
-                res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
-                return;
-            }
-            next(new Error(error));
-        }
-    };
-
     private updateUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
         const { userId } = req;
-        // TODO: add validations and check avatar
         const {
             firstName,
             lastName,
@@ -293,6 +211,93 @@ class UserController implements Controller {
             }
             if (error instanceof NotAllowError) {
                 res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
+                return;
+            }
+            next(new Error(error));
+        }
+    };
+
+    private deleteUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const { userId } = req;
+        const data: DeleteUserByIdData = { userId, userToDelete: id };
+
+        try {
+            const interactor = new DeleteUserByIdInteractor(this.userService);
+            await interactor.execute(data);
+            res.status(httpStatus.OK).json({ success: true });
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                return;
+            }
+            if (error instanceof NotAllowError) {
+                res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
+                return;
+            }
+            next(new Error(error));
+        }
+    };
+
+    private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { email, password }: { email: string; password: string } = req.body;
+        const data = { email, password };
+
+        const interactor = new SignInUserInteractor(this.userService);
+        try {
+            const result = await interactor.execute(data);
+            const token = await generateJWTToken(result.email, result.id);
+
+            res.status(httpStatus.OK).json({ success: true, data: token });
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false });
+                return;
+            }
+            if (error instanceof SignInError) {
+                res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false });
+                return;
+            }
+            next(new Error(error));
+        }
+    };
+
+    private forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const { email }: { email: string } = req.body;
+        const data: ForgotPasswordData = { email };
+
+        try {
+            const interactor = new ForgotPasswordInteractor(this.userService, this.emailService);
+            await interactor.execute(data);
+            res.status(httpStatus.OK).json({ success: true });
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                return;
+            }
+            next(new Error(error));
+        }
+    };
+
+    private resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const {
+            email,
+            newPassword,
+            resetPasswordToken,
+        }: { email: string; newPassword: string; resetPasswordToken: string } = req.body;
+        const data: ResetPasswordData = { email, newPassword, resetPasswordToken };
+
+        try {
+            const interactor = new ResetPasswordInteractor(this.userService);
+            const result = await interactor.execute(data);
+            res.status(httpStatus.OK).json({ success: result });
+        } catch (error: any) {
+            if (error instanceof NotFoundError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                return;
+            }
+            if (error instanceof InvalidDataError) {
+                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
                 return;
             }
             next(new Error(error));

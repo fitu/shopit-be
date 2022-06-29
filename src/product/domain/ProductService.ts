@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 
 import Page from "../../shared/Page";
-import { NotFoundError } from "../../shared/error/NotFoundError";
+import NotFoundError from "../../shared/error/NotFoundError";
 import { Repository as ProductRepository } from "../infrastructure/Repository";
 
 import Product from "./Product";

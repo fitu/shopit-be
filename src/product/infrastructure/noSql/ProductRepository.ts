@@ -14,7 +14,8 @@ class ProductRepository implements Repository {
 
         const newProductDocument: ProductFullDocument = await ProductDocument.create(productToSave);
 
-        return newProductDocument.toModel();
+        const newProductModel = newProductDocument.toModel();
+        return newProductModel;
     }
 
     public async insertBatch(products: Array<Product>, userIds: Array<string>): Promise<Array<Product>> {
@@ -24,11 +25,11 @@ class ProductRepository implements Repository {
         );
 
         const insertedProductDocuments: Array<ProductFullDocument> = await ProductDocument.insertMany(productsToSave);
-        const insertedProducts: Array<Product> = insertedProductDocuments.map((insertedProductDocument) =>
+        const newProductModels: Array<Product> = insertedProductDocuments.map((insertedProductDocument) =>
             insertedProductDocument.toModel()
         );
 
-        return insertedProducts;
+        return newProductModels;
     }
 
     public async updateProductById(productId: string, product: Product): Promise<Product | null> {
@@ -99,7 +100,8 @@ class ProductRepository implements Repository {
             remoteId: productId,
         }).exec();
 
-        return productDocument?.toModel();
+        const product = productDocument?.toModel();
+        return product;
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {

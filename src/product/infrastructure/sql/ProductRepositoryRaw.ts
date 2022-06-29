@@ -207,7 +207,8 @@ class ProductRepositoryRaw implements Repository {
             return null;
         }
 
-        return product.toModel();
+        const productModel = product.toModel();
+        return productModel;
     }
 
     public async getProductWithUserById(productId: string): Promise<Product | null> {
