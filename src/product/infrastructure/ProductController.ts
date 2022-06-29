@@ -23,6 +23,10 @@ import { ProductCategory } from "../domain/Product";
 import ProductViewModel from "./ProductViewModel";
 
 class ProductController implements Controller {
+    /*
+     * Variables and constructor
+     */
+
     public path = "/products";
     public router = Router();
 
@@ -36,72 +40,23 @@ class ProductController implements Controller {
         this.userService = userService;
     }
 
-    // TODO: move validations to other place
-    private initializeRoutes = (): void => {
-        this.router.get(
-            this.path,
-            [
-                query("page").isNumeric().optional({ nullable: true }),
-                query("itemsPerPage").isNumeric().optional({ nullable: true }),
-            ],
-            isValid,
-            this.getProducts
-        );
-        this.router.get(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.getProductById);
-        this.router.post(
-            this.path,
-            isAuthMiddleware,
-            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single("image"),
-            [
-                body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
-                body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
-                body("price").notEmpty().isNumeric(),
-                body("category")
-                    .notEmpty()
-                    .custom((value) => {
-                        // TODO: remove hardcoded
-                        if (
-                            value !== "Electronics" &&
-                            value !== "Cameras" &&
-                            value !== "Laptops" &&
-                            value !== "Accessories" &&
-                            value !== "Headphones" &&
-                            value !== "Food" &&
-                            value !== "Books" &&
-                            value !== "Clothes/Shoes" &&
-                            value !== "Beauty/Health" &&
-                            value !== "Sports" &&
-                            value !== "Outdoor" &&
-                            value !== "Home"
-                        ) {
-                            // TODO: remove hardcoded
-                            throw new Error("Invalid category input");
-                        }
-                        return true;
-                    }),
-                body("stock").notEmpty().isNumeric(),
-            ],
-            isValid,
-            this.createProduct
-        );
-        this.router.delete(
-            `${this.path}/:id`,
-            isAuthMiddleware,
-            [param("id").notEmpty().isUUID()],
-            isValid,
-            this.deleteProductById
-        );
-        this.router.put(
-            `${this.path}/:id`,
-            isAuthMiddleware,
-            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single("image"),
-            [
-                param("id").notEmpty().isUUID(),
-                body("title").isString().isLength({ min: 5 }).trim(),
-                body("description").isString().isLength({ min: 10, max: 400 }).trim(),
-                body("price").isNumeric(),
-                body("imageUrl").isString(),
-                body("category").custom((value) => {
+    /*
+     * Route's validations
+     */
+
+    private validations = {
+        getOne: [param("id").notEmpty().isUUID()],
+        getAll: [
+            query("page").isNumeric().optional({ nullable: true }),
+            query("itemsPerPage").isNumeric().optional({ nullable: true }),
+        ],
+        createOne: [
+            body("title").notEmpty().isString().isLength({ min: 5 }).trim(),
+            body("description").notEmpty().isString().isLength({ min: 10, max: 400 }).trim(),
+            body("price").notEmpty().isNumeric(),
+            body("category")
+                .notEmpty()
+                .custom((value) => {
                     // TODO: remove hardcoded
                     if (
                         value !== "Electronics" &&
@@ -122,8 +77,67 @@ class ProductController implements Controller {
                     }
                     return true;
                 }),
-                body("stock").isNumeric(),
-            ],
+            body("stock").notEmpty().isNumeric(),
+        ],
+        updateOne: [
+            param("id").notEmpty().isUUID(),
+            body("title").isString().isLength({ min: 5 }).trim(),
+            body("description").isString().isLength({ min: 10, max: 400 }).trim(),
+            body("price").isNumeric(),
+            body("imageUrl").isString(),
+            body("category").custom((value) => {
+                // TODO: remove hardcoded
+                if (
+                    value !== "Electronics" &&
+                    value !== "Cameras" &&
+                    value !== "Laptops" &&
+                    value !== "Accessories" &&
+                    value !== "Headphones" &&
+                    value !== "Food" &&
+                    value !== "Books" &&
+                    value !== "Clothes/Shoes" &&
+                    value !== "Beauty/Health" &&
+                    value !== "Sports" &&
+                    value !== "Outdoor" &&
+                    value !== "Home"
+                ) {
+                    // TODO: remove hardcoded
+                    throw new Error("Invalid category input");
+                }
+                return true;
+            }),
+            body("stock").isNumeric(),
+        ],
+        deleteOne: [param("id").notEmpty().isUUID()],
+    };
+
+    /*
+     * Routes
+     */
+
+    private initializeRoutes = (): void => {
+        this.router.get(this.path, this.validations.getAll, isValid, this.getProducts);
+        this.router.get(`${this.path}/:id`, this.validations.getOne, isValid, this.getProductById);
+        this.router.post(
+            this.path,
+            isAuthMiddleware,
+            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single("image"),
+            this.validations.createOne,
+            isValid,
+            this.createProduct
+        );
+        this.router.delete(
+            `${this.path}/:id`,
+            isAuthMiddleware,
+            this.validations.deleteOne,
+            isValid,
+            this.deleteProductById
+        );
+        this.router.put(
+            `${this.path}/:id`,
+            isAuthMiddleware,
+            fileUploadMiddleware.fileUpload(generateImageUploaderConfig()).single("image"),
+            this.validations.updateOne,
             isValid,
             this.updateProductById
         );
@@ -275,7 +289,6 @@ class ProductController implements Controller {
 }
 // TODO: errors with messages and translated
 // TODO: remove hardcoded
-// TODO: validate ID
 // TODO: validate image for update
 
 export default ProductController;

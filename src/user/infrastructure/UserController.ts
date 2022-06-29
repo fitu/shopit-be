@@ -26,6 +26,10 @@ import UpdateUserByIdInteractor, { UpdateUserByIdData } from "../application/Upd
 import UserViewModel from "./UserViewModel";
 
 class UserController implements Controller {
+    /*
+     * Variables and constructor
+     */
+
     public path = "/users";
     public router = Router();
 
@@ -39,82 +43,77 @@ class UserController implements Controller {
         this.initializeRoutes();
     }
 
-    // TODO: move validations to other place
-    private initializeRoutes = (): void => {
-        this.router.post(
-            `${this.path}/sign-in`,
-            [body("email").notEmpty().isEmail(), body("password").notEmpty().isLength({ min: 6 })],
-            this.signInUser
-        );
-        this.router.post(
-            `${this.path}/sign-up`,
-            [
-                body("firstName").notEmpty().isString().trim(),
-                body("lastName").notEmpty().isString().trim(),
-                body("email").notEmpty().isEmail(),
-                body("role")
-                    .notEmpty()
-                    .custom((value) => {
+    /*
+     * Route's validations
+     */
+
+    private validations = {
+        getOne: [param("id").notEmpty().isUUID()],
+        getAll: [
+            query("page").isNumeric().optional({ nullable: true }),
+            query("itemsPerPage").isNumeric().optional({ nullable: true }),
+        ],
+        signUpPost: [
+            body("firstName").notEmpty().isString().trim(),
+            body("lastName").notEmpty().isString().trim(),
+            body("email").notEmpty().isEmail(),
+            body("role")
+                .notEmpty()
+                .custom((value) => {
+                    // TODO: remove hardcoded
+                    if (value !== "admin" && value !== "user") {
                         // TODO: remove hardcoded
-                        if (value !== "admin" && value !== "user") {
-                            // TODO: remove hardcoded
-                            throw new Error("Invalid role input");
-                        }
-                        return true;
-                    })
-                    .trim(),
-                body("password").notEmpty().isLength({ min: 6 }),
-            ],
-            this.createUser
-        );
-        this.router.post(`${this.path}/forgot-password`, body("email").notEmpty().isEmail(), this.forgotPassword);
-        this.router.post(
-            `${this.path}/reset-password`,
-            [
-                body("email").notEmpty().isEmail(),
-                body("newPassword").notEmpty().isLength({ min: 6 }),
-                body("resetPasswordToken").notEmpty().isString().trim(),
-            ],
-            this.resetPassword
-        );
-        this.router.get(
-            this.path,
-            [
-                query("page").isNumeric().optional({ nullable: true }),
-                query("itemsPerPage").isNumeric().optional({ nullable: true }),
-            ],
-            isValid,
-            this.getUsers
-        );
-        this.router.get(`${this.path}/:id`, [param("id").notEmpty().isUUID()], isValid, this.getUserById);
+                        throw new Error("Invalid role input");
+                    }
+                    return true;
+                })
+                .trim(),
+            body("password").notEmpty().isLength({ min: 6 }),
+        ],
+        putOne: [
+            body("firstName").isString().trim(),
+            body("lastName").isString().trim(),
+            body("email").isEmail(),
+            body("role")
+                .custom((value) => {
+                    // TODO: remove hardcoded
+                    if (value !== "admin" && value !== "user") {
+                        // TODO: remove hardcoded
+                        throw new Error("Invalid role input");
+                    }
+                    return true;
+                })
+                .trim(),
+        ],
+        deleteOne: [param("id").notEmpty().isUUID()],
+        signInPost: [body("email").notEmpty().isEmail(), body("password").notEmpty().isLength({ min: 6 })],
+        forgotPasswordPost: [body("email").notEmpty().isEmail()],
+        resetPasswordPost: [
+            body("email").notEmpty().isEmail(),
+            body("newPassword").notEmpty().isLength({ min: 6 }),
+            body("resetPasswordToken").notEmpty().isString().trim(),
+        ],
+    };
+
+    /*
+     * Routes
+     */
+
+    private initializeRoutes = (): void => {
+        this.router.post(`${this.path}/sign-in`, this.validations.signInPost, this.signInUser);
+        this.router.post(`${this.path}/sign-up`, this.validations.signUpPost, this.createUser);
+        this.router.post(`${this.path}/forgot-password`, this.validations.forgotPasswordPost, this.forgotPassword);
+        this.router.post(`${this.path}/reset-password`, this.validations.resetPasswordPost, this.resetPassword);
+        this.router.get(this.path, this.validations.getAll, isValid, this.getUsers);
+        this.router.get(`${this.path}/:id`, this.validations.getOne, isValid, this.getUserById);
         this.router.delete(
             `${this.path}/:id`,
             isAuthMiddleware,
-            [param("id").notEmpty().isUUID()],
+            this.validations.deleteOne,
             isValid,
             this.deleteUserById
         );
-        this.router.put(
-            `${this.path}/:id`,
-            isAuthMiddleware,
-            [
-                body("firstName").isString().trim(),
-                body("lastName").isString().trim(),
-                body("email").isEmail(),
-                body("role")
-                    .custom((value) => {
-                        // TODO: remove hardcoded
-                        if (value !== "admin" && value !== "user") {
-                            // TODO: remove hardcoded
-                            throw new Error("Invalid role input");
-                        }
-                        return true;
-                    })
-                    .trim(),
-            ],
-            isValid,
-            this.updateUserById
-        );
+        this.router.put(`${this.path}/:id`, isAuthMiddleware, this.validations.putOne, isValid, this.updateUserById);
     };
 
     private signInUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -175,6 +174,7 @@ class UserController implements Controller {
         }
     };
 
+    // FIXME: fix this
     private forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         // TODO: add validations
         const { email }: { email: string } = req.body;
@@ -190,6 +190,7 @@ class UserController implements Controller {
         }
     };
 
+    // FIXME: fix this
     private resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         // TODO: add validations
         const {
