@@ -2,13 +2,13 @@ import NoSqlDb from "./noSql/NoSqlDb";
 import SqlDb from "./sql/SqlDb";
 
 enum DbType {
-    SQL = 'sql',
-    NO_SQL = 'nosql',
+    SQL = "sql",
+    NO_SQL = "nosql",
 }
 
 enum DbQuery {
-    ORM = 'orm',
-    RAW = 'raw',
+    ORM = "orm",
+    RAW = "raw",
 }
 
 interface DatabaseOptions {

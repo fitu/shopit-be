@@ -13,7 +13,7 @@ import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import { generateJWTToken } from "../../shared/utils/hashUtils";
 import Page, { getPageAndItemsPerPage } from "../../shared/Page";
 import UserData from "../application/UserData";
-import { UserRole } from "../domain/User";
+import { UserRole, validUserRoles } from "../domain/User";
 import UserService from "../domain/UserService";
 import CreateUserInteractor from "../application/CreateUserInteractor";
 import ForgotPasswordInteractor, { ForgotPasswordData } from "../application/ForgotPasswordInteractor";
@@ -61,8 +61,7 @@ class UserController implements Controller {
             body("role")
                 .notEmpty()
                 .custom((value) => {
-                    // TODO: remove hardcoded
-                    if (value !== "admin" && value !== "user") {
+                    if (!validUserRoles.includes(value)) {
                         // TODO: remove hardcoded
                         throw new Error("Invalid role input");
                     }
@@ -77,8 +76,7 @@ class UserController implements Controller {
             body("email").isEmail(),
             body("role")
                 .custom((value) => {
-                    // TODO: remove hardcoded
-                    if (value !== "admin" && value !== "user") {
+                    if (!validUserRoles.includes(value)) {
                         // TODO: remove hardcoded
                         throw new Error("Invalid role input");
                     }

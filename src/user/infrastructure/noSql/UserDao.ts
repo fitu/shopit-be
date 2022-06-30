@@ -1,7 +1,7 @@
 import mongoose, { Document, Types } from "mongoose";
 
-import { doPasswordsMatch, hashPassword } from "../../../shared/utils/hashUtils";
-import User, { UserRole } from "../../domain/User";
+import { hashPassword } from "../../../shared/utils/hashUtils";
+import User, { UserRole, validUserRoles } from "../../domain/User";
 
 import { fromUserDocumentToModel } from "./userParsers";
 
@@ -136,7 +136,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: {
             // TODO: remove hardcoded
-            values: ["user", "admin"],
+            values: validUserRoles,
             message: "Please select correct role",
         },
     },

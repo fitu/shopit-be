@@ -1,14 +1,13 @@
 import { faker } from "@faker-js/faker";
 
-import User from "../../../src/user/domain/User";
+import User, { UserRole } from "../../../src/user/domain/User";
 
 const getRandomUser = (): User => {
     const user = new User({
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
         email: faker.internet.email(),
-        // TODO: do not hardcode this
-        role: "user",
+        role: UserRole.USER,
         password: faker.random.alpha(10),
         resetPasswordToken: null,
         resetPasswordExpirationDate: null,

@@ -4,7 +4,12 @@ import Avatar from "../../avatar/domain/Avatar";
 import Cart from "../../cart/domain/Cart";
 import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
 
-type UserRole = 'user' | 'admin';
+enum UserRole {
+    USER = "user",
+    ADMIN = "admin",
+}
+
+const validUserRoles: Array<string> = Object.values(UserRole);
 
 class User {
     id?: string;
@@ -66,5 +71,5 @@ class User {
     }
 }
 
-export type { UserRole };
+export { UserRole, validUserRoles };
 export default User;

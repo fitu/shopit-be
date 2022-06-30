@@ -13,14 +13,14 @@ import {
     Sequelize,
 } from "sequelize";
 
-import { OrderStatus } from "../../domain/Order";
+import { OrderStatus, validOrderStatus } from "../../domain/Order";
 import OrderItemDao from "../../../orderItem/infrastructure/sql/OrderItemDao";
 import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 import ProductDao from "../../../product/infrastructure/sql/ProductDao";
 import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
 
-const ORDER_TABLE = 'orders';
+const ORDER_TABLE = "orders";
 
 interface OrderAttributes {
     id: string;
@@ -33,7 +33,7 @@ interface OrderAttributes {
     paidAt?: Date | null;
 }
 
-interface OrderCreationAttributes extends Optional<OrderAttributes, 'id'> {}
+interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {}
 
 class OrderDao extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
     public id!: string;
@@ -114,8 +114,7 @@ const init = (sequelize: Sequelize): void => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
-                    // TODO: get from model
-                    isIn: [['processing', 'shipped', 'delivered']],
+                    isIn: [validOrderStatus],
                 },
             },
             deliveredAt: {

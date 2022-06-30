@@ -18,7 +18,7 @@ import GetProductByIdInteractor, { GetProductByIdData } from "../application/Get
 import DeleteProductByIdInteractor, { DeleteProductByIdData } from "../application/DeleteProductByIdInteractor";
 import UpdateProductByIdInteractor, { UpdateProductByIdData } from "../application/UpdateProductByIdInteractor";
 import ProductService from "../domain/ProductService";
-import { ProductCategory } from "../domain/Product";
+import { ProductCategory, validProductCategories } from "../domain/Product";
 
 import ProductViewModel from "./ProductViewModel";
 
@@ -57,21 +57,7 @@ class ProductController implements Controller {
             body("category")
                 .notEmpty()
                 .custom((value) => {
-                    // TODO: remove hardcoded
-                    if (
-                        value !== "Electronics" &&
-                        value !== "Cameras" &&
-                        value !== "Laptops" &&
-                        value !== "Accessories" &&
-                        value !== "Headphones" &&
-                        value !== "Food" &&
-                        value !== "Books" &&
-                        value !== "Clothes/Shoes" &&
-                        value !== "Beauty/Health" &&
-                        value !== "Sports" &&
-                        value !== "Outdoor" &&
-                        value !== "Home"
-                    ) {
+                    if (!validProductCategories.includes(value)) {
                         // TODO: remove hardcoded
                         throw new Error("Invalid category input");
                     }
@@ -86,21 +72,7 @@ class ProductController implements Controller {
             body("price").isNumeric(),
             body("imageUrl").isString(),
             body("category").custom((value) => {
-                // TODO: remove hardcoded
-                if (
-                    value !== "Electronics" &&
-                    value !== "Cameras" &&
-                    value !== "Laptops" &&
-                    value !== "Accessories" &&
-                    value !== "Headphones" &&
-                    value !== "Food" &&
-                    value !== "Books" &&
-                    value !== "Clothes/Shoes" &&
-                    value !== "Beauty/Health" &&
-                    value !== "Sports" &&
-                    value !== "Outdoor" &&
-                    value !== "Home"
-                ) {
+                if (!validProductCategories.includes(value)) {
                     // TODO: remove hardcoded
                     throw new Error("Invalid category input");
                 }

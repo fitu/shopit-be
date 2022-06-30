@@ -12,8 +12,7 @@ const getRandomProduct = (): Product => {
         price: +faker.commerce.price(),
         ratings: +faker.random.numeric(),
         imageUrl: faker.system.directoryPath(),
-        // TODO: do not hardcode this
-        category: "Electronics",
+        category: ProductCategory.ELECTRONICS,
         stock: +faker.random.numeric(),
     });
 
@@ -64,8 +63,7 @@ const getProductWithData = ({
         price: price ?? +faker.commerce.price(),
         ratings: 0,
         imageUrl: imageUrl ?? faker.system.directoryPath(),
-        // TODO: do not hardcode this
-        category: category ?? "Electronics",
+        category: category ?? ProductCategory.ELECTRONICS,
         stock: stock ?? +faker.random.numeric(),
         user: user ?? getRandomUser(),
     });

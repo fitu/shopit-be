@@ -1,7 +1,7 @@
 import { omit } from "lodash";
 import mongoose, { Document } from "mongoose";
 
-import Order, { OrderStatus } from "../../domain/Order";
+import Order, { OrderStatus, validOrderStatus } from "../../domain/Order";
 
 const ORDER_SCHEMA = "Order";
 
@@ -47,7 +47,7 @@ const orderSchema = new mongoose.Schema({
         required: true,
         enum: {
             // TODO: remove hardcoded
-            values: ["processing", "shipped", "delivered"],
+            values: validOrderStatus,
             message: "Please select correct category for product",
         },
     },

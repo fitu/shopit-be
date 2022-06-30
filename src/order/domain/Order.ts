@@ -1,4 +1,10 @@
-type OrderStatus = "processing" | "shipped" | "delivered";
+enum OrderStatus {
+    PROCESSING = "processing",
+    SHIPPED = "shipped",
+    DELIVERD = "delivered",
+}
+
+const validOrderStatus: Array<string> = Object.values(OrderStatus);
 
 class Order {
     readonly id?: string;
@@ -40,5 +46,5 @@ class Order {
     }
 }
 
-export type { OrderStatus };
+export { OrderStatus, validOrderStatus };
 export default Order;

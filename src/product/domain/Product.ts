@@ -1,18 +1,21 @@
 import User from "../../user/domain/User";
 
-type ProductCategory =
-    | "Electronics"
-    | "Cameras"
-    | "Laptops"
-    | "Accessories"
-    | "Headphones"
-    | "Food"
-    | "Books"
-    | "Clothes/Shoes"
-    | "Beauty/Health"
-    | "Sports"
-    | "Outdoor"
-    | "Home";
+enum ProductCategory {
+    ELECTRONICS = "Electronics",
+    CAMERAS = "Cameras",
+    LAPTOPS = "Laptops",
+    ACCESSORIES = "Accessories",
+    HEADPHONES = "Headphones",
+    FOOD = "Food",
+    BOOKS = "Books",
+    CLOTHES_SHOES = "Clothes/Shoes",
+    BEAUTY_HEALTH = "Beauty/Health",
+    SPORTS = "Sports",
+    OUTDOOR = "Outdoor",
+    HOME = "Home",
+}
+
+const validProductCategories: Array<string> = Object.values(ProductCategory);
 
 class Product {
     readonly id?: string;
@@ -34,7 +37,7 @@ class Product {
         imageUrl,
         category,
         stock,
-        user
+        user,
     }: {
         id?: string;
         title: string;
@@ -58,5 +61,5 @@ class Product {
     }
 }
 
-export type { ProductCategory };
+export { ProductCategory, validProductCategories };
 export default Product;

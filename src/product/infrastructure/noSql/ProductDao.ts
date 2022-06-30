@@ -1,7 +1,7 @@
 import mongoose, { Document, Types } from "mongoose";
 
 import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
-import Product, { ProductCategory } from "../../domain/Product";
+import Product, { ProductCategory, validProductCategories } from "../../domain/Product";
 import { fromProductDocumentToModel } from "./productParsers";
 
 const PRODUCT_SCHEMA = "Product";
@@ -55,21 +55,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: {
-            // TODO: remove hardcoded
-            values: [
-                "Electronics",
-                "Cameras",
-                "Laptops",
-                "Accessories",
-                "Headphones",
-                "Food",
-                "Books",
-                "Clothes/Shoes",
-                "Beauty/Health",
-                "Sports",
-                "Outdoor",
-                "Home",
-            ],
+            values: validProductCategories,
             message: "Please select correct category",
         },
     },

@@ -18,7 +18,7 @@ import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
 import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
 import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
 import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
-import User, { UserRole } from "../../domain/User";
+import User, { UserRole, validUserRoles } from "../../domain/User";
 import { hashPasswordSync } from "../../../shared/utils/hashUtils";
 import Cart from "../../../cart/domain/Cart";
 import Avatar from "../../../avatar/domain/Avatar";
@@ -155,8 +155,7 @@ const init = (sequelize: Sequelize): void => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
-                    // TODO: get from model
-                    isIn: [["user", "admin"]],
+                    isIn: [validUserRoles],
                 },
             },
             [USER_PASSWORD]: {

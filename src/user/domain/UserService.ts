@@ -7,7 +7,7 @@ import InvalidDataError from "../../shared/error/InvalidDataError";
 import { doPasswordsMatch } from "../../shared/utils/hashUtils";
 import { Repository as UserRepository } from "../infrastructure/Repository";
 
-import User from "./User";
+import User, { UserRole } from "./User";
 
 class UserService {
     private userRepository: UserRepository;
@@ -89,8 +89,7 @@ class UserService {
             return false;
         }
 
-        // TODO: do not hardcode this
-        return user.role === "admin";
+        return user.role === UserRole.ADMIN.toString();
     }
 
     public async deleteUserById(userId: string): Promise<void> {

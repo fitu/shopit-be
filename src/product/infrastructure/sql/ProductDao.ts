@@ -14,7 +14,7 @@ import {
 
 import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
 import UserDao from "../../../user/infrastructure/sql/UserDao";
-import Product, { ProductCategory } from "../../domain/Product";
+import Product, { ProductCategory, validProductCategories } from "../../domain/Product";
 
 import { fromProductDaoToModel } from "./productParsers";
 
@@ -124,25 +124,7 @@ const init = (sequelize: Sequelize): void => {
             [PRODUCT_CATEGORY]: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                validate: {
-                    // TODO: get from model
-                    isIn: [
-                        [
-                            "Electronics",
-                            "Cameras",
-                            "Laptops",
-                            "Accessories",
-                            "Headphones",
-                            "Food",
-                            "Books",
-                            "Clothes/Shoes",
-                            "Beauty/Health",
-                            "Sports",
-                            "Outdoor",
-                            "Home",
-                        ],
-                    ],
-                },
+                validate: { isIn: [validProductCategories] },
             },
             [PRODUCT_STOCK]: {
                 type: DataTypes.INTEGER,

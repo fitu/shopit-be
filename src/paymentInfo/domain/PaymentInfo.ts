@@ -1,4 +1,9 @@
-type PaymentStatus = "not-paid" | "paid";
+enum PaymentStatus {
+    NOT_PAID = "not-paid",
+    PAID = "paid",
+}
+
+const validPaymentStatus: Array<string> = Object.values(PaymentStatus);
 
 class PaymentInfo {
     readonly id?: string;
@@ -10,5 +15,5 @@ class PaymentInfo {
     }
 }
 
-export type { PaymentStatus };
+export { PaymentStatus, validPaymentStatus };
 export default PaymentInfo;
