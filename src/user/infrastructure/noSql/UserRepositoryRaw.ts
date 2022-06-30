@@ -35,7 +35,8 @@ class UserRepositoryRaw implements Repository {
         return users;
     }
 
-    // TODO: password shouldn't be updated this way
+
+    // FIXME: fix this for password
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userToUpdate: UserDao = fromUserToDao(user);
 

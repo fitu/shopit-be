@@ -46,7 +46,7 @@ class UserRepository implements Repository {
             return null;
         }
 
-        userDocument.password = await hashPassword(newPassword);
+        userDocument.password = newPassword;
         userDocument.resetPasswordToken = null;
         userDocument.resetPasswordExpirationDate = null;
 

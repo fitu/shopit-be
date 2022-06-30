@@ -160,11 +160,6 @@ userSchema.methods.toModel = function (): User {
     return fromUserDocumentToModel(this);
 };
 
-// TODO: is this in use?
-userSchema.methods.validatePassword = async function (password: string) {
-    return doPasswordsMatch(password, this.user.password);
-};
-
 userSchema.pre("save", async function (next) {
     const user = this as UserFullDocument;
 
