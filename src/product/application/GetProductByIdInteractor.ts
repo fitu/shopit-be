@@ -1,3 +1,4 @@
+import NotFoundError from "../../shared/error/NotFoundError";
 import ProductService from "../domain/ProductService";
 
 import ProductData from "./ProductData";
@@ -13,8 +14,14 @@ class GetProductByIdInteractor {
         this.productService = productService;
     }
 
-    public async execute({ productId } : GetProductByIdData): Promise<ProductData> {
+    public async execute({ productId }: GetProductByIdData): Promise<ProductData> {
         const product = await this.productService.getProductById(productId);
+
+        if (!product) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError("Product not found");
+        }
+
         return ProductData.fromModel(product);
     }
 }

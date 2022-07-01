@@ -28,44 +28,30 @@ class UserService {
         return this.userRepository.getAllUsers(page, itemsPerPage);
     }
 
-    public async getUserById(userId: string): Promise<User> {
-        const user = await this.userRepository.getUserById(userId);
-
-        if (!user) {
-            // TODO: do not hardcode this
-            throw new NotFoundError("User not found");
-        }
-
-        return user;
+    public async getUserById(userId: string): Promise<User | null> {
+        return this.userRepository.getUserById(userId);
     }
 
-    public async getUserByEmail(email: string): Promise<User> {
-        const user = await this.userRepository.getUserByEmail(email);
-
-        if (!user) {
-            // TODO: do not hardcode this
-            throw new NotFoundError("User not found");
-        }
-
-        return user;
+    public async getUserByEmail(email: string): Promise<User | null> {
+        return this.userRepository.getUserByEmail(email);
     }
 
     public async checkPassword(user: User, password: string): Promise<boolean> {
         return doPasswordsMatch(password, user.password);
     }
 
-    public async checkUserPermissions(userId: string, userIdToCheck?: string): Promise<void> {
+    public async hasUserPermissions(userId: string, userIdToCheck?: string): Promise<boolean> {
         const isAdmin = await this.isAdmin(userId);
-        if (isAdmin || userId === userIdToCheck) {
-            return;
-        }
-
-        // TODO: do not hardcode this
-        throw new NotAllowError("You are not allow to do this action");
+        return isAdmin || userId === userIdToCheck;
     }
 
     public async addTokenToUser(email: string, token: string): Promise<void> {
         const user = await this.userRepository.getUserByEmail(email);
+
+        if (user) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError("User not found");
+        }
 
         user.resetPasswordToken = token;
         user.resetPasswordExpirationDate = moment().add(1, "day").toDate();

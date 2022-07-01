@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
+import { ErrorHandler } from "../../shared/error/ErrorHandler";
 import NotFoundError from "../../shared/error/NotFoundError";
 import NotAllowError from "../../shared/error/NotAllowError";
 import Controller from "../../shared/Controller";
@@ -119,16 +120,20 @@ class ProductController implements Controller {
         const [page, itemsPerPage] = getPageAndItemsPerPage(req);
         const data: GetAllProductsData = { page, itemsPerPage };
 
-        const interactor = new GetAllProductsInteractor(this.productService);
-        const result = await interactor.execute(data);
+        try {
+            const interactor = new GetAllProductsInteractor(this.productService);
+            const result = await interactor.execute(data);
 
-        const productsWithMetadata = result as Page<Array<ProductData>>;
-        const allProducts = {
-            ...productsWithMetadata,
-            data: productsWithMetadata.data.map((product) => ProductViewModel.fromData(product)),
-        };
+            const productsWithMetadata = result as Page<Array<ProductData>>;
+            const allProducts = {
+                ...productsWithMetadata,
+                data: productsWithMetadata.data.map((product) => ProductViewModel.fromData(product)),
+            };
 
-        res.status(httpStatus.OK).json({ success: true, ...allProducts });
+            res.status(httpStatus.OK).json({ success: true, ...allProducts });
+        } catch (error: any) {
+            next(error);
+        }
     };
 
     private getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -141,17 +146,19 @@ class ProductController implements Controller {
             const product = ProductViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: product });
         } catch (error: any) {
-            res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+            if (error instanceof NotFoundError) {
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                return;
+            }
+            next(error);
         }
     };
 
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                errors: "There was an error with the image",
-            });
+            // TODO: do not hardcode this
+            next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "There was an error with the image"));
             return;
         }
 
@@ -179,12 +186,16 @@ class ProductController implements Controller {
         });
         const data: CreateProductData = { productData, userId };
 
-        const interactor = new CreateProductInteractor(this.productService);
-        const result = await interactor.execute(data);
+        try {
+            const interactor = new CreateProductInteractor(this.productService);
+            const result = await interactor.execute(data);
 
-        const newProduct = ProductViewModel.fromData(result);
+            const newProduct = ProductViewModel.fromData(result);
 
-        res.status(httpStatus.CREATED).json({ success: true, data: newProduct });
+            res.status(httpStatus.CREATED).json({ success: true, data: newProduct });
+        } catch (error: any) {
+            next(error);
+        }
     };
 
     private deleteProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -199,11 +210,11 @@ class ProductController implements Controller {
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
             if (error instanceof NotFoundError) {
-                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
             if (error instanceof NotAllowError) {
-                res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
+                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
                 return;
             }
             next(new Error(error));
@@ -214,10 +225,8 @@ class ProductController implements Controller {
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                errors: "There was an error with the image",
-            });
+            // TODO: do not hardcode this
+            next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "There was an error with the image"));
             return;
         }
 
@@ -248,11 +257,11 @@ class ProductController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
         } catch (error: any) {
             if (error instanceof NotFoundError) {
-                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
             if (error instanceof NotAllowError) {
-                res.status(httpStatus.UNAUTHORIZED).json({ success: false, errors: error.message });
+                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
                 return;
             }
             next(new Error(error));

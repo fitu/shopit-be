@@ -36,26 +36,12 @@ class ProductService {
         return this.productRepository.getAllProductsWithUsers(page, itemsPerPage);
     }
 
-    public async getProductById(productId: string): Promise<Product> {
-        const product = await this.productRepository.getProductById(productId);
-
-        if (!product) {
-            // TODO: do not hardcode strings
-            throw new NotFoundError("Product not found");
-        }
-
-        return product;
+    public async getProductById(productId: string): Promise<Product | null> {
+        return this.productRepository.getProductById(productId);
     }
 
-    public async getProductWithUserById(productId: string): Promise<Product> {
-        const product = await this.productRepository.getProductWithUserById(productId);
-
-        if (!product) {
-            // TODO: do not hardcode strings
-            throw new NotFoundError("Product not found");
-        }
-
-        return product;
+    public async getProductWithUserById(productId: string): Promise<Product | null> {
+        return this.productRepository.getProductWithUserById(productId);
     }
 
     public async deleteProductById(productId: string): Promise<void> {

@@ -1,11 +1,15 @@
+import { isString } from "lodash";
+
 class ErrorHandler extends Error {
     statusCode: number;
-    errors: string | Array<string>;
+    errorMessages: string | Array<string>;
 
-    constructor(public message: string, statusCode: number, errors: string | Array<string>) {
+    constructor(statusCode: number, errorMessages: string | Array<string>) {
+        const message = isString(errorMessages) ? errorMessages : errorMessages[0];
         super(message);
+
         this.statusCode = statusCode;
-        this.errors = errors;
+        this.errorMessages = errorMessages;
 
         Error.captureStackTrace(this, this.constructor);
     }

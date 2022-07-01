@@ -1,3 +1,5 @@
+import NotAllowError from "../../shared/error/NotAllowError";
+import NotFoundError from "../../shared/error/NotFoundError";
 import UserService from "../../user/domain/UserService";
 import ProductService from "../domain/ProductService";
 import Product from "../domain/Product";
@@ -22,8 +24,18 @@ class UpdateProductByIdInteractor {
     public async execute({ productId, productData, userId }: UpdateProductByIdData): Promise<ProductData> {
         const product = await this.productService.getProductWithUserById(productId);
 
+        if (!product) {
+            // TODO: do not hardcode strings
+            throw new NotFoundError("Product not found");
+        }
+
         const productOwnerId = product?.user?.id;
-        await this.userService.checkUserPermissions(userId, productOwnerId);
+        const hasUserPermissions = await this.userService.hasUserPermissions(userId, productOwnerId);
+
+        if (!hasUserPermissions) {
+            // TODO: do not hardcode this
+            throw new NotAllowError("You are not allow to do this action");
+        }
 
         const productDataWithoutNulls = ProductData.filterNulls(productData);
         const productToUpdate = new Product({
