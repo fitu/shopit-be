@@ -1,57 +1,74 @@
-import fs from "fs/promises";
-import path from "path";
+import osPath from "path";
+import fs from "fs";
 
 import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { param } from "express-validator";
-import PDFDocument from "pdfkit";
 
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import Controller from "../../shared/Controller";
+import GenerateInvoiceInteractor, { GenerateInvoiceData } from "../application/GenerateInvoiceInteractor";
+import FileService from "../../shared/integrations/files/FileService";
+
+const BASE_FILENAME = "invoice";
+const BASE_FOLDER = "data";
+const INVOICES_FOLDER_NAME = "invoices";
+const FILE_EXTENTION = "pdf";
 
 class OrderController implements Controller {
+    /*
+     * Variables and constructor
+     */
+
     public path = "/orders";
     public router = Router();
 
-    constructor() {
+    private fileService: FileService;
+
+    constructor(fileService: FileService) {
+        this.fileService = fileService;
+
         this.initializeRoutes();
     }
 
+    /*
+     * Route's validations
+     */
+
+    private validations = {
+        getInvoiceOne: [param("id").notEmpty().isUUID()],
+    };
+
+    /*
+     * Routes
+     */
+
     private initializeRoutes = (): void => {
-        this.router.get(this.path, isAuthMiddleware, this.getOrders);
-        this.router.get(this.path, isAuthMiddleware, this.getOrders);
-        this.router.get(`${this.path}/:id/invoice`, isAuthMiddleware, param("id").notEmpty().isUUID(), this.getInvoice);
+        this.router.get(`${this.path}/:id/invoice`, this.validations.getInvoiceOne, this.getInvoice);
     };
 
-    private getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        res.status(httpStatus.OK).json({ success: true, data: [] });
-    };
-
+    // FIXME: this doesn't always work
     private getInvoice = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const { id } = req.params;
+        const invoiceFileName = `${BASE_FILENAME}-${id}.${FILE_EXTENTION}`;
+        const invoicePath = osPath.join(BASE_FOLDER, INVOICES_FOLDER_NAME, invoiceFileName);
+        const data: GenerateInvoiceData = { invoicePath };
 
-        const pdf = new PDFDocument();
+        try {
+            const interactor = new GenerateInvoiceInteractor(this.fileService);
+            await interactor.execute(data);
 
-        // TODO: move this out of controller
-        const invoiceName = "invoice-" + id + ".pdf";
-        const invoicePath = path.join("data", "invoices", invoiceName);
-        const invoiceFile = await fs.open(invoicePath, "a");
+            const file = fs.createReadStream(invoicePath);
+            const { size } = fs.statSync(invoicePath);
 
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
+            res.setHeader("Content-Length", size);
+            res.setHeader("Content-Type", `application/${FILE_EXTENTION}`);
+            res.setHeader("Content-Disposition", `inline; filename="${invoiceFileName}"`);
 
-        pdf.pipe(invoiceFile.createWriteStream());
-        pdf.pipe(res);
-
-        pdf.fontSize(26).text("This is a PDF example!", { underline: true });
-        pdf.text("-----------------------");
-
-        pdf.fontSize(20).text("Total Price: $ XX.XX");
-        pdf.end();
-    };
-
-    private createOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        res.status(httpStatus.OK).json({ success: true, data: [] });
+            file.pipe(res);
+        } catch (error: any) {
+            next(new Error(error));
+        }
     };
 }
 

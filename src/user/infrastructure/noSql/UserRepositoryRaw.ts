@@ -35,7 +35,6 @@ class UserRepositoryRaw implements Repository {
         return users;
     }
 
-
     // FIXME: fix this for password
     public async updateUserById(userId: string, user: User): Promise<User | null> {
         const userToUpdate: UserDao = fromUserToDao(user);
@@ -119,11 +118,6 @@ class UserRepositoryRaw implements Repository {
         const user: User = fromUserDaoToModel(userDao);
 
         return user;
-    }
-
-    // TODO: complete this
-    public async addProduct(userId: string, productId: string): Promise<void> {
-        return new Promise(() => {});
     }
 }
 

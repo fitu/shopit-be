@@ -99,11 +99,6 @@ class UserRepository implements Repository {
         const userModel = user?.toModel();
         return userModel;
     }
-
-    // TODO: complete this
-    public async addProduct(userId: string, productId: string): Promise<void> {
-        return new Promise(() => {});
-    }
 }
 
 export default UserRepository;

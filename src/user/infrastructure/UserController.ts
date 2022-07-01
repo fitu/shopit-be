@@ -176,7 +176,7 @@ class UserController implements Controller {
             const newUser = UserViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: newUser });
         } catch (error: any) {
-            res.status(httpStatus.OK).json({ success: false, errors: error.message });
+            next(new Error(error));
         }
     };
 
@@ -295,7 +295,7 @@ class UserController implements Controller {
                 return;
             }
             if (error instanceof InvalidDataError) {
-                res.status(httpStatus.NOT_FOUND).json({ success: false, errors: error.message });
+                res.status(httpStatus.UNPROCESSABLE_ENTITY).json({ success: false, errors: error.message });
                 return;
             }
             next(new Error(error));
