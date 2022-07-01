@@ -9,9 +9,8 @@ import ProductController from "../../../src/product/infrastructure/ProductContro
 import ProductService from "../../../src/product/domain/ProductService";
 import UserService from "../../../src/user/domain/UserService";
 import ProductViewModel from "../../../src/product/infrastructure/ProductViewModel";
-import Product from "../../../src/product/domain/Product";
+import Product, { ProductCategory } from "../../../src/product/domain/Product";
 import NotFoundError from "../../../src/shared/error/NotFoundError";
-import NotAllowError from "../../../src/shared/error/NotAllowError";
 import { getRandomUserWithId } from "../../shared/utils/UserFactory";
 import fileUploadMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
 import { getProductWithData, getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
@@ -661,9 +660,8 @@ describe("ProductController", function () {
             return getRandomProduct();
         };
 
-        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string): Promise<void> => {
-            // TODO: do not hardcode this
-            throw new NotAllowError("You are not allow to do this action");
+        userService.hasUserPermissions = async (userId: string, userIdToCheck?: string): Promise<boolean> => {
+            return false;
         };
 
         // When
@@ -686,8 +684,8 @@ describe("ProductController", function () {
             return getRandomProduct();
         };
 
-        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string): Promise<void> => {
-            return;
+        userService.hasUserPermissions = async (userId: string, userIdToCheck?: string): Promise<boolean> => {
+            return true;
         };
 
         productService.deleteProductById = async (productId: string): Promise<void> => {
@@ -716,8 +714,8 @@ describe("ProductController", function () {
             return getProductWithData({ user });
         };
 
-        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string): Promise<void> => {
-            return;
+        userService.hasUserPermissions = async (userId: string, userIdToCheck?: string): Promise<boolean> => {
+            return true;
         };
 
         productService.deleteProductById = async (productId: string): Promise<void> => {
@@ -1113,7 +1111,7 @@ describe("ProductController", function () {
         const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = "Electronics";
+        const category = ProductCategory.ELECTRONICS;
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
@@ -1121,8 +1119,8 @@ describe("ProductController", function () {
             return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
         };
 
-        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string): Promise<void> => {
-            return;
+        userService.hasUserPermissions = async (userId: string, userIdToCheck?: string): Promise<boolean> => {
+            return true;
         };
 
         productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
@@ -1165,9 +1163,8 @@ describe("ProductController", function () {
             return getRandomProduct();
         };
 
-        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string): Promise<void> => {
-            // TODO: do not hardcode this
-            throw new NotAllowError("You are not allow to do this action");
+        userService.hasUserPermissions = async (userId: string, userIdToCheck?: string): Promise<boolean> => {
+            return false;
         };
 
         // When
@@ -1198,7 +1195,7 @@ describe("ProductController", function () {
         const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = "Electronics";
+        const category = ProductCategory.ELECTRONICS;
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
@@ -1206,8 +1203,8 @@ describe("ProductController", function () {
             return getRandomProduct();
         };
 
-        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string): Promise<void> => {
-            return;
+        userService.hasUserPermissions = async (userId: string, userIdToCheck?: string): Promise<boolean> => {
+            return true;
         };
 
         productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
@@ -1254,7 +1251,7 @@ describe("ProductController", function () {
         const title = "title";
         const description = "description";
         const price = 11.11;
-        const category = "Electronics";
+        const category = ProductCategory.ELECTRONICS;
         const stock = 1;
         const imageUrl = "test/shared/fixtures/random.jpg";
 
@@ -1265,8 +1262,8 @@ describe("ProductController", function () {
             return getProductWithData({ user });
         };
 
-        userService.checkUserPermissions = async (userId: string, userIdToCheck?: string): Promise<void> => {
-            return;
+        userService.hasUserPermissions = async (userId: string, userIdToCheck?: string): Promise<boolean> => {
+            return true;
         };
 
         productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
