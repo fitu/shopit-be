@@ -78,8 +78,8 @@ describe("ProductController", function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
-        productService.getProductById = async (productId: string): Promise<Product> => {
-            throw new NotFoundError(productId);
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
+            return null;
         };
 
         // When
@@ -98,7 +98,7 @@ describe("ProductController", function () {
         // Given
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
-        productService.getProductById = async (productId: string): Promise<Product> => {
+        productService.getProductById = async (productId: string): Promise<Product | null> => {
             return getRandomProductWithId(productId);
         };
 
@@ -637,7 +637,7 @@ describe("ProductController", function () {
         const productId = "d487e446-9da0-4754-8f89-d22e278e1541";
 
         productService.getProductById = async (productId: string): Promise<Product | null> => {
-            throw new NotFoundError(productId);
+            return null;
         };
 
         // When
@@ -1080,7 +1080,7 @@ describe("ProductController", function () {
         const imageUrl = "test/shared/fixtures/random.jpg";
 
         productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
-            throw new NotFoundError(productId);
+            return null;
         };
 
         // When

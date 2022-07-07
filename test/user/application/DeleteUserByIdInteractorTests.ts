@@ -37,9 +37,8 @@ describe("DeleteUserByIdInteractor", function () {
             return true;
         };
 
-        const errorMessage = "foo";
         service.deleteUserById = async (userId: string): Promise<void> => {
-            throw new NotFoundError(errorMessage);
+            throw new NotFoundError("foo");
         };
 
         const inputData: DeleteUserByIdData = { userId: "foo", userToDelete: "bar" };
@@ -50,7 +49,6 @@ describe("DeleteUserByIdInteractor", function () {
         } catch (error: any) {
             // Then
             expect(error).instanceOf(NotFoundError);
-            expect(error.message).to.be.equal(errorMessage);
         }
     });
 

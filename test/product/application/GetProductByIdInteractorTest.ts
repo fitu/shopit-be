@@ -20,9 +20,8 @@ describe("GetProductByIdInteractor", function () {
 
     it("getProductById should throw NotFoundError if product not found", async function () {
         // Given
-        const errorMessage = "foo";
         service.getProductById = async (productId: string): Promise<Product | null> => {
-            throw new NotFoundError(errorMessage);
+            return null;
         };
 
         const inputData: GetProductByIdData = { productId: "foo" };
@@ -33,7 +32,6 @@ describe("GetProductByIdInteractor", function () {
         } catch (error: any) {
             // Then
             expect(error).instanceOf(NotFoundError);
-            expect(error.message).to.be.equal(errorMessage);
         }
     });
 
