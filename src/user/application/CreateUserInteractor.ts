@@ -22,7 +22,7 @@ class CreateUserInteractor {
         const user: User = await this.userService.getUserByEmail(userData.email);
 
         if (user) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotAllowError("Email already in use");
         }
 

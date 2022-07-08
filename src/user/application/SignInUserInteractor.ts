@@ -20,14 +20,14 @@ class SignInUserInteractor {
     public async execute({ email, password }: SignInUserData): Promise<UserData> {
         const user: User = await this.userService.getUserByEmail(email);
 
-        if (user) {
-            // TODO: do not hardcode strings
+        if (!user) {
+            // TODO: remove hardcoded
             throw new NotFoundError("User not found");
         }
 
         const doPasswordMatch: boolean = await this.userService.checkPassword(user, password);
         if (!doPasswordMatch) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             throw new SignInError("User or password invalid");
         }
 

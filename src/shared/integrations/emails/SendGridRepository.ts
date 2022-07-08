@@ -15,7 +15,8 @@ class SendGridRepository implements Repository {
         // TODO: improve this
         try {
             await this.transporter.sendMail({ to, from, subject, html: body });
-        } catch(error) {
+        } catch (error) {
+            // TODO: remove hardcoded
             // TODO: use logger
             console.log(`Error when sending email: ${error}`);
         }

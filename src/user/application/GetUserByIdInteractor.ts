@@ -17,7 +17,7 @@ class GetUserByIdInteractor {
         const user = await this.userService.getUserById(userId);
 
         if (!user) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             throw new NotFoundError("User not found");
         }
 

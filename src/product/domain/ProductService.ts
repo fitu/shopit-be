@@ -48,7 +48,7 @@ class ProductService {
         const success = await this.productRepository.deleteProductById(productId);
 
         if (!success) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("Product not found");
         }
     }
@@ -57,7 +57,7 @@ class ProductService {
         const updatedProduct = await this.productRepository.updateProductById(productId, product);
 
         if (!product) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("Product not found");
         }
 

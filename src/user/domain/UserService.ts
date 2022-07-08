@@ -49,7 +49,7 @@ class UserService {
         const user = await this.userRepository.getUserByEmail(email);
 
         if (user) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("User not found");
         }
 
@@ -61,8 +61,8 @@ class UserService {
 
     public async updatePassword(user: User, newPassword: string, resetPasswordToken: string): Promise<void> {
         if (resetPasswordToken != user.resetPasswordToken) {
-            // TODO: do not hardcode this
-            throw new InvalidDataError("Data submited is invalid");
+            // TODO: remove hardcoded
+            throw new InvalidDataError("Data submitted is invalid");
         }
 
         await this.userRepository.updatePassword(user, newPassword);
@@ -82,7 +82,7 @@ class UserService {
         const success = await this.userRepository.deleteUserById(userId);
 
         if (!success) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("User not found");
         }
     }
@@ -91,7 +91,7 @@ class UserService {
         const updatedUser = await this.userRepository.updateUserById(userId, user);
 
         if (!user) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("User not found");
         }
 

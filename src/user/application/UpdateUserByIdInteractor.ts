@@ -21,14 +21,14 @@ class UpdateUserByIdInteractor {
         const user = await this.userService.getUserById(userData.id);
 
         if (!user) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             throw new NotFoundError("User not found");
         }
 
         const hasUserPermissions = await this.userService.hasUserPermissions(userId, userData.id);
 
         if (!hasUserPermissions) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             throw new NotAllowError("You are not allow to do this action");
         }
 

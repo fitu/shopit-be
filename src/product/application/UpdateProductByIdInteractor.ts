@@ -25,7 +25,7 @@ class UpdateProductByIdInteractor {
         const product = await this.productService.getProductWithUserById(productId);
 
         if (!product) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("Product not found");
         }
 
@@ -33,7 +33,7 @@ class UpdateProductByIdInteractor {
         const hasUserPermissions = await this.userService.hasUserPermissions(userId, productOwnerId);
 
         if (!hasUserPermissions) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             throw new NotAllowError("You are not allow to do this action");
         }
 

@@ -21,15 +21,14 @@ class DeleteProductByIdInteractor {
         const product = await this.productService.getProductById(productId);
 
         if (!product) {
-            // TODO: do not hardcode strings
-            throw new NotFoundError("Product not found");
+            throw new NotFoundError("error.product_not_found");
         }
 
         const productOwnerId = product?.user?.id;
         const hasUserPermissions = await this.userService.hasUserPermissions(userId, productOwnerId);
 
         if (!hasUserPermissions) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             throw new NotAllowError("You are not allow to do this action");
         }
 

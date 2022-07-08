@@ -18,7 +18,7 @@ class GetProductByIdInteractor {
         const product = await this.productService.getProductById(productId);
 
         if (!product) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("Product not found");
         }
 

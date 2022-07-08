@@ -18,7 +18,7 @@ class ResetPasswordInteractor {
         const user = await this.userService.getUserByEmail(email);
 
         if (user) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotFoundError("User not found");
         }
 

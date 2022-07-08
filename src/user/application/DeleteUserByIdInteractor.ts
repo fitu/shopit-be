@@ -17,7 +17,7 @@ class DeleteUserByIdInteractor {
         const isAdmin = await this.userService.isAdmin(userId);
 
         if (!isAdmin) {
-            // TODO: do not hardcode strings
+            // TODO: remove hardcoded
             throw new NotAllowError("You are not allow to do this action");
         }
 

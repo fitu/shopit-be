@@ -158,7 +158,7 @@ class ProductController implements Controller {
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "There was an error with the image"));
             return;
         }
@@ -211,7 +211,8 @@ class ProductController implements Controller {
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
             if (error instanceof NotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                const translatedMessage = req.t(error.message);
+                next(new ErrorHandler(httpStatus.NOT_FOUND, translatedMessage));
                 return;
             }
             if (error instanceof NotAllowError) {
@@ -226,7 +227,7 @@ class ProductController implements Controller {
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            // TODO: do not hardcode this
+            // TODO: remove hardcoded
             next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "There was an error with the image"));
             return;
         }
@@ -269,8 +270,5 @@ class ProductController implements Controller {
         }
     };
 }
-// TODO: errors with messages and translated
-// TODO: remove hardcoded
-// TODO: validate image for update
 
 export default ProductController;
