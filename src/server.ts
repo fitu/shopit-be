@@ -12,7 +12,14 @@ import EmailService from "./shared/integrations/emails/EmailService";
 import FileService from "./shared/integrations/files/FileService";
 import { getDb } from "./shared/db/database";
 
-import App from "./app";
+import App from "./app/app";
+import ParserMiddleware from "./app/middlewares/ParserMiddleware";
+import CORSMiddleware from "./app/middlewares/CORSMiddleware";
+import HeadersMiddleware from "./app/middlewares/HeadersMiddleware";
+import LogsMiddleware from "./app/middlewares/LogsMiddleware";
+import CSRFMiddleware from "./app/middlewares/CSRFMiddleware";
+import I18nMiddleware from "./app/middlewares/I18nMiddleware";
+import StaticResourcesMiddleware from "./app/middlewares/StaticResourcesMiddleware";
 
 (async () => {
     try {
@@ -50,8 +57,20 @@ import App from "./app";
             new UserController(userService, emailService),
         ];
 
+        // Create Middlewares
+        const middlewares = [
+            new ParserMiddleware(),
+            new CORSMiddleware(),
+            new HeadersMiddleware(),
+            new LogsMiddleware(),
+            // TODO: check this
+            // new CSRFMiddleware(),
+            new I18nMiddleware(),
+            new StaticResourcesMiddleware(),
+        ];
+
         // Create app and launch it!
-        const app = new App(controllers);
+        const app = new App(controllers, middlewares);
         await app.init();
         await app.listen();
     } catch (error: any) {

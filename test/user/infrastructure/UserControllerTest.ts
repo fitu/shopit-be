@@ -5,13 +5,13 @@ import sinon, { SinonSandbox } from "sinon";
 import { expect } from "chai";
 import httpStatus from "http-status";
 
-import App from "../../../src/app";
 import UserService from "../../../src/user/domain/UserService";
 import TestRequest from "../../shared/utils/requests";
 import UserController from "../../../src/user/infrastructure/UserController";
 import EmailService from "../../../src/shared/integrations/emails/EmailService";
 import fileUploaderMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
 import NotFoundError from "../../../src/shared/error/NotFoundError";
+import App from "../../../src/app/app";
 
 describe("UserController", function () {
     let userService: UserService;
@@ -25,8 +25,9 @@ describe("UserController", function () {
     beforeEach(async () => {
         userService = <UserService>{};
         const controller = new UserController(userService, emailService);
+        const middlewares = [];
         path = controller.path;
-        const app = new App([controller]);
+        const app = new App([controller], middlewares);
 
         await app.init();
         server = await app.listen(false);

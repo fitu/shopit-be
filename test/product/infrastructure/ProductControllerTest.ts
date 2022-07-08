@@ -17,7 +17,7 @@ import { getProductWithData, getRandomProduct, getRandomProductWithId } from "..
 import { getMockPage } from "../../shared/utils/PageFactory";
 import TestRequest, { FAKE_JWT_USER_ID } from "../../shared/utils/requests";
 import Page from "../../../src/shared/Page";
-import App from "../../../src/app";
+import App from "../../../src/app/app";
 
 describe("ProductController", function () {
     let productService: ProductService;
@@ -32,8 +32,9 @@ describe("ProductController", function () {
         productService = <ProductService>{};
         userService = <UserService>{};
         const controller = new ProductController(productService, userService);
+        const middlewares = [];
         path = controller.path;
-        const app = new App([controller]);
+        const app = new App([controller], middlewares);
 
         await app.init();
         server = await app.listen(false);

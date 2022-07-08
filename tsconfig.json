@@ -10,7 +10,8 @@
         "baseUrl": "./src",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "typeRoots": ["./src/types", "./node_modules/@types"]
+        "typeRoots": ["./src/types", "./node_modules/@types"],
+        "resolveJsonModule": true
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]
