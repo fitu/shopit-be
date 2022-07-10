@@ -1,7 +1,7 @@
-import NotAllowError from "../../shared/error/NotAllowError";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import User from "../domain/User";
 import UserService from "../domain/UserService";
+import EmailAlreadyInUseError from "./error/EmailAlreadyInUseError";
 
 import UserData from "./UserData";
 
@@ -22,8 +22,7 @@ class CreateUserInteractor {
         const user: User = await this.userService.getUserByEmail(userData.email);
 
         if (user) {
-            // TODO: remove hardcoded
-            throw new NotAllowError("Email already in use");
+            throw new EmailAlreadyInUseError();
         }
 
         const newUser = new User({ ...userData, password: userData.password });

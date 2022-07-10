@@ -1,10 +1,9 @@
 import moment from "moment";
 
+import BaseInvalidDataError from "../../shared/error/BaseInvalidDataError";
 import Page from "../../shared/Page";
-import NotAllowError from "../../shared/error/NotAllowError";
-import NotFoundError from "../../shared/error/NotFoundError";
-import InvalidDataError from "../../shared/error/InvalidDataError";
 import { doPasswordsMatch } from "../../shared/utils/hashUtils";
+import UserNotFoundError from "../application/error/UserNotFoundError";
 import { Repository as UserRepository } from "../infrastructure/Repository";
 
 import User, { UserRole } from "./User";
@@ -49,8 +48,7 @@ class UserService {
         const user = await this.userRepository.getUserByEmail(email);
 
         if (user) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
 
         user.resetPasswordToken = token;
@@ -61,8 +59,7 @@ class UserService {
 
     public async updatePassword(user: User, newPassword: string, resetPasswordToken: string): Promise<void> {
         if (resetPasswordToken != user.resetPasswordToken) {
-            // TODO: remove hardcoded
-            throw new InvalidDataError("Data submitted is invalid");
+            throw new BaseInvalidDataError("error.passwords_do_not_match");
         }
 
         await this.userRepository.updatePassword(user, newPassword);
@@ -82,8 +79,7 @@ class UserService {
         const success = await this.userRepository.deleteUserById(userId);
 
         if (!success) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
     }
 
@@ -91,8 +87,7 @@ class UserService {
         const updatedUser = await this.userRepository.updateUserById(userId, user);
 
         if (!user) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
 
         return updatedUser;

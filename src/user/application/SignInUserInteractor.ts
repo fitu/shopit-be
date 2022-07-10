@@ -1,8 +1,7 @@
-import SignInError from "../../shared/error/SignInError";
-import NotFoundError from "../../shared/error/NotFoundError";
 import UserService from "../domain/UserService";
 import User from "../domain/User";
-
+import UserNotFoundError from "./error/UserNotFoundError";
+import SignInError from "./error/SignInError";
 import UserData from "./UserData";
 
 interface SignInUserData {
@@ -21,14 +20,12 @@ class SignInUserInteractor {
         const user: User = await this.userService.getUserByEmail(email);
 
         if (!user) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
 
         const doPasswordMatch: boolean = await this.userService.checkPassword(user, password);
         if (!doPasswordMatch) {
-            // TODO: remove hardcoded
-            throw new SignInError("User or password invalid");
+            throw new SignInError("error.user_or_password_invalid");
         }
 
         const userData: UserData = UserData.fromModel(user);

@@ -1,7 +1,7 @@
-import NotAllowError from "../../shared/error/NotAllowError";
-import NotFoundError from "../../shared/error/NotFoundError";
 import UserService from "../../user/domain/UserService";
 import User from "../domain/User";
+import UserHasNotPermissionsError from "./error/UserHasNotPermissionsError";
+import UserNotFoundError from "./error/UserNotFoundError";
 
 import UserData from "./UserData";
 
@@ -21,15 +21,13 @@ class UpdateUserByIdInteractor {
         const user = await this.userService.getUserById(userData.id);
 
         if (!user) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
 
         const hasUserPermissions = await this.userService.hasUserPermissions(userId, userData.id);
 
         if (!hasUserPermissions) {
-            // TODO: remove hardcoded
-            throw new NotAllowError("You are not allow to do this action");
+            throw new UserHasNotPermissionsError();
         }
 
         const userDataWithoutNulls = UserData.filterNulls(userData);

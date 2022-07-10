@@ -1,5 +1,5 @@
-import NotAllowError from "../../shared/error/NotAllowError";
 import UserService from "../../user/domain/UserService";
+import UserHasNotPermissionsError from "./error/UserHasNotPermissionsError";
 
 interface DeleteUserByIdData {
     userId: string;
@@ -17,8 +17,7 @@ class DeleteUserByIdInteractor {
         const isAdmin = await this.userService.isAdmin(userId);
 
         if (!isAdmin) {
-            // TODO: remove hardcoded
-            throw new NotAllowError("You are not allow to do this action");
+            throw new UserHasNotPermissionsError();
         }
 
         await this.userService.deleteUserById(userToDelete);

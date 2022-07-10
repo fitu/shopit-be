@@ -1,5 +1,5 @@
-import NotAllowError from "../../shared/error/NotAllowError";
-import NotFoundError from "../../shared/error/NotFoundError";
+import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
+import ProductNotFoundError from "./error/ProductNotFoundError";
 import UserService from "../../user/domain/UserService";
 import ProductService from "../domain/ProductService";
 import Product from "../domain/Product";
@@ -25,16 +25,14 @@ class UpdateProductByIdInteractor {
         const product = await this.productService.getProductWithUserById(productId);
 
         if (!product) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("Product not found");
+            throw new ProductNotFoundError();
         }
 
         const productOwnerId = product?.user?.id;
         const hasUserPermissions = await this.userService.hasUserPermissions(userId, productOwnerId);
 
         if (!hasUserPermissions) {
-            // TODO: remove hardcoded
-            throw new NotAllowError("You are not allow to do this action");
+            throw new UserHasNotPermissionsError();
         }
 
         const productDataWithoutNulls = ProductData.filterNulls(productData);

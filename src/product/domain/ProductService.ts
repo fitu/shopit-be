@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 
 import Page from "../../shared/Page";
-import NotFoundError from "../../shared/error/NotFoundError";
+import ProductNotFoundError from "../application/error/ProductNotFoundError";
 import { Repository as ProductRepository } from "../infrastructure/Repository";
 
 import Product from "./Product";
@@ -48,8 +48,7 @@ class ProductService {
         const success = await this.productRepository.deleteProductById(productId);
 
         if (!success) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("Product not found");
+            throw new ProductNotFoundError();
         }
     }
 
@@ -57,8 +56,7 @@ class ProductService {
         const updatedProduct = await this.productRepository.updateProductById(productId, product);
 
         if (!product) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("Product not found");
+            throw new ProductNotFoundError();
         }
 
         return updatedProduct;

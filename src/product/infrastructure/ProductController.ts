@@ -2,9 +2,10 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
+import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
+import ProductNotFoundError from "../application/error/ProductNotFoundError";
+import BaseInvalidDataError from "../../shared/error/BaseInvalidDataError";
 import { ErrorHandler } from "../../shared/error/ErrorHandler";
-import NotFoundError from "../../shared/error/NotFoundError";
-import NotAllowError from "../../shared/error/NotAllowError";
 import Controller from "../../shared/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
@@ -59,8 +60,7 @@ class ProductController implements Controller {
                 .notEmpty()
                 .custom((value) => {
                     if (!validProductCategories.includes(value)) {
-                        // TODO: remove hardcoded
-                        throw new Error("Invalid category input");
+                        throw new BaseInvalidDataError("error.invalid_category_input");
                     }
                     return true;
                 }),
@@ -74,8 +74,7 @@ class ProductController implements Controller {
             body("imageUrl").isString(),
             body("category").custom((value) => {
                 if (!validProductCategories.includes(value)) {
-                    // TODO: remove hardcoded
-                    throw new Error("Invalid category input");
+                    throw new BaseInvalidDataError("error.invalid_category_input");
                 }
                 return true;
             }),
@@ -146,7 +145,7 @@ class ProductController implements Controller {
             const product = ProductViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: product });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof ProductNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
@@ -158,8 +157,7 @@ class ProductController implements Controller {
     private createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            // TODO: remove hardcoded
-            next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "There was an error with the image"));
+            next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "error.there_was_an_error_with_the_image"));
             return;
         }
 
@@ -210,12 +208,11 @@ class ProductController implements Controller {
             await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
-                const translatedMessage = req.t(error.message);
-                next(new ErrorHandler(httpStatus.NOT_FOUND, translatedMessage));
+            if (error instanceof ProductNotFoundError) {
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
-            if (error instanceof NotAllowError) {
+            if (error instanceof UserHasNotPermissionsError) {
                 next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
                 return;
             }
@@ -227,8 +224,7 @@ class ProductController implements Controller {
     private updateProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const imageUri = req.file?.filename;
         if (!imageUri) {
-            // TODO: remove hardcoded
-            next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "There was an error with the image"));
+            next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, "error.there_was_an_error_with_the_image"));
             return;
         }
 
@@ -258,11 +254,11 @@ class ProductController implements Controller {
             const updatedProduct = ProductViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof ProductNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
-            if (error instanceof NotAllowError) {
+            if (error instanceof UserHasNotPermissionsError) {
                 next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
                 return;
             }

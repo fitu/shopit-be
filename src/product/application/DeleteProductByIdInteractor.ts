@@ -1,7 +1,7 @@
-import NotAllowError from "../../shared/error/NotAllowError";
-import NotFoundError from "../../shared/error/NotFoundError";
+import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
 import UserService from "../../user/domain/UserService";
 import ProductService from "../domain/ProductService";
+import ProductNotFoundError from "./error/ProductNotFoundError";
 
 interface DeleteProductByIdData {
     productId: string;
@@ -21,15 +21,14 @@ class DeleteProductByIdInteractor {
         const product = await this.productService.getProductById(productId);
 
         if (!product) {
-            throw new NotFoundError("error.product_not_found");
+            throw new ProductNotFoundError();
         }
 
         const productOwnerId = product?.user?.id;
         const hasUserPermissions = await this.userService.hasUserPermissions(userId, productOwnerId);
 
         if (!hasUserPermissions) {
-            // TODO: remove hardcoded
-            throw new NotAllowError("You are not allow to do this action");
+            throw new UserHasNotPermissionsError();
         }
 
         await this.productService.deleteProductById(productId);

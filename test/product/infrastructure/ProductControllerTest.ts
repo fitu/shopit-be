@@ -5,12 +5,12 @@ import { Server } from "http";
 import sinon, { SinonSandbox } from "sinon";
 import { Response, NextFunction } from "express";
 
+import ProductNotFoundError from "../../../src/product/application/error/ProductNotFoundError";
 import ProductController from "../../../src/product/infrastructure/ProductController";
 import ProductService from "../../../src/product/domain/ProductService";
 import UserService from "../../../src/user/domain/UserService";
 import ProductViewModel from "../../../src/product/infrastructure/ProductViewModel";
 import Product, { ProductCategory } from "../../../src/product/domain/Product";
-import NotFoundError from "../../../src/shared/error/NotFoundError";
 import { getRandomUserWithId } from "../../shared/utils/UserFactory";
 import fileUploadMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
 import { getProductWithData, getRandomProduct, getRandomProductWithId } from "../../shared/utils/ProductFactory";
@@ -1125,7 +1125,7 @@ describe("ProductController", function () {
         };
 
         productService.updateProductById = async (productId: string, product: Product): Promise<Product> => {
-            throw new NotFoundError(productId);
+            throw new ProductNotFoundError();
         };
 
         // When

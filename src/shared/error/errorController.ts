@@ -4,12 +4,13 @@ import httpStatus from "http-status";
 import { ErrorHandler } from "./ErrorHandler";
 
 const handleAppErrors = (err: ErrorHandler, req: Request, res: Response, next: NextFunction): void => {
-    err.statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
+    const statusCode = (err.statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR);
+    // TODO: check multiple error messages
+    const translatedErrorMessage = err.message ? "error.internal_server" : req.t(err.message);
 
-    // TODO: remove hardcoded
-    res.status(err.statusCode).json({
+    res.status(statusCode).json({
         success: false,
-        message: err.message || "Internal server error",
+        message: translatedErrorMessage,
         errors: err.errorMessages,
         // TODO: use another file for production, not env vars
         ...(process.env.NODE_ENV === "DEVELOPMENT" && { stack: err.stack }),

@@ -5,12 +5,12 @@ import sinon, { SinonSandbox } from "sinon";
 import { expect } from "chai";
 import httpStatus from "http-status";
 
+import UserNotFoundError from "../../../src/user/application/error/UserNotFoundError";
 import UserService from "../../../src/user/domain/UserService";
 import TestRequest from "../../shared/utils/requests";
 import UserController from "../../../src/user/infrastructure/UserController";
 import EmailService from "../../../src/shared/integrations/emails/EmailService";
 import fileUploaderMiddleware, { MulterRequest } from "../../../src/shared/middlewares/fileUploaderMiddleware";
-import NotFoundError from "../../../src/shared/error/NotFoundError";
 import App from "../../../src/app/app";
 
 describe("UserController", function () {
@@ -97,7 +97,7 @@ describe("UserController", function () {
         };
 
         userService.deleteUserById = async (userId: string): Promise<void> => {
-            throw new NotFoundError(userId);
+            throw new UserNotFoundError();
         };
 
         // When

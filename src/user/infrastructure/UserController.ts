@@ -2,11 +2,11 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
-import NotFoundError from "../../shared/error/NotFoundError";
+import UserHasNotPermissionsError from "../application/error/UserHasNotPermissionsError";
+import UserNotFoundError from "../application/error/UserNotFoundError";
+import BaseInvalidDataError from "../../shared/error/BaseInvalidDataError";
 import { ErrorHandler } from "../../shared/error/ErrorHandler";
-import SignInError from "../../shared/error/SignInError";
-import NotAllowError from "../../shared/error/NotAllowError";
-import InvalidDataError from "../../shared/error/InvalidDataError";
+import SignInError from "../application/error/SignInError";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import Controller from "../../shared/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
@@ -63,8 +63,7 @@ class UserController implements Controller {
                 .notEmpty()
                 .custom((value) => {
                     if (!validUserRoles.includes(value)) {
-                        // TODO: remove hardcoded
-                        throw new Error("Invalid role input");
+                        throw new BaseInvalidDataError("error.invalid_role_input");
                     }
                     return true;
                 })
@@ -78,8 +77,7 @@ class UserController implements Controller {
             body("role")
                 .custom((value) => {
                     if (!validUserRoles.includes(value)) {
-                        // TODO: remove hardcoded
-                        throw new Error("Invalid role input");
+                        throw new BaseInvalidDataError("error.invalid_role_input");
                     }
                     return true;
                 })
@@ -126,7 +124,7 @@ class UserController implements Controller {
             const user = UserViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: user });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof UserNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
@@ -185,11 +183,11 @@ class UserController implements Controller {
             const newUser = UserViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: newUser });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof UserNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
-            if (error instanceof NotAllowError) {
+            if (error instanceof UserHasNotPermissionsError) {
                 next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
                 return;
             }
@@ -220,10 +218,10 @@ class UserController implements Controller {
             const updatedUser = UserViewModel.fromData(result);
             res.status(httpStatus.OK).json({ success: true, data: updatedUser });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof UserNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
             }
-            if (error instanceof NotAllowError) {
+            if (error instanceof UserHasNotPermissionsError) {
                 next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
                 return;
             }
@@ -241,11 +239,11 @@ class UserController implements Controller {
             await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof UserNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
-            if (error instanceof NotAllowError) {
+            if (error instanceof UserHasNotPermissionsError) {
                 next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
                 return;
             }
@@ -264,7 +262,7 @@ class UserController implements Controller {
 
             res.status(httpStatus.OK).json({ success: true, data: token });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof UserNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
@@ -285,7 +283,7 @@ class UserController implements Controller {
             await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof UserNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
@@ -306,11 +304,11 @@ class UserController implements Controller {
             const result = await interactor.execute(data);
             res.status(httpStatus.OK).json({ success: result });
         } catch (error: any) {
-            if (error instanceof NotFoundError) {
+            if (error instanceof UserNotFoundError) {
                 next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
                 return;
             }
-            if (error instanceof InvalidDataError) {
+            if (error instanceof BaseInvalidDataError) {
                 next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, error.message));
                 return;
             }

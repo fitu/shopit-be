@@ -13,7 +13,6 @@ class PDFRepository implements Repository {
 
     // TODO: improve order generation
     // TODO: remove hardcoded
-
     public async generateInvoice(invoicePath: string): Promise<void> {
         const invoiceFile = await fs.open(invoicePath, "a");
         const writeStream = invoiceFile.createWriteStream();

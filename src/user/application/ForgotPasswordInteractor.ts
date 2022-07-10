@@ -1,7 +1,7 @@
 import { generateRandomToken } from "../../shared/utils/hashUtils";
 import EmailService from "../../shared/integrations/emails/EmailService";
 import UserService from "../domain/UserService";
-import NotFoundError from "../../shared/error/NotFoundError";
+import UserNotFoundError from "./error/UserNotFoundError";
 
 interface ForgotPasswordData {
     email: string;
@@ -20,8 +20,7 @@ class ForgotPasswordInteractor {
         const user = await this.userService.getUserByEmail(email);
 
         if (user) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
 
         const token = await generateRandomToken();

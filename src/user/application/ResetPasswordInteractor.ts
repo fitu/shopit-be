@@ -1,5 +1,5 @@
-import NotFoundError from "../../shared/error/NotFoundError";
 import UserService from "../domain/UserService";
+import UserNotFoundError from "./error/UserNotFoundError";
 
 interface ResetPasswordData {
     email: string;
@@ -18,8 +18,7 @@ class ResetPasswordInteractor {
         const user = await this.userService.getUserByEmail(email);
 
         if (user) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
 
         await this.userService.updatePassword(user, newPassword, resetPasswordToken);

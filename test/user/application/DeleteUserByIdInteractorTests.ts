@@ -4,6 +4,7 @@ import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../../../src/user/
 import UserService from "../../../src/user/domain/UserService";
 import NotFoundError from "../../../src/shared/error/NotFoundError";
 import NotAllowError from "../../../src/shared/error/NotAllowError";
+import UserNotFoundError from "../../../src/user/application/error/UserNotFoundError";
 
 describe("DeleteUserByIdInteractor", function () {
     let service: UserService;
@@ -38,7 +39,7 @@ describe("DeleteUserByIdInteractor", function () {
         };
 
         service.deleteUserById = async (userId: string): Promise<void> => {
-            throw new NotFoundError("foo");
+            throw new UserNotFoundError();
         };
 
         const inputData: DeleteUserByIdData = { userId: "foo", userToDelete: "bar" };

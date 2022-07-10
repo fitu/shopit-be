@@ -1,5 +1,5 @@
-import NotFoundError from "../../shared/error/NotFoundError";
 import ProductService from "../domain/ProductService";
+import ProductNotFoundError from "./error/ProductNotFoundError";
 
 import ProductData from "./ProductData";
 
@@ -18,8 +18,7 @@ class GetProductByIdInteractor {
         const product = await this.productService.getProductById(productId);
 
         if (!product) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("Product not found");
+            throw new ProductNotFoundError();
         }
 
         return ProductData.fromModel(product);

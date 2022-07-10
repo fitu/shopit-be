@@ -1,5 +1,5 @@
-import NotFoundError from "../../shared/error/NotFoundError";
 import UserService from "../../user/domain/UserService";
+import UserNotFoundError from "./error/UserNotFoundError";
 import UserData from "./UserData";
 
 interface GetUserByIdData {
@@ -17,8 +17,7 @@ class GetUserByIdInteractor {
         const user = await this.userService.getUserById(userId);
 
         if (!user) {
-            // TODO: remove hardcoded
-            throw new NotFoundError("User not found");
+            throw new UserNotFoundError();
         }
 
         return UserData.fromModel(user);
