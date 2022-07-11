@@ -1,0 +1,9 @@
+{
+    "error.user_not_found": "User not found",
+    "error.passwords_do_not_match": "Passwords do not match",
+    "error.invalid_role_input": "Invalid role input",
+    "error.user_has_not_permissions": "User has not permissions",
+    "error.email_already_in_use": "Email already in use",
+    "error.sign_in": "Sign in error",
+    "error.user_or_password_invalid": "User or password invalid"
+}

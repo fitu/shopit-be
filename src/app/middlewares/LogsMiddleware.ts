@@ -4,7 +4,7 @@ import path from "path";
 import { Application } from "express";
 import morgan from "morgan";
 
-import Middleware from "../../shared/Middleware";
+import Middleware from "../../shared/middlewares/Middleware";
 
 class LogsMiddleware implements Middleware {
     public async init(app: Application): Promise<void> {

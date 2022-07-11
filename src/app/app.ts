@@ -5,8 +5,8 @@ import { Server } from "http";
 import express, { Application } from "express";
 
 import { handleAppErrors } from "../shared/error/errorController";
-import Middleware from "../shared/Middleware";
-import Controller from "../shared/Controller";
+import Middleware from "../shared/middlewares/Middleware";
+import Controller from "../shared/controllers/Controller";
 
 const BASE_VERSION = "/api/v1";
 

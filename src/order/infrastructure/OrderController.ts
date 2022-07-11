@@ -6,7 +6,7 @@ import httpStatus from "http-status";
 import { param } from "express-validator";
 
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
-import Controller from "../../shared/Controller";
+import Controller from "../../shared/controllers/Controller";
 import GenerateInvoiceInteractor, { GenerateInvoiceData } from "../application/GenerateInvoiceInteractor";
 import FileService from "../../shared/integrations/files/FileService";
 

@@ -10,7 +10,7 @@ import ProductService from "../../../product/domain/ProductService";
 import ReviewService from "../../../review/domain/ReviewService";
 import UserService from "../../../user/domain/UserService";
 import { readFromCsv } from "../../../shared/data/csvUtils";
-import getRepositories from "../../../shared/repository/Repository";
+import getRepositories from "../../repositories/Repository";
 import validateEnv from "../../env/envUtils";
 import { DbQuery, DbType } from "../database";
 

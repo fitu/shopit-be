@@ -8,7 +8,7 @@ import BaseInvalidDataError from "../../shared/error/BaseInvalidDataError";
 import { ErrorHandler } from "../../shared/error/ErrorHandler";
 import SignInError from "../application/error/SignInError";
 import EmailService from "../../shared/integrations/emails/EmailService";
-import Controller from "../../shared/Controller";
+import Controller from "../../shared/controllers/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import { generateJWTToken } from "../../shared/utils/hashUtils";

@@ -6,7 +6,7 @@ import UserHasNotPermissionsError from "../../user/application/error/UserHasNotP
 import ProductNotFoundError from "../application/error/ProductNotFoundError";
 import BaseInvalidDataError from "../../shared/error/BaseInvalidDataError";
 import { ErrorHandler } from "../../shared/error/ErrorHandler";
-import Controller from "../../shared/Controller";
+import Controller from "../../shared/controllers/Controller";
 import isValid from "../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
 import fileUploadMiddleware from "../../shared/middlewares/fileUploaderMiddleware";

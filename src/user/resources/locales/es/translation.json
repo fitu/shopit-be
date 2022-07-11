@@ -1,19 +1,9 @@
 {
-    "error.not_found": "No encontrado",
     "error.user_not_found": "Usuario no encontrado",
-    "error.product_not_found": "Producto no encontrado",
-
-    "error.invalid_data": "Datos invalidos",
     "error.passwords_do_not_match": "Las contrasenas no concuerdan",
     "error.invalid_role_input": "El rol ingresado es invalido",
-    "error.invalid_category_input": "La categoria ingresa es invalida",
-    "error.there_was_an_error_with_the_image": "Hubo un error con la imagen",
-    
-    "error.not_allow": "Usted no tiene permitido a realizar esta accion",
     "error.user_has_not_permissions": "El usuario no tiene permisos",
     "error.email_already_in_use": "Email actualmente en uso",
-    "error.not_authenticated": "No autenticado",
-    
     "error.sign_in": "Error al iniciar sesion",
     "error.user_or_password_invalid": "Usuario o contrasena invalida"
 }

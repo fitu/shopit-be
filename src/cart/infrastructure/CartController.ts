@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 
 import isAuthMiddleware from "../../shared/middlewares/isAuthMiddleware";
-import Controller from "../../shared/Controller";
+import Controller from "../../shared/controllers/Controller";
 
 class CartController implements Controller {
     public path = "/cart";

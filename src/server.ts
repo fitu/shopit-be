@@ -7,7 +7,7 @@ import UserController from "./user/infrastructure/UserController";
 import UserService from "./user/domain/UserService";
 import ProductService from "./product/domain/ProductService";
 import validateEnv from "./shared/env/envUtils";
-import getRepositories from "./shared/repository/Repository";
+import getRepositories from "./shared/repositories/Repository";
 import EmailService from "./shared/integrations/emails/EmailService";
 import FileService from "./shared/integrations/files/FileService";
 import { getDb } from "./shared/db/database";

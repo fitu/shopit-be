@@ -9,7 +9,7 @@ import ReviewService from "../../../review/domain/ReviewService";
 import ShippingInfoService from "../../../shippingInfo/domain/ShippingInfoService";
 import UserService from "../../../user/domain/UserService";
 import validateEnv from "../../env/envUtils";
-import getRepositories from "../../../shared/repository/Repository";
+import getRepositories from "../../repositories/Repository";
 import { readFromCsv } from "../../../shared/data/csvUtils";
 import { DbType } from "../database";
 
