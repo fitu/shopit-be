@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 
-import Product, { ProductCategory } from "../../../src/product/domain/Product";
-import User from "../../../src/user/domain/User";
+import Product, { ProductCategory } from "../../../src/modules/product/domain/Product";
+import User from "../../../src/modules/user/domain/User";
 
 import { getRandomUser } from "./UserFactory";
 

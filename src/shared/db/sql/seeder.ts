@@ -1,13 +1,13 @@
 import { Server } from "socket.io";
 
-import ProductCSV from "../../../product/infrastructure/sql/ProductCSV";
-import ReviewCSV from "../../../review/infrastructure/sql/ReviewCSV";
-import ShippingInfoCSV from "../../../shippingInfo/infrastructure/sql/ShippingInfoCSV";
-import UserCSV from "../../../user/infrastructure/sql/UserCSV";
-import ProductService from "../../../product/domain/ProductService";
-import ReviewService from "../../../review/domain/ReviewService";
-import ShippingInfoService from "../../../shippingInfo/domain/ShippingInfoService";
-import UserService from "../../../user/domain/UserService";
+import ProductCSV from "../../../modules/product/infrastructure/sql/ProductCSV";
+import ReviewCSV from "../../../modules/review/infrastructure/sql/ReviewCSV";
+import ShippingInfoCSV from "../../../modules/shippingInfo/infrastructure/sql/ShippingInfoCSV";
+import UserCSV from "../../../modules/user/infrastructure/sql/UserCSV";
+import ProductService from "../../../modules/product/domain/ProductService";
+import ReviewService from "../../../modules/review/domain/ReviewService";
+import ShippingInfoService from "../../../modules/shippingInfo/domain/ShippingInfoService";
+import UserService from "../../../modules/user/domain/UserService";
 import validateEnv from "../../env/envUtils";
 import getRepositories from "../../repositories/Repository";
 import { readFromCsv } from "../../../shared/data/csvUtils";

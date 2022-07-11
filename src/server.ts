@@ -1,11 +1,11 @@
 import { Server } from "socket.io";
 
-import CartController from "./cart/infrastructure/CartController";
-import OrderController from "./order/infrastructure/OrderController";
-import ProductController from "./product/infrastructure/ProductController";
-import UserController from "./user/infrastructure/UserController";
-import UserService from "./user/domain/UserService";
-import ProductService from "./product/domain/ProductService";
+import CartController from "./modules/cart/infrastructure/CartController";
+import OrderController from "./modules/order/infrastructure/OrderController";
+import ProductController from "./modules/product/infrastructure/ProductController";
+import UserController from "./modules/user/infrastructure/UserController";
+import UserService from "./modules/user/domain/UserService";
+import ProductService from "./modules/product/domain/ProductService";
 import validateEnv from "./shared/env/envUtils";
 import getRepositories from "./shared/repositories/Repository";
 import EmailService from "./shared/integrations/emails/EmailService";

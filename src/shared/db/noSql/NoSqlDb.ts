@@ -1,8 +1,8 @@
 import mongoose, { Mongoose } from "mongoose";
 
-import UserDocument from "../../../user/infrastructure/noSql/UserDao";
-import ProductDocument from "../../../product/infrastructure/noSql/ProductDao";
-import ReviewDocument from "../../../review/infrastructure/noSql/ReviewDao";
+import UserDocument from "../../../modules/user/infrastructure/noSql/UserDao";
+import ProductDocument from "../../../modules/product/infrastructure/noSql/ProductDao";
+import ReviewDocument from "../../../modules/review/infrastructure/noSql/ReviewDao";
 import Database, { DatabaseOptions } from "../database";
 
 class NoSqlDb implements Database {

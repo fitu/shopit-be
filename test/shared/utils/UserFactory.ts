@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import User, { UserRole } from "../../../src/user/domain/User";
+import User, { UserRole } from "../../../src/modules/user/domain/User";
 
 const getRandomUser = (): User => {
     const user = new User({

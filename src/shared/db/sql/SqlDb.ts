@@ -1,16 +1,16 @@
 import { Sequelize } from "sequelize";
 
-import ProductDao, { init as initProduct } from "../../../product/infrastructure/sql/ProductDao";
-import UserDao, { init as initUser } from "../../../user/infrastructure/sql/UserDao";
-import CartDao, { init as initCart } from "../../../cart/infrastructure/sql/CartDao";
-import CartItemDao, { init as initCartItem } from "../../../cartItem/infrastructure/sql/CartItemDao";
-import OrderDao, { init as initOrder } from "../../../order/infrastructure/sql/OrderDao";
-import OrderItemDao, { init as initOrderItem } from "../../../orderItem/infrastructure/sql/OrderItemDao";
-import AvatarDao, { init as initAvatar } from "../../../avatar/infrastructure/sql/AvatarDao";
-import ReviewDao, { init as initReview } from "../../../review/infrastructure/sql/ReviewDao";
-import PaymentOrderDao, { init as initPaymentOrder } from "../../../paymentOrder/infrastructure/sql/PaymentOrderDao";
-import PaymentInfoDao, { init as initPaymentInfo } from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
-import ShippingInfoDao, { init as initShippingInfo } from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
+import ProductDao, { init as initProduct } from "../../../modules/product/infrastructure/sql/ProductDao";
+import UserDao, { init as initUser } from "../../../modules/user/infrastructure/sql/UserDao";
+import CartDao, { init as initCart } from "../../../modules/cart/infrastructure/sql/CartDao";
+import CartItemDao, { init as initCartItem } from "../../../modules/cartItem/infrastructure/sql/CartItemDao";
+import OrderDao, { init as initOrder } from "../../../modules/order/infrastructure/sql/OrderDao";
+import OrderItemDao, { init as initOrderItem } from "../../../modules/orderItem/infrastructure/sql/OrderItemDao";
+import AvatarDao, { init as initAvatar } from "../../../modules/avatar/infrastructure/sql/AvatarDao";
+import ReviewDao, { init as initReview } from "../../../modules/review/infrastructure/sql/ReviewDao";
+import PaymentOrderDao, { init as initPaymentOrder } from "../../../modules/paymentOrder/infrastructure/sql/PaymentOrderDao";
+import PaymentInfoDao, { init as initPaymentInfo } from "../../../modules/paymentInfo/infrastructure/sql/PaymentInfoDao";
+import ShippingInfoDao, { init as initShippingInfo } from "../../../modules/shippingInfo/infrastructure/sql/ShippingInfoDao";
 import Database, { DatabaseOptions } from "../database";
 
 class SqlDb implements Database {

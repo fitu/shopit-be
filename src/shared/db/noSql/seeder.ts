@@ -1,14 +1,14 @@
 import { Server } from "socket.io";
 import { zip } from "lodash";
 
-import ProductCSV from "../../../product/infrastructure/noSql/ProductCSV";
-import ReviewCSV from "../../../review/infrastructure/noSql/ReviewCSV";
-import ShippingInfoCSV from "../../../shippingInfo/infrastructure/noSql/ShippingInfoCSV";
-import UserCSV from "../../../user/infrastructure/noSql/UserCSV";
-import ShippingInfo from "../../../shippingInfo/domain/ShippingInfo";
-import ProductService from "../../../product/domain/ProductService";
-import ReviewService from "../../../review/domain/ReviewService";
-import UserService from "../../../user/domain/UserService";
+import ProductCSV from "../../../modules/product/infrastructure/noSql/ProductCSV";
+import ReviewCSV from "../../../modules/review/infrastructure/noSql/ReviewCSV";
+import ShippingInfoCSV from "../../../modules/shippingInfo/infrastructure/noSql/ShippingInfoCSV";
+import UserCSV from "../../../modules/user/infrastructure/noSql/UserCSV";
+import ShippingInfo from "../../../modules/shippingInfo/domain/ShippingInfo";
+import ProductService from "../../../modules/product/domain/ProductService";
+import ReviewService from "../../../modules/review/domain/ReviewService";
+import UserService from "../../../modules/user/domain/UserService";
 import { readFromCsv } from "../../../shared/data/csvUtils";
 import getRepositories from "../../repositories/Repository";
 import validateEnv from "../../env/envUtils";
