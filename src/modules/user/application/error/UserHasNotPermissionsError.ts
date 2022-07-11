@@ -1,12 +1,13 @@
-import BaseNotAllowError from "../../../../shared/error/BaseNotAllowError";
+import { ErrorCodes } from "../../../../shared/error/BaseError";
+import BaseNotAllowedError from "../../../../shared/error/BaseNotAllowedError";
 
-class UserHasNotPermissionsError extends BaseNotAllowError {
+class UserHasNotPermissionsError extends BaseNotAllowedError {
     constructor() {
-        const ERROR_CODE = "na-1";
+        const errorCode = ErrorCodes.USER_HAS_NOT_PERMISSIONS.toString();
         const messageToRender = "error.user_has_not_permissions";
         const detailsToRender = "";
 
-        super(messageToRender, detailsToRender, ERROR_CODE);
+        super(messageToRender, detailsToRender, errorCode);
 
         Error.captureStackTrace(this, this.constructor);
     }

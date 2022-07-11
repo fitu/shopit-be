@@ -1,7 +1,8 @@
 {
+    "error.internal_server": "Internal server error",
     "error.not_found": "Not found",
     "error.invalid_data": "Invalid data",
     "error.there_was_an_error_with_the_image": "There was an error with the image",
-    "error.not_allow": "You are not allow to do this action",
+    "error.not_allowed": "You are not allow to do this action",
     "error.not_authenticated": "Not authenticated"
 }

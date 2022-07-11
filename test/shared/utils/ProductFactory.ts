@@ -58,14 +58,14 @@ const getProductWithData = ({
 }): Product => {
     const product = new Product({
         id,
-        title: title ?? faker.commerce.productName(),
-        description: description ?? faker.commerce.productDescription(),
+        title: title || faker.commerce.productName(),
+        description: description || faker.commerce.productDescription(),
         price: price ?? +faker.commerce.price(),
         ratings: 0,
-        imageUrl: imageUrl ?? faker.system.directoryPath(),
-        category: category ?? ProductCategory.ELECTRONICS,
+        imageUrl: imageUrl || faker.system.directoryPath(),
+        category: category || ProductCategory.ELECTRONICS,
         stock: stock ?? +faker.random.numeric(),
-        user: user ?? getRandomUser(),
+        user: user || getRandomUser(),
     });
 
     return product;

@@ -1,9 +1,9 @@
 import BaseError, { ErrorCodes } from "./BaseError";
 
-class BaseInvalidDataError extends BaseError {
+class BaseNotAllowedError extends BaseError {
     constructor(message?: string, details?: string, code?: string) {
-        const errorCode = code || ErrorCodes.INVALID_DATA.toString();
-        const messageToRender = message || "error.invalid_data";
+        const errorCode = code || ErrorCodes.NOT_ALLOWED.toString();
+        const messageToRender = message || "error.not_allowed";
         const detailsToRender = details || "";
 
         super({ code: errorCode, message: messageToRender, details: detailsToRender });
@@ -12,4 +12,4 @@ class BaseInvalidDataError extends BaseError {
     }
 }
 
-export default BaseInvalidDataError;
+export default BaseNotAllowedError;

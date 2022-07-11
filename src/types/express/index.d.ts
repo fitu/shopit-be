@@ -8,7 +8,7 @@ declare global {
             email: string;
 
             // For i18n
-            t: (message: string) => string
+            t: (message: string) => string;
         }
     }
 }

@@ -1,12 +1,13 @@
-import BaseNotAllowError from "../../../../shared/error/BaseNotAllowError";
+import { ErrorCodes } from "../../../../shared/error/BaseError";
+import BaseNotAllowedError from "../../../../shared/error/BaseNotAllowedError";
 
-class EmailAlreadyInUseError extends BaseNotAllowError {
+class EmailAlreadyInUseError extends BaseNotAllowedError {
     constructor() {
-        const ERROR_CODE = "na-2";
+        const errorCode = ErrorCodes.EMAIL_ALREADY_IN_USE.toString();
         const messageToRender = "error.error.email_already_in_use";
         const detailsToRender = "";
 
-        super(messageToRender, detailsToRender, ERROR_CODE);
+        super(messageToRender, detailsToRender, errorCode);
 
         Error.captureStackTrace(this, this.constructor);
     }

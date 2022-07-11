@@ -3,19 +3,18 @@ import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
 import UserHasNotPermissionsError from "../application/error/UserHasNotPermissionsError";
+import SignInError from "../application/error/SignInError";
 import UserNotFoundError from "../application/error/UserNotFoundError";
+import Controller from "../../../shared/controllers/Controller";
 import BaseInvalidDataError from "../../../shared/error/BaseInvalidDataError";
 import { ErrorHandler } from "../../../shared/error/ErrorHandler";
-import SignInError from "../application/error/SignInError";
 import EmailService from "../../../shared/integrations/emails/EmailService";
-import Controller from "../../../shared/controllers/Controller";
 import isValid from "../../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../../shared/middlewares/isAuthMiddleware";
 import { generateJWTToken } from "../../../shared/utils/hashUtils";
 import Page, { getPageAndItemsPerPage } from "../../../shared/Page";
+
 import UserData from "../application/UserData";
-import { UserRole, validUserRoles } from "../domain/User";
-import UserService from "../domain/UserService";
 import CreateUserInteractor from "../application/CreateUserInteractor";
 import ForgotPasswordInteractor, { ForgotPasswordData } from "../application/ForgotPasswordInteractor";
 import ResetPasswordInteractor, { ResetPasswordData } from "../application/ResetPasswordInteractor";
@@ -24,7 +23,8 @@ import GetAllUsersInteractor, { GetAllUsersData } from "../application/GetAllUse
 import GetUserByIdInteractor, { GetUserByIdData } from "../application/GetUserByIdInteractor";
 import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../application/DeleteUserByIdInteractor";
 import UpdateUserByIdInteractor, { UpdateUserByIdData } from "../application/UpdateUserByIdInteractor";
-
+import { UserRole, validUserRoles } from "../domain/User";
+import UserService from "../domain/UserService";
 import UserViewModel from "./UserViewModel";
 
 class UserController implements Controller {
@@ -125,7 +125,7 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: user });
         } catch (error: any) {
             if (error instanceof UserNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             next(error);
@@ -184,11 +184,11 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: newUser });
         } catch (error: any) {
             if (error instanceof UserNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             if (error instanceof UserHasNotPermissionsError) {
-                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
+                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error));
                 return;
             }
             next(error);
@@ -219,10 +219,10 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: updatedUser });
         } catch (error: any) {
             if (error instanceof UserNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
             }
             if (error instanceof UserHasNotPermissionsError) {
-                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
+                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error));
                 return;
             }
             next(new Error(error));
@@ -240,11 +240,11 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
             if (error instanceof UserNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             if (error instanceof UserHasNotPermissionsError) {
-                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
+                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error));
                 return;
             }
             next(new Error(error));
@@ -263,11 +263,11 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: token });
         } catch (error: any) {
             if (error instanceof UserNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             if (error instanceof SignInError) {
-                next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, error.message));
+                next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, error));
                 return;
             }
             next(new Error(error));
@@ -284,7 +284,7 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
             if (error instanceof UserNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             next(new Error(error));
@@ -305,11 +305,11 @@ class UserController implements Controller {
             res.status(httpStatus.OK).json({ success: result });
         } catch (error: any) {
             if (error instanceof UserNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             if (error instanceof BaseInvalidDataError) {
-                next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, error.message));
+                next(new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, error));
                 return;
             }
             next(new Error(error));

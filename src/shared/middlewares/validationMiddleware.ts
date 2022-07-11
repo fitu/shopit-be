@@ -9,6 +9,7 @@ const errorFormatter = ({ location, msg, param, value, nestedErrors }: Validatio
 
 const isValid = (req: Request, res: Response, next: NextFunction) => {
     const validations = validationResult(req).formatWith(errorFormatter);
+
     if (!validations.isEmpty()) {
         throw new ErrorHandler(httpStatus.UNPROCESSABLE_ENTITY, validations.array());
     }

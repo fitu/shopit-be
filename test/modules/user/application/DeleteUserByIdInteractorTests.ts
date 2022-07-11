@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import NotFoundError from "../../../../src/shared/error/BaseNotFoundError";
-import NotAllowError from "../../../../src/shared/error/BaseNotAllowError";
+import NotAllowedError from "../../../../src/shared/error/BaseNotAllowedError";
 import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../../../../src/modules/user/application/DeleteUserByIdInteractor";
 import UserService from "../../../../src/modules/user/domain/UserService";
 import UserNotFoundError from "../../../../src/modules/user/application/error/UserNotFoundError";
@@ -28,7 +28,7 @@ describe("DeleteUserByIdInteractor", function () {
             await interactor.execute(inputData);
         } catch (error: any) {
             // Then
-            expect(error).instanceOf(NotAllowError);
+            expect(error).instanceOf(NotAllowedError);
         }
     });
 

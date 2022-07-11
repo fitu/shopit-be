@@ -2,26 +2,26 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
-import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
-import ProductNotFoundError from "../application/error/ProductNotFoundError";
+import Controller from "../../../shared/controllers/Controller";
 import BaseInvalidDataError from "../../../shared/error/BaseInvalidDataError";
 import { ErrorHandler } from "../../../shared/error/ErrorHandler";
-import Controller from "../../../shared/controllers/Controller";
 import isValid from "../../../shared/middlewares/validationMiddleware";
 import isAuthMiddleware from "../../../shared/middlewares/isAuthMiddleware";
 import fileUploadMiddleware from "../../../shared/middlewares/fileUploaderMiddleware";
-import Page, { getPageAndItemsPerPage } from "../../../shared/Page";
 import { generateImageUploaderConfig } from "../../../shared/utils/imageUtils";
+import Page, { getPageAndItemsPerPage } from "../../../shared/Page";
+import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
 import UserService from "../../user/domain/UserService";
+
 import ProductData from "../application/ProductData";
 import CreateProductInteractor, { CreateProductData } from "../application/CreateProductInteractor";
 import GetAllProductsInteractor, { GetAllProductsData } from "../application/GetAllProductsInteractor";
 import GetProductByIdInteractor, { GetProductByIdData } from "../application/GetProductByIdInteractor";
 import DeleteProductByIdInteractor, { DeleteProductByIdData } from "../application/DeleteProductByIdInteractor";
 import UpdateProductByIdInteractor, { UpdateProductByIdData } from "../application/UpdateProductByIdInteractor";
+import ProductNotFoundError from "../application/error/ProductNotFoundError";
 import ProductService from "../domain/ProductService";
 import { ProductCategory, validProductCategories } from "../domain/Product";
-
 import ProductViewModel from "./ProductViewModel";
 
 class ProductController implements Controller {
@@ -36,10 +36,10 @@ class ProductController implements Controller {
     private userService: UserService;
 
     constructor(productService: ProductService, userService: UserService) {
-        this.initializeRoutes();
-
         this.productService = productService;
         this.userService = userService;
+
+        this.initializeRoutes();
     }
 
     /*
@@ -146,7 +146,7 @@ class ProductController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: product });
         } catch (error: any) {
             if (error instanceof ProductNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             next(error);
@@ -209,11 +209,11 @@ class ProductController implements Controller {
             res.status(httpStatus.OK).json({ success: true });
         } catch (error: any) {
             if (error instanceof ProductNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             if (error instanceof UserHasNotPermissionsError) {
-                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
+                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error));
                 return;
             }
             next(new Error(error));
@@ -255,11 +255,11 @@ class ProductController implements Controller {
             res.status(httpStatus.OK).json({ success: true, data: updatedProduct });
         } catch (error: any) {
             if (error instanceof ProductNotFoundError) {
-                next(new ErrorHandler(httpStatus.NOT_FOUND, error.message));
+                next(new ErrorHandler(httpStatus.NOT_FOUND, error));
                 return;
             }
             if (error instanceof UserHasNotPermissionsError) {
-                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error.message));
+                next(new ErrorHandler(httpStatus.UNAUTHORIZED, error));
                 return;
             }
             next(new Error(error));

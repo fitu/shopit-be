@@ -15,10 +15,10 @@ import { DbType } from "../database";
 
 import Db from "./SqlDb";
 
-const PRODUCTS_CSV_PATH = "./src/product/infrastructure/data/products.csv";
-const REVIEWS_CSV_PATH = "./src/review/infrastructure/data/reviews.csv";
-const SHIPPINGS_INFO_CSV_PATH = "./src/shippingInfo/infrastructure/data/shippingsInfo.csv";
-const USERS_CSV_PATH = "./src/user/infrastructure/data/users.csv";
+const PRODUCTS_CSV_PATH = "./src/modules/product/infrastructure/data/products.csv";
+const REVIEWS_CSV_PATH = "./src/modules/review/infrastructure/data/reviews.csv";
+const SHIPPINGS_INFO_CSV_PATH = "./src/modules/shippingInfo/infrastructure/data/shippingsInfo.csv";
+const USERS_CSV_PATH = "./src/modules/user/infrastructure/data/users.csv";
 
 const seedDb = async () => {
     try {

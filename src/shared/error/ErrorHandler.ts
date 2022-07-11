@@ -1,15 +1,14 @@
-import { isString } from "lodash";
+import BaseError from "./BaseError";
 
 class ErrorHandler extends Error {
     statusCode: number;
-    errorMessages: string | Array<string>;
+    errors: string | BaseError | Array<string> | Array<BaseError>;
 
-    constructor(statusCode: number, errorMessages: string | Array<string>) {
-        const message = isString(errorMessages) ? errorMessages : errorMessages[0];
-        super(message);
+    constructor(statusCode: number, errors: string | BaseError | Array<string> | Array<BaseError>) {
+        super("");
 
         this.statusCode = statusCode;
-        this.errorMessages = errorMessages;
+        this.errors = errors;
 
         Error.captureStackTrace(this, this.constructor);
     }
