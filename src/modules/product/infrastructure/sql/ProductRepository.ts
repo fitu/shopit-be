@@ -2,8 +2,7 @@ import Page from "@shared/Page";
 import UserDao from "@user/infrastructure/sql/UserDao";
 import Product from "@product/domain/Product";
 import { Repository } from "@product/infrastructure/Repository";
-
-import ProductDao, { validateProductFieldsToInsert } from "./ProductDao";
+import ProductDao, { validateProductFieldsToInsert } from "@product/infrastructure/sql/ProductDao";
 
 class ProductRepository implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {

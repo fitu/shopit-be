@@ -7,7 +7,6 @@ import { wasDeletionSuccessful } from "@utils/sqlUtils";
 import { hashPassword } from "@utils/hashUtils";
 import User from "@user/domain/User";
 import { Repository } from "@user/infrastructure/Repository";
-
 import UserDao, {
     USER_TABLE,
     USER_ID,
@@ -27,7 +26,7 @@ import UserDao, {
     USER_PRODUCTS,
     USER_REVIEWS,
     USER_ORDERS,
-} from "./UserDao";
+} from "@user/infrastructure/sql/UserDao";
 
 class UserRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}

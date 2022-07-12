@@ -8,7 +8,6 @@ import User from "@user/domain/User";
 import { USER_ID, USER_TABLE } from "@user/infrastructure/sql/UserDao";
 import Product from "@product/domain/Product";
 import { Repository } from "@product/infrastructure/Repository";
-
 import ProductDao, {
     PRODUCT_TABLE,
     PRODUCT_ID,
@@ -22,7 +21,7 @@ import ProductDao, {
     PRODUCT_CREATED_AT,
     PRODUCT_UPDATED_AT,
     PRODUCT_USER_ID,
-} from "./ProductDao";
+} from "@product/infrastructure/sql/ProductDao";
 
 class ProductRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}

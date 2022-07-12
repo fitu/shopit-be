@@ -13,18 +13,6 @@
     "url": "https://github.com/fitu/shopit-be/issues"
   },
   "homepage": "https://github.com/fitu/shopit-be#readme",
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.test.ts",
-      ".git",
-      "node_modules"
-    ],
-    "watch": [
-      "src"
-    ],
-    "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/server.ts",
-    "ext": "ts"
-  },
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf ./dist",

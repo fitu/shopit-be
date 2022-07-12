@@ -239,7 +239,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
 
         // When
         const response = await api
@@ -268,7 +268,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
 
         // When
         const response = await api
@@ -302,8 +302,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -331,8 +330,7 @@ describe("ProductController", function () {
         const description = "description";
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -360,8 +358,7 @@ describe("ProductController", function () {
         const price = "foo";
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -389,8 +386,7 @@ describe("ProductController", function () {
         const description = "description";
         const price = 11.11;
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -418,8 +414,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "foo";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -448,8 +443,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "foo";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -477,8 +471,7 @@ describe("ProductController", function () {
         const description = "description";
         const price = 11.11;
         const category = "Electronics";
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -506,8 +499,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = "foo";
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .post(`${path}`)
@@ -536,8 +528,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         productService.insert = async (product: Product, userId: string): Promise<Product> => {
             return product;
         };
@@ -580,8 +571,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         productService.insert = async (product: Product, userId: string): Promise<Product> => {
             return product;
         };
@@ -742,8 +732,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -772,8 +761,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -807,8 +795,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -837,8 +824,7 @@ describe("ProductController", function () {
         const description = "description";
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -867,8 +853,7 @@ describe("ProductController", function () {
         const price = "foo";
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -897,8 +882,7 @@ describe("ProductController", function () {
         const description = "description";
         const price = 11.11;
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -927,8 +911,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "foo";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -958,8 +941,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "foo";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -988,8 +970,7 @@ describe("ProductController", function () {
         const description = "description";
         const price = 11.11;
         const category = "Electronics";
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -1018,8 +999,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = "foo";
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api
             .put(`${path}/${productId}`)
@@ -1049,8 +1029,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         // When
         const response = await api.put(`${path}/${productId}`).field({
             title,
@@ -1078,8 +1057,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return null;
         };
@@ -1114,8 +1092,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = ProductCategory.ELECTRONICS;
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return getProductWithData({ id: productId, title, description, price, category, stock, imageUrl });
         };
@@ -1158,8 +1135,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = "Electronics";
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return getRandomProduct();
         };
@@ -1198,8 +1174,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = ProductCategory.ELECTRONICS;
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         productService.getProductWithUserById = async (productId: string): Promise<Product | null> => {
             return getRandomProduct();
         };
@@ -1254,8 +1229,7 @@ describe("ProductController", function () {
         const price = 11.11;
         const category = ProductCategory.ELECTRONICS;
         const stock = 1;
-        const imageUrl = "test/shared/fixtures/random.jpg";
-
+        const imageUrl = "src/tests/shared/fixtures/random.jpg";
         const userId = FAKE_JWT_USER_ID;
         const user = getRandomUserWithId(userId);
 

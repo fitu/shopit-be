@@ -13,12 +13,12 @@ import {
     Sequelize,
 } from "sequelize";
 
-import { OrderStatus, validOrderStatus } from "../../domain/Order";
-import OrderItemDao from "../../../orderItem/infrastructure/sql/OrderItemDao";
-import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
-import ProductDao from "../../../product/infrastructure/sql/ProductDao";
-import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
+import OrderItemDao from "@orderItem/infrastructure/sql/OrderItemDao";
+import PaymentInfoDao from "@paymentInfo/infrastructure/sql/PaymentInfoDao";
+import ProductDao from "@product/infrastructure/sql/ProductDao";
+import ShippingInfoDao from "@shippingInfo/infrastructure/sql/ShippingInfoDao";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import { OrderStatus, validOrderStatus } from "@order/domain/Order";
 
 const ORDER_TABLE = "orders";
 

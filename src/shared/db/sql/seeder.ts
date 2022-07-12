@@ -14,11 +14,10 @@ import { readFromCsv } from "@shared/data/csvUtils";
 import { DbType } from "@shared/db/database";
 import Db from "@shared/db/sql/SqlDb";
 
-// TODO: shouldn't this be not hardcoded?
-const PRODUCTS_CSV_PATH = "./src/modules/product/infrastructure/data/products.csv";
-const REVIEWS_CSV_PATH = "./src/modules/review/infrastructure/data/reviews.csv";
-const SHIPPINGS_INFO_CSV_PATH = "./src/modules/shippingInfo/infrastructure/data/shippingsInfo.csv";
-const USERS_CSV_PATH = "./src/modules/user/infrastructure/data/users.csv";
+const PRODUCTS_CSV_PATH = "src/modules/product/infrastructure/data/products.csv";
+const REVIEWS_CSV_PATH = "src/modules/review/infrastructure/data/reviews.csv";
+const SHIPPINGS_INFO_CSV_PATH = "src/modules/shippingInfo/infrastructure/data/shippingsInfo.csv";
+const USERS_CSV_PATH = "src/modules/user/infrastructure/data/users.csv";
 
 const seedDb = async () => {
     try {
