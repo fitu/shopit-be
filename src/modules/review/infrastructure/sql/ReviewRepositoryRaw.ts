@@ -1,9 +1,9 @@
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import Review from "../../domain/Review";
-import { Repository } from "../Repository";
-import { REVIEW_TABLE } from "./ReviewDao";
+import Review from "@review/domain/Review";
+import { Repository } from "@review/infrastructure/Repository";
+import { REVIEW_TABLE } from "@review/infrastructure/sql/ReviewDao";
 
 class ReviewRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}

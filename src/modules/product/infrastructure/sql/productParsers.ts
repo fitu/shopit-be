@@ -1,6 +1,5 @@
-import Product from "../../domain/Product";
-
-import ProductDao from "./ProductDao";
+import Product from "@product/domain/Product";
+import ProductDao from "@product/infrastructure/sql/ProductDao";
 
 const fromProductDaoToModel = (productDao: ProductDao): Product => {
     return new Product({

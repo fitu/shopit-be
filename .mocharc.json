@@ -1,0 +1,10 @@
+{
+    "extension": ["ts"],
+    "timeout": "10000",
+    "require": [
+        "ts-node/register",
+        "tsconfig-paths/register"
+    ],
+    "watch-files": ["tests/**/*.ts"],
+    "exit": true
+}

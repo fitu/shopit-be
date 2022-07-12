@@ -1,7 +1,7 @@
 import { Application, Request, Response, NextFunction } from "express";
 import csrf from "csurf";
 
-import Middleware from "../../shared/middlewares/Middleware";
+import Middleware from "@shared/middlewares/Middleware";
 
 class CSRFMiddleware implements Middleware {
     public async init(app: Application): Promise<void> {

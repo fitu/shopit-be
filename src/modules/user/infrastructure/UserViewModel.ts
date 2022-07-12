@@ -1,10 +1,10 @@
-import Avatar from "../../avatar/domain/Avatar";
-import Cart from "../../cart/domain/Cart";
-import Product from "../../product/domain/Product";
-import Review from "../../review/domain/Review";
-import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
-import UserData from "../application/UserData";
-import { UserRole } from "../domain/User";
+import Avatar from "@avatar/domain/Avatar";
+import Cart from "@cart/domain/Cart";
+import Product from "@product/domain/Product";
+import Review from "@review/domain/Review";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
+import UserData from "@user/application/UserData";
+import { UserRole } from "@user/domain/User";
 
 class UserViewModel {
     readonly id: string;

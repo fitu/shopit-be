@@ -1,4 +1,4 @@
-import Cart from "../domain/Cart";
+import Cart from "@cart/domain/Cart";
 
 interface Repository {
     create: (cart: Cart, userId: string) => Promise<Cart>;

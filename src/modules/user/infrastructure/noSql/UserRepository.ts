@@ -1,10 +1,8 @@
-import { hashPassword } from "../../../../shared/utils/hashUtils";
-import Page from "../../../../shared/Page";
-import User from "../../domain/User";
-import { Repository } from "../Repository";
-
-import UserDocument, { UserDao, UserFullDocument } from "./UserDao";
-import { fromUserToDao, updateUserDocument } from "./userParsers";
+import Page from "@shared/Page";
+import User from "@user/domain/User";
+import { Repository } from "@user/infrastructure/Repository";
+import UserDocument, { UserDao, UserFullDocument } from "@user/infrastructure/noSql/UserDao";
+import { fromUserToDao, updateUserDocument } from "@user/infrastructure/noSql/userParsers";
 
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {

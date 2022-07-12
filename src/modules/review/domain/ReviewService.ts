@@ -1,6 +1,5 @@
-import { Repository as ReviewRepository } from "../infrastructure/Repository";
-
-import Review from "./Review";
+import { Repository as ReviewRepository } from "@review/infrastructure/Repository";
+import Review from "@review/domain/Review";
 
 class ReviewService {
     private reviewRepository: ReviewRepository;

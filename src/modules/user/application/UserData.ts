@@ -1,11 +1,11 @@
 import { isNil } from "lodash";
 
-import User, { UserRole } from "../domain/User";
-import Avatar from "../../avatar/domain/Avatar";
-import Cart from "../../cart/domain/Cart";
-import Product from "../../product/domain/Product";
-import Review from "../../review/domain/Review";
-import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
+import Avatar from "@avatar/domain/Avatar";
+import Cart from "@cart/domain/Cart";
+import Product from "@product/domain/Product";
+import Review from "@review/domain/Review";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
+import User, { UserRole } from "@user/domain/User";
 
 class UserData {
     readonly id?: string;

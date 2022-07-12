@@ -2,13 +2,11 @@ import osPath from "path";
 import fs from "fs";
 
 import { Router, Request, Response, NextFunction } from "express";
-import httpStatus from "http-status";
 import { param } from "express-validator";
 
-import isAuthMiddleware from "../../../shared/middlewares/isAuthMiddleware";
-import Controller from "../../../shared/controllers/Controller";
-import GenerateInvoiceInteractor, { GenerateInvoiceData } from "../application/GenerateInvoiceInteractor";
-import FileService from "../../../shared/integrations/files/FileService";
+import Controller from "@shared/controllers/Controller";
+import FileService from "@shared/integrations/files/FileService";
+import GenerateInvoiceInteractor, { GenerateInvoiceData } from "@order/application/GenerateInvoiceInteractor";
 
 const BASE_FILENAME = "invoice";
 const BASE_FOLDER = "data";

@@ -1,6 +1,5 @@
-import { Repository as PaymentInfoRepository } from "../infrastructure/Repository";
-
-import PaymentInfo from "./PaymentInfo";
+import { Repository as PaymentInfoRepository } from "@paymentInfo/infrastructure/Repository";
+import PaymentInfo from "@paymentInfo/domain/PaymentInfo";
 
 class PaymentInfoService {
     private paymentInfoRepository: PaymentInfoRepository;

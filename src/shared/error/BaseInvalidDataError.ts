@@ -1,4 +1,4 @@
-import BaseError, { ErrorCodes } from "./BaseError";
+import BaseError, { ErrorCodes } from "@shared/error/BaseError";
 
 class BaseInvalidDataError extends BaseError {
     constructor(message?: string, details?: string, code?: string) {

@@ -1,13 +1,12 @@
 import { isNil } from "lodash";
 import mongoose from "mongoose";
 
-import { hashPassword, hashPasswordSync } from "../../../../shared/utils/hashUtils";
-import Page from "../../../../shared/Page";
-import User from "../../domain/User";
-import { Repository } from "../Repository";
-
-import { UserDao, USER_DOCUMENT } from "./UserDao";
-import { fromUserDaoToModel, fromUserToDao } from "./userParsers";
+import Page from "@shared/Page";
+import { hashPassword, hashPasswordSync } from "@utils/hashUtils";
+import User from "@user/domain/User";
+import { Repository } from "@user/infrastructure/Repository";
+import { UserDao, USER_DOCUMENT } from "@user/infrastructure/noSql/UserDao";
+import { fromUserDaoToModel, fromUserToDao } from "@user/infrastructure/noSql/userParsers";
 
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {

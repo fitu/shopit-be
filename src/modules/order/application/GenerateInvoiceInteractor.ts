@@ -1,4 +1,4 @@
-import FileService from "../../../shared/integrations/files/FileService";
+import FileService from "@shared/integrations/files/FileService";
 
 interface GenerateInvoiceData {
     invoicePath: string;

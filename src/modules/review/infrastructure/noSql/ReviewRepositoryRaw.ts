@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
-import Review from "../../domain/Review";
-import { Repository } from "../Repository";
-
-import { ReviewDao, REVIEW_DOCUMENT } from "./ReviewDao";
-import { fromReviewToDao } from "./reviewParsers";
+import Review from "@review/domain/Review";
+import { Repository } from "@review/infrastructure/Repository";
+import { ReviewDao, REVIEW_DOCUMENT } from "@review/infrastructure/noSql/ReviewDao";
+import { fromReviewToDao } from "@review/infrastructure/noSql/reviewParsers";
 
 class ReviewRepositoryRaw implements Repository {
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {

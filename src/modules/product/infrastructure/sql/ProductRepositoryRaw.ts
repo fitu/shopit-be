@@ -2,12 +2,12 @@ import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import { wasDeletionSuccessful } from "../../../../shared/utils/sqlUtils";
-import Page from "../../../../shared/Page";
-import Product from "../../domain/Product";
-import User from "../../../user/domain/User";
-import { USER_ID, USER_TABLE } from "../../../user/infrastructure/sql/UserDao";
-import { Repository } from "../Repository";
+import Page from "@shared/Page";
+import { wasDeletionSuccessful } from "@utils/sqlUtils";
+import User from "@user/domain/User";
+import { USER_ID, USER_TABLE } from "@user/infrastructure/sql/UserDao";
+import Product from "@product/domain/Product";
+import { Repository } from "@product/infrastructure/Repository";
 
 import ProductDao, {
     PRODUCT_TABLE,

@@ -1,6 +1,5 @@
-import User from "../../domain/User";
-
-import UserDao from "./UserDao";
+import User from "@user/domain/User";
+import UserDao from "@user/infrastructure/sql/UserDao";
 
 const fromUserDaoToModel = (userDao: UserDao): User => {
     const user = new User({

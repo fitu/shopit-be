@@ -1,6 +1,6 @@
-import AvatarCSV from "../../../avatar/infrastructure/noSql/AvatarCSV";
-import CartCSV from "../../../cart/infrastructure/noSql/CartCSV";
-import User, { UserRole } from "../../domain/User";
+import AvatarCSV from "@avatar/infrastructure/noSql/AvatarCSV";
+import CartCSV from "@cart/infrastructure/noSql/CartCSV";
+import User, { UserRole } from "@user/domain/User";
 
 class UserCSV {
     constructor(

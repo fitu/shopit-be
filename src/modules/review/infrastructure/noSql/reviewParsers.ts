@@ -1,8 +1,7 @@
 import { omit } from "lodash";
 
-import Review from "../../domain/Review";
-
-import { ReviewFullDocument, ReviewDao } from "./ReviewDao";
+import Review from "@review/domain/Review";
+import { ReviewFullDocument, ReviewDao } from "@review/infrastructure/noSql/ReviewDao";
 
 const fromReviewDocumentToModel = (reviewDocument: ReviewFullDocument): Review => {
     const review = new Review({

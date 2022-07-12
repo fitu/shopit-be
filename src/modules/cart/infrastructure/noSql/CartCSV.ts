@@ -1,4 +1,4 @@
-import Cart from "../../domain/Cart";
+import Cart from "@cart/domain/Cart";
 
 class CartCSV {
     constructor(public id: string, public itemsPrice: number, public taxPrice: number, public totalPrice: number) {}

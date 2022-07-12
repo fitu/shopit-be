@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ValidationError, validationResult } from "express-validator";
 import httpStatus from "http-status";
 
-import { ErrorHandler } from "../error/ErrorHandler";
+import { ErrorHandler } from "@shared/error/ErrorHandler";
 
 const errorFormatter = ({ location, msg, param, value, nestedErrors }: ValidationError): string =>
     `[${param}]: ${msg}, (${value})`;

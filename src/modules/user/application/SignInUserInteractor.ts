@@ -1,8 +1,8 @@
-import UserService from "../domain/UserService";
-import User from "../domain/User";
-import UserNotFoundError from "./error/UserNotFoundError";
-import SignInError from "./error/SignInError";
-import UserData from "./UserData";
+import UserService from "@user/domain/UserService";
+import User from "@user/domain/User";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
+import SignInError from "@user/application/error/SignInError";
+import UserData from "@user/application/UserData";
 
 interface SignInUserData {
     email: string;

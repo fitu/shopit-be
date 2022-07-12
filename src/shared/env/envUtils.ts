@@ -1,7 +1,7 @@
 import { cleanEnv, str, port } from "envalid";
 import dotenv from "dotenv";
 
-import { DbType, DbQuery } from "../db/database";
+import { DbType, DbQuery } from "@shared/db/database";
 
 const validateEnv = (): any => {
     // Load envs

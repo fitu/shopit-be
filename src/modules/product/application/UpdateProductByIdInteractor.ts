@@ -1,10 +1,9 @@
-import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
-import ProductNotFoundError from "./error/ProductNotFoundError";
-import UserService from "../../user/domain/UserService";
-import ProductService from "../domain/ProductService";
-import Product from "../domain/Product";
-
-import ProductData from "./ProductData";
+import UserHasNotPermissionsError from "@user/application/error/UserHasNotPermissionsError";
+import UserService from "@user/domain/UserService";
+import ProductService from "@product/domain/ProductService";
+import Product from "@product/domain/Product";
+import ProductData from "@product/application/ProductData";
+import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
 
 interface UpdateProductByIdData {
     productId: string;

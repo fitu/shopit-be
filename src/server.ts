@@ -1,25 +1,24 @@
 import { Server } from "socket.io";
 
-import CartController from "./modules/cart/infrastructure/CartController";
-import OrderController from "./modules/order/infrastructure/OrderController";
-import ProductController from "./modules/product/infrastructure/ProductController";
-import UserController from "./modules/user/infrastructure/UserController";
-import UserService from "./modules/user/domain/UserService";
-import ProductService from "./modules/product/domain/ProductService";
-import validateEnv from "./shared/env/envUtils";
-import getRepositories from "./shared/repositories/Repository";
-import EmailService from "./shared/integrations/emails/EmailService";
-import FileService from "./shared/integrations/files/FileService";
-import { getDb } from "./shared/db/database";
-
-import App from "./app/app";
-import ParserMiddleware from "./app/middlewares/ParserMiddleware";
-import CORSMiddleware from "./app/middlewares/CORSMiddleware";
-import HeadersMiddleware from "./app/middlewares/HeadersMiddleware";
-import LogsMiddleware from "./app/middlewares/LogsMiddleware";
-import CSRFMiddleware from "./app/middlewares/CSRFMiddleware";
-import I18nMiddleware from "./app/middlewares/I18nMiddleware";
-import StaticResourcesMiddleware from "./app/middlewares/StaticResourcesMiddleware";
+import CartController from "@cart/infrastructure/CartController";
+import OrderController from "@order/infrastructure/OrderController";
+import ProductController from "@product/infrastructure/ProductController";
+import UserController from "@user/infrastructure/UserController";
+import UserService from "@user/domain/UserService";
+import ProductService from "@product/domain/ProductService";
+import validateEnv from "@shared/env/envUtils";
+import getRepositories from "@shared/repositories/Repository";
+import EmailService from "@shared/integrations/emails/EmailService";
+import FileService from "@shared/integrations/files/FileService";
+import { getDb } from "@shared/db/database";
+import App from "@app/app";
+import ParserMiddleware from "@app/middlewares/ParserMiddleware";
+import CORSMiddleware from "@app/middlewares/CORSMiddleware";
+import HeadersMiddleware from "@app/middlewares/HeadersMiddleware";
+import LogsMiddleware from "@app/middlewares/LogsMiddleware";
+import CSRFMiddleware from "@app/middlewares/CSRFMiddleware";
+import I18nMiddleware from "@app/middlewares/I18nMiddleware";
+import StaticResourcesMiddleware from "@app/middlewares/StaticResourcesMiddleware";
 
 (async () => {
     try {

@@ -1,5 +1,5 @@
-import Email from "./Email";
-import { Repository as EmailRepository } from "./Repository";
+import Email from "@shared/integrations/emails/Email";
+import { Repository as EmailRepository } from "@shared/integrations/emails/Repository";
 
 class EmailService {
     private emailRepository: EmailRepository;

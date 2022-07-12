@@ -1,7 +1,6 @@
-import Cart from "../../domain/Cart";
-import { Repository } from "../Repository";
-
-import CartDao from "./CartDao";
+import Cart from "@cart/domain/Cart";
+import { Repository } from "@cart/infrastructure/Repository";
+import CartDao from "@cart/infrastructure/sql/CartDao";
 
 class CartRepository implements Repository {
     // TODO: is this in use?

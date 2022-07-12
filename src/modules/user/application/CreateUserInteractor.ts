@@ -1,9 +1,8 @@
-import EmailService from "../../../shared/integrations/emails/EmailService";
-import User from "../domain/User";
-import UserService from "../domain/UserService";
-import EmailAlreadyInUseError from "./error/EmailAlreadyInUseError";
-
-import UserData from "./UserData";
+import EmailService from "@shared/integrations/emails/EmailService";
+import User from "@user/domain/User";
+import UserService from "@user/domain/UserService";
+import EmailAlreadyInUseError from "@user/application/error/EmailAlreadyInUseError";
+import UserData from "@user/application/UserData";
 
 interface CreateUserData {
     userData: UserData;

@@ -12,11 +12,10 @@ import {
     Sequelize,
 } from "sequelize";
 
-import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import Product, { ProductCategory, validProductCategories } from "../../domain/Product";
-
-import { fromProductDaoToModel } from "./productParsers";
+import ReviewDao from "@review/infrastructure/sql/ReviewDao";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import Product, { ProductCategory, validProductCategories } from "@product/domain/Product";
+import { fromProductDaoToModel } from "@product/infrastructure/sql/productParsers";
 
 const PRODUCT_TABLE = "products";
 const PRODUCT_ID = "id";

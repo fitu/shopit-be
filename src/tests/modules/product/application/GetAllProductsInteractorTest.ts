@@ -1,11 +1,9 @@
 import { expect } from "chai";
 
-import Page from "../../../../src/shared/Page";
-import GetAllProductsInteractor, {
-    GetAllProductsData,
-} from "../../../../src/modules/product/application/GetAllProductsInteractor";
-import ProductService from "../../../../src/modules/product/domain/ProductService";
-import Product from "../../../../src/modules/product/domain/Product";
+import Page from "@shared/Page";
+import GetAllProductsInteractor, { GetAllProductsData } from "@product/application/GetAllProductsInteractor";
+import ProductService from "@product/domain/ProductService";
+import Product from "@product/domain/Product";
 import { getRandomProduct } from "../../../shared/utils/ProductFactory";
 import { getMockPage } from "../../../shared/utils/PageFactory";
 

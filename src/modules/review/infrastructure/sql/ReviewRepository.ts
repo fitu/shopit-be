@@ -1,9 +1,8 @@
-import ProductDao from "../../../product/infrastructure/sql/ProductDao";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import Review from "../../domain/Review";
-import { Repository } from "../Repository";
-
-import ReviewDao from "./ReviewDao";
+import ProductDao from "@product/infrastructure/sql/ProductDao";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import Review from "@review/domain/Review";
+import { Repository } from "@review/infrastructure/Repository";
+import ReviewDao from "@review/infrastructure/sql/ReviewDao";
 
 class ReviewRepository implements Repository {
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {

@@ -1,12 +1,11 @@
 import moment from "moment";
 
-import BaseInvalidDataError from "../../../shared/error/BaseInvalidDataError";
-import Page from "../../../shared/Page";
-import { doPasswordsMatch } from "../../../shared/utils/hashUtils";
-import UserNotFoundError from "../application/error/UserNotFoundError";
-import { Repository as UserRepository } from "../infrastructure/Repository";
-
-import User, { UserRole } from "./User";
+import Page from "@shared/Page";
+import BaseInvalidDataError from "@shared/error/BaseInvalidDataError";
+import { doPasswordsMatch } from "@utils/hashUtils";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
+import { Repository as UserRepository } from "@user/infrastructure/Repository";
+import User, { UserRole } from "@user/domain/User";
 
 class UserService {
     private userRepository: UserRepository;

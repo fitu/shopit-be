@@ -1,12 +1,11 @@
 import { omit } from "lodash";
 
-import Page from "../../../../shared/Page";
-import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
-import CartDao from "../../../cart/infrastructure/sql/CartDao";
-import User from "../../domain/User";
-import { Repository } from "../Repository";
-
-import UserDao, { USER_AVATAR, USER_CART, validateUserFieldsToInsert } from "./UserDao";
+import Page from "@shared/Page";
+import AvatarDao from "@avatar/infrastructure/sql/AvatarDao";
+import CartDao from "@cart/infrastructure/sql/CartDao";
+import User from "@user/domain/User";
+import { Repository } from "@user/infrastructure/Repository";
+import UserDao, { USER_AVATAR, USER_CART, validateUserFieldsToInsert } from "@user/infrastructure/sql/UserDao";
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {
         const userToInsert: User = validateUserFieldsToInsert(user);

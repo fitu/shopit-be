@@ -1,5 +1,5 @@
-import NoSqlDb from "./noSql/NoSqlDb";
-import SqlDb from "./sql/SqlDb";
+import NoSqlDb from "@shared/db/noSql/NoSqlDb";
+import SqlDb from "@shared/db/sql/SqlDb";
 
 enum DbType {
     SQL = "sql",

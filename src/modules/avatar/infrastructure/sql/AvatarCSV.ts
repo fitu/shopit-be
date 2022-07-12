@@ -1,4 +1,4 @@
-import Avatar from "../../domain/Avatar";
+import Avatar from "@avatar/domain/Avatar";
 
 class AvatarCSV {
     constructor(public id: string, public publicId: string | null, public url: string | null) {}

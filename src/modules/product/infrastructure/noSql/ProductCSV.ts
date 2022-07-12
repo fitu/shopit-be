@@ -1,4 +1,4 @@
-import Product, { ProductCategory } from "../../domain/Product";
+import Product, { ProductCategory } from "@product/domain/Product";
 
 class ProductCSV {
     constructor(

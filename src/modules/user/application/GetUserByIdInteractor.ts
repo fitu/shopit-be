@@ -1,6 +1,6 @@
-import UserService from "../domain/UserService";
-import UserNotFoundError from "./error/UserNotFoundError";
-import UserData from "./UserData";
+import UserService from "@user/domain/UserService";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
+import UserData from "@user/application/UserData";
 
 interface GetUserByIdData {
     userId: string;

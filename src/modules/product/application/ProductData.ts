@@ -1,6 +1,6 @@
 import { isNil } from "lodash";
 
-import Product, { ProductCategory } from "../domain/Product";
+import Product, { ProductCategory } from "@product/domain/Product";
 
 class ProductData {
     readonly id?: string;

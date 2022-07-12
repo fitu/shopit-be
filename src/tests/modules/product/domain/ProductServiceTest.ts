@@ -1,10 +1,10 @@
 import { expect } from "chai";
 
-import NotFoundError from "../../../../src/shared/error/BaseNotFoundError";
-import { Repository as ProductRepository } from "../../../../src/modules/product/infrastructure/Repository";
-import ProductService from "../../../../src/modules/product/domain/ProductService";
-import Product from "../../../../src/modules/product/domain/Product";
-import Page from "../../../../src/shared/Page";
+import Page from "@shared/Page";
+import NotFoundError from "@shared/error/BaseNotFoundError";
+import { Repository as ProductRepository } from "@product/infrastructure/Repository";
+import ProductService from "@product/domain/ProductService";
+import Product from "@product/domain/Product";
 import { getMockPage } from "../../../shared/utils/PageFactory";
 import { getRandomProduct, getRandomProductWithId } from "../../../shared/utils/ProductFactory";
 

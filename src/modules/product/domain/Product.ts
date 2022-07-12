@@ -1,4 +1,4 @@
-import User from "../../user/domain/User";
+import User from "@user/domain/User";
 
 enum ProductCategory {
     ELECTRONICS = "Electronics",

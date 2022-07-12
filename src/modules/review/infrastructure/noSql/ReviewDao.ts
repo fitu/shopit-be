@@ -1,11 +1,9 @@
-import { omit } from "lodash";
 import mongoose, { Document, Types } from "mongoose";
 
-import { PRODUCT_SCHEMA } from "../../../product/infrastructure/noSql/ProductDao";
-import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
-import Review from "../../domain/Review";
-
-import { fromReviewDocumentToModel } from "./reviewParsers";
+import { PRODUCT_SCHEMA } from "@product/infrastructure/noSql/ProductDao";
+import { USER_SCHEMA } from "@user/infrastructure/noSql/UserDao";
+import Review from "@review/domain/Review";
+import { fromReviewDocumentToModel } from "@review/infrastructure/noSql/reviewParsers";
 
 const REVIEW_SCHEMA = "Review";
 const REVIEW_DOCUMENT = "reviews";

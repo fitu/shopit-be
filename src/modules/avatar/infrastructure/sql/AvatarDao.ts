@@ -1,7 +1,7 @@
 import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssociationMixin, Sequelize } from "sequelize";
 
-import Avatar from "../../domain/Avatar";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
+import Avatar from "@avatar/domain/Avatar";
+import UserDao from "@user/infrastructure/sql/UserDao";
 
 const AVATAR_TABLE = 'avatars';
 

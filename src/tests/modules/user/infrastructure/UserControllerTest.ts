@@ -5,13 +5,13 @@ import sinon, { SinonSandbox } from "sinon";
 import { expect } from "chai";
 import httpStatus from "http-status";
 
-import EmailService from "../../../../src/shared/integrations/emails/EmailService";
-import fileUploaderMiddleware, { MulterRequest } from "../../../../src/shared/middlewares/fileUploaderMiddleware";
-import UserNotFoundError from "../../../../src/modules/user/application/error/UserNotFoundError";
-import UserService from "../../../../src/modules/user/domain/UserService";
-import UserController from "../../../../src/modules/user/infrastructure/UserController";
+import App from "@app/app";
+import EmailService from "@shared/integrations/emails/EmailService";
+import fileUploaderMiddleware, { MulterRequest } from "@shared/middlewares/fileUploaderMiddleware";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
+import UserService from "@user/domain/UserService";
+import UserController from "@user/infrastructure/UserController";
 import TestRequest from "../../../shared/utils/requests";
-import App from "../../../../src/app/app";
 
 describe("UserController", function () {
     let userService: UserService;

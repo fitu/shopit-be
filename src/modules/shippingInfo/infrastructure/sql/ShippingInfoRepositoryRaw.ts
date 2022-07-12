@@ -1,10 +1,9 @@
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import ShippingInfo from "../../domain/ShippingInfo";
-import { Repository } from "../Repository";
-
-import { SHIPPING_INFO_TABLE } from "./ShippingInfoDao";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
+import { Repository } from "@shippingInfo/infrastructure/Repository";
+import { SHIPPING_INFO_TABLE } from "@shippingInfo/infrastructure/sql/ShippingInfoDao";
 
 class ShippingInfoRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}

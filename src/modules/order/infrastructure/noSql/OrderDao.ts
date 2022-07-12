@@ -1,7 +1,7 @@
 import { omit } from "lodash";
 import mongoose, { Document } from "mongoose";
 
-import Order, { OrderStatus, validOrderStatus } from "../../domain/Order";
+import Order, { OrderStatus, validOrderStatus } from "@order/domain/Order";
 
 const ORDER_SCHEMA = "Order";
 

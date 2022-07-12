@@ -1,7 +1,7 @@
-import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
-import UserService from "../../user/domain/UserService";
-import ProductService from "../domain/ProductService";
-import ProductNotFoundError from "./error/ProductNotFoundError";
+import UserHasNotPermissionsError from "@user/application/error/UserHasNotPermissionsError";
+import UserService from "@user/domain/UserService";
+import ProductService from "@product/domain/ProductService";
+import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
 
 interface DeleteProductByIdData {
     productId: string;

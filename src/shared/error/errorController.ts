@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { isString } from "lodash";
 
-import BaseError, { ErrorCodes } from "./BaseError";
-import { ErrorHandler } from "./ErrorHandler";
+import BaseError, { ErrorCodes } from "@shared/error/BaseError";
+import { ErrorHandler } from "@shared/error/ErrorHandler";
 
 // TODO: use another file for production, not env vars
 const handleAppErrors = (err: ErrorHandler, req: Request, res: Response, next: NextFunction): void => {

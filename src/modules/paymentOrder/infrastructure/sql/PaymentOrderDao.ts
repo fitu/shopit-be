@@ -8,8 +8,8 @@ import {
     Sequelize,
 } from "sequelize";
 
-import OrderDao from "../../../order/infrastructure/sql/OrderDao";
-import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
+import OrderDao from "@order/infrastructure/sql/OrderDao";
+import PaymentInfoDao from "@paymentInfo/infrastructure/sql/PaymentInfoDao";
 
 const PAYMENT_ORDER_TABLE = 'paymentOrders';
 

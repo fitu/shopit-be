@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { noop } from "lodash";
 import { expect } from "chai";
 
-import middleware from "../../../src/shared/middlewares/validationMiddleware";
+import middleware from "@shared/middlewares/validationMiddleware";
 
 describe("validationMiddleware", function () {
     let req: Partial<Request>;

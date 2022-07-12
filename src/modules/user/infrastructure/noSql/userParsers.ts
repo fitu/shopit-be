@@ -1,11 +1,10 @@
 import { omit } from "lodash";
 
-import Avatar from "../../../avatar/domain/Avatar";
-import ShippingInfo from "../../../shippingInfo/domain/ShippingInfo";
-import Cart from "../../../cart/domain/Cart";
-import User from "../../domain/User";
-
-import { AvatarDao, CartDao, ShippingInfoDao, UserDao, UserFullDocument } from "./UserDao";
+import Avatar from "@avatar/domain/Avatar";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
+import Cart from "@cart/domain/Cart";
+import User from "@user/domain/User";
+import { AvatarDao, CartDao, ShippingInfoDao, UserDao, UserFullDocument } from "@user/infrastructure/noSql/UserDao";
 
 const fromShippingInfoToDao = (shippingInfo: ShippingInfo): ShippingInfoDao => {
     const remoteId = shippingInfo.id;

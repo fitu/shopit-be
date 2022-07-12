@@ -1,9 +1,7 @@
 import { Sequelize } from "sequelize";
 
-import Cart from "../../domain/Cart";
-import { Repository } from "../Repository";
-
-import CartDao from "./CartDao";
+import Cart from "@cart/domain/Cart";
+import { Repository } from "@cart/infrastructure/Repository";
 
 class CartRepositoryRaw implements Repository {
     constructor(public instance: Sequelize) {}

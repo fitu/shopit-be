@@ -1,7 +1,7 @@
-import Page from "../../../../shared/Page";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import Product from "../../domain/Product";
-import { Repository } from "../Repository";
+import Page from "@shared/Page";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import Product from "@product/domain/Product";
+import { Repository } from "@product/infrastructure/Repository";
 
 import ProductDao, { validateProductFieldsToInsert } from "./ProductDao";
 

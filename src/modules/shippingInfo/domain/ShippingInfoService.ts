@@ -1,6 +1,5 @@
-import { Repository as ShippingInfoRepository } from "../infrastructure/Repository";
-
-import ShippingInfo from "./ShippingInfo";
+import { Repository as ShippingInfoRepository } from "@shippingInfo/infrastructure/Repository";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
 
 class ShippingInfoService {
     private shippingInfoRepository: ShippingInfoRepository;

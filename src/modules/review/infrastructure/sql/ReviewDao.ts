@@ -1,8 +1,8 @@
 import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssociationMixin, Sequelize } from "sequelize";
 
-import ProductDao from "../../../product/infrastructure/sql/ProductDao";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import Review from "../../domain/Review";
+import ProductDao from "@product/infrastructure/sql/ProductDao";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import Review from "@review/domain/Review";
 
 const REVIEW_TABLE = "reviews";
 

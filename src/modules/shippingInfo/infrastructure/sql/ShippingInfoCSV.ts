@@ -1,4 +1,4 @@
-import ShippingInfo from "../../domain/ShippingInfo";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
 
 class ShippingInfoCSV {
     constructor(

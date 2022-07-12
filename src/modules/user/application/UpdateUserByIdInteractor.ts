@@ -1,9 +1,8 @@
-import UserService from "../domain/UserService";
-import User from "../domain/User";
-import UserHasNotPermissionsError from "./error/UserHasNotPermissionsError";
-import UserNotFoundError from "./error/UserNotFoundError";
-
-import UserData from "./UserData";
+import UserService from "@user/domain/UserService";
+import User from "@user/domain/User";
+import UserHasNotPermissionsError from "@user/application/error/UserHasNotPermissionsError";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
+import UserData from "@user/application/UserData";
 
 interface UpdateUserByIdData {
     userId: string;

@@ -1,8 +1,7 @@
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import PaymentInfo from "../../domain/PaymentInfo";
-import { Repository } from "../Repository";
-
-import PaymentInfoDao from "./PaymentInfoDao";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import PaymentInfo from "@paymentInfo/domain/PaymentInfo";
+import { Repository } from "@paymentInfo/infrastructure/Repository";
+import PaymentInfoDao from "@paymentInfo/infrastructure/sql/PaymentInfoDao";
 
 class PaymentInfoRepository implements Repository {
     public async insert(paymentInfo: PaymentInfo, userId: string): Promise<PaymentInfo> {

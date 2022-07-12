@@ -1,7 +1,7 @@
-import { generateRandomToken } from "../../../shared/utils/hashUtils";
-import EmailService from "../../../shared/integrations/emails/EmailService";
-import UserService from "../domain/UserService";
-import UserNotFoundError from "./error/UserNotFoundError";
+import EmailService from "@shared/integrations/emails/EmailService";
+import { generateRandomToken } from "@utils/hashUtils";
+import UserService from "@user/domain/UserService";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
 
 interface ForgotPasswordData {
     email: string;

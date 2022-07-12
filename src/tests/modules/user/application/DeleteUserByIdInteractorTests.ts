@@ -1,10 +1,10 @@
 import { expect } from "chai";
 
-import NotFoundError from "../../../../src/shared/error/BaseNotFoundError";
-import NotAllowedError from "../../../../src/shared/error/BaseNotAllowedError";
-import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../../../../src/modules/user/application/DeleteUserByIdInteractor";
-import UserService from "../../../../src/modules/user/domain/UserService";
-import UserNotFoundError from "../../../../src/modules/user/application/error/UserNotFoundError";
+import NotFoundError from "@shared/error/BaseNotFoundError";
+import NotAllowedError from "@shared/error/BaseNotAllowedError";
+import DeleteUserByIdInteractor, { DeleteUserByIdData } from "@user/application/DeleteUserByIdInteractor";
+import UserService from "@user/domain/UserService";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
 
 describe("DeleteUserByIdInteractor", function () {
     let service: UserService;

@@ -1,4 +1,4 @@
-import { Repository as FileRepository } from "./Repository";
+import { Repository as FileRepository } from "@shared/integrations/files/Repository";
 
 class FileService {
     private fileRepository: FileRepository;

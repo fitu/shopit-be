@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import sendGridTransport from "nodemailer-sendgrid-transport";
 
-import { Repository } from "./Repository";
+import { Repository } from "@shared/integrations/emails/Repository";
 
 class SendGridRepository implements Repository {
     private transporter: any;

@@ -1,9 +1,8 @@
 import mongoose, { Document, Types } from "mongoose";
 
-import { hashPassword } from "../../../../shared/utils/hashUtils";
-import User, { UserRole, validUserRoles } from "../../domain/User";
-
-import { fromUserDocumentToModel } from "./userParsers";
+import { hashPassword } from "@utils/hashUtils";
+import User, { UserRole, validUserRoles } from "@user/domain/User";
+import { fromUserDocumentToModel } from "@user/infrastructure/noSql/userParsers";
 
 const USER_SCHEMA = "User";
 const USER_DOCUMENT = "users";

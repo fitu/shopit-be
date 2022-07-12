@@ -4,7 +4,7 @@ import { expect } from "chai";
 import jwt from "jsonwebtoken";
 import sinon from "sinon";
 
-import middleware from "../../../src/shared/middlewares/isAuthMiddleware";
+import middleware from "@shared/middlewares/isAuthMiddleware";
 
 describe("isAuthMiddleware", function () {
     let req: Partial<Request>;

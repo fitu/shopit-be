@@ -1,6 +1,6 @@
-import Page from "../../../shared/Page";
-import UserService from "../domain/UserService";
-import UserData from "./UserData";
+import Page from "@shared/Page";
+import UserService from "@user/domain/UserService";
+import UserData from "@user/application/UserData";
 
 interface GetAllUsersData {
     page: number;

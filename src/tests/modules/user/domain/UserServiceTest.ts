@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
-import NotFoundError from "../../../../src/shared/error/BaseNotFoundError";
-import { Repository as UserRepository } from "../../../../src/modules/user/infrastructure/Repository";
-import UserService from "../../../../src/modules/user/domain/UserService";
+import NotFoundError from "@shared/error/BaseNotFoundError";
+import { Repository as UserRepository } from "@user/infrastructure/Repository";
+import UserService from "@user/domain/UserService";
 
 describe("ProductService", function () {
     let repository: UserRepository;

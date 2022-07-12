@@ -1,4 +1,4 @@
-import Review from "../../domain/Review";
+import Review from "@review/domain/Review";
 
 class ReviewCSV {
     constructor(

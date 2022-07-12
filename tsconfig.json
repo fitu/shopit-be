@@ -1,18 +1,38 @@
 {
+    "ts-node": {
+        "files": true
+    },
     "compilerOptions": {
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "baseUrl": "./src",
         "module": "commonjs",
         "esModuleInterop": true,
         "target": "es2017",
         "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "baseUrl": "./src",
+        "forceConsistentCasingInFileNames": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "typeRoots": ["./src/types", "./node_modules/@types"],
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "paths": {
+            "@app/*": ["app/*"],
+            "@avatar/*": ["modules/avatar/*"],
+            "@cart/*": ["modules/cart/*"],
+            "@cartItem/*": ["modules/cartItem/*"],
+            "@order/*": ["modules/order/*"],
+            "@orderItem/*": ["modules/orderItem/*"],
+            "@paymentInfo/*": ["modules/paymentInfo/*"],
+            "@paymentOrder/*": ["modules/paymentOrder/*"],
+            "@product/*": ["modules/product/*"],
+            "@review/*": ["modules/review/*"],
+            "@shippingInfo/*": ["modules/shippingInfo/*"],
+            "@user/*": ["modules/user/*"],
+            "@shared/*": ["shared/*"],
+            "@utils/*": ["shared/utils/*"],
+        }
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src"],
     "exclude": ["node_modules"]
 }

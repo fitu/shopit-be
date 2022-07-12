@@ -1,6 +1,5 @@
-import { Repository as CartRepository } from "../infrastructure/Repository";
-
-import Cart from "./Cart";
+import { Repository as CartRepository } from "@cart/infrastructure/Repository";
+import Cart from "@cart/domain/Cart";
 
 class CartService {
     private cartRepository: CartRepository;

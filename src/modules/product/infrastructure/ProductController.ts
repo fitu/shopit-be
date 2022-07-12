@@ -2,27 +2,26 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
-import Controller from "../../../shared/controllers/Controller";
-import BaseInvalidDataError from "../../../shared/error/BaseInvalidDataError";
-import { ErrorHandler } from "../../../shared/error/ErrorHandler";
-import isValid from "../../../shared/middlewares/validationMiddleware";
-import isAuthMiddleware from "../../../shared/middlewares/isAuthMiddleware";
-import fileUploadMiddleware from "../../../shared/middlewares/fileUploaderMiddleware";
-import { generateImageUploaderConfig } from "../../../shared/utils/imageUtils";
-import Page, { getPageAndItemsPerPage } from "../../../shared/Page";
-import UserHasNotPermissionsError from "../../user/application/error/UserHasNotPermissionsError";
-import UserService from "../../user/domain/UserService";
-
-import ProductData from "../application/ProductData";
-import CreateProductInteractor, { CreateProductData } from "../application/CreateProductInteractor";
-import GetAllProductsInteractor, { GetAllProductsData } from "../application/GetAllProductsInteractor";
-import GetProductByIdInteractor, { GetProductByIdData } from "../application/GetProductByIdInteractor";
-import DeleteProductByIdInteractor, { DeleteProductByIdData } from "../application/DeleteProductByIdInteractor";
-import UpdateProductByIdInteractor, { UpdateProductByIdData } from "../application/UpdateProductByIdInteractor";
-import ProductNotFoundError from "../application/error/ProductNotFoundError";
-import ProductService from "../domain/ProductService";
-import { ProductCategory, validProductCategories } from "../domain/Product";
-import ProductViewModel from "./ProductViewModel";
+import Controller from "@shared/controllers/Controller";
+import BaseInvalidDataError from "@shared/error/BaseInvalidDataError";
+import { ErrorHandler } from "@shared/error/ErrorHandler";
+import isValid from "@shared/middlewares/validationMiddleware";
+import isAuthMiddleware from "@shared/middlewares/isAuthMiddleware";
+import fileUploadMiddleware from "@shared/middlewares/fileUploaderMiddleware";
+import Page, { getPageAndItemsPerPage } from "@shared/Page";
+import { generateImageUploaderConfig } from "@utils/imageUtils";
+import UserHasNotPermissionsError from "@user/application/error/UserHasNotPermissionsError";
+import UserService from "@user/domain/UserService";
+import ProductData from "@product/application/ProductData";
+import CreateProductInteractor, { CreateProductData } from "@product/application/CreateProductInteractor";
+import GetAllProductsInteractor, { GetAllProductsData } from "@product/application/GetAllProductsInteractor";
+import GetProductByIdInteractor, { GetProductByIdData } from "@product/application/GetProductByIdInteractor";
+import DeleteProductByIdInteractor, { DeleteProductByIdData } from "@product/application/DeleteProductByIdInteractor";
+import UpdateProductByIdInteractor, { UpdateProductByIdData } from "@product/application/UpdateProductByIdInteractor";
+import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
+import ProductService from "@product/domain/ProductService";
+import { ProductCategory, validProductCategories } from "@product/domain/Product";
+import ProductViewModel from "@product/infrastructure/ProductViewModel";
 
 class ProductController implements Controller {
     /*

@@ -1,5 +1,5 @@
-import UserService from "../domain/UserService";
-import UserHasNotPermissionsError from "./error/UserHasNotPermissionsError";
+import UserService from "@user/domain/UserService";
+import UserHasNotPermissionsError from "@user/application/error/UserHasNotPermissionsError";
 
 interface DeleteUserByIdData {
     userId: string;

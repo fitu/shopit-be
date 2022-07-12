@@ -1,5 +1,5 @@
-import { ErrorCodes } from "../../../../shared/error/BaseError";
-import BaseNotAllowedError from "../../../../shared/error/BaseNotAllowedError";
+import { ErrorCodes } from "@shared/error/BaseError";
+import BaseNotAllowedError from "@shared/error/BaseNotAllowedError";
 
 class UserHasNotPermissionsError extends BaseNotAllowedError {
     constructor() {

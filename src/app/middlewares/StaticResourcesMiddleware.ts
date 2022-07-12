@@ -3,8 +3,8 @@ import path from "path";
 import express, { Application } from "express";
 import compression from "compression";
 
-import { IMAGES_FOLDER_NAME } from "../../shared/utils/imageUtils";
-import Middleware from "../../shared/middlewares/Middleware";
+import { IMAGES_FOLDER_NAME } from "@utils/imageUtils";
+import Middleware from "@shared/middlewares/Middleware";
 
 class StaticResourcesMiddleware implements Middleware {
     public async init(app: Application): Promise<void> {

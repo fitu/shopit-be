@@ -2,7 +2,7 @@ import fs from "fs/promises";
 
 import PDFDocument from "pdfkit";
 
-import { Repository } from "./Repository";
+import { Repository } from "@shared/integrations/files/Repository";
 
 class PDFRepository implements Repository {
     private pdf: PDFDocument;

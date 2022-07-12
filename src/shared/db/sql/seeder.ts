@@ -1,20 +1,20 @@
 import { Server } from "socket.io";
 
-import ProductCSV from "../../../modules/product/infrastructure/sql/ProductCSV";
-import ReviewCSV from "../../../modules/review/infrastructure/sql/ReviewCSV";
-import ShippingInfoCSV from "../../../modules/shippingInfo/infrastructure/sql/ShippingInfoCSV";
-import UserCSV from "../../../modules/user/infrastructure/sql/UserCSV";
-import ProductService from "../../../modules/product/domain/ProductService";
-import ReviewService from "../../../modules/review/domain/ReviewService";
-import ShippingInfoService from "../../../modules/shippingInfo/domain/ShippingInfoService";
-import UserService from "../../../modules/user/domain/UserService";
-import validateEnv from "../../env/envUtils";
-import getRepositories from "../../repositories/Repository";
-import { readFromCsv } from "../../../shared/data/csvUtils";
-import { DbType } from "../database";
+import ProductCSV from "@product/infrastructure/sql/ProductCSV";
+import ReviewCSV from "@review/infrastructure/sql/ReviewCSV";
+import ShippingInfoCSV from "@shippingInfo/infrastructure/sql/ShippingInfoCSV";
+import UserCSV from "@user/infrastructure/sql/UserCSV";
+import ProductService from "@product/domain/ProductService";
+import ReviewService from "@review/domain/ReviewService";
+import ShippingInfoService from "@shippingInfo/domain/ShippingInfoService";
+import UserService from "@user/domain/UserService";
+import validateEnv from "@shared/env/envUtils";
+import getRepositories from "@shared/repositories/Repository";
+import { readFromCsv } from "@shared/data/csvUtils";
+import { DbType } from "@shared/db/database";
+import Db from "@shared/db/sql/SqlDb";
 
-import Db from "./SqlDb";
-
+// TODO: shouldn't this be not hardcoded?
 const PRODUCTS_CSV_PATH = "./src/modules/product/infrastructure/data/products.csv";
 const REVIEWS_CSV_PATH = "./src/modules/review/infrastructure/data/reviews.csv";
 const SHIPPINGS_INFO_CSV_PATH = "./src/modules/shippingInfo/infrastructure/data/shippingsInfo.csv";

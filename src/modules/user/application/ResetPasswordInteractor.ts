@@ -1,5 +1,5 @@
-import UserService from "../domain/UserService";
-import UserNotFoundError from "./error/UserNotFoundError";
+import UserService from "@user/domain/UserService";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
 
 interface ResetPasswordData {
     email: string;

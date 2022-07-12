@@ -1,4 +1,4 @@
-import ShippingInfo from "../domain/ShippingInfo";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
 
 interface Repository {
     insert: (shippingInfo: ShippingInfo, userId: string) => Promise<ShippingInfo>;

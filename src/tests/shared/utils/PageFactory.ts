@@ -1,4 +1,4 @@
-import Page, { DEFAULT_ITEMS_PER_PAGE } from "../../../src/shared/Page";
+import Page, { DEFAULT_ITEMS_PER_PAGE } from "@shared/Page";
 
 const getMockPage = <T>(data: Array<T>): Page<Array<T>> => {
     const page = new Page<Array<T>>({

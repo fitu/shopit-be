@@ -1,10 +1,9 @@
 import { Server } from "socket.io";
 
-import Page from "../../../shared/Page";
-import ProductNotFoundError from "../application/error/ProductNotFoundError";
-import { Repository as ProductRepository } from "../infrastructure/Repository";
-
-import Product from "./Product";
+import Page from "@shared/Page";
+import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
+import { Repository as ProductRepository } from "@product/infrastructure/Repository";
+import Product from "@product/domain/Product";
 
 class ProductService {
     // private io: Server;

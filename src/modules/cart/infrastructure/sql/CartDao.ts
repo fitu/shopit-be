@@ -12,9 +12,8 @@ import {
     Sequelize,
 } from "sequelize";
 
-import CartItemDao from "../../../cartItem/infrastructure/sql/CartItemDao";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import Cart from "../../domain/Cart";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import Cart from "@cart/domain/Cart";
 
 const CART_TABLE = 'carts';
 

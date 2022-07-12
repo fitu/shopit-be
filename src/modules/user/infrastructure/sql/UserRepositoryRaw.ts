@@ -2,11 +2,11 @@ import { isEmpty } from "lodash";
 import { Sequelize } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import { wasDeletionSuccessful } from "../../../../shared/utils/sqlUtils";
-import Page from "../../../../shared/Page";
-import { hashPassword } from "../../../../shared/utils/hashUtils";
-import User from "../../domain/User";
-import { Repository } from "../Repository";
+import Page from "@shared/Page";
+import { wasDeletionSuccessful } from "@utils/sqlUtils";
+import { hashPassword } from "@utils/hashUtils";
+import User from "@user/domain/User";
+import { Repository } from "@user/infrastructure/Repository";
 
 import UserDao, {
     USER_TABLE,

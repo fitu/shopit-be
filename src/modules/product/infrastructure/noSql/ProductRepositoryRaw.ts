@@ -1,15 +1,14 @@
 import { isNil, zip } from "lodash";
 import mongoose from "mongoose";
 
-import User from "../../../user/domain/User";
-import { UserDao, USER_DOCUMENT } from "../../../user/infrastructure/noSql/UserDao";
-import { fromUserDaoToModel } from "../../../user/infrastructure/noSql/userParsers";
-import Page from "../../../../shared/Page";
-import Product from "../../domain/Product";
-import { Repository } from "../Repository";
-
-import { ProductDao, PRODUCT_DOCUMENT } from "./ProductDao";
-import { fromProductDaoToModel, fromProductToDao } from "./productParsers";
+import Page from "@shared/Page";
+import User from "@user/domain/User";
+import { UserDao, USER_DOCUMENT } from "@user/infrastructure/noSql/UserDao";
+import { fromUserDaoToModel } from "@user/infrastructure/noSql/userParsers";
+import Product from "@product/domain/Product";
+import { Repository } from "@product/infrastructure/Repository";
+import { ProductDao, PRODUCT_DOCUMENT } from "@product/infrastructure/noSql/ProductDao";
+import { fromProductDaoToModel, fromProductToDao } from "@product/infrastructure/noSql/productParsers";
 
 class ProductRepositoryRaw implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {

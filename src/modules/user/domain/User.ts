@@ -1,8 +1,8 @@
-import Product from "../../product/domain/Product";
-import Review from "../../review/domain/Review";
-import Avatar from "../../avatar/domain/Avatar";
-import Cart from "../../cart/domain/Cart";
-import ShippingInfo from "../../shippingInfo/domain/ShippingInfo";
+import Product from "@product/domain/Product";
+import Review from "@review/domain/Review";
+import Avatar from "@avatar/domain/Avatar";
+import Cart from "@cart/domain/Cart";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
 
 enum UserRole {
     USER = "user",

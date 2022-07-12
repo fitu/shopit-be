@@ -1,5 +1,5 @@
-import { ErrorCodes } from "../../../../shared/error/BaseError";
-import NotFoundError from "../../../../shared/error/BaseNotFoundError";
+import { ErrorCodes } from "@shared/error/BaseError";
+import NotFoundError from "@shared/error/BaseNotFoundError";
 
 class UserNotFoundError extends NotFoundError {
     constructor() {

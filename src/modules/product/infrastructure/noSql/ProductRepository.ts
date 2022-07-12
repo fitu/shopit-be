@@ -1,12 +1,11 @@
 import { zip } from "lodash";
 
-import UserDocument, { UserFullDocument } from "../../../user/infrastructure/noSql/UserDao";
-import Page from "../../../../shared/Page";
-import Product from "../../domain/Product";
-import { Repository } from "../Repository";
-
-import ProductDocument, { ProductFullDocument, ProductDao } from "./ProductDao";
-import { fromProductToDao } from "./productParsers";
+import Page from "@shared/Page";
+import UserDocument, { UserFullDocument } from "@user/infrastructure/noSql/UserDao";
+import Product from "@product/domain/Product";
+import { Repository } from "@product/infrastructure/Repository";
+import ProductDocument, { ProductFullDocument, ProductDao } from "@product/infrastructure/noSql/ProductDao";
+import { fromProductToDao } from "@product/infrastructure/noSql/productParsers";
 
 class ProductRepository implements Repository {
     public async insert(product: Product, userId: string): Promise<Product> {

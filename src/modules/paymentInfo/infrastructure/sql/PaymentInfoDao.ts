@@ -12,9 +12,9 @@ import {
     Sequelize,
 } from "sequelize";
 
-import OrderDao from "../../../order/infrastructure/sql/OrderDao";
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import PaymentInfo, { PaymentStatus, validPaymentStatus } from "../../domain/PaymentInfo";
+import OrderDao from "@order/infrastructure/sql/OrderDao";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import PaymentInfo, { PaymentStatus, validPaymentStatus } from "@paymentInfo/domain/PaymentInfo";
 
 const PAYMENT_INFO_TABLE = "paymentInfos";
 

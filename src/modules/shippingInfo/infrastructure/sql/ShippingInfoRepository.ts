@@ -1,8 +1,7 @@
-import UserDao from "../../../user/infrastructure/sql/UserDao";
-import ShippingInfo from "../../domain/ShippingInfo";
-import { Repository } from "../Repository";
-
-import ShippingInfoDao from "./ShippingInfoDao";
+import UserDao from "@user/infrastructure/sql/UserDao";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
+import { Repository } from "@shippingInfo/infrastructure/Repository";
+import ShippingInfoDao from "@shippingInfo/infrastructure/sql/ShippingInfoDao";
 
 class ShippingInfoRepository implements Repository {
     public async insert(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {

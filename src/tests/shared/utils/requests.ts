@@ -1,5 +1,6 @@
 import { SuperTest, Test } from "supertest";
-import { BASE_VERSION } from "../../../src/app/app";
+
+import { BASE_VERSION } from "@app/app";
 
 const FAKE_JWT_SECRET = "computadorar";
 const FAKE_JWT_USER_ID = "a19a4a35-c507-4755-a20b-08737ea0e94d";

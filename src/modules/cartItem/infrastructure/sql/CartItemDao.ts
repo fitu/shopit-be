@@ -8,8 +8,8 @@ import {
     Sequelize,
 } from "sequelize";
 
-import CartDao from "../../../cart/infrastructure/sql/CartDao";
-import ProductDao from "../../../product/infrastructure/sql/ProductDao";
+import CartDao from "@cart/infrastructure/sql/CartDao";
+import ProductDao from "@product/infrastructure/sql/ProductDao";
 
 const CART_ITEM_TABLE = 'cartItems';
 

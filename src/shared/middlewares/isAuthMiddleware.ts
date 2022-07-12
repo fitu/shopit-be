@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import httpStatus from "http-status";
 
-import { ErrorHandler } from "../error/ErrorHandler";
+import { ErrorHandler } from "@shared/error/ErrorHandler";
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;

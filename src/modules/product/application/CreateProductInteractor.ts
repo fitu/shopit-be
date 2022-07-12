@@ -1,7 +1,6 @@
-import Product from "../domain/Product";
-import ProductService from "../domain/ProductService";
-
-import ProductData from "./ProductData";
+import Product from "@product/domain/Product";
+import ProductService from "@product/domain/ProductService";
+import ProductData from "@product/application/ProductData";
 
 interface CreateProductData {
     productData: ProductData;

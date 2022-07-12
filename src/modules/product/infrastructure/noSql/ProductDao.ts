@@ -1,8 +1,8 @@
 import mongoose, { Document, Types } from "mongoose";
 
-import { USER_SCHEMA } from "../../../user/infrastructure/noSql/UserDao";
-import Product, { ProductCategory, validProductCategories } from "../../domain/Product";
-import { fromProductDocumentToModel } from "./productParsers";
+import { USER_SCHEMA } from "@user/infrastructure/noSql/UserDao";
+import Product, { ProductCategory, validProductCategories } from "@product/domain/Product";
+import { fromProductDocumentToModel } from "@product/infrastructure/noSql/productParsers";
 
 const PRODUCT_SCHEMA = "Product";
 const PRODUCT_DOCUMENT = "products";

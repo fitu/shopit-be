@@ -1,4 +1,4 @@
-import PaymentInfo from "../domain/PaymentInfo";
+import PaymentInfo from "@paymentInfo/domain/PaymentInfo";
 
 interface Repository {
     insert: (paymentInfo: PaymentInfo, userId: string) => Promise<PaymentInfo>;

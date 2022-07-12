@@ -1,10 +1,9 @@
 import { zip } from "lodash";
 
-import Review from "../../domain/Review";
-import { Repository } from "../Repository";
-
-import ReviewDocument, { ReviewDao } from "./ReviewDao";
-import { fromReviewToDao } from "./reviewParsers";
+import Review from "@review/domain/Review";
+import { Repository } from "@review/infrastructure/Repository";
+import ReviewDocument, { ReviewDao } from "@review/infrastructure/noSql/ReviewDao";
+import { fromReviewToDao } from "@review/infrastructure/noSql/reviewParsers";
 
 class ReviewRepository implements Repository {
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {

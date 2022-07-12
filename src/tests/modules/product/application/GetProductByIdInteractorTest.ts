@@ -1,12 +1,10 @@
 import { expect } from "chai";
 
-import NotFoundError from "../../../../src/shared/error/BaseNotFoundError";
-import GetProductByIdInteractor, {
-    GetProductByIdData,
-} from "../../../../src/modules/product/application/GetProductByIdInteractor";
-import ProductService from "../../../../src/modules/product/domain/ProductService";
-import Product from "../../../../src/modules/product/domain/Product";
-import ProductData from "../../../../src/modules/product/application/ProductData";
+import NotFoundError from "@shared/error/BaseNotFoundError";
+import GetProductByIdInteractor, { GetProductByIdData } from "@product/application/GetProductByIdInteractor";
+import ProductService from "@product/domain/ProductService";
+import Product from "@product/domain/Product";
+import ProductData from "@product/application/ProductData";
 import { getRandomProductWithId } from "../../../shared/utils/ProductFactory";
 
 describe("GetProductByIdInteractor", function () {

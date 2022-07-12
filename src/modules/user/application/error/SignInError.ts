@@ -1,4 +1,4 @@
-import BaseError, { ErrorCodes } from "../../../../shared/error/BaseError";
+import BaseError, { ErrorCodes } from "@shared/error/BaseError";
 
 class SignInError extends BaseError {
     constructor(message?: string, details?: string) {

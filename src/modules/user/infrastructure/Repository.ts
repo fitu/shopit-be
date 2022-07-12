@@ -1,5 +1,5 @@
-import Page from "../../../shared/Page";
-import User from "../domain/User";
+import Page from "@shared/Page";
+import User from "@user/domain/User";
 
 interface Repository {
     insert: (user: User) => Promise<User>;

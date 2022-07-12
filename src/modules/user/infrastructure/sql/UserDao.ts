@@ -12,18 +12,17 @@ import {
     HasOneGetAssociationMixin,
 } from "sequelize";
 
-import ProductDao from "../../../product/infrastructure/sql/ProductDao";
-import CartDao from "../../../cart/infrastructure/sql/CartDao";
-import AvatarDao from "../../../avatar/infrastructure/sql/AvatarDao";
-import ReviewDao from "../../../review/infrastructure/sql/ReviewDao";
-import PaymentInfoDao from "../../../paymentInfo/infrastructure/sql/PaymentInfoDao";
-import ShippingInfoDao from "../../../shippingInfo/infrastructure/sql/ShippingInfoDao";
-import User, { UserRole, validUserRoles } from "../../domain/User";
-import { hashPasswordSync } from "../../../../shared/utils/hashUtils";
-import Cart from "../../../cart/domain/Cart";
-import Avatar from "../../../avatar/domain/Avatar";
-
-import { fromUserDaoToModel } from "./userParsers";
+import { hashPasswordSync } from "@utils/hashUtils";
+import ProductDao from "@product/infrastructure/sql/ProductDao";
+import Avatar from "@avatar/domain/Avatar";
+import AvatarDao from "@avatar/infrastructure/sql/AvatarDao";
+import Cart from "@cart/domain/Cart";
+import CartDao from "@cart/infrastructure/sql/CartDao";
+import ReviewDao from "@review/infrastructure/sql/ReviewDao";
+import PaymentInfoDao from "@paymentInfo/infrastructure/sql/PaymentInfoDao";
+import ShippingInfoDao from "@shippingInfo/infrastructure/sql/ShippingInfoDao";
+import User, { UserRole, validUserRoles } from "@user/domain/User";
+import { fromUserDaoToModel } from "@user/infrastructure/sql/userParsers";
 
 const USER_TABLE = "users";
 const USER_ID = "id";

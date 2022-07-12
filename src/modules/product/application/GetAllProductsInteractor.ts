@@ -1,7 +1,6 @@
-import Page from "../../../shared/Page";
-import ProductService from "../domain/ProductService";
-
-import ProductData from "./ProductData";
+import Page from "@shared/Page";
+import ProductService from "@product/domain/ProductService";
+import ProductData from "@product/application/ProductData";
 
 interface GetAllProductsData {
     page: number;

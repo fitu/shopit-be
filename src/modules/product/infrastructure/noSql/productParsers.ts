@@ -1,8 +1,7 @@
 import { omit } from "lodash";
 
-import Product from "../../domain/Product";
-
-import { ProductDao, ProductFullDocument } from "./ProductDao";
+import Product from "@product//domain/Product";
+import { ProductDao, ProductFullDocument } from "@product/infrastructure/noSql/ProductDao";
 
 const fromProductDocumentToModel = (productDocument: ProductFullDocument): Product => {
     const product: Product = new Product({

@@ -2,30 +2,29 @@ import { Router, Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { body, param, query } from "express-validator";
 
-import UserHasNotPermissionsError from "../application/error/UserHasNotPermissionsError";
-import SignInError from "../application/error/SignInError";
-import UserNotFoundError from "../application/error/UserNotFoundError";
-import Controller from "../../../shared/controllers/Controller";
-import BaseInvalidDataError from "../../../shared/error/BaseInvalidDataError";
-import { ErrorHandler } from "../../../shared/error/ErrorHandler";
-import EmailService from "../../../shared/integrations/emails/EmailService";
-import isValid from "../../../shared/middlewares/validationMiddleware";
-import isAuthMiddleware from "../../../shared/middlewares/isAuthMiddleware";
-import { generateJWTToken } from "../../../shared/utils/hashUtils";
-import Page, { getPageAndItemsPerPage } from "../../../shared/Page";
-
-import UserData from "../application/UserData";
-import CreateUserInteractor from "../application/CreateUserInteractor";
-import ForgotPasswordInteractor, { ForgotPasswordData } from "../application/ForgotPasswordInteractor";
-import ResetPasswordInteractor, { ResetPasswordData } from "../application/ResetPasswordInteractor";
-import SignInUserInteractor from "../application/SignInUserInteractor";
-import GetAllUsersInteractor, { GetAllUsersData } from "../application/GetAllUsersInteractor";
-import GetUserByIdInteractor, { GetUserByIdData } from "../application/GetUserByIdInteractor";
-import DeleteUserByIdInteractor, { DeleteUserByIdData } from "../application/DeleteUserByIdInteractor";
-import UpdateUserByIdInteractor, { UpdateUserByIdData } from "../application/UpdateUserByIdInteractor";
-import { UserRole, validUserRoles } from "../domain/User";
-import UserService from "../domain/UserService";
-import UserViewModel from "./UserViewModel";
+import Page, { getPageAndItemsPerPage } from "@shared/Page";
+import Controller from "@shared/controllers/Controller";
+import BaseInvalidDataError from "@shared/error/BaseInvalidDataError";
+import { ErrorHandler } from "@shared/error/ErrorHandler";
+import EmailService from "@shared/integrations/emails/EmailService";
+import isValid from "@shared/middlewares/validationMiddleware";
+import isAuthMiddleware from "@shared/middlewares/isAuthMiddleware";
+import { generateJWTToken } from "@utils/hashUtils";
+import UserData from "@user/application/UserData";
+import CreateUserInteractor from "@user/application/CreateUserInteractor";
+import ForgotPasswordInteractor, { ForgotPasswordData } from "@user/application/ForgotPasswordInteractor";
+import ResetPasswordInteractor, { ResetPasswordData } from "@user/application/ResetPasswordInteractor";
+import SignInUserInteractor from "@user/application/SignInUserInteractor";
+import GetAllUsersInteractor, { GetAllUsersData } from "@user/application/GetAllUsersInteractor";
+import GetUserByIdInteractor, { GetUserByIdData } from "@user/application/GetUserByIdInteractor";
+import DeleteUserByIdInteractor, { DeleteUserByIdData } from "@user/application/DeleteUserByIdInteractor";
+import UpdateUserByIdInteractor, { UpdateUserByIdData } from "@user/application/UpdateUserByIdInteractor";
+import UserHasNotPermissionsError from "@user/application/error/UserHasNotPermissionsError";
+import SignInError from "@user/application/error/SignInError";
+import UserNotFoundError from "@user/application/error/UserNotFoundError";
+import { UserRole, validUserRoles } from "@user/domain/User";
+import UserService from "@user/domain/UserService";
+import UserViewModel from "@user/infrastructure/UserViewModel";
 
 class UserController implements Controller {
     /*

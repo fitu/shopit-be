@@ -1,7 +1,6 @@
-import ProductService from "../domain/ProductService";
-import ProductNotFoundError from "./error/ProductNotFoundError";
-
-import ProductData from "./ProductData";
+import ProductService from "@product/domain/ProductService";
+import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
+import ProductData from "@product/application/ProductData";
 
 interface GetProductByIdData {
     productId: string;
