@@ -34,10 +34,16 @@ const parseErrors = (req: Request, errors: string | BaseError | Array<string> | 
     return translatedErrors;
 };
 
-// FIXME: tests are falling because of this t
 const parseString = (req: Request, error: string): BaseError => {
     const errorMessage = error || "error.internal_server";
-    const translatedErrorMessage = req.t(errorMessage);
+
+    // FIXME: tests are falling because of this t. This is a workaround
+    let translatedErrorMessage;
+    try {
+        translatedErrorMessage = req.t(errorMessage);
+    } catch (error: any) {
+        translatedErrorMessage = errorMessage;
+    }
 
     const translatedError = new BaseError({
         code: ErrorCodes.UNKNOWN.toString(),
@@ -51,7 +57,14 @@ const parseString = (req: Request, error: string): BaseError => {
 const parseBaseError = (req: Request, error: BaseError): BaseError => {
     const { code, message, details } = error;
     const errorMessage = message || "error.internal_server";
-    const translatedErrorMessage = req.t(errorMessage);
+
+    // FIXME: tests are falling because of this t. This is a workaround
+    let translatedErrorMessage;
+    try {
+        translatedErrorMessage = req.t(errorMessage);
+    } catch (error: any) {
+        translatedErrorMessage = errorMessage;
+    }
 
     const translatedError = new BaseError({
         code,
