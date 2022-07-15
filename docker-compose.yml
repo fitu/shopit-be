@@ -5,23 +5,18 @@ services:
         restart: always
         build: .
         ports:
-            - "4000:4000"
+            - ${PORT}:${PORT}
         links:
             - noSqlDB
             - sqlDB
+            - inMemoryDB
         depends_on:
             - noSqlDB
             - sqlDB
+            - inMemoryDB
         volumes:
             - .:/usr/src/shopit
-    noSqlDB:
-        container_name: noSqlDB
-        image: mongo:latest
-        restart: always
-        volumes:
-            - nosql-data:/data/db
-        ports:
-            - "27017:27017"
+
     sqlDB:
         container_name: sqlDB
         image: postgres:latest
@@ -29,17 +24,44 @@ services:
         volumes:
             - sql-data:/var/lib/postgresql/data
         ports:
-            - "5432:5432"
+            - ${DB_SQL_PORT}:${DB_SQL_PORT}
         environment:
-            POSTGRES_DB: shopit
-            POSTGRES_USER: shopit
-            POSTGRES_PASSWORD: computadorar
+            POSTGRES_DB: ${DB_SQL_NAME}
+            POSTGRES_USER: ${DB_SQL_USER_NAME}
+            POSTGRES_PASSWORD: ${DB_SQL_PASSWORD}
+
+    noSqlDB:
+        container_name: noSqlDB
+        image: mongo:latest
+        restart: always
+        volumes:
+            - nosql-data:/data/db
+        ports:
+            - ${DB_NO_SQL_PORT}:${DB_NO_SQL_PORT}
+        environment:
+            MONGO_INITDB_DATABASE: ${DB_NO_SQL_NAME}
+            MONGO_INITDB_ROOT_USERNAME: ${DB_NO_SQL_USER_NAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${DB_NO_SQL_PASSWORD}
+
+    inMemoryDB:
+        container_name: inMemoryDB
+        image: redis:latest
+        restart: always
+        command: >
+            --requirepass ${DB_IN_MEMORY_PASSWORD}
+        volumes:
+            - inmemory-data:/bitnami/redis/data
+        ports:
+            - ${DB_IN_MEMORY_PORT}:${DB_IN_MEMORY_PORT}
+
     adminer:
         container_name: adminer
         image: adminer
         restart: always
         ports:
             - 8080:8080
+
 volumes:
-    nosql-data:
     sql-data:
+    nosql-data:
+    inmemory-data:

@@ -1,13 +1,18 @@
 # DB
+# Check DbTypes to see possible arguments
 populatedb:
-	docker-compose run shopit npm run seeder:sql
-	docker-compose run shopit npm run seeder:noSql
+	docker-compose run shopit npm run seeder -- --type=sql
+	docker-compose run shopit npm run seeder -- --type=no_sql
+	docker-compose run shopit npm run seeder -- --type=in_memory
 
 populate-sql:
-	docker-compose run shopit npm run seeder:sql
+	docker-compose run shopit npm run seeder -- --type=sql
 
 populate-nosql:
-	docker-compose run shopit npm run seeder:noSql
+	docker-compose run shopit npm run seeder -- --type=no_sql
+
+populate-inmemory:
+	docker-compose run shopit npm run seeder -- --type=in_memory
 
 # Config
 envs:

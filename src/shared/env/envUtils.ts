@@ -9,19 +9,27 @@ const validateEnv = (): any => {
 
     // Validate and clear envs
     const env = cleanEnv(process.env, {
-        DB_TYPE: str({ choices: [DbType.SQL.toString(), DbType.NO_SQL.toString()] }),
+        DB_TYPE: str({ choices: [DbType.SQL.toString(), DbType.NO_SQL.toString(), DbType.IN_MEMORY.toString()] }),
         DB_QUERIES: str({ choices: [DbQuery.ORM.toString(), DbQuery.RAW.toString()] }),
+
         DB_SQL_NAME: str(),
         DB_SQL_USER_NAME: str(),
         DB_SQL_PASSWORD: str(),
         DB_SQL_HOST: str(),
         DB_SQL_PORT: port(),
+        
         DB_NO_SQL_NAME: str(),
         DB_NO_SQL_USER_NAME: str(),
         DB_NO_SQL_PASSWORD: str(),
         DB_NO_SQL_HOST: str(),
         DB_NO_SQL_PORT: port(),
+        
+        DB_IN_MEMORY_PASSWORD: str(),
+        DB_IN_MEMORY_HOST: str(),
+        DB_IN_MEMORY_PORT: port(),
+        
         KEY_EMAILS: str(),
+        
         JWT: str(),
     });
 

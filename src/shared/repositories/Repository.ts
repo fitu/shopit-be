@@ -21,6 +21,12 @@ import NoSqlReviewRepository from "@review/infrastructure/noSql/ReviewRepository
 import NoSqlProductRepositoryRaw from "@product/infrastructure/noSql/ProductRepositoryRaw";
 import NoSqlUserRepositoryRaw from "@user/infrastructure/noSql/UserRepositoryRaw";
 import NoSqlReviewRepositoryRaw from "@review/infrastructure/noSql/ReviewRepositoryRaw";
+import InMemoryProductRepository from "@product/infrastructure/inMemory/InMemoryProductRepository";
+import InMemoryUserRepository from "@user/infrastructure/inMemory/InMemoryUserRepository";
+import InMemoryReviewRepository from "@review/infrastructure/inMemory/InMemoryReviewRepository";
+import InMemoryProductRepositoryRaw from "@product/infrastructure/inMemory/InMemoryProductRepositoryRaw";
+import InMemoryUserRepositoryRaw from "@user/infrastructure/inMemory/InMemoryUserRepositoryRaw";
+import InMemoryReviewRepositoryRaw from "@review/infrastructure/inMemory/InMemoryReviewRepositoryRaw";
 import { Repository as EmailRepository } from "@shared/integrations/emails/Repository";
 import { Repository as FileRepository } from "@shared/integrations/files/Repository";
 import SendGridRepository from "@shared/integrations/emails/SendGridRepository";
@@ -40,47 +46,83 @@ type Repos = {
 const getRepositories = (env: any, db: any): Repos => {
     const useORMQueries = env.DB_QUERIES === DbQuery.ORM.toString();
 
-    if (useORMQueries) {
-        return env.DB_TYPE === DbType.SQL.toString()
-            ? {
-                  cartRepository: new SqlCartRepository(),
-                  productRepository: new SqlProductRepository(),
-                  shippingInfoRepository: new SqlShippingInfoRepository(),
-                  reviewRepository: new SqlReviewRepository(),
-                  userRepository: new SqlUserRepository(),
-                  emailRepository: new SendGridRepository(),
-                  fileRepository: new PDFRepository(),
-              }
-            : {
-                  cartRepository: null,
-                  productRepository: new NoSqlProductRepository(),
-                  reviewRepository: new NoSqlReviewRepository(),
-                  userRepository: new NoSqlUserRepository(),
-                  emailRepository: new SendGridRepository(),
-                  fileRepository: new PDFRepository(),
-              };
+    const repos: Repos = useORMQueries ? getORMRepo(env) : getRawRepo(env, db);
+
+    return repos;
+};
+
+const getORMRepo = (env: any): Repos => {
+    const dbType = env.DB_TYPE;
+
+    if (dbType === DbType.SQL.toString()) {
+        return {
+            cartRepository: new SqlCartRepository(),
+            productRepository: new SqlProductRepository(),
+            shippingInfoRepository: new SqlShippingInfoRepository(),
+            reviewRepository: new SqlReviewRepository(),
+            userRepository: new SqlUserRepository(),
+            emailRepository: new SendGridRepository(),
+            fileRepository: new PDFRepository(),
+        };
     }
 
-    const sequelize = db as unknown as Sequelize;
+    if (dbType === DbType.NO_SQL.toString()) {
+        return {
+            cartRepository: null,
+            productRepository: new NoSqlProductRepository(),
+            reviewRepository: new NoSqlReviewRepository(),
+            userRepository: new NoSqlUserRepository(),
+            emailRepository: new SendGridRepository(),
+            fileRepository: new PDFRepository(),
+        };
+    }
 
-    return env.DB_TYPE === DbType.SQL.toString()
-        ? {
-              cartRepository: new SqlCartRepositoryRaw(sequelize),
-              productRepository: new SqlProductRepositoryRaw(sequelize),
-              shippingInfoRepository: new SqlShippingInfoRepositoryRaw(sequelize),
-              reviewRepository: new SqlReviewRepositoryRaw(sequelize),
-              userRepository: new SqlUserRepositoryRaw(sequelize),
-              emailRepository: new SendGridRepository(),
-              fileRepository: new PDFRepository(),
-          }
-        : {
-              cartRepository: null,
-              productRepository: new NoSqlProductRepositoryRaw(),
-              reviewRepository: new NoSqlReviewRepositoryRaw(),
-              userRepository: new NoSqlUserRepositoryRaw(),
-              emailRepository: new SendGridRepository(),
-              fileRepository: new PDFRepository(),
-          };
+    return {
+        cartRepository: null,
+        productRepository: new InMemoryProductRepository(),
+        reviewRepository: new InMemoryReviewRepository(),
+        userRepository: new InMemoryUserRepository(),
+        emailRepository: new SendGridRepository(),
+        fileRepository: new PDFRepository(),
+    };
+};
+
+const getRawRepo = (env: any, db: any): Repos => {
+    const dbType = env.DB_TYPE;
+
+    if (dbType === DbType.SQL.toString()) {
+        const sequelize = db as unknown as Sequelize;
+
+        return {
+            cartRepository: new SqlCartRepositoryRaw(sequelize),
+            productRepository: new SqlProductRepositoryRaw(sequelize),
+            shippingInfoRepository: new SqlShippingInfoRepositoryRaw(sequelize),
+            reviewRepository: new SqlReviewRepositoryRaw(sequelize),
+            userRepository: new SqlUserRepositoryRaw(sequelize),
+            emailRepository: new SendGridRepository(),
+            fileRepository: new PDFRepository(),
+        };
+    }
+
+    if (dbType === DbType.NO_SQL.toString()) {
+        return {
+            cartRepository: null,
+            productRepository: new NoSqlProductRepositoryRaw(),
+            reviewRepository: new NoSqlReviewRepositoryRaw(),
+            userRepository: new NoSqlUserRepositoryRaw(),
+            emailRepository: new SendGridRepository(),
+            fileRepository: new PDFRepository(),
+        };
+    }
+
+    return {
+        cartRepository: null,
+        productRepository: new InMemoryProductRepositoryRaw(),
+        reviewRepository: new InMemoryReviewRepositoryRaw(),
+        userRepository: new InMemoryUserRepositoryRaw(),
+        emailRepository: new SendGridRepository(),
+        fileRepository: new PDFRepository(),
+    };
 };
 
 export default getRepositories;

@@ -16,22 +16,19 @@ import Database, { DatabaseOptions } from "@shared/db/database";
 class SqlDb implements Database {
     private env: any;
     private instance: Sequelize;
-    private sessionStore: any;
 
     constructor(env: any) {
         this.env = env;
     }
 
-    public init = async (options?: DatabaseOptions): Promise<any> => {
-        const db = this.createDbConnection();
-        this.instance = db;
+    public init = async (options?: DatabaseOptions): Promise<void> => {
+        this.instance = this.createDbConnection();
 
         this.initializeTables();
         this.initializeRelationships();
 
         const forceSync = options?.force ?? false;
         await this.instance.sync({ force: forceSync });
-        return this.instance;
     };
 
     private createDbConnection = (): Sequelize => {
@@ -108,6 +105,8 @@ class SqlDb implements Database {
         UserDao.hasMany(PaymentInfoDao, { sourceKey: "id", foreignKey: "userId", as: "paymentsInfo" });
         UserDao.hasMany(ShippingInfoDao, { sourceKey: "id", foreignKey: "userId", as: "shippingsInfo" });
     };
+
+    public getInstance = (): any => this.instance;
 
     public clearDB = async (): Promise<void> => {
         console.log("Delete users");

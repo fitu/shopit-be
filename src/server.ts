@@ -27,16 +27,16 @@ import StaticResourcesMiddleware from "@app/middlewares/StaticResourcesMiddlewar
 
         // Initialize and connect to DB
         const db = getDb(env);
-        const intializedDb = await db.init();
+        await db.init();
+
+        // Create Socket
+        // const io = new Server();
 
         // Create Repositories
         const { productRepository, userRepository, emailRepository, fileRepository } = getRepositories(
             env,
-            intializedDb
+            db.getInstance()
         );
-
-        // Create Socket
-        const io = new Server();
 
         // Create Services
         const productService = new ProductService(productRepository);
