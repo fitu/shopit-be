@@ -7,6 +7,11 @@ import InMemorySeeder from "@shared/db/inMemory/InMemorySeeder";
 import NoSqlSeeder from "@shared/db/noSql/NoSqlSeeder";
 import SqlSeeder from "@shared/db/sql/SqlSeeder";
 
+const USERS_CSV_PATH = "src/modules/user/infrastructure/data/users.csv";
+const PRODUCTS_CSV_PATH = "src/modules/product/infrastructure/data/products.csv";
+const REVIEWS_CSV_PATH = "src/modules/review/infrastructure/data/reviews.csv";
+const SHIPPINGS_INFO_CSV_PATH = "src/modules/shippingInfo/infrastructure/data/shippingsInfo.csv";
+
 interface Seeder {
     seed: () => Promise<void>;
 }
@@ -26,8 +31,8 @@ const getSeeder = (
         return new NoSqlSeeder({ userService, productService, reviewService });
     }
 
-    return new InMemorySeeder({ userService, shippingInfoService, productService, reviewService });
+    return new InMemorySeeder({ userService, productService, reviewService });
 };
 
-export { getSeeder };
+export { getSeeder, USERS_CSV_PATH, PRODUCTS_CSV_PATH, REVIEWS_CSV_PATH, SHIPPINGS_INFO_CSV_PATH };
 export default Seeder;

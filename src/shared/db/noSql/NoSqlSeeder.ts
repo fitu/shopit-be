@@ -1,20 +1,20 @@
 import { zip } from "lodash";
 
-import ProductCSV from "@product/infrastructure/noSql/ProductCSV";
-import ReviewCSV from "@review/infrastructure/noSql/ReviewCSV";
-import ShippingInfoCSV from "@shippingInfo/infrastructure/noSql/ShippingInfoCSV";
-import UserCSV from "@user/infrastructure/noSql/UserCSV";
+import ProductCSV from "@product/infrastructure/data/ProductCSV";
+import ReviewCSV from "@review/infrastructure/data/ReviewCSV";
+import ShippingInfoCSV from "@shippingInfo/infrastructure/data/ShippingInfoCSV";
+import UserCSV from "@user/infrastructure/data/UserCSV";
 import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
 import ProductService from "@product/domain/ProductService";
 import ReviewService from "@review/domain/ReviewService";
 import UserService from "@user/domain/UserService";
 import { readFromCsv } from "@shared/data/csvUtils";
-import Seeder from "@shared/db/seeder";
-
-const PRODUCTS_CSV_PATH = "src/modules/product/infrastructure/data/products.csv";
-const REVIEWS_CSV_PATH = "src/modules/review/infrastructure/data/reviews.csv";
-const SHIPPINGS_INFO_CSV_PATH = "src/modules/shippingInfo/infrastructure/data/shippingsInfo.csv";
-const USERS_CSV_PATH = "src/modules/user/infrastructure/data/users.csv";
+import Seeder, {
+    USERS_CSV_PATH,
+    PRODUCTS_CSV_PATH,
+    REVIEWS_CSV_PATH,
+    SHIPPINGS_INFO_CSV_PATH,
+} from "@shared/db/seeder";
 
 class NoSqlSeeder implements Seeder {
     private userService: UserService;

@@ -45,14 +45,15 @@ services:
 
     inMemoryDB:
         container_name: inMemoryDB
-        image: redis:latest
+        # TODO: use redis/redis-stack-server in production
+        image: redis/redis-stack:latest
         restart: always
-        command: >
-            --requirepass ${DB_IN_MEMORY_PASSWORD}
         volumes:
             - inmemory-data:/bitnami/redis/data
         ports:
             - ${DB_IN_MEMORY_PORT}:${DB_IN_MEMORY_PORT}
+        environment:
+            REDIS_ARGS: "--requirepass ${DB_IN_MEMORY_PASSWORD}"
 
     adminer:
         container_name: adminer

@@ -4,35 +4,35 @@ import { Repository } from "@user/infrastructure/Repository";
 
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {
-        return new Promise(() => {});
+        return Promise.resolve(<User>{});
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        return new Promise(() => {});
+        return Promise.resolve([]);
     }
 
     public async updateUserById(userId: string, user: User): Promise<User | null> {
-        return new Promise(() => {});
+        return Promise.resolve(null);
     }
 
     public async updatePassword(user: User, newPassword: string): Promise<void> {
-        return new Promise(() => {});
+        return Promise.resolve();
     }
 
     public async deleteUserById(userId: string): Promise<boolean> {
-        return new Promise(() => {});
+        return Promise.resolve(false);
     }
 
     public async getAllUsers(page: number, itemsPerPage: number): Promise<Page<Array<User>>> {
-        return new Promise(() => {});
+        return Promise.resolve(<Page<Array<User>>>{});
     }
 
     public async getUserById(userId: string): Promise<User | null> {
-        return new Promise(() => {});
+        return Promise.resolve(null);
     }
 
     public async getUserByEmail(email: string): Promise<User | null> {
-        return new Promise(() => {});
+        return Promise.resolve(null);
     }
 }
 

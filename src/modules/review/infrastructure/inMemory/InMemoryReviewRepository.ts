@@ -3,7 +3,7 @@ import { Repository } from "@review/infrastructure/Repository";
 
 class ReviewRepository implements Repository {
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {
-        return new Promise(() => {});
+        return Promise.resolve(<Review>{});
     }
 
     public async insertBatch(
@@ -11,7 +11,7 @@ class ReviewRepository implements Repository {
         productIds: Array<string>,
         userIds: Array<string>
     ): Promise<Array<Review>> {
-        return new Promise(() => {});
+        return Promise.resolve([]);
     }
 }
 
