@@ -2,8 +2,9 @@ import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssocia
 
 import Avatar from "@avatar/domain/Avatar";
 import UserDao from "@user/infrastructure/sql/UserDao";
+import { fromAvatarDaoToModel } from "@avatar/infrastructure/sql/avatarParsers";
 
-const AVATAR_TABLE = 'avatars';
+const AVATAR_TABLE = "avatars";
 
 interface AvatarAttributes {
     id: string;
@@ -11,7 +12,7 @@ interface AvatarAttributes {
     url: string;
 }
 
-interface AvatarCreationAttributes extends Optional<AvatarAttributes, 'id'> {}
+interface AvatarCreationAttributes extends Optional<AvatarAttributes, "id"> {}
 
 class AvatarDao extends Model<AvatarAttributes, AvatarCreationAttributes> implements AvatarAttributes {
     public id!: string;
@@ -25,11 +26,7 @@ class AvatarDao extends Model<AvatarAttributes, AvatarCreationAttributes> implem
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
     public toModel(): Avatar {
-        return {
-            id: this.id,
-            publicId: this.publicId,
-            url: this.url,
-        };
+        return fromAvatarDaoToModel(this);
     }
 }
 

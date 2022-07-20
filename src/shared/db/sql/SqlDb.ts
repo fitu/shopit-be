@@ -38,11 +38,13 @@ class SqlDb implements Database {
         const dbHost = this.env.DB_SQL_HOST;
         const dbPort = this.env.DB_SQL_PORT;
 
-        return new Sequelize(dbName, dbUserName, dbPassword, {
+        const sequelize = new Sequelize(dbName, dbUserName, dbPassword, {
             dialect: "postgres",
             host: dbHost,
             port: dbPort,
         });
+
+        return sequelize;
     };
 
     private initializeTables = (): void => {

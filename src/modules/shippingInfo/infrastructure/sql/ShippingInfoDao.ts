@@ -15,8 +15,9 @@ import {
 import OrderDao from "@order/infrastructure/sql/OrderDao";
 import UserDao from "@user/infrastructure/sql/UserDao";
 import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
+import { fromShippingInfoDaoToModel } from "@shippingInfo/infrastructure/sql/shippingInfoParsers";
 
-const SHIPPING_INFO_TABLE = 'shippingInfos';
+const SHIPPING_INFO_TABLE = "shippingInfos";
 
 interface ShippingInfoAttributes {
     id: string;
@@ -27,7 +28,7 @@ interface ShippingInfoAttributes {
     country: string;
 }
 
-interface ShippingInfoCreationAttributes extends Optional<ShippingInfoAttributes, 'id'> {}
+interface ShippingInfoCreationAttributes extends Optional<ShippingInfoAttributes, "id"> {}
 
 class ShippingInfoDao
     extends Model<ShippingInfoAttributes, ShippingInfoCreationAttributes>
@@ -57,14 +58,7 @@ class ShippingInfoDao
     public countOrders!: HasManyCountAssociationsMixin;
 
     public toModel(): ShippingInfo {
-        return {
-            id: this.id,
-            address: this.address,
-            city: this.city,
-            phone: this.phone,
-            postalCode: this.postalCode,
-            country: this.country,
-        };
+        return fromShippingInfoDaoToModel(this);
     }
 }
 

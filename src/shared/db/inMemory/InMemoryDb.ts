@@ -24,6 +24,7 @@ class InMemoryDb implements Database {
         });
 
         await client.connect();
+
         return client;
     };
 

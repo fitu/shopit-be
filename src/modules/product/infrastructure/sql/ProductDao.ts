@@ -142,6 +142,7 @@ const init = (sequelize: Sequelize): void => {
 };
 
 const validateProductFieldsToInsert = (product: Product): Product => ({
+    // TODO: is this necessary?
     ...(product.id && { id: product.id }),
     title: product.title,
     description: product.description,

@@ -12,7 +12,7 @@ class ShippingInfoCSV {
     ) {}
 
     static toModel(shippingInfoCSV: ShippingInfoCSV): ShippingInfo {
-        return new ShippingInfo({
+        const shippingInfo = new ShippingInfo({
             id: shippingInfoCSV.id,
             address: shippingInfoCSV.address,
             city: shippingInfoCSV.city,
@@ -20,6 +20,8 @@ class ShippingInfoCSV {
             postalCode: shippingInfoCSV.postalCode,
             country: shippingInfoCSV.country,
         });
+
+        return shippingInfo;
     }
 }
 

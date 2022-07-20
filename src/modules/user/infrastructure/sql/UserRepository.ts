@@ -6,6 +6,7 @@ import CartDao from "@cart/infrastructure/sql/CartDao";
 import User from "@user/domain/User";
 import { Repository } from "@user/infrastructure/Repository";
 import UserDao, { USER_AVATAR, USER_CART, validateUserFieldsToInsert } from "@user/infrastructure/sql/UserDao";
+
 class UserRepository implements Repository {
     public async insert(user: User): Promise<User> {
         const userToInsert: User = validateUserFieldsToInsert(user);

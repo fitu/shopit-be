@@ -23,6 +23,7 @@ const generateRandomToken = async function (): Promise<string> {
         crypto.randomBytes(BYTES_TO_GENERATE, (error, buffer) => {
             if (error) {
                 reject();
+                return;
             }
 
             const token = buffer.toString("hex");

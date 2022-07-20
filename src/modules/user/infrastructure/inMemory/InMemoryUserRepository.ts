@@ -1,51 +1,26 @@
-import { Entity, Schema } from "redis-om";
-import { Client, Repository as RedisRepository } from "redis-om";
-
 import Page from "@shared/Page";
-import User, { UserRole } from "@user/domain/User";
+import User from "@user/domain/User";
 import { Repository } from "@user/infrastructure/Repository";
-import Cart from "@cart/domain/Cart";
-import Avatar from "@avatar/domain/Avatar";
-import Product from "@product/domain/Product";
-import Review from "@review/domain/Review";
-import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
-
-class UserEntity extends Entity {}
-
-const userSchema = new Schema(UserEntity, {
-    id: { type: "string" },
-    firstName: { type: "string" },
-    lastName: { type: "string" },
-    email: { type: "string" },
-    // role: { type: UserRole },
-    password: { type: "string" },
-    resetPasswordToken: { type: "string" },
-    resetPasswordExpirationDate: { type: "date" },
-    // cart: { type: Cart },
-    // avatar: { type: Avatar },
-    // products: { type: Array<Product> },
-    // reviews: { type: Array<Review> },
-    // shippingsInfo: { type: Array<ShippingInfo> },
-});
+import UserDao from "@user/infrastructure/inMemory/UserDao";
+import { fromUserDaoToModel, fromModelToUserDao } from "@user/infrastructure/inMemory/userParsers";
 
 class UserRepository implements Repository {
     readonly client: any;
-    readonly userRepository: RedisRepository<UserEntity>;
 
     constructor(db: any) {
         this.client = db;
     }
 
     public async insert(user: User): Promise<User> {
-        const foo = await this.client.jsonset("user", user);
-        // const value = await client.json.get(TEST_KEY, {
-        //   // JSON Path: .node = the element called 'node' at root level.
-        //   path: '.node'
-        // });
+        const userDao = fromModelToUserDao(user);
 
-        console.log("foo");
+        await this.client.json.set("user", ".", { user: userDao });
+        const newUser: UserDao = await this.client.json.get("user", {
+            path: ".user",
+        });
 
-        return { ...user, id: "foo" };
+        const newUserModel = fromUserDaoToModel(newUser);
+        return newUserModel;
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {

@@ -14,7 +14,7 @@ class ProductCSV {
     ) {}
 
     static toModel(productCSV: ProductCSV): Product {
-        return new Product({
+        const product = new Product({
             id: productCSV.id,
             title: productCSV.title,
             description: productCSV.description,
@@ -25,6 +25,8 @@ class ProductCSV {
             category: productCSV.category,
             stock: productCSV.stock,
         });
+
+        return product;
     }
 }
 

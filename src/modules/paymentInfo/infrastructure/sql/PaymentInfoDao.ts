@@ -15,6 +15,7 @@ import {
 import OrderDao from "@order/infrastructure/sql/OrderDao";
 import UserDao from "@user/infrastructure/sql/UserDao";
 import PaymentInfo, { PaymentStatus, validPaymentStatus } from "@paymentInfo/domain/PaymentInfo";
+import { fromPaymentInfoDaoToModel } from "@paymentInfo/infrastructure/sql/paymentInfoParsers";
 
 const PAYMENT_INFO_TABLE = "paymentInfos";
 
@@ -49,10 +50,7 @@ class PaymentInfoDao
     public countOrders!: HasManyCountAssociationsMixin;
 
     public toModel(): PaymentInfo {
-        return {
-            id: this.id,
-            status: this.status,
-        };
+        return fromPaymentInfoDaoToModel(this);
     }
 }
 

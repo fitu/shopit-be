@@ -67,7 +67,7 @@ class UserData {
     }
 
     public static fromModel(user: User): UserData {
-        return new UserData({
+        const userData = new UserData({
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -82,6 +82,8 @@ class UserData {
             reviews: user.reviews,
             shippingsInfo: user.shippingsInfo,
         });
+
+        return userData;
     }
 
     public static filterNulls(userData: UserData): UserData {

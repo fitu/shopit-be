@@ -14,8 +14,9 @@ import {
 
 import UserDao from "@user/infrastructure/sql/UserDao";
 import Cart from "@cart/domain/Cart";
+import { fromCartDaoToModel } from "@cart/infrastructure/sql/cartParsers";
 
-const CART_TABLE = 'carts';
+const CART_TABLE = "carts";
 
 interface CartAttributes {
     id: string;
@@ -24,7 +25,7 @@ interface CartAttributes {
     totalPrice: number;
 }
 
-interface CartCreationAttributes extends Optional<CartAttributes, 'id'> {}
+interface CartCreationAttributes extends Optional<CartAttributes, "id"> {}
 
 class CartDao extends Model<CartAttributes, CartCreationAttributes> implements CartAttributes {
     public id!: string;
@@ -47,12 +48,7 @@ class CartDao extends Model<CartAttributes, CartCreationAttributes> implements C
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
     public toModel(): Cart {
-        return {
-            id: this.id,
-            itemsPrice: this.itemsPrice,
-            taxPrice: this.taxPrice,
-            totalPrice: this.totalPrice,
-        };
+        return fromCartDaoToModel(this);
     }
 }
 

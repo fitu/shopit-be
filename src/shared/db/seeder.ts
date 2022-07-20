@@ -23,15 +23,13 @@ const getSeeder = (
     productService: ProductService,
     reviewService: ReviewService
 ): Seeder => {
-    if (dbType === DbType.SQL.toString()) {
-        return new SqlSeeder({ userService, shippingInfoService, productService, reviewService });
-    }
+    const seeder: Seeder = {
+        [DbType.SQL]: new SqlSeeder({ userService, shippingInfoService, productService, reviewService }),
+        [DbType.NO_SQL]: new NoSqlSeeder({ userService, productService, reviewService }),
+        [DbType.IN_MEMORY]: new InMemorySeeder({ userService, productService, reviewService }),
+    }[dbType];
 
-    if (dbType === DbType.NO_SQL.toString()) {
-        return new NoSqlSeeder({ userService, productService, reviewService });
-    }
-
-    return new InMemorySeeder({ userService, productService, reviewService });
+    return seeder;
 };
 
 export { getSeeder, USERS_CSV_PATH, PRODUCTS_CSV_PATH, REVIEWS_CSV_PATH, SHIPPINGS_INFO_CSV_PATH };

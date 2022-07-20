@@ -41,7 +41,7 @@ class ProductViewModel {
     }
 
     public static fromData(productData: ProductData): ProductViewModel {
-        return new ProductViewModel({
+        const productViewModel = new ProductViewModel({
             id: productData.id,
             title: productData.title,
             description: productData.description,
@@ -51,6 +51,8 @@ class ProductViewModel {
             stock: productData.stock,
             ratings: productData.ratings,
         });
+
+        return productViewModel;
     }
 }
 

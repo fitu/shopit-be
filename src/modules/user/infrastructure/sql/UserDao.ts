@@ -183,6 +183,7 @@ const init = (sequelize: Sequelize): void => {
 };
 
 const validateUserFieldsToInsert = (user: User): User => {
+    // TODO: is this necessary?
     const cart = user.cart
         ? new Cart({
               id: user.cart.id,

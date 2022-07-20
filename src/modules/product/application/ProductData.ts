@@ -42,7 +42,7 @@ class ProductData {
     }
 
     public static fromModel(product: Product): ProductData {
-        return new ProductData({
+        const productData = new ProductData({
             id: product.id,
             title: product.title,
             description: product.description,
@@ -52,6 +52,8 @@ class ProductData {
             stock: product.stock,
             ratings: product.ratings,
         });
+
+        return productData;
     }
 
     public static filterNulls(productData: ProductData): ProductData {

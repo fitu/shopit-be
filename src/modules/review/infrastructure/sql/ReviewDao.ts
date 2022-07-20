@@ -3,6 +3,7 @@ import { Model, DataTypes, Optional, HasOneGetAssociationMixin, HasOneSetAssocia
 import ProductDao from "@product/infrastructure/sql/ProductDao";
 import UserDao from "@user/infrastructure/sql/UserDao";
 import Review from "@review/domain/Review";
+import { fromReviewDaoToModel } from "@review/infrastructure/sql/reviewParsers";
 
 const REVIEW_TABLE = "reviews";
 
@@ -34,12 +35,7 @@ class ReviewDao extends Model<ReviewAttributes, ReviewCreationAttributes> implem
     public setUser!: HasOneSetAssociationMixin<UserDao, number>;
 
     public toModel(): Review {
-        return {
-            id: this.id,
-            name: this.name,
-            rating: this.rating,
-            comment: this.comment,
-        };
+        return fromReviewDaoToModel(this);
     }
 }
 
