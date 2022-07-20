@@ -1,14 +1,61 @@
+import { Entity, Schema } from "redis-om";
+import { Client, Repository as RedisRepository } from "redis-om";
+
 import Page from "@shared/Page";
-import User from "@user/domain/User";
+import User, { UserRole } from "@user/domain/User";
 import { Repository } from "@user/infrastructure/Repository";
+import Cart from "@cart/domain/Cart";
+import Avatar from "@avatar/domain/Avatar";
+import Product from "@product/domain/Product";
+import Review from "@review/domain/Review";
+import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
+
+class UserEntity extends Entity {}
+
+const userSchema = new Schema(UserEntity, {
+    id: { type: "string" },
+    firstName: { type: "string" },
+    lastName: { type: "string" },
+    email: { type: "string" },
+    // role: { type: UserRole },
+    password: { type: "string" },
+    resetPasswordToken: { type: "string" },
+    resetPasswordExpirationDate: { type: "date" },
+    // cart: { type: Cart },
+    // avatar: { type: Avatar },
+    // products: { type: Array<Product> },
+    // reviews: { type: Array<Review> },
+    // shippingsInfo: { type: Array<ShippingInfo> },
+});
 
 class UserRepository implements Repository {
+    readonly client: any;
+    readonly userRepository: RedisRepository<UserEntity>;
+
+    constructor(db: any) {
+        this.client = db;
+    }
+
     public async insert(user: User): Promise<User> {
-        return Promise.resolve(<User>{});
+        const foo = await this.client.jsonset("user", user);
+        // const value = await client.json.get(TEST_KEY, {
+        //   // JSON Path: .node = the element called 'node' at root level.
+        //   path: '.node'
+        // });
+
+        console.log("foo");
+
+        return { ...user, id: "foo" };
     }
 
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
-        return Promise.resolve([]);
+        const userPromises = users.map(async (user) => this.insert(user));
+
+        await Promise.all(userPromises);
+
+        const result = users.map((user) => ({ ...user, id: "foo" }));
+
+        return Promise.resolve(result);
     }
 
     public async updateUserById(userId: string, user: User): Promise<User | null> {

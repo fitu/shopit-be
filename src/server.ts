@@ -24,9 +24,11 @@ import StaticResourcesMiddleware from "@app/middlewares/StaticResourcesMiddlewar
     try {
         // Validate env before start
         const env = validateEnv();
+        const dbType = env.DB_TYPE;
+        const dbQuery = env.DB_QUERIES;
 
         // Initialize and connect to DB
-        const db = getDb(env);
+        const db = getDb(env, dbType);
         await db.init();
 
         // Create Socket
@@ -34,8 +36,9 @@ import StaticResourcesMiddleware from "@app/middlewares/StaticResourcesMiddlewar
 
         // Create Repositories
         const { productRepository, userRepository, emailRepository, fileRepository } = getRepositories(
-            env,
-            db.getInstance()
+            db.getInstance(),
+            dbType,
+            dbQuery
         );
 
         // Create Services

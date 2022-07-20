@@ -24,7 +24,11 @@ import ProductDao, {
 } from "@product/infrastructure/sql/ProductDao";
 
 class ProductRepositoryRaw implements Repository {
-    constructor(public instance: Sequelize) {}
+    readonly instance: Sequelize;
+
+    constructor(db: Sequelize) {
+        this.instance = db;
+    }
 
     public async insert(product: Product, userId: string): Promise<Product> {
         const productId = product.id || uuidv4();

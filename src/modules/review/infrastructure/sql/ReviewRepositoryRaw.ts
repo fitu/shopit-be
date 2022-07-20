@@ -6,7 +6,11 @@ import { Repository } from "@review/infrastructure/Repository";
 import { REVIEW_TABLE } from "@review/infrastructure/sql/ReviewDao";
 
 class ReviewRepositoryRaw implements Repository {
-    constructor(public instance: Sequelize) {}
+    readonly instance: Sequelize;
+
+    constructor(db: Sequelize) {
+        this.instance = db;
+    }
 
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {
         const reviewId = review.id || uuidv4();

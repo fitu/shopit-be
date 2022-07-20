@@ -6,7 +6,11 @@ import { Repository } from "@shippingInfo/infrastructure/Repository";
 import { SHIPPING_INFO_TABLE } from "@shippingInfo/infrastructure/sql/ShippingInfoDao";
 
 class ShippingInfoRepositoryRaw implements Repository {
-    constructor(public instance: Sequelize) {}
+    readonly instance: Sequelize;
+
+    constructor(db: Sequelize) {
+        this.instance = db;
+    }
 
     public async insert(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
         const shippingInfoId = shippingInfo.id || uuidv4();

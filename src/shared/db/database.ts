@@ -20,21 +20,17 @@ interface DatabaseOptions {
 interface Database {
     init: (options?: DatabaseOptions) => Promise<void>;
     clearDB: () => void;
-    getInstance: () => any
+    getInstance: () => any;
 }
 
-const getDb = (env: any): Database => {
-    const dbType = env.DB_TYPE;
+const getDb = (env: any, dbType: string): Database => {
+    const db: Database = {
+        [DbType.SQL]: new SqlDb(env),
+        [DbType.NO_SQL]: new NoSqlDb(env),
+        [DbType.IN_MEMORY]: new InMemoryDb(env),
+    }[dbType];
 
-    if (dbType == DbType.SQL.toString()) {
-        return new SqlDb(env);
-    }
-
-    if (dbType == DbType.NO_SQL.toString()) {
-        return new NoSqlDb(env);
-    }
-
-    return new InMemoryDb(env);
+    return db;
 };
 
 export type { DatabaseOptions };

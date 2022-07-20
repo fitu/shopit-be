@@ -13,13 +13,10 @@ import { getDb } from "@shared/db/database";
 const seedDb = async (dbType: string) => {
     // Validate env before start
     const env = validateEnv();
-    const envsWithType = {
-        ...env,
-        DB_TYPE: dbType,
-    };
+    const dbQuery = env.DB_QUERIES;
 
     // Initialize and connect to DB
-    const db = getDb(envsWithType);
+    const db = getDb(env, dbType);
     await db.init({ force: true });
 
     // Clear data
@@ -31,8 +28,9 @@ const seedDb = async (dbType: string) => {
 
     // Create Repositories
     const { productRepository, userRepository, shippingInfoRepository, reviewRepository } = getRepositories(
-        envsWithType,
-        db.getInstance()
+        db.getInstance(),
+        dbType,
+        dbQuery
     );
 
     // Create Services

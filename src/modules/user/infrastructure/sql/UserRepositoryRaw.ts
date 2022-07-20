@@ -29,7 +29,11 @@ import UserDao, {
 } from "@user/infrastructure/sql/UserDao";
 
 class UserRepositoryRaw implements Repository {
-    constructor(public instance: Sequelize) {}
+    readonly instance: Sequelize;
+
+    constructor(db: Sequelize) {
+        this.instance = db;
+    }
 
     public async insert(user: User): Promise<User> {
         const userId: string = user.id || uuidv4();
