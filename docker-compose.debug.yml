@@ -1,0 +1,75 @@
+version: "3.8"
+services:
+    shopit:
+        container_name: shopit
+        restart: always
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        ports:
+            - ${PORT}:${PORT}
+            - 4001:4001
+        links:
+            - noSqlDB
+            - sqlDB
+            - inMemoryDB
+        depends_on:
+            - noSqlDB
+            - sqlDB
+            - inMemoryDB
+        volumes:
+            - .:/usr/src/shopit
+        environment:
+          NODE_ENV: development
+        command: ["npm", "run", "dev"]
+
+    sqlDB:
+        container_name: sqlDB
+        image: postgres:alpine
+        restart: always
+        volumes:
+            - sql-data:/var/lib/postgresql/data
+        ports:
+            - ${DB_SQL_PORT}:${DB_SQL_PORT}
+        environment:
+            POSTGRES_DB: ${DB_SQL_NAME}
+            POSTGRES_USER: ${DB_SQL_USER_NAME}
+            POSTGRES_PASSWORD: ${DB_SQL_PASSWORD}
+
+    noSqlDB:
+        container_name: noSqlDB
+        image: mongo:5.0.9
+        restart: always
+        volumes:
+            - nosql-data:/data/db
+        ports:
+            - ${DB_NO_SQL_PORT}:${DB_NO_SQL_PORT}
+        environment:
+            MONGO_INITDB_DATABASE: ${DB_NO_SQL_NAME}
+            MONGO_INITDB_ROOT_USERNAME: ${DB_NO_SQL_USER_NAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${DB_NO_SQL_PASSWORD}
+
+    inMemoryDB:
+        container_name: inMemoryDB
+        # TODO: use redis/redis-stack-server in production
+        image: redis/redis-stack:6.2.2-v5
+        restart: always
+        volumes:
+            - inmemory-data:/bitnami/redis/data
+        ports:
+            - ${DB_IN_MEMORY_PORT}:${DB_IN_MEMORY_PORT}
+            - ${DB_IN_MEMORY_PORT_DEBUG}:${DB_IN_MEMORY_PORT_DEBUG}
+        environment:
+            REDIS_ARGS: "--requirepass ${DB_IN_MEMORY_PASSWORD}"
+
+    adminer:
+        container_name: adminer
+        image: adminer:4.8.1
+        restart: always
+        ports:
+            - ${DB_SQL_PORT_DEBUG}:${DB_SQL_PORT_DEBUG}
+
+volumes:
+    sql-data:
+    nosql-data:
+    inmemory-data:

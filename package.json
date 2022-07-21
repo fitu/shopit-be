@@ -18,8 +18,9 @@
         "clean": "rm -rf ./dist",
         "seeder": "npm run clean && npm run build && NODE_ENV=DEVELOPMENT && node -r tsconfig-paths/register -r ts-node/register dist/shared/db/seed.js",
         "test": "mocha src/tests/**/*.ts",
-        "dev": "npm run build && NODE_ENV=DEVELOPMENT nodemon",
-        "start": "npm run build && NODE_ENV=DEVELOPMENT && node -r tsconfig-paths/register -r ts-node/register dist/server.js"
+        "dev": "npm run build && NODE_ENV=DEVELOPMENT nodemon --inspect=0.0.0.0:4001",
+        "start": "npm run build && NODE_ENV=DEVELOPMENT && node -r tsconfig-paths/register -r ts-node/register dist/server.js",
+        "prod": "npm run build && NODE_ENV=PRODUCTION node -r tsconfig-paths/register -r ts-node/register dist/server.js"
     },
     "devDependencies": {
         "@faker-js/faker": "^6.3.1",

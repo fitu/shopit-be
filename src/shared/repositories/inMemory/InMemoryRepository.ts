@@ -1,9 +1,9 @@
-import InMemoryProductRepository from "@product/infrastructure/inMemory/InMemoryProductRepository";
-import InMemoryUserRepository from "@user/infrastructure/inMemory/InMemoryUserRepository";
-import InMemoryReviewRepository from "@review/infrastructure/inMemory/InMemoryReviewRepository";
-import InMemoryProductRepositoryRaw from "@product/infrastructure/inMemory/InMemoryProductRepositoryRaw";
-import InMemoryUserRepositoryRaw from "@user/infrastructure/inMemory/InMemoryUserRepositoryRaw";
-import InMemoryReviewRepositoryRaw from "@review/infrastructure/inMemory/InMemoryReviewRepositoryRaw";
+import InMemoryProductRepository from "@product/infrastructure/inMemory/ProductRepository";
+import InMemoryUserRepository from "@user/infrastructure/inMemory/UserRepository";
+import InMemoryReviewRepository from "@review/infrastructure/inMemory/ReviewRepository";
+import InMemoryProductRepositoryRaw from "@product/infrastructure/inMemory/ProductRepositoryRaw";
+import InMemoryUserRepositoryRaw from "@user/infrastructure/inMemory/UserRepositoryRaw";
+import InMemoryReviewRepositoryRaw from "@review/infrastructure/inMemory/ReviewRepositoryRaw";
 import SendGridRepository from "@shared/integrations/emails/SendGridRepository";
 import PDFRepository from "@shared/integrations/files/PDFRepository";
 import { DbQuery } from "@shared/db/database";

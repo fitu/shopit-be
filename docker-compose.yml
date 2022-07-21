@@ -3,7 +3,9 @@ services:
     shopit:
         container_name: shopit
         restart: always
-        build: .
+        build:
+            context: .
+            dockerfile: ./Dockerfile
         ports:
             - ${PORT}:${PORT}
         links:
@@ -16,10 +18,11 @@ services:
             - inMemoryDB
         volumes:
             - .:/usr/src/shopit
+        command: [ "npm", "run", "prod" ]
 
     sqlDB:
         container_name: sqlDB
-        image: postgres:latest
+        image: postgres:alpine
         restart: always
         volumes:
             - sql-data:/var/lib/postgresql/data
@@ -32,7 +35,7 @@ services:
 
     noSqlDB:
         container_name: noSqlDB
-        image: mongo:latest
+        image: mongo:5.0.9
         restart: always
         volumes:
             - nosql-data:/data/db
@@ -45,8 +48,7 @@ services:
 
     inMemoryDB:
         container_name: inMemoryDB
-        # TODO: use redis/redis-stack-server in production
-        image: redis/redis-stack:latest
+        image: redis/redis-stack-server:6.2.2-v5
         restart: always
         volumes:
             - inmemory-data:/bitnami/redis/data
@@ -54,13 +56,6 @@ services:
             - ${DB_IN_MEMORY_PORT}:${DB_IN_MEMORY_PORT}
         environment:
             REDIS_ARGS: "--requirepass ${DB_IN_MEMORY_PASSWORD}"
-
-    adminer:
-        container_name: adminer
-        image: adminer
-        restart: always
-        ports:
-            - 8080:8080
 
 volumes:
     sql-data:
