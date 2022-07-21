@@ -3,19 +3,35 @@
         "files": true
     },
     "compilerOptions": {
+        // JS compilation details
+        "module": "commonjs",
+        "target": "es2017",
+        "sourceMap": true,
+        "moduleResolution": "node",
+
+        // Dist, src and type folders
         "outDir": "./dist",
         "rootDir": "./src",
         "baseUrl": "./src",
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "target": "es2017",
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "forceConsistentCasingInFileNames": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "resolveJsonModule": true,
         "typeRoots": ["./node_modules/@types", "./src/types"],
+
+        // Strict mode and other options
+        "noEmitOnError": true,
+        "noImplicitAny": false, // TODO: turn to true
+        "strictNullChecks": false, // TODO: turn to true
+        "strictBindCallApply": true,
+        "noImplicitThis": false, // TODO: turn to true
+        "removeComments": true,
+        "noUnusedLocals": false, // TODO: turn to true
+        "noUnusedParameters": false, // TODO: turn to true
+        "noImplicitReturns": true, 
+        "forceConsistentCasingInFileNames": true,
+        "esModuleInterop": true,
+
+        // To import i18n
+        "resolveJsonModule": true,
+
+        // Define relative paths
         "paths": {
             "@app/*": ["app/*"],
             "@avatar/*": ["modules/avatar/*"],
@@ -30,9 +46,7 @@
             "@shippingInfo/*": ["modules/shippingInfo/*"],
             "@user/*": ["modules/user/*"],
             "@shared/*": ["shared/*"],
-            "@utils/*": ["shared/utils/*"],
+            "@utils/*": ["shared/utils/*"]
         }
-    },
-    "include": ["src"],
-    "exclude": ["node_modules"]
+    }
 }
