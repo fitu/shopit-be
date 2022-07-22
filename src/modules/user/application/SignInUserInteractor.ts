@@ -4,17 +4,13 @@ import UserNotFoundError from "@user/application/error/UserNotFoundError";
 import SignInError from "@user/application/error/SignInError";
 import UserData from "@user/application/UserData";
 
-interface SignInUserData {
-    email: string;
-    password: string;
-}
+type SignInUserData = {
+    readonly email: string;
+    readonly password: string;
+};
 
 class SignInUserInteractor {
-    private userService: UserService;
-
-    constructor(userService: UserService) {
-        this.userService = userService;
-    }
+    constructor(private readonly userService: UserService) {}
 
     public async execute({ email, password }: SignInUserData): Promise<UserData> {
         const user: User = await this.userService.getUserByEmail(email);

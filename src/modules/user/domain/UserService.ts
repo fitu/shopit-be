@@ -8,11 +8,7 @@ import { Repository as UserRepository } from "@user/infrastructure/Repository";
 import User, { UserRole } from "@user/domain/User";
 
 class UserService {
-    private userRepository: UserRepository;
-
-    constructor(userRepository: UserRepository) {
-        this.userRepository = userRepository;
-    }
+    constructor(private readonly userRepository: UserRepository) {}
 
     public async insert(user: User): Promise<User> {
         return this.userRepository.insert(user);
@@ -50,10 +46,13 @@ class UserService {
             throw new UserNotFoundError();
         }
 
-        user.resetPasswordToken = token;
-        user.resetPasswordExpirationDate = moment().add(1, "day").toDate();
+        const updatedUser = new User({
+            ...user,
+            resetPasswordToken: token,
+            resetPasswordExpirationDate: moment().add(1, "day").toDate(),
+        });
 
-        await this.userRepository.updateUserById(user.id, user);
+        await this.userRepository.updateUserById(user.id, updatedUser);
     }
 
     public async updatePassword(user: User, newPassword: string, resetPasswordToken: string): Promise<void> {

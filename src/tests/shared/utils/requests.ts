@@ -9,12 +9,9 @@ const FAKE_JWT_TOKEN =
     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhMTlhNGEzNS1jNTA3LTQ3NTUtYTIwYi0wODczN2VhMGU5NGQiLCJlbWFpbCI6ImZvb0BiYXIuY29tIn0.g5NGl_iTSQ3mBKyWizBT9_WDPzUioiuOvSagjKCBx0c";
 
 class TestRequest {
-    private api: SuperTest<Test>;
-
-    constructor(api: SuperTest<Test>) {
+    constructor(private readonly api: SuperTest<Test>) {
         // Set the JWT secret to be able to parse the token
         process.env.JWT = FAKE_JWT_SECRET;
-        this.api = api;
     }
 
     private call(method: string) {

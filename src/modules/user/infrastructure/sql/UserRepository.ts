@@ -51,8 +51,8 @@ class UserRepository implements Repository {
             return null;
         }
 
-        const userToSave: User = validateUserFieldsToInsert(user);
-        userToSave.password = newPassword;
+        const updatedUser = new User({ ...userToUpdate, password: newPassword });
+        const userToSave: User = validateUserFieldsToInsert(updatedUser);
 
         await userToUpdate.update(userToSave);
     }

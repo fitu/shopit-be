@@ -2,17 +2,13 @@ import Product from "@product/domain/Product";
 import ProductService from "@product/domain/ProductService";
 import ProductData from "@product/application/ProductData";
 
-interface CreateProductData {
-    productData: ProductData;
-    userId: string;
-}
+type CreateProductData = {
+    readonly productData: ProductData;
+    readonly userId: string;
+};
 
 class CreateProductInteractor {
-    private productService: ProductService;
-
-    constructor(productService: ProductService) {
-        this.productService = productService;
-    }
+    constructor(private readonly productService: ProductService) {}
 
     public async execute({ productData, userId }: CreateProductData): Promise<ProductData> {
         const newProduct = new Product({

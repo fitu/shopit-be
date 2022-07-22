@@ -14,8 +14,8 @@ import PaymentInfoDao from "@paymentInfo/infrastructure/sql/PaymentInfoDao";
 const PAYMENT_ORDER_TABLE = 'paymentOrders';
 
 interface PaymentOrderAttributes {
-    id: string;
-    amount: number;
+    readonly id: string;
+    readonly amount: number;
 }
 
 interface OrderItemCreationAttributes extends Optional<PaymentOrderAttributes, 'id'> {}

@@ -23,14 +23,14 @@ import { OrderStatus, validOrderStatus } from "@order/domain/Order";
 const ORDER_TABLE = "orders";
 
 interface OrderAttributes {
-    id: string;
-    itemsPrice: number;
-    taxPrice: number;
-    shippingPrice: number;
-    totalPrice: number;
-    orderStatus: OrderStatus;
-    deliveredAt?: Date | null;
-    paidAt?: Date | null;
+    readonly id: string;
+    readonly itemsPrice: number;
+    readonly taxPrice: number;
+    readonly shippingPrice: number;
+    readonly totalPrice: number;
+    readonly orderStatus: OrderStatus;
+    readonly deliveredAt?: Date | null;
+    readonly paidAt?: Date | null;
 }
 
 interface OrderCreationAttributes extends Optional<OrderAttributes, "id"> {}

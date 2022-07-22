@@ -14,7 +14,7 @@ enum DbQuery {
 }
 
 interface DatabaseOptions {
-    force?: boolean;
+    readonly force?: boolean;
 }
 
 interface Database {

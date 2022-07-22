@@ -14,8 +14,8 @@ import ProductDao from "@product/infrastructure/sql/ProductDao";
 const ORDER_ITEM_TABLE = 'orderItems';
 
 interface OrderItemAttributes {
-    id: string;
-    quantity: number;
+    readonly id: string;
+    readonly quantity: number;
 }
 
 interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, 'id'> {}

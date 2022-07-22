@@ -15,10 +15,10 @@ import Seeder, {
 } from "@shared/db/seeder";
 
 class SqlSeeder implements Seeder {
-    private userService: UserService;
-    private shippingInfoService: ShippingInfoService;
-    private productService: ProductService;
-    private reviewService: ReviewService;
+    readonly userService: UserService;
+    readonly shippingInfoService: ShippingInfoService;
+    readonly productService: ProductService;
+    readonly reviewService: ReviewService;
 
     constructor({
         userService,

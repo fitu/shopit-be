@@ -13,19 +13,15 @@ const BASE_FOLDER = "data";
 const INVOICES_FOLDER_NAME = "invoices";
 const FILE_EXTENTION = "pdf";
 
-class OrderController implements Controller {
+class OrderController extends Controller {
     /*
      * Variables and constructor
      */
 
     public path = "/orders";
-    public router = Router();
 
-    private fileService: FileService;
-
-    constructor(fileService: FileService) {
-        this.fileService = fileService;
-
+    constructor(private readonly fileService: FileService) {
+        super();
         this.initializeRoutes();
     }
 
@@ -41,7 +37,7 @@ class OrderController implements Controller {
      * Routes
      */
 
-    private initializeRoutes = (): void => {
+    protected override initializeRoutes = (): void => {
         this.router.get(`${this.path}/:id/invoice`, this.validations.getInvoiceOne, this.getInvoice);
     };
 

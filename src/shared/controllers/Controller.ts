@@ -1,8 +1,10 @@
 import { Router } from "express";
 
-interface Controller {
+abstract class Controller {
     path: string;
-    router: Router;
+    router: Router = Router();
+
+    protected abstract initializeRoutes: () => void;
 }
 
 export default Controller;

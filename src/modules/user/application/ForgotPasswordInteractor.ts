@@ -3,18 +3,12 @@ import { generateRandomToken } from "@utils/hashUtils";
 import UserService from "@user/domain/UserService";
 import UserNotFoundError from "@user/application/error/UserNotFoundError";
 
-interface ForgotPasswordData {
-    email: string;
-}
+type ForgotPasswordData = {
+    readonly email: string;
+};
 
 class ForgotPasswordInteractor {
-    private userService: UserService;
-    private emailService: EmailService;
-
-    constructor(userService: UserService, emailService: EmailService) {
-        this.userService = userService;
-        this.emailService = emailService;
-    }
+    constructor(private readonly userService: UserService, private readonly emailService: EmailService) {}
 
     public async execute({ email }: ForgotPasswordData): Promise<void> {
         const user = await this.userService.getUserByEmail(email);

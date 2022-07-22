@@ -11,9 +11,9 @@ import { fromUserDaoToModel, fromUserToDao } from "@user/infrastructure/noSql/us
 class UserRepositoryRaw implements Repository {
     public async insert(user: User): Promise<User> {
         const hashedPassword: string = await hashPassword(user.password);
-        user.password = hashedPassword;
+        const updatedUser = new User({ ...user, password: hashedPassword });
 
-        const userToSave: UserDao = fromUserToDao(user);
+        const userToSave: UserDao = fromUserToDao(updatedUser);
         await mongoose.connection.db.collection(USER_DOCUMENT).insertOne(userToSave);
 
         return user;
@@ -22,9 +22,9 @@ class UserRepositoryRaw implements Repository {
     public async insertBatch(users: Array<User>): Promise<Array<User>> {
         const usersToSave: Array<UserDao> = users.map((user) => {
             const hashedPassword: string = hashPasswordSync(user.password);
-            user.password = hashedPassword;
+            const updatedUser = new User({ ...user, password: hashedPassword });
 
-            const userDao: UserDao = fromUserToDao(user);
+            const userDao: UserDao = fromUserToDao(updatedUser);
 
             return userDao;
         });
@@ -50,11 +50,15 @@ class UserRepositoryRaw implements Repository {
     }
 
     public async updatePassword(user: User, newPassword: string): Promise<void> {
-        user.password = await hashPassword(newPassword);
-        user.resetPasswordToken = null;
-        user.resetPasswordExpirationDate = null;
+        const newHashedPassword = await hashPassword(newPassword);
+        const updatedUser = new User({
+            ...user,
+            password: newHashedPassword,
+            resetPasswordToken: null,
+            resetPasswordExpirationDate: null,
+        });
 
-        const userToSave: UserDao = fromUserToDao(user);
+        const userToSave: UserDao = fromUserToDao(updatedUser);
         await mongoose.connection.db.collection(USER_DOCUMENT).replaceOne({ remoteId: user.id }, userToSave);
     }
 

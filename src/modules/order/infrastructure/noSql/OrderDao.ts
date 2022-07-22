@@ -6,7 +6,7 @@ import Order, { OrderStatus, validOrderStatus } from "@order/domain/Order";
 const ORDER_SCHEMA = "Order";
 
 interface OrderDao {
-    _id?: string;
+    readonly _id?: string;
     itemsPrice: number;
     taxPrice: number;
     shippingPrice: number;

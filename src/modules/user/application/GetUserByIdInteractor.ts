@@ -2,16 +2,12 @@ import UserService from "@user/domain/UserService";
 import UserNotFoundError from "@user/application/error/UserNotFoundError";
 import UserData from "@user/application/UserData";
 
-interface GetUserByIdData {
-    userId: string;
-}
+type GetUserByIdData = {
+    readonly userId: string;
+};
 
 class GetUserByIdInteractor {
-    private userService: UserService;
-
-    constructor(userService: UserService) {
-        this.userService = userService;
-    }
+    constructor(private readonly userService: UserService) {}
 
     public async execute({ userId }: GetUserByIdData): Promise<UserData> {
         const user = await this.userService.getUserById(userId);

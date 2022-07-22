@@ -7,9 +7,9 @@ import { fromAvatarDaoToModel } from "@avatar/infrastructure/sql/avatarParsers";
 const AVATAR_TABLE = "avatars";
 
 interface AvatarAttributes {
-    id: string;
-    publicId: string;
-    url: string;
+    readonly id: string;
+    readonly publicId: string;
+    readonly url: string;
 }
 
 interface AvatarCreationAttributes extends Optional<AvatarAttributes, "id"> {}

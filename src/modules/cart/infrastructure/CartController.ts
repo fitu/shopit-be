@@ -4,15 +4,26 @@ import httpStatus from "http-status";
 import isAuthMiddleware from "@shared/middlewares/isAuthMiddleware";
 import Controller from "@shared/controllers/Controller";
 
-class CartController implements Controller {
+class CartController extends Controller {
+    /*
+     * Variables and constructor
+     */
+
     public path = "/cart";
-    public router = Router();
 
     constructor() {
+        super();
         this.initializeRoutes();
     }
 
-    private initializeRoutes = (): void => {
+    /*
+     * Route's validations
+     */
+
+    /*
+     * Routes
+     */
+    protected override initializeRoutes = (): void => {
         this.router.get(this.path, isAuthMiddleware, this.getCart);
         this.router.post(this.path, isAuthMiddleware, this.addProductToCart);
         this.router.delete(this.path, isAuthMiddleware, this.deleteProductFromCart);

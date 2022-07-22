@@ -5,20 +5,14 @@ import Product from "@product/domain/Product";
 import ProductData from "@product/application/ProductData";
 import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
 
-interface UpdateProductByIdData {
-    productId: string;
-    productData: ProductData;
-    userId: string;
-}
+type UpdateProductByIdData = {
+    readonly productId: string;
+    readonly productData: ProductData;
+    readonly userId: string;
+};
 
 class UpdateProductByIdInteractor {
-    private productService: ProductService;
-    private userService: UserService;
-
-    constructor(productService: ProductService, userService: UserService) {
-        this.productService = productService;
-        this.userService = userService;
-    }
+    constructor(private readonly productService: ProductService, private readonly userService: UserService) {}
 
     public async execute({ productId, productData, userId }: UpdateProductByIdData): Promise<ProductData> {
         const product = await this.productService.getProductWithUserById(productId);

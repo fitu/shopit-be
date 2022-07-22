@@ -2,11 +2,7 @@ import { Repository as ShippingInfoRepository } from "@shippingInfo/infrastructu
 import ShippingInfo from "@shippingInfo/domain/ShippingInfo";
 
 class ShippingInfoService {
-    private shippingInfoRepository: ShippingInfoRepository;
-
-    constructor(shippingInfoRepository: ShippingInfoRepository) {
-        this.shippingInfoRepository = shippingInfoRepository;
-    }
+    constructor(private readonly shippingInfoRepository: ShippingInfoRepository) {}
 
     public async insert(shippingInfo: ShippingInfo, userId: string): Promise<ShippingInfo> {
         return this.shippingInfoRepository.insert(shippingInfo, userId);

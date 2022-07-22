@@ -20,12 +20,12 @@ import { fromShippingInfoDaoToModel } from "@shippingInfo/infrastructure/sql/shi
 const SHIPPING_INFO_TABLE = "shippingInfos";
 
 interface ShippingInfoAttributes {
-    id: string;
-    address: string;
-    city: string;
-    phone: string;
-    postalCode: string;
-    country: string;
+    readonly id: string;
+    readonly address: string;
+    readonly city: string;
+    readonly phone: string;
+    readonly postalCode: string;
+    readonly country: string;
 }
 
 interface ShippingInfoCreationAttributes extends Optional<ShippingInfoAttributes, "id"> {}

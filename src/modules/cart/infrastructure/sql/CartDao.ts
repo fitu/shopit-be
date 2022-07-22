@@ -19,10 +19,10 @@ import { fromCartDaoToModel } from "@cart/infrastructure/sql/cartParsers";
 const CART_TABLE = "carts";
 
 interface CartAttributes {
-    id: string;
-    itemsPrice: number;
-    taxPrice: number;
-    totalPrice: number;
+    readonly id: string;
+    readonly itemsPrice: number;
+    readonly taxPrice: number;
+    readonly totalPrice: number;
 }
 
 interface CartCreationAttributes extends Optional<CartAttributes, "id"> {}

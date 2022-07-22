@@ -33,14 +33,14 @@ const PRODUCT_USER = "user";
 const PRODUCT_USER_ID = "userId";
 
 interface ProductAttributes {
-    [PRODUCT_ID]: string;
-    [PRODUCT_TITLE]: string;
-    [PRODUCT_DESCRIPTION]: string;
-    [PRODUCT_PRICE]: number;
-    [PRODUCT_RATINGS]: number;
-    [PRODUCT_IMAGE_URL]: string;
-    [PRODUCT_CATEGORY]: ProductCategory;
-    [PRODUCT_STOCK]: number;
+    readonly [PRODUCT_ID]: string;
+    readonly [PRODUCT_TITLE]: string;
+    readonly [PRODUCT_DESCRIPTION]: string;
+    readonly [PRODUCT_PRICE]: number;
+    readonly [PRODUCT_RATINGS]: number;
+    readonly [PRODUCT_IMAGE_URL]: string;
+    readonly [PRODUCT_CATEGORY]: ProductCategory;
+    readonly [PRODUCT_STOCK]: number;
 }
 
 interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}

@@ -2,11 +2,7 @@ import { Repository as ReviewRepository } from "@review/infrastructure/Repositor
 import Review from "@review/domain/Review";
 
 class ReviewService {
-    private reviewRepository: ReviewRepository;
-
-    constructor(reviewRepository: ReviewRepository) {
-        this.reviewRepository = reviewRepository;
-    }
+    constructor(private readonly reviewRepository: ReviewRepository) {}
 
     public async insert(review: Review, productId: string, userId: string): Promise<Review> {
         return this.reviewRepository.insert(review, productId, userId);

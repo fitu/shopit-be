@@ -3,12 +3,9 @@ import { createClient } from "redis";
 import Database, { DatabaseOptions } from "@shared/db/database";
 
 class InMemoryDb implements Database {
-    private env: any;
     private instance: any;
 
-    constructor(env: any) {
-        this.env = env;
-    }
+    constructor(private readonly env: any) {}
 
     public init = async (options?: DatabaseOptions): Promise<void> => {
         this.instance = await this.createDbConnection();

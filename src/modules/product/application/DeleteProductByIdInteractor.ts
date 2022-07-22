@@ -3,19 +3,13 @@ import UserService from "@user/domain/UserService";
 import ProductService from "@product/domain/ProductService";
 import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
 
-interface DeleteProductByIdData {
-    productId: string;
-    userId: string;
-}
+type DeleteProductByIdData = {
+    readonly productId: string;
+    readonly userId: string;
+};
 
 class DeleteProductByIdInteractor {
-    private productService: ProductService;
-    private userService: UserService;
-
-    constructor(productService: ProductService, userService: UserService) {
-        this.productService = productService;
-        this.userService = userService;
-    }
+    constructor(private readonly productService: ProductService, private readonly userService: UserService) {}
 
     public async execute({ productId, userId }: DeleteProductByIdData): Promise<void> {
         const product = await this.productService.getProductById(productId);

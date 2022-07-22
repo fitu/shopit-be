@@ -2,11 +2,7 @@ import Email from "@shared/integrations/emails/Email";
 import { Repository as EmailRepository } from "@shared/integrations/emails/Repository";
 
 class EmailService {
-    private emailRepository: EmailRepository;
-
-    constructor(emailRepository: EmailRepository) {
-        this.emailRepository = emailRepository;
-    }
+    constructor(private readonly emailRepository: EmailRepository) {}
 
     public init(key: string): void {
         this.emailRepository.init(key);

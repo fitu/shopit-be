@@ -11,15 +11,12 @@ import Controller from "@shared/controllers/Controller";
 const BASE_VERSION = "/api/v1";
 
 class App {
-    private app: Application;
-    // private io: Server;
-    private controllers: Array<Controller>;
-    private middlewares: Array<Middleware>;
+    private readonly app: Application;
 
     constructor(
-        // io: Server,
-        controllers: Array<Controller>,
-        middlewares: Array<Middleware>
+        // private readonly io: Server,
+        private readonly controllers: Array<Controller>,
+        private readonly middlewares: Array<Middleware>
     ) {
         this.app = express();
         // this.io = io;

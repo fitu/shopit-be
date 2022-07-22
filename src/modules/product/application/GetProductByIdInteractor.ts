@@ -2,16 +2,12 @@ import ProductService from "@product/domain/ProductService";
 import ProductNotFoundError from "@product/application/error/ProductNotFoundError";
 import ProductData from "@product/application/ProductData";
 
-interface GetProductByIdData {
-    productId: string;
-}
+type GetProductByIdData = {
+    readonly productId: string;
+};
 
 class GetProductByIdInteractor {
-    private productService: ProductService;
-
-    constructor(productService: ProductService) {
-        this.productService = productService;
-    }
+    constructor(private readonly productService: ProductService) {}
 
     public async execute({ productId }: GetProductByIdData): Promise<ProductData> {
         const product = await this.productService.getProductById(productId);

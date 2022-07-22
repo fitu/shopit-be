@@ -8,10 +8,10 @@ import { fromReviewDaoToModel } from "@review/infrastructure/sql/reviewParsers";
 const REVIEW_TABLE = "reviews";
 
 interface ReviewAttributes {
-    id: string;
-    name: string;
-    rating: number;
-    comment: string;
+    readonly id: string;
+    readonly name: string;
+    readonly rating: number;
+    readonly comment: string;
 }
 
 interface ReviewCreationAttributes extends Optional<ReviewAttributes, "id"> {}

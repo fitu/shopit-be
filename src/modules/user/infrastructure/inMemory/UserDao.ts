@@ -7,19 +7,19 @@ import ProductDao from "@product/infrastructure/inMemory/ProductDao";
 import { fromModelToUserDao, fromUserDaoToModel } from "@user/infrastructure/inMemory/userParsers";
 
 class UserDao {
-    id?: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: UserRole;
-    password: string;
-    resetPasswordToken?: string | null;
-    resetPasswordExpirationDate?: Date | null;
-    cart?: CartDao | null;
-    avatar?: AvatarDao | null;
-    products?: Array<ProductDao> | null;
-    reviews?: Array<ReviewDao> | null;
-    shippingsInfo?: Array<ShippingInfoDao> | null;
+    readonly id?: string;
+    readonly firstName: string;
+    readonly lastName: string;
+    readonly email: string;
+    readonly role: UserRole;
+    readonly password: string;
+    readonly resetPasswordToken?: string | null;
+    readonly resetPasswordExpirationDate?: Date | null;
+    readonly cart?: CartDao | null;
+    readonly avatar?: AvatarDao | null;
+    readonly products?: Array<ProductDao> | null;
+    readonly reviews?: Array<ReviewDao> | null;
+    readonly shippingsInfo?: Array<ShippingInfoDao> | null;
 
     constructor({
         id,

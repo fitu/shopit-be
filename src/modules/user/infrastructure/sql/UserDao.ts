@@ -44,14 +44,14 @@ const USER_REVIEWS = "reviews";
 const USER_ORDERS = "orders";
 
 interface UserAttributes {
-    [USER_ID]: string;
-    [USER_FIRST_NAME]: string;
-    [USER_LAST_NAME]: string;
-    [USER_EMAIL]: string;
-    [USER_ROLE]: UserRole;
-    [USER_PASSWORD]: string;
-    [USER_RESET_PASSWORD_TOKEN]?: string | null;
-    [USER_RESET_PASSWORD_EXPIRATION_DATE]?: Date | null;
+    readonly [USER_ID]: string;
+    readonly [USER_FIRST_NAME]: string;
+    readonly [USER_LAST_NAME]: string;
+    readonly [USER_EMAIL]: string;
+    readonly [USER_ROLE]: UserRole;
+    readonly [USER_PASSWORD]: string;
+    readonly [USER_RESET_PASSWORD_TOKEN]?: string | null;
+    readonly [USER_RESET_PASSWORD_EXPIRATION_DATE]?: Date | null;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}

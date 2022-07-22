@@ -6,12 +6,9 @@ import { Repository as ProductRepository } from "@product/infrastructure/Reposit
 import Product from "@product/domain/Product";
 
 class ProductService {
-    // private io: Server;
-    private productRepository: ProductRepository;
-
     constructor(
-        // io: Server,
-        productRepository: ProductRepository
+        // private readonly io: Server,
+        private readonly productRepository: ProductRepository
     ) {
         // this.io = io;
         this.productRepository = productRepository;

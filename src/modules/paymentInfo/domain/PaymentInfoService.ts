@@ -2,11 +2,7 @@ import { Repository as PaymentInfoRepository } from "@paymentInfo/infrastructure
 import PaymentInfo from "@paymentInfo/domain/PaymentInfo";
 
 class PaymentInfoService {
-    private paymentInfoRepository: PaymentInfoRepository;
-
-    constructor(paymentInfoRepository: PaymentInfoRepository) {
-        this.paymentInfoRepository = paymentInfoRepository;
-    }
+    constructor(private readonly paymentInfoRepository: PaymentInfoRepository) {}
 
     public async insert(paymentInfo: PaymentInfo, userId: string): Promise<PaymentInfo> {
         return this.paymentInfoRepository.insert(paymentInfo, userId);

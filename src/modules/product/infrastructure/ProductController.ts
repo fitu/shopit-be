@@ -23,21 +23,15 @@ import ProductService from "@product/domain/ProductService";
 import { ProductCategory, validProductCategories } from "@product/domain/Product";
 import ProductViewModel from "@product/infrastructure/ProductViewModel";
 
-class ProductController implements Controller {
+class ProductController extends Controller {
     /*
      * Variables and constructor
      */
 
     public path = "/products";
-    public router = Router();
 
-    private productService: ProductService;
-    private userService: UserService;
-
-    constructor(productService: ProductService, userService: UserService) {
-        this.productService = productService;
-        this.userService = userService;
-
+    constructor(private readonly productService: ProductService, private readonly userService: UserService) {
+        super();
         this.initializeRoutes();
     }
 
@@ -86,7 +80,7 @@ class ProductController implements Controller {
      * Routes
      */
 
-    private initializeRoutes = (): void => {
+    protected override initializeRoutes = (): void => {
         this.router.get(this.path, this.validations.getAll, isValid, this.getProducts);
         this.router.get(`${this.path}/:id`, this.validations.getOne, isValid, this.getProductById);
         this.router.post(

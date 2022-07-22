@@ -2,17 +2,13 @@ import Page from "@shared/Page";
 import UserService from "@user/domain/UserService";
 import UserData from "@user/application/UserData";
 
-interface GetAllUsersData {
-    page: number;
-    itemsPerPage: number;
-}
+type GetAllUsersData = {
+    readonly page: number;
+    readonly itemsPerPage: number;
+};
 
 class GetAllUsersInteractor {
-    private userService: UserService;
-
-    constructor(userService: UserService) {
-        this.userService = userService;
-    }
+    constructor(private readonly userService: UserService) {}
 
     public async execute({ page, itemsPerPage }: GetAllUsersData): Promise<Page<Array<UserData>>> {
         const allUsersWithMetadata = await this.userService.getAllUsers(page, itemsPerPage);

@@ -1,18 +1,14 @@
 import UserService from "@user/domain/UserService";
 import UserNotFoundError from "@user/application/error/UserNotFoundError";
 
-interface ResetPasswordData {
-    email: string;
-    newPassword: string;
-    resetPasswordToken: string;
-}
+type ResetPasswordData = {
+    readonly email: string;
+    readonly newPassword: string;
+    readonly resetPasswordToken: string;
+};
 
 class ResetPasswordInteractor {
-    private userService: UserService;
-
-    constructor(userService: UserService) {
-        this.userService = userService;
-    }
+    constructor(private readonly userService: UserService) {}
 
     public async execute({ email, newPassword, resetPasswordToken }: ResetPasswordData): Promise<void> {
         const user = await this.userService.getUserByEmail(email);

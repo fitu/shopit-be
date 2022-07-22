@@ -1,11 +1,7 @@
 import { Repository as FileRepository } from "@shared/integrations/files/Repository";
 
 class FileService {
-    private fileRepository: FileRepository;
-
-    constructor(fileRepository: FileRepository) {
-        this.fileRepository = fileRepository;
-    }
+    constructor(private readonly fileRepository: FileRepository) {}
 
     public init(): void {
         this.fileRepository.init();

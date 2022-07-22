@@ -17,9 +17,9 @@ import Seeder, {
 } from "@shared/db/seeder";
 
 class NoSqlSeeder implements Seeder {
-    private userService: UserService;
-    private productService: ProductService;
-    private reviewService: ReviewService;
+    readonly userService: UserService;
+    readonly productService: ProductService;
+    readonly reviewService: ReviewService;
 
     constructor({
         userService,

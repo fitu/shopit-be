@@ -4,18 +4,12 @@ import UserService from "@user/domain/UserService";
 import EmailAlreadyInUseError from "@user/application/error/EmailAlreadyInUseError";
 import UserData from "@user/application/UserData";
 
-interface CreateUserData {
-    userData: UserData;
-}
+type CreateUserData = {
+    readonly userData: UserData;
+};
 
 class CreateUserInteractor {
-    private userService: UserService;
-    private emailService: EmailService;
-
-    constructor(userService: UserService, emailService: EmailService) {
-        this.userService = userService;
-        this.emailService = emailService;
-    }
+    constructor(private readonly userService: UserService, private readonly emailService: EmailService) {}
 
     public async execute({ userData }: CreateUserData): Promise<UserData> {
         const user: User = await this.userService.getUserByEmail(userData.email);

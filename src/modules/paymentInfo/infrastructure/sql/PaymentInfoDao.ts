@@ -20,8 +20,8 @@ import { fromPaymentInfoDaoToModel } from "@paymentInfo/infrastructure/sql/payme
 const PAYMENT_INFO_TABLE = "paymentInfos";
 
 interface PaymentInfoAttributes {
-    id: string;
-    status: PaymentStatus;
+    readonly id: string;
+    readonly status: PaymentStatus;
 }
 
 interface PaymentInfoCreationAttributes extends Optional<PaymentInfoAttributes, "id"> {}

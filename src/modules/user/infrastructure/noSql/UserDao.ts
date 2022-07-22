@@ -9,7 +9,7 @@ const USER_DOCUMENT = "users";
 // TODO: add "columns"
 
 interface UserDao {
-    _id?: Types.ObjectId;
+    readonly _id?: Types.ObjectId;
     remoteId?: string;
     firstName: string;
     lastName: string;
@@ -31,25 +31,25 @@ interface UserDocument extends Document {
 type UserFullDocument = UserDao & UserDocument;
 
 interface ShippingInfoDao {
-    remoteId?: string;
-    address: string;
-    city: string;
-    phone: string;
-    postalCode: string;
-    country: string;
+    readonly remoteId?: string;
+    readonly address: string;
+    readonly city: string;
+    readonly phone: string;
+    readonly postalCode: string;
+    readonly country: string;
 }
 
 interface CartDao {
-    remoteId?: string;
-    itemsPrice: number;
-    taxPrice: number;
-    totalPrice: number;
+    readonly remoteId?: string;
+    readonly itemsPrice: number;
+    readonly taxPrice: number;
+    readonly totalPrice: number;
 }
 
 interface AvatarDao {
-    remoteId?: string;
-    publicId: string;
-    url: string;
+    readonly remoteId?: string;
+    readonly publicId: string;
+    readonly url: string;
 }
 
 const shippingInfoSchema = new mongoose.Schema({

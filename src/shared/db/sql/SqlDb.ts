@@ -14,12 +14,9 @@ import ShippingInfoDao, { init as initShippingInfo } from "@shippingInfo/infrast
 import Database, { DatabaseOptions } from "@shared/db/database";
 
 class SqlDb implements Database {
-    private env: any;
     private instance: Sequelize;
 
-    constructor(env: any) {
-        this.env = env;
-    }
+    constructor(private readonly env: any) {}
 
     public init = async (options?: DatabaseOptions): Promise<void> => {
         this.instance = this.createDbConnection();

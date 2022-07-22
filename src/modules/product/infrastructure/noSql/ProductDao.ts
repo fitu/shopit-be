@@ -9,7 +9,7 @@ const PRODUCT_DOCUMENT = "products";
 // TODO: add "columns"
 
 interface ProductDao {
-    _id?: Types.ObjectId;
+    readonly _id?: Types.ObjectId;
     remoteId?: string;
     title: string;
     description: string;

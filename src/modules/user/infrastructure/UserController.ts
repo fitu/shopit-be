@@ -26,21 +26,15 @@ import { UserRole, validUserRoles } from "@user/domain/User";
 import UserService from "@user/domain/UserService";
 import UserViewModel from "@user/infrastructure/UserViewModel";
 
-class UserController implements Controller {
+class UserController extends Controller {
     /*
      * Variables and constructor
      */
 
     public path = "/users";
-    public router = Router();
 
-    private userService: UserService;
-    private emailService: EmailService;
-
-    constructor(userService: UserService, emailService: EmailService) {
-        this.emailService = emailService;
-        this.userService = userService;
-
+    constructor(private readonly userService: UserService, private readonly emailService: EmailService) {
+        super();
         this.initializeRoutes();
     }
 
@@ -96,7 +90,7 @@ class UserController implements Controller {
      * Routes
      */
 
-    private initializeRoutes = (): void => {
+    protected override initializeRoutes = (): void => {
         this.router.get(this.path, this.validations.getAll, isValid, this.getUsers);
         this.router.get(`${this.path}/:id`, this.validations.getOne, isValid, this.getUserById);
         this.router.post(`${this.path}/sign-up`, this.validations.signUpPost, this.createUser);

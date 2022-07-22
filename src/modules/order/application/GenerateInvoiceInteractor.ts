@@ -1,15 +1,11 @@
 import FileService from "@shared/integrations/files/FileService";
 
-interface GenerateInvoiceData {
-    invoicePath: string;
-}
+type GenerateInvoiceData = {
+    readonly invoicePath: string;
+};
 
 class GenerateInvoiceInteractor {
-    private fileService: FileService;
-
-    constructor(fileService: FileService) {
-        this.fileService = fileService;
-    }
+    constructor(private readonly fileService: FileService) {}
 
     public async execute({ invoicePath }: GenerateInvoiceData): Promise<void> {
         await this.fileService.generateInvoice(invoicePath);

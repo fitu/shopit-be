@@ -10,7 +10,7 @@ const REVIEW_DOCUMENT = "reviews";
 // TODO: add "columns
 
 interface ReviewDao {
-    _id?: Types.ObjectId;
+    readonly _id?: Types.ObjectId;
     remoteId?: string;
     name: string;
     rating: number;

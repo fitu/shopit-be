@@ -4,17 +4,13 @@ import UserHasNotPermissionsError from "@user/application/error/UserHasNotPermis
 import UserNotFoundError from "@user/application/error/UserNotFoundError";
 import UserData from "@user/application/UserData";
 
-interface UpdateUserByIdData {
-    userId: string;
-    userData: UserData;
-}
+type UpdateUserByIdData = {
+    readonly userId: string;
+    readonly userData: UserData;
+};
 
 class UpdateUserByIdInteractor {
-    private userService: UserService;
-
-    constructor(userService: UserService) {
-        this.userService = userService;
-    }
+    constructor(private readonly userService: UserService) {}
 
     public async execute({ userId, userData }: UpdateUserByIdData): Promise<UserData> {
         const user = await this.userService.getUserById(userData.id);

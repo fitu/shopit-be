@@ -14,8 +14,8 @@ import ProductDao from "@product/infrastructure/sql/ProductDao";
 const CART_ITEM_TABLE = 'cartItems';
 
 interface CartItemAttributes {
-    id: string;
-    quantity: number;
+    readonly id: string;
+    readonly quantity: number;
 }
 
 interface CartItemCreationAttributes extends Optional<CartItemAttributes, 'id'> {}
